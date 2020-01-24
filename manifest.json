@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+
+    "name": "drrr bot extension",
+    "description": "extension for automatically doing something",
+    "version": "1.0",
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "/popup/index.html"
+    },
+    "background": {
+        "page": "/background/index.html",
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://drrr.com/room/*"],
+            "css": ["/content/index.css"],
+            "run_at": "document_start",
+            "js": ["/js/jquery-3.4.1.min.js", "/globals.js", "/content/index.js"]
+        }
+    ],
+    "permissions": [
+        "tabs",
+        "storage"
+    ]
+}

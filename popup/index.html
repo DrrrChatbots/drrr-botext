@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+    <head>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
+        <link href="/popup/index.css" rel="stylesheet">
+        <script src="/globals.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/jquery-3.4.1.min.js"></script>
+        <script src="/js/bootstrap-switch.min.js"></script>
+        <script src="/popup/index.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+
+    <body>
+        <div class="panel panel-success" style="margin: 0px 0px 0px 0px; width: 450px">
+            <div class="panel-heading" style="padding: 0px 0px 0px 0px;">
+                <div class="input-group" sytle="width:auto;">
+
+                    <div class="input-group-btn">
+                        <button id="refresh" class="btn btn-default refresh" type="submit" >
+                            <i class="glyphicon glyphicon-refresh"></i>
+                        </button>
+                    </div>
+                    <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
+                    <div class="input-group-btn">
+                        <button id="cog" class="btn btn-default cog" type="submit" >
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div id="switch_panel"></div>
+
+                <hr>
+
+                <div class="input-group"> 
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                    <input type="text" class="form-control" placeholder="Upload Image" disabled>
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-circle-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-paste"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-cd"></i></span>
+                    <input type="text" class="form-control" placeholder="Play playlist by ID">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-play"></i>
+                        </button>
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-time"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+                <br>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
+
+                    <input type="text" class="form-control" placeholder="Search Keyword and Play">
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-play"></i>
+                        </button>
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-time"></i>
+                        </button> 
+                    </div>
+                </div> 
+
+
+            </div>
+        </div>
+    </body>
+</html>
+<!--
+    https://drrr.chat/d/129-command-list-like-night
+-->

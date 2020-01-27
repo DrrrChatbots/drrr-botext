@@ -1,12 +1,14 @@
 <!doctype html>
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
         <link href="/popup/index.css" rel="stylesheet">
         <script src="/globals.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/jquery-3.4.1.min.js"></script>
         <script src="/js/bootstrap-switch.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
         <script src="/popup/index.js" type="text/javascript" charset="utf-8"></script>
     </head>
 
@@ -16,13 +18,15 @@
                 <div class="input-group" sytle="width:auto;">
 
                     <div class="input-group-btn">
-                        <button id="refresh" class="btn btn-default refresh" type="submit" >
+                        <button id="refresh" class="btn btn-default refresh" type="submit"
+                                                                             title="Reset all configurations">
                             <i class="glyphicon glyphicon-refresh"></i>
                         </button>
                     </div>
                     <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
                     <div class="input-group-btn">
-                        <button id="cog" class="btn btn-default cog" type="submit" >
+                        <button id="cog" class="btn btn-default cog" type="submit"
+                                                                     title="Go to setting panel">
                             <i class="glyphicon glyphicon-cog"></i>
                         </button>
                     </div>
@@ -34,57 +38,123 @@
 
                 <hr>
 
-                <div class="input-group"> 
+                <!-- image uploader: the <input type="file"/> need be newed in background page,
+                    and It may cost my a lot of time to try,
+                    and fetch key on https://api.imgbb.com/ may have some considerations
+                -->
+                <!--
+                    <div class="input-group"> 
                     <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
                     <input type="text" class="form-control" placeholder="Upload Image" disabled>
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-circle-arrow-up"></i>
-                        </button>
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-paste"></i>
-                        </button>
+                    <label id="upload-pic" class="btn btn-default" type="submit">
+                    <i class="glyphicon glyphicon-circle-arrow-up"></i>
+                    <input type="file" id="file-uploader" data-target="file-uploader" accept="image/*" multiple="multiple" hidden/>
+                    </label>
+                    <button class="btn btn-default" type="submit">
+                    <i class="glyphicon glyphicon-paste"></i>
+                    </button>
                     </div>
-                </div>
+                    </div>
+                    <br>
 
-                <br>
-
-                <div class="input-group">
+                    <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-cd"></i></span>
                     <input type="text" class="form-control" placeholder="Play playlist by ID">
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-play"></i>
-                        </button>
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-time"></i>
-                        </button>
+                    <button class="btn btn-default" type="submit">
+                    <i class="glyphicon glyphicon-play"></i>
+                    </button>
+                    <button class="btn btn-default" type="submit">
+                    <i class="glyphicon glyphicon-time"></i>
+                    </button>
                     </div>
-                </div>
-
-
-                <br>
+                    </div>
+                    <br>
+                -->
 
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
-
-                    <input type="text" class="form-control" placeholder="Search Keyword and Play">
+                    <!--
+                        <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-headphones"></i></span>
+                    -->
 
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>
+                        <button id="music_mode" class="btn btn-default" type="button"
+                                                                        title='album mode, continue playing if any song in list'>
+                            <i id="mode_type" class="glyphicon glyphicon-cd"></i>
+                            <!-- glyphicon glyphicon-search -->
+                            <!-- glyphicon glyphicon-list -->
+                            <!-- glyphicon glyphicon-list-alt -->
                         </button>
-                        <button class="btn btn-default" type="submit">
+                    </div>
+
+                    <select id="music_source" name="source" class="form-control" style="padding-left: 0px; padding-right: 0px " title="music source">
+                    </select>
+
+                    <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+                    <!--
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
+                    -->
+
+                    <input id="keyword" type="text" 
+                                        class="form-control" placeholder="Search Keyword and Play">
+                    <!-- https://drrr.wiki/zh-tw/%E9%9F%B3%E6%A8%82%E9%BB%9E%E6%92%AD -->
+                    <!--{xiami:"虾",netease:"易",bilibili:"Ｂ",tencent:"Ｑ",baidu:"千",kugou:"狗"}-->
+                    <!-- https://drrr.wiki/zh-tw/%E9%9F%B3%E6%A8%82%E9%BB%9E%E6%92%AD -->
+                    <!-- https://zhuanlan.zhihu.com/p/24581605 bilibili api -->
+                    <!-- https://music.sounm.com/?name=%E5%9E%83%E5%9C%BE%E8%BB%8A%20%E4%BA%94%E6%9C%88%E5%A4%A9&type=netease common api -->
+                    <!-- https://music.liuzhijin.cn/?name=little%20do%20you%20know&type=netease -->
+
+                    <!-- http://music.taihe.com/ -->
+                    <!-- https://blog.csdn.net/qq_42072206/article/details/80814964 -->
+                    <!-- https://blog.csdn.net/baiyuliang2013/article/details/51496620 -->
+                    <!-- https://www.luxing.im/  -->
+                    <!-- x https://zhuanlan.zhihu.com/p/30246788 -->
+                    <!-- https://cloud.tencent.com/developer/article/1543945 -->
+                    <div class="input-group-btn">
+                        <button id="music_list_opener" class="btn btn-default" type="button"
+                                                                               data-toggle="collapse" data-target="#music_list"
+                                                                                                      title="show playlist">
+                            <i id="list_type" class="glyphicon glyphicon-list"></i>
+                            <!-- glyphicon glyphicon-search -->
+                            <!-- glyphicon glyphicon-list -->
+                            <!-- glyphicon glyphicon-list-alt -->
+                        </button>
+                        <button id="play_search" class="btn btn-default" type="submit"
+                                                                         title="search and play the song immediately">
                             <i class="glyphicon glyphicon-play"></i>
                         </button>
-                        <button class="btn btn-default" type="submit">
-                            <i class="glyphicon glyphicon-time"></i>
-                        </button> 
-                    </div>
+                        <button id="add_search" class="btn btn-default" type="submit"
+                                                                        title="search and add the song to playlist">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <!-- glyphicon glyphicon-time -->
+                            <!-- glyphicon glyphicon-plus -->
+                        </button>
+                    </div>  
                 </div> 
-
-
+                <div id="music_list" class="collapse">
+                    <div class="row" style="height:100%">
+                        <div class="col-md-4">
+                            <div class="list-group" style="margin-bottom: 0px;">
+                                <hr>
+                                <div id='list_container'></div>
+                                <!--
+                                    <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
+                                    Action1
+                                    <span class="pull-right">
+                                    <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
+                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                    </span>
+                                    </span>
+                                    </a>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
         </div>
     </body>
 </html>

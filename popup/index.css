@@ -52,3 +52,7 @@
 .ui-unit{
     margin-left: 5px;
 }
+
+[hidden] {
+  display: none !important;
+}

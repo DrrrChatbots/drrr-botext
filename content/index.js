@@ -15,7 +15,7 @@ var postMessage = function(args){
 var openFuncList = function(args, callback){
     var s = $(`li[title="${args.user}"] div[class="name-wrap"]`);
     if(!s.length) s = $(`li[title="${args.user} (host)"] div[class="name-wrap"]`);
-    if(s.length) s.click(), setTimeout(callback, 100);
+    if(s.length) s.click()[0], setTimeout(callback, 100);
 }
 
 var offDmMember = function(args){
@@ -49,16 +49,21 @@ var publishMessage = function(args){
     var input = $('textarea[name="message"]');
     var retainText = input.val();
     var retainUser = '';
+    var me = enableMe;
+    enableMe = false;
     if(input.hasClass('state-secret')){
         retainUser = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
         offDmMember();
     }
     $('textarea[name="message"]').val(args.msg);
+    console.log(args.msg);
+    console.log($('input[name="post"]'));
     $('input[name="post"]').click();
     setTimeout(()=>{
         if(retainUser) onDmMember({name: retainUser});
         $('textarea[name="message"]').val(retainText);
-    }, 1000);
+        enableMe = me;
+    }, 100);
 }
 
 var kickMember = function(args){
@@ -81,7 +86,7 @@ var banReportMember = function(args){
 }
 
 var playMusic = function(args){
-    postMessage(`/share ${args.url} ${args.title}`);
+    publishMessage({msg: `/share ${args.url} ${args.title}`});
 }
 
 var switchMe = function(args){
@@ -89,17 +94,18 @@ var switchMe = function(args){
 }
 
 var listenMe = function(){
-    if(!$('textarea[name="message"]').hasClass('state-secret')){
-        $('input[name="post"]').click(()=>{
-            if(enableMe)
+    console.log("new script");
+    $('input[name="post"]').click(()=>{
+        if(!$('textarea[name="message"]').hasClass('state-secret') && 
+            $('#url-icon').attr('data-status') !== 'filled' && enableMe)
                 $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
-        })
-        $('textarea[name="message"]').keydown(function(e){
-            if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13 && enableMe) {
-                $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
-            }
-        });
-    }
+    })
+    $('textarea[name="message"]').keydown(function(e){
+        if(!$('textarea[name="message"]').hasClass('state-secret') &&
+            $('#url-icon').attr('data-status') !== 'filled' &&
+            !e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13 && enableMe)
+            $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
+    });
 }
 
 var getMembers = function(args, callback){
@@ -109,6 +115,10 @@ var getMembers = function(args, callback){
         list.push(user_list[i].textContent);
     }
     callback(list);
+}
+
+var alertUser = function(args){
+    alert(args.msg);
 }
 
 var renew = function(){
@@ -202,8 +212,83 @@ var handle_talks = function(msg){
     });
 }
 
+
+var alarms = []
+
+function clearAlarms(){
+    alarms.map((v) => clearInterval(v));
+    alarms = [];
+}
+
+function rebindAlarms(){
+    if(alarms.length) bindAlarms();
+}
+
+function bindAlarms(){
+    console.log("start alarm on this tab");
+    chrome.storage.sync.get((config) => {
+        clearAlarms(); 
+        rules = settings[TIMER].load(config[sid(TIMER)]);
+        Object.keys(rules).map((idx)=>{
+
+            var [period, message]  = rules[idx];
+            alarms.push(setInterval(
+                ((msg) => () => {
+                    var wmsg = Array.isArray(msg) ?
+                        msg[Math.floor(Math.random() * msg.length)] : msg;
+                    publishMessage({msg: wmsg});
+                })(message), period)
+            );
+            console.log('rule:', period, message);
+        });
+    });
+}
+
+var logout = false;
+function handle_exit(){
+    $('.do-logout').click(function(){
+        logout = true;
+    });
+
+    function confirmExit(){
+
+        if(logout){
+            if(alarms.length) // for alarms only
+                chrome.runtime.sendMessage({
+                        type: event_logout,
+                        user: 'unknown',
+                        text: 'unknown',
+                        url: 'unknown'
+                });
+            else console.log("logout without alarms")
+        }
+        else{
+            if(alarms.length){
+                chrome.runtime.sendMessage({
+                        type: event_exitalarm,
+                        user: 'unknown',
+                        text: 'unknown',
+                        url: 'unknown'
+                });
+                // return "are you sure exit?";
+            }
+            else console.log("exittab without alarms");
+            //type: event_exittab
+        }
+    }
+    window.onbeforeunload = confirmExit;
+    //window.onunload = confirmExit;
+}
+
+window.onload = function() {
+    /* invoke newtab event */
+    //alert("reload");
+    //chrome.runtime.sendMessage({
+    //    type: event_newtab,
+    //});
+}
+
 $(document).ready(function(){
-    listenMe();
 
     chrome.storage.sync.get((res) => {
         if(res[SWITCH_ME] !== undefined)
@@ -215,16 +300,11 @@ $(document).ready(function(){
 
     $('#talks').bind('DOMNodeInserted', function(event) {
         var e = event.target;
-        if(e.parentElement.id == 'talks'){
+        if(e.parentElement.id == 'talks')
             handle_talks(e);
-        }
-        else{
-            //console.log("fake", e)
-        }
     });
 
-
-    /* invoke submit event */
+    /* bind submit event */
     $('input[name="post"]').click(()=>{
         setTimeout(function() {  
             chrome.runtime.sendMessage({
@@ -251,11 +331,13 @@ $(document).ready(function(){
         }
     });
     //$('div[role="progressbar"]').attr('class')
+    listenMe(); 
     /* invoke newtab event */
     chrome.runtime.sendMessage({
         type: event_newtab,
     });
-    console.log("start background moniter");
+    console.log("start background moniter new"); 
+    handle_exit();
 });
 
 var methods = {}
@@ -269,6 +351,10 @@ methods[ban_member] = banMember;
 methods[ban_report_member] = banReportMember;
 methods[play_music] = playMusic;
 methods[get_members] = getMembers;
+methods[alert_user] = alertUser;
+methods[bind_alarms] = bindAlarms;
+methods[rebind_alarms] = rebindAlarms;
+methods[clear_alarms] = clearAlarms;
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(JSON.stringify(req), "comes the method from background");

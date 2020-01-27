@@ -3,125 +3,11 @@
 
 setting_cache = {};
 
-istype = {
-    number: (v) => typeof v === 'number',
-    string: (v) => typeof v === 'string',
-    strary: (v) => Array.isArray(v) && v.every(istype.string),
-    regex: (v) => {
-        try{
-            new RegExp(v);        
-        }
-        catch(e){
-            alert(String(e));
-            return false;
-        }
-        return true;
-    }
-}
-
-function rule_plain(rules){
-    return rules.map((r) =>
-        `"${r[0]}", "${r[1]}"`).join('\n');
-}
-
-function rule_store(text){
-    return JSON.parse(
-        "[" + text.split("\n").map(
-            (r) => "[" + r + "]").join(",")
-        + "]");
-}
-
-sid = (v) => `${v}-setting`
-var settings = {
-    [TIMER]: {
-        desc: `<p>Report some messages once in a while</p>
-<p>TimeSyntax: "60" means 60 second, "1m6s" means 1 min 6 secs, need add 'T' before time</p>
-<p>ReportSyntax: a string to report something, need add 'R' before string</p>
-<p>you can use <a href="http://blog.stevenlevithan.com/archives/date-time-format">time mask</a> in the ReportSyntax, but use 'D' as prefix</p>
-<p></p>
-        `,
-        def_conf:
-`"600", "every 10 mins report once!"
-"300", ["It's a Report Message", "Now is HH:MM!"]
-`,
-        validate: (data) => {
-            try {
-                var d = rule_sotre(data);
-                var b = d.map((v) => v[0]).every(istype.number)
-                    && d.map((v) => v[1]).every(
-                        (v) => istype.string(v) || istype.strary(v));
-            } catch (e) {
-                alert(e);
-                return false;
-            }
-            return b;
-        },
-        plain: rule_plain,
-        load: (d) => d,
-        store: rule_store 
-    },
-    [WELCOME]: {
-        desc: `<p>welcome a user with specific messages</p>`,
-        def_conf:
-`"lambda.*cat", "hello, master"
-".*", "hello @user"`,
-        validate: (data) => {
-            try {
-                var d = rule_store(data);
-                var b = d.map((v) => v[0]).every(istype.string) 
-                    && d.map((v) => v[0]).every(istype.regex) 
-                    && d.map((v) => v[1]).every(
-                        (v) => istype.string(v) || istype.strary(v))
-            } catch (e) {
-                alert(e);
-                return false;
-            }
-            return b;
-        },
-        plain: rule_plain,
-        load: (d) => d,
-        store: rule_store 
-    },
-    [WHITELIST]: {
-        desc: '<p>use regular expression to create whitelist</p>',
-        def_conf:
-`.*cat
-lambda.*
-神秘.*`,
-        validate: (d) => d.split("\n").every(istype.regex),
-        plain: (d) => d,
-        load: (d) => d.split("\n"),
-        store: (d) => d.replace(/^\s*[\r\n]|\n^\s*$/gm, '')
-    },
-    [BLACKLIST]: {
-        desc: '<p>use regular expression to create blacklist</p>',
-        def_conf:
-`otoko.*
-.*机器人.*|.*機器人.*
-小冰|小氷`,
-        validate: (d) => d.split("\n").every(istype.regex),
-        plain: (d) => d,
-        load: (d) => d.split("\n"),
-        store: (d) => d.replace(/^\s*[\r\n]|\n^\s*$/gm, '')
-    },
-    [HISTORY]: {
-        desc: 'chat history',
-        def_conf:
-`No History
-Enable History Recording on Popup Window
-To Record Some Chat History!!`,
-        validate: (d) => true,
-        plain: (d) => d,
-        load: (d) => d,
-        store: (d) => d.replace(/^\s*[\r\n]|\n^\s*$/gm, '')
-    }
-}
-
-function make_pills(ps){
+function make_pills(ps, index){
     console.log(ps);
     return `<ul class="nav nav-pills">
                 ${Object.keys(ps).map(
-                    (idx) => `<li ${(Number(idx) === 0 ? `class="active"` : '')}>
+                    (idx) => `<li ${(`menu${idx}` === index ? `class="active"` : '')}>
                                 <a data-toggle="pill" href="#menu${idx}">
                                     ${ps[idx]}
                                 </a>
@@ -129,14 +15,14 @@ function make_pills(ps){
             </ul>`;
 }
 
-function make_tabs(tabs){
+function make_tabs(tabs, index){
     console.log(tabs);
     var keys = Object.keys(tabs);
     return `<div class="tab-content">
                 ${Object.keys(keys).map(
                     (idx) =>
                     `<div id="menu${idx}" 
-                      class="tab-pane fade ${Number(idx) === 0 ? `in active` : ''}"> 
+                      class="tab-pane fade ${`menu${idx}` === index ? `in active` : ''}"> 
 
                     <h3>${keys[idx]} Setting
 
@@ -191,10 +77,32 @@ function make_tabs(tabs){
             </div>`
 }
 
+var save_callback = {
+    [TIMER]: function(){
+        chrome.storage.sync.get((config) => {
+            if(config[SWITCH_TIMER]){
+                roomTabs((tabs) => {
+                    if(tabs.length &&
+                        confirm('TIMER configuration changed, do you want to restart now?')){
+                        bcastTabs({ fn: rebind_alarms });
+                        chrome.notifications.create({
+                            type: "basic",
+                            iconUrl: '/icon.png',
+                            title: 'RESTART TIMER',
+                            message: 'Configuration changed, Timer restarted on other tab'
+                        });
+                    }
+                });
+            }
+        })
+    }
+}
 
 $(document).ready(()=>{
-    $('#nav_pills').append(make_pills(Object.keys(settings)));
-    $('#tab_conts').append(make_tabs(settings));
+    var index = window.location.toString().split('#')[1]
+    if(!index) index = 'menu0';
+    $('#nav_pills').append(make_pills(Object.keys(settings), index));
+    $('#tab_conts').append(make_tabs(settings, index));
 
     /* enable tab */
     $(document).delegate('.setting-input', 'keydown', function(e) {
@@ -208,10 +116,6 @@ $(document).ready(()=>{
                 $(`#reset-${$(this).attr('data')}`).show();
             }
         }, 100);
-        //if(setting_cache[$(this).attr('id')] === $(this).val())
-        //    $(`#save-${$(this).attr('data')}`).hide();
-        //else
-        //    $(`#save-${$(this).attr('data')}`).show();
 
         var keyCode = e.keyCode || e.which;
 
@@ -272,15 +176,22 @@ $(document).ready(()=>{
             chrome.storage.sync.remove(`${sid($(this).attr('data'))}`);
             setting_cache[`${sid($(this).attr('data'))}`] = val;
         }
-        else if(settings[$(this).attr('data')].validate(val)){
+        else try{
+            settings[$(this).attr('data')].validate(val);
             $(this).hide();
             $(`#reset-${$(this).attr('data')}`).hide();
             chrome.storage.sync.set({
-                [`${sid($(this).attr('data'))}`]: 
+                [`${sid($(this).attr('data'))}`]:
                 settings[$(this).attr('data')].store(val)
             });
             setting_cache[`${sid($(this).attr('data'))}`] = val;
-        } else alert("invalid syntax");
+            console.log($(this).attr('data'), save_callback);
+            if($(this).attr('data') in save_callback)
+                save_callback[$(this).attr('data')]();
+        }
+        catch(e){
+            alert(e);
+        }
 
     });
     /* reset function */
@@ -334,10 +245,12 @@ function ui_object(type, template, def_attrs = {}){
             this.events = events === undefined ? {} : events; 
             this.bindEvents = ($, uis) => {
                 for(name in this.events){
-                    $(`#${attrs.id}`).on(name, null, {
-                        $: $,
-                        uis: uis
-                    }, this.events[name]);
+                    $(()=>
+                        $(`#${attrs.id}`).on(name, null, {
+                            $: $,
+                            uis: uis
+                        }, this.events[name])
+                    )
                 }
                 Object.values(childs).forEach(
                     (child) => child.bindEvents($, uis));
@@ -360,7 +273,7 @@ var switch_change = (callback) =>
         chrome.storage.sync.set({
             [this.id]: state
         });
-        if(callback) callback(state);
+        if(callback) callback(state, event);
     }
 
 var switch_ui = ui_object(SWITCH,
@@ -445,10 +358,10 @@ function Handler(hname, uis, events){
         console.log("making", k);
         /* use IIFE avoid fucking side effect !! */
         var lift = (function(event_name, event_func){
-            return function(req, callback, config){
+            return function(req, callback, config, sender){
                 if(event_func.precond(config, uis)){
                     console.log(`handling ${hname} ${event_name}`);
-                    event_func.onevent(req, callback, config, uis);
+                    event_func.onevent(req, callback, config, uis, sender);
                 } else console.log(`pass ${hname}`);
             }
         })(k, e);
@@ -483,20 +396,33 @@ function assoc(key, res, name){
     }
 }
 
-function roomTabs(f){
-    chrome.tabs.query({
-        url: 'https://drrr.com/room/*'
-    }, (tabs) => f(tabs));
-}
-
-function sendTab(data){
-    roomTabs((tabs) => chrome.tabs.sendMessage(tabs[0].id, data));
-}
-
-function bcastTabs(data){
-    roomTabs((tabs) => 
-        tabs.forEach((tab) =>
-            chrome.tabs.sendMessage(tab.id, data)));
+function noteEmptySetting(state, event, switch_id, func_name, callback){
+    if(state) chrome.storage.sync.get((config) => {
+        if(!config[sid(func_name)]){
+            event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
+            chrome.notifications.create(
+                chrome.extension.getURL('background/index.html')
+                + `#menu${Object.keys(settings).indexOf(func_name)}`,
+                {
+                    type: "basic",
+                    iconUrl: '/icon.png',
+                    title: `EMPTY ${func_name.toUpperCase()} RULE`,
+                    message: `To enable ${func_name.toLowerCase()}, make some rules`
+                });
+            chrome.notifications.onClicked.addListener(function(notificationId) {
+                console.log(notificationId);
+                if(notificationId.match(new RegExp('chrome-extension://')))
+                    chrome.tabs.create({url: notificationId});
+                chrome.notifications.clear(notificationId);
+            });  
+            chrome.storage.sync.set({
+                [switch_id]: false
+            }); 
+            return;
+        }
+        else if(callback) callback();
+    });
+    else if(callback) callback();
 }
 
 var switches = [
@@ -505,13 +431,101 @@ var switches = [
         [
             new pack_ui({}, '', [
                 new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
+                    'switchChange.bootstrapSwitch': switch_change((state, event)=>{
+                        noteEmptySetting(state, event, SWITCH_TIMER, TIMER, () =>
+                            roomTabs((tabs)=>{
+                                if(tabs.length){
+                                    if(state){
+                                        console.log(config[sid(TIMER)]);
+                                        chrome.tabs.sendMessage(tabs[0].id, {
+                                            fn: bind_alarms
+                                        })
+                                        chrome.notifications.create({
+                                            type: "basic",
+                                            iconUrl: '/icon.png',
+                                            title: 'START TIMER',
+                                            message: 'Switch on, Timer will be started'
+                                        });
+                                    }
+                                    else{
+                                        bcastTabs({ fn: clear_alarms });
+                                        chrome.notifications.create({
+                                            type: "basic",
+                                            iconUrl: '/icon.png',
+                                            title: 'STOP TIMER',
+                                            message: 'Switch off, Timer will be disabled'
+                                        });
+                                    }
+                                }
+                            })
+                        )
+                    }) 
                 }, '', [], {id: SWITCH_TIMER}),
-                new label_ui({}, 'timer')
+                new label_ui({}, 'Timer')
             ])
         ], 
         {
-
+            [event_newtab]: {
+                precond: (config, uis) => config[SWITCH_TIMER],
+                onevent: (req, callback, config, uis, sender) => {
+                    //check the chrome.alarm.api 
+                    roomTabs((tabs)=>{
+                        if(tabs.length == 1){
+                            chrome.tabs.sendMessage(tabs[0].id, {
+                                fn: bind_alarms
+                            })
+                            chrome.notifications.create({
+                                type: "basic",
+                                iconUrl: '/icon.png',
+                                title: 'START TIMER',
+                                message: 'Timer will be started on this tab'
+                            });
+                        }
+                    })  
+                }
+            },
+            [event_logout]: {
+                precond: (config, uis) => config[SWITCH_TIMER],
+                onevent: (req, callback, config, uis, sender) => {
+                    chrome.notifications.create({
+                        type: "basic",
+                        iconUrl: '/icon.png',
+                        title: 'STOP TIMER (LOGOUT)',
+                        message: 'Logout, Timer will be disabled'
+                    });
+                }
+            },
+            [event_exitalarm]: {
+                precond: (config, uis) => config[SWITCH_TIMER],
+                onevent: (req, callback, config, uis, sender) => { 
+                    roomTabs((tabs)=>{
+                        if(tabs.length < 2){
+                            chrome.notifications.create({
+                                type: "basic",
+                                iconUrl: '/icon.png',
+                                title: 'WILL STOP TIMER (IF LAST TAB CLOSED)',
+                                message: 'If you close last tab, timer will be disabled'
+                            });
+                        }
+                        else{
+                            chrome.notifications.create({
+                                type: "basic",
+                                iconUrl: '/icon.png',
+                                title: 'TRANSFER TIMER',
+                                message: 'Active tab closed, Timer will be restart on other tab'
+                            });
+                            for(tab of tabs){
+                                if(tab.id !== sender.tab.id){
+                                    chrome.tabs.sendMessage(tab.id, {
+                                        fn: bind_alarms
+                                    })
+                                    break;
+                                }
+                            }
+                        }
+                    })
+                }
+            },
         }
     ),
 
@@ -519,9 +533,11 @@ var switches = [
         [
             new pack_ui({}, '', [
                 new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
+                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                        noteEmptySetting(state, event, SWITCH_WELCOME, WELCOME))
+
                 }, '', [], {id: SWITCH_WELCOME}),
-                new label_ui({}, 'welcome')
+                new label_ui({}, 'Welcome')
             ])
         ], 
         {
@@ -550,9 +566,10 @@ var switches = [
         [
             new pack_ui({}, '', [
                 new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
+                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                        noteEmptySetting(state, event, SWITCH_WHITELIST, WHITELIST))
                 }, '', [], {id: SWITCH_WHITELIST}),
-                new label_ui({}, 'whitelist')
+                new label_ui({}, 'Whitelist')
             ])
         ],
         {
@@ -570,15 +587,14 @@ var switches = [
         }
     ),
 
-
-
     new Handler("blacklist", 
         [
             new pack_ui({}, '', [
                 new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
+                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                        noteEmptySetting(state, event, SWITCH_BLACKLIST, BLACKLIST))
                 }, '', [], {id: SWITCH_BLACKLIST}),
-                new label_ui({}, 'blacklist')
+                new label_ui({}, 'Blacklist')
             ])
         ],
         {
@@ -594,6 +610,61 @@ var switches = [
                     }
                 }
             }
+        }
+    ),
+
+    new Handler("BanAbuse",
+        [
+            new pack_ui({}, '', [
+                new switch_ui({
+                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                        noteEmptySetting(state, event, SWITCH_BANABUSE, BANABUSE))
+                }, '', [], {id: SWITCH_BANABUSE}),
+                new label_ui({}, 'BanAbuse')
+            ])
+        ],
+        {
+            [event_msg]: {
+                precond: (config, uis) => config[SWITCH_BANABUSE],
+                onevent: (req, callback, config, uis) => {
+                    if(assoc(req.text, config, BANABUSE)){
+                        console.log("abuse kick");
+                        sendTab({
+                            fn: kick_member,
+                            args: { user: req.user }
+                        })
+                    }
+                }
+            },
+
+            [event_dm]: {
+                precond: (config, uis) => config[SWITCH_BANABUSE],
+                onevent: (req, callback, config, uis) => {
+                    if(assoc(req.text, config, BANABUSE)){
+                        console.log("abuse kick");
+                        sendTab({
+                            fn: kick_member,
+                            args: { user: req.user }
+                        })
+                    }
+                }
+            }
+        }
+    ),
+
+    new Handler("message events",
+        [
+            new pack_ui({}, '', [
+                new switch_ui({
+                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                        noteEmptySetting(state, event, SWITCH_MSGEVENTS, MSGEVENTS))
+
+                }, '', [], {id: SWITCH_MSGEVENTS}),
+                new label_ui({}, '<s>MsgEvents</s> (WIP)')
+            ])
+        ],
+        {
+
         }
     ),
 
@@ -618,15 +689,6 @@ var switches = [
                     ) 
                 }, '', [], {id: SWITCH_DM}),
                 new label_ui({}, 'AutoDM', [], {id: DM_USERNAME}),
-                //new select_ui({
-                //    'change': function(){
-                //        chrome.storage.sync.set({
-                //            [DM_USERNAME]: 
-                //            this.options[this.selectedIndex].text
-                //        });
-                //        sendTab({ fn: off_dm_member });
-                //    }
-                //}, 'username', [], {id: DM_USERNAME})
             ])
         ],
         {
@@ -677,37 +739,7 @@ var switches = [
                             });
                         }),
                 }, '', [], {id: SWITCH_ME}),
-                new label_ui({}, 'always me')
-            ])
-        ],
-        {
-
-        }
-    ),
-
-
-    new Handler("record chat",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
-                }, '', [], {id: SWITCH_HISTORY}), 
-                new label_ui({}, 'record chat')
-            ])
-        ],
-        {
-
-        }
-    ),
-
-
-    new Handler("accept music request",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change() 
-                }),
-                new label_ui({}, 'accept 🎶 request')
+                new label_ui({}, 'Always/me')
             ])
         ],
         {
@@ -733,36 +765,8 @@ function init_switches($, defaults){
         Object.assign(state, JSON.parse(JSON.stringify(
             !Object.keys(res).length ? defaults : res)));
         $(`.${class_map[SWITCH]}`).each(function(){
-            $(this).bootstrapSwitch('state', state[this.id]);
+            $(this).bootstrapSwitch('state', state[this.id], true);
         })
-        $(`.${class_map[SELECT]}`).each(function(){
-            var dm_user = state[this.id];
-            $(`#${this.id} option[value="${dm_user}"]`).html();
-        });
-
-        roomTabs((tabs) => {
-            if(tabs.length){
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    fn: get_members,
-                }, (members) => {
-                    if(members){
-                        members.forEach((m) =>
-                            $(`.${class_map[SELECT]}`).append(
-                                `<option value="${m}">
-                                     ${m}
-                                 </option>`)
-                        );
-                    }
-                })
-            }
-        });
-
-        function sendTab(data){
-            roomTabs((tabs) => chrome.tabs.sendMessage(tabs[0].id, data));
-        }
-
-
-
     });
 }
 
@@ -770,9 +774,6 @@ function template_setting($){
     var template = {}
     $(`.${class_map[SWITCH]}`).each(function(){
         template[this.id] = $(this).prop('checked');
-    });
-    $(`.${class_map[SELECT]}`).each(function(){
-        template[this.id] = $(`#${this.id} :selected`).val();
     });
     return template;
 }
@@ -799,15 +800,21 @@ var popupURL = chrome.extension.getURL('popup/index.html');
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     if(sender.url === popupURL){
+        console.log(req);
         if(callback) callback();
     }
-    else if(sender.url === 'https://drrr.com/room/'){
+    else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){ 
         console.log(req);
+        console.log(JSON.stringify(sender))
         chrome.storage.sync.get((config) => {
             var reg_funcs = reg_table[req.type] || [];
             for(handle of reg_funcs)
-                handle(req, callback, config)
+                handle(req, callback, config, sender)
             if(callback) callback("done.");
         });   
     }
 })
+
+function ajax(request){
+    $.ajax(request);
+}

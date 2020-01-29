@@ -104,7 +104,7 @@ var empty_template =
 function show_playlist(){
     chrome.storage.sync.get((config) => {
         var list = config[PLAYLIST];
-        if(list.length){
+        if(list && list.length){
             $('#list_container').html(
                 Object.keys(list).map((idx) => 
                     playlist_template({

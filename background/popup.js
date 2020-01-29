@@ -238,7 +238,7 @@ var switches = [
                     }) 
                 }, '', [], {id: SWITCH_TIMER}),
                 new label_ui({}, 'Timer')
-            ])
+            ], {title: 'send some custom messages periodically (⚙ setting)'})
         ], 
         {
             [event_newtab]: {
@@ -314,7 +314,7 @@ var switches = [
 
                 }, '', [], {id: SWITCH_WELCOME}),
                 new label_ui({}, 'Welcome')
-            ])
+            ], {title: 'send some custom messages to welcome someone (⚙ setting)'})
         ], 
         {
             [event_join]: {
@@ -346,7 +346,7 @@ var switches = [
                         noteEmptySetting(state, event, SWITCH_WHITELIST, WHITELIST))
                 }, '', [], {id: SWITCH_WHITELIST}),
                 new label_ui({}, 'Whitelist')
-            ])
+            ], {title: 'kick all the guests not in the list (⚙ setting)'})
         ],
         {
             [event_join]: {
@@ -371,7 +371,7 @@ var switches = [
                         noteEmptySetting(state, event, SWITCH_BLACKLIST, BLACKLIST))
                 }, '', [], {id: SWITCH_BLACKLIST}),
                 new label_ui({}, 'Blacklist')
-            ])
+            ], {title: 'kick all the guests in the list (⚙ setting)'})
         ],
         {
             [event_join]: {
@@ -397,7 +397,7 @@ var switches = [
                         noteEmptySetting(state, event, SWITCH_BANABUSE, BANABUSE))
                 }, '', [], {id: SWITCH_BANABUSE}),
                 new label_ui({}, 'BanAbuse')
-            ])
+            ], {title: 'kick member who send some abuse terms in the list (⚙ setting)'})
         ],
         {
             [event_msg]: {
@@ -437,7 +437,7 @@ var switches = [
 
                 }, '', [], {id: SWITCH_EVENTACT}),
                 new label_ui({}, '<s>EventAction</s> (WIP)')
-            ])
+            ], {title: 'custom your actions on specific events (⚙ setting)'})
         ],
         {
 
@@ -465,7 +465,7 @@ var switches = [
                     ) 
                 }, '', [], {id: SWITCH_DM}),
                 new label_ui({}, 'AutoDM', [], {id: DM_USERNAME}),
-            ])
+            ], {title: 'change to direct message automatically after sending message'})
         ],
         {
             [event_dmto]: {
@@ -516,7 +516,7 @@ var switches = [
                         }),
                 }, '', [], {id: SWITCH_ME}),
                 new label_ui({}, 'Always/me')
-            ])
+            ], {title: 'add /me automatically after sending message'})
         ],
         {
 

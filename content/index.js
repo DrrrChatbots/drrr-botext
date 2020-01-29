@@ -236,7 +236,7 @@ function bindAlarms(){
                     var wmsg = Array.isArray(msg) ?
                         msg[Math.floor(Math.random() * msg.length)] : msg;
                     publishMessage({msg: wmsg});
-                })(message), period)
+                })(message), period * 1000)
             );
             console.log('rule:', period, message);
         });

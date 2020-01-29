@@ -2,7 +2,17 @@
 /* require global.js utility.js */
 
 function ajax(request){
+    console.log(request);
     $.ajax(request);
+}
+
+function get_music(callback, keyword, source = '易'){
+    if(keyword) {
+        music_api(keyword, callback, {
+            log: console.log, 
+            ajax: ajax
+        }, source);
+    } else console.log("please input keyword"); 
 }
 
 new Handler("music", [],

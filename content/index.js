@@ -97,13 +97,15 @@ var listenMe = function(){
     console.log("new script");
     $('input[name="post"]').click(()=>{
         if(!$('textarea[name="message"]').hasClass('state-secret') && 
-            $('#url-icon').attr('data-status') !== 'filled' && enableMe)
+            $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
+            !$('textarea[name="message"]').val().startsWith('/me'))
                 $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
     })
     $('textarea[name="message"]').keydown(function(e){
         if(!$('textarea[name="message"]').hasClass('state-secret') &&
             $('#url-icon').attr('data-status') !== 'filled' &&
-            !e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13 && enableMe)
+            !e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13 && enableMe &&
+            !$('textarea[name="message"]').val().startsWith('/me'))
             $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
     });
 }
@@ -155,11 +157,8 @@ var handle_talks = function(msg){
             else if(msg.classList.contains("music")){
                 type = event_music;
                 names = $(msg).find('.name');
-                /* if it works? */
-                [user,text] = names.map((e)=>e.textContent);
-                //user = names[0].textContent;
-                //text = names[1].textContent;
-                console.log(user);
+                user = names[0].textContent;
+                text = names[1].textContent;
             }
             else{
 
@@ -280,14 +279,7 @@ function handle_exit(){
     //window.onunload = confirmExit;
 }
 
-window.onload = function() {
-    /* invoke newtab event */
-    //alert("reload");
-    //chrome.runtime.sendMessage({
-    //    type: event_newtab,
-    //});
-}
-
+var prev_mstatus = false;
 $(document).ready(function(){
 
     chrome.storage.sync.get((res) => {
@@ -330,11 +322,29 @@ $(document).ready(function(){
             }, 1000);
         }
     });
+    /* music progressbar event */
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        var status = mutation.target.classList.contains('active');
+        if(status != prev_mstatus){
+            if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
+            else chrome.runtime.sendMessage({ type: event_musicend });
+            console.log(`contains active? ${status}`);
+        }
+        prev_mstatus = status;
+      });
+    });
+
+    observer.observe($('div[role="progressbar"]')[0], {
+      attributes: true //configure it to listen to attribute changes
+    });
+
+
     //$('div[role="progressbar"]').attr('class')
     listenMe(); 
     /* invoke newtab event */
     chrome.runtime.sendMessage({
-        type: event_newtab,
+        type: event_newtab
     });
     console.log("start background moniter new"); 
     handle_exit();

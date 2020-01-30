@@ -15,9 +15,9 @@ function get_music(callback){
         music_api(keyword, callback, {
             log: alert.bind(window), 
             ajax: (req) =>
-                chrome.runtime.sendMessage(
-                    { type: 'ajax' },
-                    () => bkg().ajax(req))
+            chrome.runtime.sendMessage(
+                { type: 'ajax' },
+                () => bkg().ajax(req))
         }, source);
         /* retain ? */
         $('#keyword').val('');
@@ -47,7 +47,7 @@ var search_template = (args) =>
      </div>  
  </div>`;
 
-function display_search(){
+function display_search(callback){
     get_music((keyword, source, data) => {
         $('#list_container').html(
             Object.keys(api[source].songs(data)).map((idx)=>
@@ -57,7 +57,7 @@ function display_search(){
                     singer: api[source].singer(data, idx)
                 })
             ).join('')
-        );
+        ).promise().then(callback);;
         $('.imm-play').click(function(){
             playMusic(
                 $(this).parent().prev().text(),
@@ -101,7 +101,7 @@ var empty_template =
      <span class="input-group-addon form-control panel-footer text-center">EMPTY LIST</span>
  </div>`;
 
-function show_playlist(){
+function show_playlist(callback){
     chrome.storage.sync.get((config) => {
         var list = config[PLAYLIST];
         if(list && list.length){
@@ -114,7 +114,7 @@ function show_playlist(){
                         singer: list[idx].singer
                     })
                 ).join('')
-            );
+            ).promise().then(callback);
             $('.imm-play').click(function(){
                 playMusic(
                     $(this).parent().prev().text(),
@@ -124,12 +124,11 @@ function show_playlist(){
                 $(this).next().click();
             })
             $('.del-song').click(function(){
-                del_song($(this).attr('data'), true);
-                show_playlist();
+                del_song($(this).attr('data'), false, show_playlist);
             })
         }
         else{
-            $('#list_container').html(empty_template);
+            $('#list_container').html(empty_template).promise().then(callback);
         }
     });
 }
@@ -193,17 +192,22 @@ $(document).ready(
 
         /* when open the music_list */
         /* .collapse('hide') .collapse('show') */
-        $('#music_list').on('show.bs.collapse', function () {
-            if($('#list_type').hasClass('glyphicon-list')){
+        //$('#music_list').on('show.bs.collapse', function () {
+        $('#music_list_opener').on('click', function () {
+            var $target = $($(this).attr("data-target"));
+            if ($target.hasClass('in')){
+                $target.collapse('hide');
+            }
+            else if($('#list_type').hasClass('glyphicon-list')){
                 //show playlist
-                show_playlist();
+                show_playlist(()=>$target.collapse('show'))
             }
             else{
                 //search and show the result
-                display_search();
+                display_search(()=>$target.collapse(('show')));
             }
         });
-
+    
         /* when search buttons clicked */
         $('#play_search').click(()=>play_search(get_music, alert.bind(window)));
 

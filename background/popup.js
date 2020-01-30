@@ -176,7 +176,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
         if(!config[sid(func_name)]){
             event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
             chrome.notifications.create(
-                chrome.extension.getURL('background/index.html')
+                chrome.extension.getURL('setting/index.html')
                 + `#menu${Object.keys(settings).indexOf(func_name)}`,
                 {
                     type: "basic",
@@ -201,6 +201,41 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
 }
 
 
+
+
+actions = {
+    [action_msg ] : (msg) => sendTab({
+        fn: publish_message,
+        msg: msg
+    }),
+    [action_dm  ] : (user, msg) => sendTab({
+        fn: dm_member,
+        user: user,
+        msg: msg
+    }),
+    [action_kick] : (user) => sendTab({
+        fn: kick_member,
+        user: user
+    }),
+    [action_plym] : (song) => play_search(get_music.bind(null, song)),
+    [action_addm] : (song) => add_search(get_music.bind(null, song)),
+    [action_delm] : (idx)  => del_song(idx),
+    [action_lstm] : ()     => lstMusic(),
+    [action_nxtm] : ()     => function(){ play_next(this); },
+}
+
+function event_action(event, config, req){
+    var rules = settings[EVENTACT].load(config[EVENTACT]);
+    rules.map(([type, user_regex, cont_regex, action, arglist])=> {
+        if(((Array.isArray(type) && type.includes(event)) || type == evnet)
+            && req.user.match(new RegExp(user_regex))
+            && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
+            actions[action].apply(config, argfmt(arglist, req.user, req.text, req.url));
+        }
+    });
+}
+
+
 var switches = [
 
     new Handler("timer", 
@@ -212,7 +247,6 @@ var switches = [
                             roomTabs((tabs)=>{
                                 if(tabs.length){
                                     if(state){
-                                        console.log(config[sid(TIMER)]);
                                         chrome.tabs.sendMessage(tabs[0].id, {
                                             fn: bind_alarms
                                         })
@@ -428,7 +462,7 @@ var switches = [
         }
     ),
 
-    new Handler("message events",
+    new Handler("event action",
         [
             new pack_ui({}, '', [
                 new switch_ui({
@@ -440,10 +474,48 @@ var switches = [
             ], {title: 'custom your actions on specific events (⚙ setting)'})
         ],
         {
-
+            [event_join]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_join, config, req)
+            },
+            [event_leave]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req) 
+            },
+            [event_newhost]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req) 
+            },
+            [event_me]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req) 
+            },
+            [event_msg]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req) 
+            },
+            [event_dm]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_dm, config, req)
+            },
+            [event_dmto]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_dmto, config, req)
+            },
+            [event_submit]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_submit, config, req)
+            },
+            [event_music]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_music, config, req)
+            },
+            [event_musicend]: {
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                onevent: (req, callback, config, uis, sender) => event_action(event_musicend, config, req)
+            }
         }
     ),
-
 
     new Handler("AutoDM",
         [

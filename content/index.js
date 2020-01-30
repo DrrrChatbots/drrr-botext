@@ -60,7 +60,7 @@ var publishMessage = function(args){
     console.log($('input[name="post"]'));
     $('input[name="post"]').click();
     setTimeout(()=>{
-        if(retainUser) onDmMember({name: retainUser});
+        if(retainUser) onDmMember({user: retainUser});
         $('textarea[name="message"]').val(retainText);
         enableMe = me;
     }, 100);
@@ -224,7 +224,7 @@ function rebindAlarms(){
 }
 
 function bindAlarms(){
-    console.log("start alarm on this tab");
+    console.log(timefmt("%H:%m:%s - start alarm on this tab"));
     chrome.storage.sync.get((config) => {
         clearAlarms(); 
         rules = settings[TIMER].load(config[sid(TIMER)]);
@@ -235,7 +235,7 @@ function bindAlarms(){
                 ((msg) => () => {
                     var wmsg = Array.isArray(msg) ?
                         msg[Math.floor(Math.random() * msg.length)] : msg;
-                    publishMessage({msg: wmsg});
+                    publishMessage({msg: timefmt(wmsg)});
                 })(message), period * 1000)
             );
             console.log('rule:', period, message);
@@ -335,9 +335,10 @@ $(document).ready(function(){
       });
     });
 
-    observer.observe($('div[role="progressbar"]')[0], {
-      attributes: true //configure it to listen to attribute changes
-    });
+    if($('div[role="progressbar"]')
+        observer.observe($('div[role="progressbar"]')[0], {
+          attributes: true //configure it to listen to attribute changes
+        });
 
 
     //$('div[role="progressbar"]').attr('class')
@@ -355,6 +356,7 @@ methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
 methods[switch_me] = switchMe;
 methods[on_dm_member] = onDmMember;
+methods[dm_member] = dmMember;
 methods[off_dm_member] = offDmMember;
 methods[kick_member] = kickMember;
 methods[ban_member] = banMember;

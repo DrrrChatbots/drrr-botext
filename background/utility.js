@@ -1,4 +1,6 @@
 
+/* for background scripts only */
+
 reg_table = {}
 
 function Handler(hname, uis, events){
@@ -21,3 +23,9 @@ function Handler(hname, uis, events){
     this.bindEvents = ($) =>{ for(ui of uis) ui.bindEvents($, uis); }
     this.ui = () => uis.map((ui)=>ui.html()).join('');
 }
+
+function ajax(request){
+    console.log(request);
+    $.ajax(request);
+}
+

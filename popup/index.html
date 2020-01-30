@@ -90,7 +90,12 @@
                         </button>
                     </div>
 
-                    <select id="music_source" name="source" class="form-control" style="padding-left: 0px; padding-right: 0px " title="music source">
+                    <select id="music_source" name="source" class="form-control"
+                            style="text-align:center;
+                                   padding-left: 4px;
+                                   padding-right: 0px;
+                                   padding-top: 4px;"
+                            title="music source">
                     </select>
 
                     <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
@@ -115,7 +120,7 @@
                     <!-- https://cloud.tencent.com/developer/article/1543945 -->
                     <div class="input-group-btn">
                         <button id="music_list_opener" class="btn btn-default" type="button"
-                                                                               data-toggle="collapse" data-target="#music_list"
+                                                                               data-delayed-toggle="collapse" data-target="#music_list"
                                                                                                       title="show playlist">
                             <i id="list_type" class="glyphicon glyphicon-list"></i>
                             <!-- glyphicon glyphicon-search -->

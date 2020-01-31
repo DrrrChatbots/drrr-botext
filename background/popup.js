@@ -206,28 +206,28 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
 actions = {
     [action_msg ] : (msg) => sendTab({
         fn: publish_message,
-        msg: msg
+        args: { msg: msg }
     }),
     [action_dm  ] : (user, msg) => sendTab({
         fn: dm_member,
-        user: user,
-        msg: msg
+        args: { user: user, msg: msg }
     }),
     [action_kick] : (user) => sendTab({
         fn: kick_member,
-        user: user
+        args: { user: user }
     }),
     [action_plym] : (song) => play_search(get_music.bind(null, song)),
-    [action_addm] : (song) => add_search(get_music.bind(null, song)),
-    [action_delm] : (idx)  => del_song(idx),
-    [action_lstm] : ()     => lstMusic(),
-    [action_nxtm] : ()     => function(){ play_next(this); },
+    [action_addm] : (song) => add_search(get_music.bind(null, song), false, true),
+    [action_delm] : (idx)  => setTimeout(()=>del_song(idx, undefined, false, true), 1000),
+    [action_lstm] : function(){ console.log("here"), setTimeout(()=>lstMusic(this), 1000) },
+    [action_nxtm] : function(){ console.log("----> "), setTimeout(()=>play_next(this), 1000); },
+    /* too quick leading play song failed in content script, so setTimout */
 }
 
 function event_action(event, config, req){
-    var rules = settings[EVENTACT].load(config[EVENTACT]);
+    var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
     rules.map(([type, user_regex, cont_regex, action, arglist])=> {
-        if(((Array.isArray(type) && type.includes(event)) || type == evnet)
+        if(((Array.isArray(type) && type.includes(event)) || type == event)
             && req.user.match(new RegExp(user_regex))
             && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
             actions[action].apply(config, argfmt(arglist, req.user, req.text, req.url));
@@ -475,43 +475,43 @@ var switches = [
         ],
         {
             [event_join]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_join, config, req)
             },
             [event_leave]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req) 
             },
             [event_newhost]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req) 
             },
             [event_me]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req) 
             },
             [event_msg]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req) 
             },
             [event_dm]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_dm, config, req)
             },
             [event_dmto]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_dmto, config, req)
             },
             [event_submit]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_submit, config, req)
             },
             [event_music]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_music, config, req)
             },
             [event_musicend]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[EVENTACT],
+                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
                 onevent: (req, callback, config, uis, sender) => event_action(event_musicend, config, req)
             }
         }

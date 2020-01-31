@@ -99,7 +99,7 @@ var listenMe = function(){
         if(!$('textarea[name="message"]').hasClass('state-secret') && 
             $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
             !$('textarea[name="message"]').val().startsWith('/me'))
-                $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
+            $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
     })
     $('textarea[name="message"]').keydown(function(e){
         if(!$('textarea[name="message"]').hasClass('state-secret') &&
@@ -254,20 +254,20 @@ function handle_exit(){
         if(logout){
             if(alarms.length) // for alarms only
                 chrome.runtime.sendMessage({
-                        type: event_logout,
-                        user: 'unknown',
-                        text: 'unknown',
-                        url: 'unknown'
+                    type: event_logout,
+                    user: 'unknown',
+                    text: 'unknown',
+                    url: 'unknown'
                 });
             else console.log("logout without alarms")
         }
         else{
             if(alarms.length){
                 chrome.runtime.sendMessage({
-                        type: event_exitalarm,
-                        user: 'unknown',
-                        text: 'unknown',
-                        url: 'unknown'
+                    type: event_exitalarm,
+                    user: 'unknown',
+                    text: 'unknown',
+                    url: 'unknown'
                 });
                 // return "are you sure exit?";
             }
@@ -322,23 +322,25 @@ $(document).ready(function(){
             }, 1000);
         }
     });
-    /* music progressbar event */
-    var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        var status = mutation.target.classList.contains('active');
-        if(status != prev_mstatus){
-            if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
-            else chrome.runtime.sendMessage({ type: event_musicend });
-            console.log(`contains active? ${status}`);
-        }
-        prev_mstatus = status;
-      });
-    });
 
-    if($('div[role="progressbar"]')
-        observer.observe($('div[role="progressbar"]')[0], {
-          attributes: true //configure it to listen to attribute changes
+
+    if($('div[role="progressbar"]')){
+        /* music progressbar event */
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                var status = mutation.target.classList.contains('active');
+                if(status != prev_mstatus){
+                    if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
+                    else chrome.runtime.sendMessage({ type: event_musicend });
+                    console.log(`contains active? ${status}`);
+                }
+                prev_mstatus = status;
+            });
         });
+        observer.observe($('div[role="progressbar"]')[0], {
+            attributes: true //configure it to listen to attribute changes
+        });
+    }
 
 
     //$('div[role="progressbar"]').attr('class')

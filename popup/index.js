@@ -124,7 +124,7 @@ function show_playlist(callback){
                 $(this).next().click();
             })
             $('.del-song').click(function(){
-                del_song($(this).attr('data'), false, show_playlist);
+                del_song($(this).attr('data'), show_playlist, false);
             })
         }
         else{

@@ -10,15 +10,18 @@ function get_music(keyword, callback){
     } else console.log("please input keyword"); 
 }
 
-function lstMusic(){
-    var list = this[PLAYLIST];
+function lstMusic(config){
+    var list = config[PLAYLIST];
     if(list && list.length){
         msg = Object.keys(list).map(
             (idx) => `[${idx}] ${ommited_name(list[idx].name, list[idx].singer)}`
         ).join('\n');
     } else msg = 'EMPTY LIST'
+    console.log(msg);
     sendTab({
         fn: publish_message,
-        msg: msg
+        args:{
+            msg: msg
+        }
     });
 }

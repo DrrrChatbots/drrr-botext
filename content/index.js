@@ -98,7 +98,7 @@ var listenMe = function(){
     $('input[name="post"]').click(()=>{
         if(!$('textarea[name="message"]').hasClass('state-secret') && 
             $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
-            !$('textarea[name="message"]').val().startsWith('/me'))
+            !$('textarea[name="message"]').val().match(/^\/\w/))
             $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
     })
     $('textarea[name="message"]').keydown(function(e){
@@ -211,7 +211,6 @@ var handle_talks = function(msg){
     });
 }
 
-
 var alarms = []
 
 function clearAlarms(){
@@ -279,6 +278,34 @@ function handle_exit(){
     //window.onunload = confirmExit;
 }
 
+function end() {
+  endTime = ;
+  var timeDiff = ;
+  // strip the ms
+  timeDiff /= 1000;
+
+  // get seconds 
+  var seconds = Math.round(timeDiff);
+  console.log(seconds + " seconds");
+}
+
+var play_end = undefined;
+
+function after_play(){
+    return play_end === undefined ? Math.round((new Date() - play_end) / 1000) : play_end;
+}
+
+function isPlaying(args, callback){
+    if(callback){
+        var target = $('div[role="progressbar"]');
+        if(!target.length)
+            callback(false, after_play());
+        else
+            callback(target[0].classList.contains('active'));
+    }
+}
+
+
 var prev_mstatus = false;
 $(document).ready(function(){
 
@@ -323,15 +350,17 @@ $(document).ready(function(){
         }
     });
 
-
-    if($('div[role="progressbar"]')){
+    if($('div[role="progressbar"]').length){
         /* music progressbar event */
-        var observer = new MutationObserver(function(mutations) {
+        var observer = new MutationObserver(function(mutations){
             mutations.forEach(function(mutation) {
                 var status = mutation.target.classList.contains('active');
                 if(status != prev_mstatus){
                     if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
-                    else chrome.runtime.sendMessage({ type: event_musicend });
+                    else{
+                        play_end = new Date();
+                        chrome.runtime.sendMessage({ type: event_musicend });
+                    }
                     console.log(`contains active? ${status}`);
                 }
                 prev_mstatus = status;
@@ -369,6 +398,7 @@ methods[alert_user] = alertUser;
 methods[bind_alarms] = bindAlarms;
 methods[rebind_alarms] = rebindAlarms;
 methods[clear_alarms] = clearAlarms;
+methods[is_playing] = isPlaying;
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(JSON.stringify(req), "comes the method from background");

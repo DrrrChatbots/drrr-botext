@@ -200,9 +200,6 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
     else if(callback) callback();
 }
 
-
-
-
 actions = {
     [action_msg ] : (msg) => sendTab({
         fn: publish_message,
@@ -219,8 +216,9 @@ actions = {
     [action_plym] : (song) => play_search(get_music.bind(null, song)),
     [action_addm] : (song) => add_search(get_music.bind(null, song), false, true),
     [action_delm] : (idx)  => setTimeout(()=>del_song(idx, undefined, false, true), 1000),
-    [action_lstm] : function(){ console.log("here"), setTimeout(()=>lstMusic(this), 1000) },
-    [action_nxtm] : function(){ console.log("----> "), setTimeout(()=>play_next(this), 1000); },
+    [action_lstm] : function(){ setTimeout(()=>lstMusic(this), 1000); },
+    [action_nxtm] : function(){ setTimeout(()=>play_next(this), 1000); },
+    [action_pndm] : function(song){ setTimeout(()=>pndMusic(this, song), 1000); },
     /* too quick leading play song failed in content script, so setTimout */
 }
 
@@ -361,7 +359,10 @@ var switches = [
                                     wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
                                 sendTab({
                                     fn: publish_message,
-                                    args: { msg: wmsg.replace(/@user/g, req.user) }
+                                    args: {
+                                        msg: wmsg.replace(/(^|[^\$])\$user/g, `$1${req.user}`)
+                                                 .replace(/(^|[^\$])\$/g, `$1$`)
+                                    }
                                 });
                             }
                         })(assoc(req.user, config, WELCOME));
@@ -470,7 +471,7 @@ var switches = [
                         noteEmptySetting(state, event, SWITCH_EVENTACT, EVENTACT))
 
                 }, '', [], {id: SWITCH_EVENTACT}),
-                new label_ui({}, '<s>EventAction</s> (WIP)')
+                new label_ui({}, 'EventAction')
             ], {title: 'custom your actions on specific events (⚙ setting)'})
         ],
         {

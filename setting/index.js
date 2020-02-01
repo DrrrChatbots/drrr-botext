@@ -1,5 +1,33 @@
-
 /* setting.html */
+
+var infos = `
+<li><a href="https://hackmd.io/@nobodyzxc/rkfiv3bfI" target="_blank"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a data-toggle="modal" data-target="#info-modal"><i class="glyphicon glyphicon-info-sign"></i></a></li>`
+
+var infopop = `
+<div id="info-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">關於開發者</h4>
+          </div>
+          <div class="modal-body">
+            $ whoami <br><br>
+            lambda.catノ#L/CaT//Hsk <br><br><br>
+            $ finger lambda.catノ <br><br> 
+            drrr.com 上的一般用戶，約於 2017 秋開始出沒於 drrr.com。<br>
+            Email 為 lambdacat.tw@gmail.com <br>
+          </div>
+          <div class="modal-footer">
+            <button type="button"
+                class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+</div>
+`
+
 
 function make_pills(ps, index){
     console.log(ps);
@@ -10,7 +38,8 @@ function make_pills(ps, index){
                                     ${ps[idx]}
                                 </a>
                               </li>`).join('')} 
-            </ul>`;
+                ${infos}
+            </ul>${infopop}`;
 }
 
 function make_tabs(tabs, index){
@@ -54,9 +83,9 @@ function make_tabs(tabs, index){
                                 <h4 class="modal-title">${keys[idx]} Configuration</h4>
                               </div>
                               <div class="modal-body">
-                                ${settings[keys[idx]].desc}
-                                <p>example: </p>
-                                <textarea disabled rows="${settings[keys[idx]].def_conf.split('\n').length}" style="width:100%; height:100%">${settings[keys[idx]].def_conf}</textarea>
+                                ${manual[keys[idx]].desc}
+                                <!-- <textarea disabled rows="${manual[keys[idx]].def_conf.split('\n').length}" style="width:100%; height:100%">${manual[keys[idx]].def_conf}</textarea>-->
+                                <pre><code>${manual[keys[idx]].def_conf}</pre></code>
                               </div>
                               <div class="modal-footer">
                                 <button type="button"
@@ -155,7 +184,7 @@ $(document).ready(()=>{
         for(e of Object.keys(settings)){
             $(`#${sid(e)}`).attr(
                 'placeholder',
-                settings[e].def_conf);
+                manual[e].def_conf);
             if(res[`${sid(e)}`]){
                 var val = settings[e].plain(res[`${sid(e)}`]);
                 setting_cache[`${sid(e)}`] = val;
@@ -199,5 +228,66 @@ $(document).ready(()=>{
         $(this).hide();
         $(`#save-${$(this).attr('data')}`).hide();
         $(`#${sid($(this).attr('data'))}`).val(setting_cache[`${sid($(this).attr('data'))}`]);
+    });
+
+    /* quick regex test */
+    function setIcon(s, icon){
+        return $(s).removeClass('glyphicon-ok')
+            .removeClass('glyphicon-warning-sign')
+            .removeClass('glyphicon-remove')
+            .addClass(icon);
+    }
+
+    function setStatus(s, status, title = ''){
+        return $(s).removeClass('has-success')
+            .removeClass('has-warning')
+            .removeClass('has-error')
+            .addClass(status)
+            .attr('title', title);
+    }
+
+    $('.test-input').on('input focus',function(e){
+        console.log('focus');
+        var valid = true,
+            regex = $('#test-regex').val(),
+            string = $('#test-string').val();
+        try{
+            console.log('string:', regex);
+            regex = new RegExp(regex);
+        }
+        catch(e){
+            valid = false;
+            setStatus('#test-string-status', 'has-warning', 'Please correct your RegExp');
+            setIcon('#test-string-icon', 'glyphicon-warning-sign');
+            setStatus('#test-regex-status', 'has-warning', e);
+            setIcon('#test-regex-icon', 'glyphicon-warning-sign');
+        }
+        if(valid){
+            setStatus('#test-regex-status', 'has-sucess');
+            setIcon('#test-regex-icon', 'glyphicon-ok');
+            if($('#test-string').val().match(regex)){
+                setStatus('#test-string-status', 'has-sucess');
+                setIcon('#test-string-icon', 'glyphicon-ok');
+            }
+            else{
+                setStatus('#test-string-status', 'has-error', 'String not match the RegExp');
+                setIcon('#test-string-icon', 'glyphicon-remove');
+            }
+        }
+    });
+
+    chrome.storage.sync.get((config)=>{
+        $('#music_delay').val(config[MUSIC_DELAY] ? config[MUSIC_DELAY] : 34);
+    });
+
+    $('#music_delay').on('input focus',function(e){
+        if(!isNaN(Number($(this).val()))){
+            chrome.storage.sync.set({
+                [MUSIC_DELAY]: $(this).val()
+            })
+        } else { 
+            alert('Please input number');
+            $(this).val('');
+        }
     });
 });

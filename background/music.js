@@ -25,3 +25,23 @@ function lstMusic(config){
         }
     });
 }
+
+function pndMusic(config, song){
+    if(song.length){
+        sendTab({
+            fn: is_playing,
+        }, undefined, (active, after) => {
+            if(active)
+                add_search(get_music.bind(null, song), false, true);
+            else{
+                if(config[PLAYLIST] && config[PLAYLIST].length)
+                    add_search(get_music.bind(null, song), false, true);
+                else if(after === undefined || after > getDelay() + 5)
+                    play_search(get_music.bind(null, song));
+                else
+                    add_search(get_music.bind(null, song), false, true);
+            }
+        });
+    }
+    else lstMusic(config);
+}

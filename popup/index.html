@@ -75,18 +75,11 @@
                 -->
 
                 <div class="input-group">
-                    <!--
-                        <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-headphones"></i></span>
-                    -->
-
+                    
                     <div class="input-group-btn">
                         <button id="music_mode" class="btn btn-default" type="button"
-                                                                        title='album mode, continue playing if any song in list'>
+                                                                        title='album mode, continue playing if any song in playlist'>
                             <i id="mode_type" class="glyphicon glyphicon-cd"></i>
-                            <!-- glyphicon glyphicon-search -->
-                            <!-- glyphicon glyphicon-list -->
-                            <!-- glyphicon glyphicon-list-alt -->
                         </button>
                     </div>
 
@@ -99,43 +92,24 @@
                     </select>
 
                     <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
-                    <!--
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
-                    -->
 
                     <input id="keyword" type="text" 
                                         class="form-control" placeholder="Search Keyword and Play">
-                    <!-- https://drrr.wiki/zh-tw/%E9%9F%B3%E6%A8%82%E9%BB%9E%E6%92%AD -->
-                    <!--{xiami:"虾",netease:"易",bilibili:"Ｂ",tencent:"Ｑ",baidu:"千",kugou:"狗"}-->
-                    <!-- https://drrr.wiki/zh-tw/%E9%9F%B3%E6%A8%82%E9%BB%9E%E6%92%AD -->
-                    <!-- https://zhuanlan.zhihu.com/p/24581605 bilibili api -->
-                    <!-- https://music.sounm.com/?name=%E5%9E%83%E5%9C%BE%E8%BB%8A%20%E4%BA%94%E6%9C%88%E5%A4%A9&type=netease common api -->
-                    <!-- https://music.liuzhijin.cn/?name=little%20do%20you%20know&type=netease -->
-
-                    <!-- http://music.taihe.com/ -->
-                    <!-- https://blog.csdn.net/qq_42072206/article/details/80814964 -->
-                    <!-- https://blog.csdn.net/baiyuliang2013/article/details/51496620 -->
-                    <!-- https://www.luxing.im/  -->
-                    <!-- x https://zhuanlan.zhihu.com/p/30246788 -->
-                    <!-- https://cloud.tencent.com/developer/article/1543945 -->
+                    
                     <div class="input-group-btn">
                         <button id="music_list_opener" class="btn btn-default" type="button"
-                                                                               data-delayed-toggle="collapse" data-target="#music_list"
-                                                                                                      title="show playlist">
+                                data-delayed-toggle="collapse" data-target="#music_list"
+                                title="show playlist">
                             <i id="list_type" class="glyphicon glyphicon-list"></i>
-                            <!-- glyphicon glyphicon-search -->
-                            <!-- glyphicon glyphicon-list -->
-                            <!-- glyphicon glyphicon-list-alt -->
                         </button>
                         <button id="play_search" class="btn btn-default" type="submit"
                                                                          title="search and play the song immediately">
                             <i class="glyphicon glyphicon-play"></i>
                         </button>
-                        <button id="add_search" class="btn btn-default" type="submit"
-                                                                        title="search and add the song to playlist">
-                            <i class="glyphicon glyphicon-plus"></i>
-                            <!-- glyphicon glyphicon-time -->
-                            <!-- glyphicon glyphicon-plus -->
+                        <button id="fav_add_search" class="btn btn-default" type="submit"
+                                data-delayed-toggle="collapse" data-target="#music_list"
+                                title="show favorite songs">
+                            <i id="fav_add_icon" class="glyphicon glyphicon-heart"></i>
                         </button>
                     </div>  
                 </div> 
@@ -145,16 +119,6 @@
                             <div class="list-group" style="margin-bottom: 0px;">
                                 <hr>
                                 <div id='list_container'></div>
-                                <!--
-                                    <a class="list-group-item clearfix" onclick="alert('Action1 -> Details');">
-                                    Action1
-                                    <span class="pull-right">
-                                    <span class="btn btn-xs btn-default" onclick="alert('Action1 -> Play'); event.stopPropagation();">
-                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                    </span>
-                                    </span>
-                                    </a>
-                                -->
                             </div>
                         </div>
                     </div>
@@ -164,6 +128,4 @@
         </div>
     </body>
 </html>
-<!--
-    https://drrr.chat/d/129-command-list-like-night
--->
+<!-- https://drrr.chat/d/129-command-list-like-night -->

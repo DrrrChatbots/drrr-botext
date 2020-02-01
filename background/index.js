@@ -4,7 +4,7 @@
 new Handler("music", [],
     {
         [event_musicend]: {
-            precond: (config, uis) => config[MUSIC_MODE] == ALBUM_MODE,
+            precond: (config, uis) => config[MUSIC_MODE] == ALBUM_MODE && !empty_list(config, PLAYLIST),
             onevent: (req, callback, config, uis, sender) => {
                 setTimeout(()=>play_next(config), getDelay(config) * 1000);
             }

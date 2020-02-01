@@ -215,9 +215,11 @@ actions = {
     }),
     [action_plym] : (song) => play_search(get_music.bind(null, song)),
     [action_addm] : (song) => add_search(get_music.bind(null, song), false, true),
-    [action_delm] : (idx)  => setTimeout(()=>del_song(idx, undefined, false, true), 1000),
+    [action_delm] : (idx)  => setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000),
     [action_lstm] : function(){ setTimeout(()=>lstMusic(this), 1000); },
-    [action_nxtm] : function(){ setTimeout(()=>play_next(this), 1000); },
+    [action_nxtm] : function(){
+        setTimeout(()=> play_next(this, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
+    },
     [action_pndm] : function(song){ setTimeout(()=>pndMusic(this, song), 1000); },
     /* too quick leading play song failed in content script, so setTimout */
 }

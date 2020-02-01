@@ -25,8 +25,9 @@ var offDmMember = function(args){
 
 var onDmMember = function(args){
     //$(`li[title*="${args.user}"] div[class="name-wrap"]`).click();
-    openFuncList(args, () => 
-        $('.dropdown-item-secret')[0].click());
+    if($('.dropdown-item-secret').length)
+        openFuncList(args, () => 
+            $('.dropdown-item-secret')[0].click());
 }
 
 var dmMember = function(args){
@@ -67,22 +68,29 @@ var publishMessage = function(args){
 }
 
 var kickMember = function(args){
-    openFuncList(args, () =>
-        $('.dropdown-item-kick')[0].click());
+    if($('.dropdown-item-kick').length){
+        openFuncList(args, () =>
+            $('.dropdown-item-kick')[0].click());
+    }
+    else alert("you are not room owner, can't kick anyone");
 }
 
 var banMember = function(args){
-    //$(`li[title="${args.user}"] div[class="name-wrap"]`).click();
-    openFuncList(args, () =>
-        $('dropdown-item-ban')[0].click());
+    if($('.dropdown-item-ban').length){
+        openFuncList(args, () =>
+            $('.dropdown-item-ban')[0].click());
+    }
+    else alert("you are not room owner, can't kick anyone");
 }
 
 var banReportMember = function(args){
-    //$(`li[title="${args.user}"] div[class="name-wrap"]`).click();
-    openFuncList(args, () => {
-        $('dropdown-item-report-user')[0].click();
-        setTimeout(()=> $('.confirm')[0].click(), 500);
-    });
+    if($('.dropdown-item-report-user').length){
+        openFuncList(args, () => {
+            $('.dropdown-item-report-user')[0].click();
+            setTimeout(()=> $('.confirm')[0].click(), 500);
+        });
+    }
+    else alert("you are not room owner, can't kick anyone");
 }
 
 var playMusic = function(args){
@@ -258,7 +266,7 @@ function handle_exit(){
                     text: 'unknown',
                     url: 'unknown'
                 });
-            else console.log("logout without alarms")
+            else console.log("logout without alarms");
         }
         else{
             if(alarms.length){
@@ -276,17 +284,6 @@ function handle_exit(){
     }
     window.onbeforeunload = confirmExit;
     //window.onunload = confirmExit;
-}
-
-function end() {
-  endTime = ;
-  var timeDiff = ;
-  // strip the ms
-  timeDiff /= 1000;
-
-  // get seconds 
-  var seconds = Math.round(timeDiff);
-  console.log(seconds + " seconds");
 }
 
 var play_end = undefined;

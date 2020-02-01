@@ -65,9 +65,10 @@ var manual = {
 格式：</p><pre><code class="js hljs">禁用詞(正則表達式)
 </code></pre><p>注意：</p><ul>
 <li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的禁用詞）。</li>
-</ul><p>範例：聊天內容含有說到 <code>狗</code> 的成員會被踢出。</p>`,
+</ul><p>範例：聊天內容含有說到 <code>狗</code> 或是 <code>真香</code> 的成員會被踢出。</p>`,
         def_conf:
-`狗`,
+`狗
+真香`,
     },
     [EVENTACT]: {
         desc: `<p>功能：對於一些事件，這裡提供一些函數，可以訂一些相應的動作。<br>

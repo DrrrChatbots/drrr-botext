@@ -1,8 +1,8 @@
 var manual = {
     [TIMER]: {
         desc: `<p>功能：定時推播訊息。<br>
-格式：兩種格式，推播字串可以多個（隨機選擇並發出）</p><pre><code class="js hljs">秒數, <span class="hljs-string">"字串"</span>
-秒數, [<span class="hljs-string">"推播字串"</span>, <span class="hljs-string">"推播字串"</span>, ...]
+格式：兩種格式，推播字串可以多個（隨機選擇並發出）</p><pre><code class="js hljs">分鐘數, <span class="hljs-string">"字串"</span>
+分鐘數, [<span class="hljs-string">"推播字串"</span>, <span class="hljs-string">"推播字串"</span>, ...]
 </code></pre><p>注意：字串記得要<strong>加雙引號</strong> <code>"</code>。</p><p>特殊時間變量：</p><ul>
 <li><code>%Y</code> 年份，四位數字西元年</li>
 <li><code>%年</code> 年份，中文數字</li>
@@ -20,8 +20,8 @@ var manual = {
 <li><code>%%</code> 轉義字符 <code>%</code></li>
 </ul><p>範例：</p>`,
         def_conf:
-`600, "every 10 mins report once!"
-300, ["It's a Report Message", "Now is %H:%M!"]`,
+`10, "every 10 mins report once!"
+2, ["It's a Report Message", "Now is %H:%m!"]`,
     },
     [WELCOME]: {
         desc: `<p>功能：有人進入房間後，如果名稱匹配<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，則自動發出歡迎詞。<br>

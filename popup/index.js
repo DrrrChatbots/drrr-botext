@@ -2,6 +2,7 @@ var bkg = chrome.extension.getBackgroundPage;
 
 function refresh_settings(){
     chrome.storage.sync.clear();
+    window.close();
 }
 
 function open_background(){

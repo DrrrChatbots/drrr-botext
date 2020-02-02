@@ -230,8 +230,9 @@ function rebindAlarms(){
     if(alarms.length) bindAlarms();
 }
 
+var min = 1000 * 60;
 function bindAlarms(){
-    console.log(timefmt("%H:%m:%s - start alarm on this tab"));
+    console.log(timefmt("%H:%m:%s - start alarm on this tab, unit: min"));
     chrome.storage.sync.get((config) => {
         clearAlarms(); 
         rules = settings[TIMER].load(config[sid(TIMER)]);
@@ -243,7 +244,7 @@ function bindAlarms(){
                     var wmsg = Array.isArray(msg) ?
                         msg[Math.floor(Math.random() * msg.length)] : msg;
                     publishMessage({msg: timefmt(wmsg)});
-                })(message), period * 1000)
+                })(message), period * min)
             );
             console.log('rule:', period, message);
         });

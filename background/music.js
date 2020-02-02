@@ -36,8 +36,12 @@ function pndMusic(config, song){
             if(active)
                 add_search(get_music.bind(null, song), false, true);
             else{
-                if(config[PLAYLIST] && config[PLAYLIST].length)
+                if(config[PLAYLIST] && config[PLAYLIST].length){
                     add_search(get_music.bind(null, song), false, true);
+                    if(after === undefined || after > getDelay() + 5)
+                        setTimeout(()=> play_next(config, publish), 1000);
+                    
+                }
                 else if(after === undefined || after > getDelay() + 5)
                     play_search(get_music.bind(null, song), publish);
                 else

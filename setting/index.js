@@ -293,7 +293,7 @@ $(document).ready(()=>{
     });
 
     chrome.storage.sync.get((config)=>{
-        $('#music_delay').val(config[MUSIC_DELAY] ? config[MUSIC_DELAY] : 34);
+        $('#music_delay').val(config[MUSIC_DELAY] ? config[MUSIC_DELAY] : DEFAULT_DELAY);
     });
 
     $('#music_delay').on('input focus',function(e){

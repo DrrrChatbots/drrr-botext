@@ -201,19 +201,22 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
 }
 
 actions = {
-    [action_msg ] : (msg) => sendTab({
-        fn: publish_message,
-        args: { msg: msg }
-    }),
-    [action_dm  ] : (user, msg) => sendTab({
-        fn: dm_member,
-        args: { user: user, msg: msg }
-    }),
-    [action_kick] : (user) => sendTab({
-        fn: kick_member,
-        args: { user: user }
-    }),
-    [action_plym] : (song) => play_search(get_music.bind(null, song)),
+    [action_msg ] : (msg) => setTimeout(
+        () => sendTab({
+            fn: publish_message,
+            args: { msg: msg }
+        }), 1000),
+    [action_dm  ] : (user, msg) => setTimeout(
+        () => sendTab({
+            fn: dm_member,
+            args: { user: user, msg: msg }
+        }), 1000),
+    [action_kick] : (user) => setTimeout(
+        () => sendTab({
+            fn: kick_member,
+            args: { user: user }
+        }), 500),
+    [action_plym] : (song) => play_search(get_music.bind(null, song), (msg) => sendTab({ fn: publish_message, args: { msg: msg } })),
     [action_addm] : (song) => add_search(get_music.bind(null, song), false, true),
     [action_delm] : (idx)  => setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000),
     [action_lstm] : function(){ setTimeout(()=>lstMusic(this), 1000); },
@@ -363,7 +366,7 @@ var switches = [
                                     fn: publish_message,
                                     args: {
                                         msg: wmsg.replace(/(^|[^\$])\$user/g, `$1${req.user}`)
-                                                 .replace(/(^|[^\$])\$/g, `$1$`)
+                                        .replace(/(^|[^\$])\$/g, `$1$`)
                                     }
                                 });
                             }

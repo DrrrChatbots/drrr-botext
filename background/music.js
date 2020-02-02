@@ -5,6 +5,7 @@ function get_music(keyword, callback){
     if(keyword) {
         music_api(keyword, callback, {
             log: console.log, 
+            error: (msg) => sendTab({ fn: publish_message, args: { msg: msg } }),
             ajax: ajax
         }, source);
     } else console.log("please input keyword"); 
@@ -16,7 +17,7 @@ function lstMusic(config){
         msg = Object.keys(list).map(
             (idx) => `[${idx}] ${ommited_name(list[idx].name, list[idx].singer)}`
         ).join('\n');
-    } else msg = 'EMPTY LIST'
+    } else msg = 'EMPTY PLAYLIST'
     console.log(msg);
     sendTab({
         fn: publish_message,
@@ -27,6 +28,7 @@ function lstMusic(config){
 }
 
 function pndMusic(config, song){
+    var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
     if(song.length){
         sendTab({
             fn: is_playing,
@@ -37,7 +39,7 @@ function pndMusic(config, song){
                 if(config[PLAYLIST] && config[PLAYLIST].length)
                     add_search(get_music.bind(null, song), false, true);
                 else if(after === undefined || after > getDelay() + 5)
-                    play_search(get_music.bind(null, song));
+                    play_search(get_music.bind(null, song), publish);
                 else
                     add_search(get_music.bind(null, song), false, true);
             }

@@ -1,8 +1,7 @@
 var bkg = chrome.extension.getBackgroundPage;
 
-function refresh_settings(){
-    chrome.storage.sync.clear();
-    window.close();
+function open_manual(){
+    chrome.tabs.create({url: chrome.extension.getURL('manual.html')});
 }
 
 function open_background(){
@@ -190,11 +189,12 @@ function emptyKeyword(){
     $('#music_list_opener').attr('title', 'show playlist');
     $('#fav_add_icon').attr('class', 'glyphicon glyphicon-heart');
     $('#fav_add_search').attr('title', 'show favorite songs');
+    $('#play_search').attr('title', "play first song in playlist")
 }
 
 $(document).ready(
     function(){
-        $("#refresh").click(refresh_settings);
+        $("#manual").click(open_manual);
         $("#cog").click(open_background); 
         /* ensure activate the background page */
         chrome.runtime.sendMessage({ type: 'popup' },
@@ -212,7 +212,8 @@ $(document).ready(
             }
         }
 
-        chrome.storage.sync.get((config)=> mode_switch(config[MUSIC_MODE] == SINGLE_MODE));
+        /* handle config[MUSIC_MODE] be undefined slightly */
+        chrome.storage.sync.get((config)=> mode_switch(config[MUSIC_MODE] === SINGLE_MODE));
         $('#music_mode').click(()=>{
             chrome.storage.sync.set({
                 [MUSIC_MODE]: $('#mode_type').hasClass('glyphicon-cd') ? SINGLE_MODE : ALBUM_MODE
@@ -240,6 +241,7 @@ $(document).ready(
                 $('#music_list_opener').attr('title', 'search and show available results');
                 $('#fav_add_icon').attr('class', 'glyphicon glyphicon-plus');
                 $('#fav_add_search').attr('title', 'search and add the song to playlist');
+                $('#play_search').attr('title', "search and play the song immediately")
             }
             else{
                 emptyKeyword();

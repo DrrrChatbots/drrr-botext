@@ -3,10 +3,23 @@
 
 new Handler("music", [],
     {
-        [event_musicend]: {
-            precond: (config, uis) => config[MUSIC_MODE] == ALBUM_MODE && !empty_list(config, PLAYLIST),
+        [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */
+            precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
             onevent: (req, callback, config, uis, sender) => {
-                setTimeout(()=>play_next(config), getDelay(config) * 1000);
+                console.log("wait for delay", getDelay(config), 's');
+                function wake_check(){
+                    sendTab({
+                        fn: is_playing,
+                    }, undefined, (active, after) => {
+                        if(!active){
+                            if(after === undefined || after > getDelay() - 5)
+                                play_next(config)
+                            else
+                                setTimeout(wake_check, (getDelay() - after + 5) * 1000);
+                        }
+                    });
+                }
+                setTimeout(wake_check, getDelay(config) * 1000);
             }
         },
     }

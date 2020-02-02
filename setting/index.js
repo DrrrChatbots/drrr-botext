@@ -1,8 +1,11 @@
 /* setting.html */
 
 var infos = `
-<li><a href="https://hackmd.io/@nobodyzxc/rkfiv3bfI" target="_blank"><i class="glyphicon glyphicon-question-sign"></i></a></li>
-<li><a data-toggle="modal" data-target="#info-modal"><i class="glyphicon glyphicon-info-sign"></i></a></li>`
+<li><a href="https://nobodyzxc.github.io/drrr-botext-manual" target="_blank" title="在線文檔"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a href="${chrome.extension.getURL('manual.html')}" target="_blank" title="本地文檔"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a data-toggle="modal" data-target="#info-modal" title="關於開發者"><i class="glyphicon glyphicon-info-sign"></i></a></li>
+<li><a id="reset" title="重置所有設定"><i class="glyphicon glyphicon-refresh"></i></a></li>
+`
 
 var infopop = `
 <div id="info-modal" class="modal fade" role="dialog">
@@ -116,7 +119,7 @@ var save_callback = {
                             type: "basic",
                             iconUrl: '/icon.png',
                             title: 'RESTART TIMER',
-                            message: 'Configuration changed, Timer restarted on other tab'
+                            message: 'Configuration changed, Timer restarted tab'
                         });
                     }
                 });
@@ -125,13 +128,21 @@ var save_callback = {
     }
 }
 
+function refresh_settings(){
+    alert("reset");
+    chrome.storage.sync.clear();
+    location.reload();
+}
+
 setting_cache = {};
 
 $(document).ready(()=>{
+
     var index = window.location.toString().split('#')[1]
     if(!index) index = 'menu0';
     $('#nav_pills').append(make_pills(Object.keys(settings), index));
     $('#tab_conts').append(make_tabs(settings, index));
+    $("#reset").click(refresh_settings);
 
     /* enable tab */
     $(document).delegate('.setting-input', 'keydown', function(e) {
@@ -203,7 +214,10 @@ $(document).ready(()=>{
             $(this).hide();
             $(`#reset-${$(this).attr('data')}`).hide();
             chrome.storage.sync.remove(`${sid($(this).attr('data'))}`);
-            setting_cache[`${sid($(this).attr('data'))}`] = val;
+            setting_cache[`${sid($(this).attr('data'))}`] = '';
+            $(`#${sid($(this).attr('data'))}`).val('')
+            /* close switch */
+            settings[$(this).attr('data')].empty_cbk();
         }
         else try{
             settings[$(this).attr('data')].validate(val);
@@ -214,9 +228,11 @@ $(document).ready(()=>{
                 settings[$(this).attr('data')].store(val)
             });
             setting_cache[`${sid($(this).attr('data'))}`] = val;
-            console.log($(this).attr('data'), save_callback);
-            if($(this).attr('data') in save_callback)
-                save_callback[$(this).attr('data')]();
+            //console.log($(this).attr('data'), save_callback);
+            //if($(this).attr('data') in save_callback)
+            //    save_callback[$(this).attr('data')]();
+            /* open switch */
+            settings[$(this).attr('data')].save_cbk();
         }
         catch(e){
             alert(e);

@@ -14,6 +14,7 @@ var postMessage = function(args){
 
 var openFuncList = function(args, callback){
     var s = $(`li[title="${args.user}"] div[class="name-wrap"]`);
+    console.log(`$('li[title="${args.user}"] div[class="name-wrap"]')`)
     if(!s.length) s = $(`li[title="${args.user} (host)"] div[class="name-wrap"]`);
     if(s.length) s.click()[0], setTimeout(callback, 100);
 }
@@ -25,9 +26,10 @@ var offDmMember = function(args){
 
 var onDmMember = function(args){
     //$(`li[title*="${args.user}"] div[class="name-wrap"]`).click();
-    if($('.dropdown-item-secret').length)
-        openFuncList(args, () => 
-            $('.dropdown-item-secret')[0].click());
+    openFuncList(args, () => {
+        if($('.dropdown-item-secret').length)
+            $('.dropdown-item-secret')[0].click()
+    });
 }
 
 var dmMember = function(args){
@@ -61,36 +63,39 @@ var publishMessage = function(args){
     console.log($('input[name="post"]'));
     $('input[name="post"]').click();
     setTimeout(()=>{
-        if(retainUser) onDmMember({user: retainUser});
+        if(retainUser){
+            console.log("recover DM member:", retainUser);
+            onDmMember({user: retainUser});
+        }
         $('textarea[name="message"]').val(retainText);
         enableMe = me;
-    }, 100);
+    }, 1000);
 }
 
 var kickMember = function(args){
-    if($('.dropdown-item-kick').length){
-        openFuncList(args, () =>
-            $('.dropdown-item-kick')[0].click());
-    }
-    else alert("you are not room owner, can't kick anyone");
+    openFuncList(args, () => {
+        if($('.dropdown-item-kick').length)
+            $('.dropdown-item-kick')[0].click()
+        else alert("you are not room owner, can't kick anyone");
+    });
 }
 
 var banMember = function(args){
-    if($('.dropdown-item-ban').length){
-        openFuncList(args, () =>
-            $('.dropdown-item-ban')[0].click());
-    }
-    else alert("you are not room owner, can't kick anyone");
+    openFuncList(args, () => {
+        if($('.dropdown-item-ban').length)
+            $('.dropdown-item-ban')[0].click()
+        else alert("you are not room owner, can't kick anyone");
+    });
 }
 
 var banReportMember = function(args){
-    if($('.dropdown-item-report-user').length){
-        openFuncList(args, () => {
+    openFuncList(args, () => {
+        if($('.dropdown-item-report-user').length){
             $('.dropdown-item-report-user')[0].click();
             setTimeout(()=> $('.confirm')[0].click(), 500);
-        });
-    }
-    else alert("you are not room owner, can't kick anyone");
+        }
+        else alert("you are not room owner, can't kick anyone");
+    });
 }
 
 var playMusic = function(args){

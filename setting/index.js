@@ -129,7 +129,6 @@ var save_callback = {
 }
 
 function refresh_settings(){
-    alert("reset");
     chrome.storage.sync.clear();
     location.reload();
 }

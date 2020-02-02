@@ -1,8 +1,9 @@
 {
     "manifest_version": 2,
 
-    "name": "drrr bot extension",
-    "description": "extension for automatically doing something",
+    "name": "drrr chatbot extension",
+    "description": "chatbot extension for drrr.com",
+    "short_name": "drrrbot",
     "version": "1.0",
     "browser_action": {
         "default_icon": "icon.png",

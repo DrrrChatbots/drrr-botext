@@ -200,45 +200,6 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
     else if(callback) callback();
 }
 
-actions = {
-    [action_msg ] : (msg) => setTimeout(
-        () => sendTab({
-            fn: publish_message,
-            args: { msg: msg }
-        }), 1000),
-    [action_dm  ] : (user, msg) => setTimeout(
-        () => sendTab({
-            fn: dm_member,
-            args: { user: user, msg: msg }
-        }), 1000),
-    [action_kick] : (user) => setTimeout(
-        () => sendTab({
-            fn: kick_member,
-            args: { user: user }
-        }), 500),
-    [action_plym] : (song) => play_search(get_music.bind(null, song), (msg) => sendTab({ fn: publish_message, args: { msg: msg } })),
-    [action_addm] : (song) => add_search(get_music.bind(null, song), false, true),
-    [action_delm] : (idx)  => setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000),
-    [action_lstm] : function(){ setTimeout(()=>lstMusic(this), 1000); },
-    [action_nxtm] : function(){
-        setTimeout(()=> play_next(this, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
-    },
-    [action_pndm] : function(song){ setTimeout(()=>pndMusic(this, song), 1000); },
-    /* too quick leading play song failed in content script, so setTimout */
-}
-
-function event_action(event, config, req){
-    var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
-    rules.map(([type, user_regex, cont_regex, action, arglist])=> {
-        if(((Array.isArray(type) && type.includes(event)) || type == event)
-            && req.user.match(new RegExp(user_regex))
-            && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
-            actions[action].apply(config, argfmt(arglist, req.user, req.text, req.url));
-        }
-    });
-}
-
-
 var switches = [
 
     new Handler("timer", 

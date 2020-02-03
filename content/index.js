@@ -1,158 +1,3 @@
-var new_script = function(url){
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = url;
-    $("head").append(s);
-}
-
-var enableMe = true;
-
-var postMessage = function(args){
-    $('textarea[name="message"]').val(args.msg);
-    $('input[name="post"]').click();
-}
-
-var openFuncList = function(args, callback){
-    var s = $(`li[title="${args.user}"] div[class="name-wrap"]`);
-    console.log(`$('li[title="${args.user}"] div[class="name-wrap"]')`)
-    if(!s.length) s = $(`li[title="${args.user} (host)"] div[class="name-wrap"]`);
-    if(s.length) s.click()[0], setTimeout(callback, 100);
-}
-
-var offDmMember = function(args){
-    var to = $('.to-whom a');
-    if(to.length) to[0].click();
-}
-
-var onDmMember = function(args){
-    //$(`li[title*="${args.user}"] div[class="name-wrap"]`).click();
-    openFuncList(args, () => {
-        if($('.dropdown-item-secret').length)
-            $('.dropdown-item-secret')[0].click()
-    });
-}
-
-var dmMember = function(args){
-    onDmMember(args);
-    setTimeout(()=> {
-        var me = enableMe;
-        enableMe = false;
-        postMessage(args)
-        enableMe = me;
-    }, 1500);
-}
-
-var getTextNodesIn = function(el) {
-    return $(el).find(":not(iframe)").addBack().contents().filter(function() {
-        return this.nodeType == 3;
-    });
-};
-
-var publishMessage = function(args){
-    var input = $('textarea[name="message"]');
-    var retainText = input.val();
-    var retainUser = '';
-    var me = enableMe;
-    enableMe = false;
-    if(input.hasClass('state-secret')){
-        retainUser = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
-        offDmMember();
-    }
-    $('textarea[name="message"]').val(args.msg);
-    console.log(args.msg);
-    console.log($('input[name="post"]'));
-    $('input[name="post"]').click();
-    setTimeout(()=>{
-        if(retainUser){
-            console.log("recover DM member:", retainUser);
-            onDmMember({user: retainUser});
-        }
-        $('textarea[name="message"]').val(retainText);
-        enableMe = me;
-    }, 1000);
-}
-
-var kickMember = function(args){
-    openFuncList(args, () => {
-        if($('.dropdown-item-kick').length)
-            $('.dropdown-item-kick')[0].click()
-        else alert("you are not room owner, can't kick anyone");
-    });
-}
-
-var banMember = function(args){
-    openFuncList(args, () => {
-        if($('.dropdown-item-ban').length)
-            $('.dropdown-item-ban')[0].click()
-        else alert("you are not room owner, can't kick anyone");
-    });
-}
-
-var banReportMember = function(args){
-    openFuncList(args, () => {
-        if($('.dropdown-item-report-user').length){
-            $('.dropdown-item-report-user')[0].click();
-            setTimeout(()=> $('.confirm')[0].click(), 500);
-        }
-        else alert("you are not room owner, can't kick anyone");
-    });
-}
-
-var playMusic = function(args){
-    publishMessage({msg: `/share ${args.url} ${args.title}`});
-}
-
-var switchMe = function(args){
-    enableMe = args.state;
-}
-
-var listenMe = function(){
-    console.log("new script");
-    $('input[name="post"]').click(()=>{
-        if(!$('textarea[name="message"]').hasClass('state-secret') && 
-            $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
-            !$('textarea[name="message"]').val().match(/^\/\w/))
-            $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
-    })
-    $('textarea[name="message"]').keydown(function(e){
-        if(!$('textarea[name="message"]').hasClass('state-secret') &&
-            $('#url-icon').attr('data-status') !== 'filled' &&
-            !e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13 && enableMe &&
-            !$('textarea[name="message"]').val().startsWith('/me'))
-            $('textarea[name="message"]').val('/me ' + $('textarea[name="message"]').val())
-    });
-}
-
-var getMembers = function(args, callback){
-    list = []
-    var user_list = $('#user_list .select-text');
-    for(var i = 0; i < user_list.length; i++){
-        list.push(user_list[i].textContent);
-    }
-    callback(list);
-}
-
-var alertUser = function(args){
-    alert(args.msg);
-}
-
-var renew = function(){
-    var msgs = ['/me' , '/roll' , '過了十分鐘囉~', '孤獨 ;w;'];
-    postMessage({
-        msg: msgs[Math.floor(Math.random() * msgs.length)]
-    });
-}
-
-var welcome = function(latest){
-
-    if(latest.className === "talk join system"){
-        var guest = latest.firstElementChild.firstElementChild.innerText;
-        var msgs = [`歐 是${guest}` , `${guest} 晚好哇` , `${guest} 安安`, `${guest} 夜安`];
-        postMessage({
-            msg: msgs[Math.floor(Math.random() * msgs.length)]
-        });
-    }
-}
 
 var handle_talks = function(msg){
 
@@ -174,13 +19,8 @@ var handle_talks = function(msg){
                 text = names[1].textContent;
             }
             else{
-
-                [
-                    ["leave", event_leave],
-                    ["join", event_join],
-                    ["new-host", event_newhost]
-                ]
-                    .forEach(([w, e])=>{
+                [["leave", event_leave], ["join", event_join], ["new-host", event_newhost]]
+                    .forEach(([w, e]) => {
                         if(msg.classList.contains(w)){
                             type = e;
                             user = $(msg).find('.name').text();
@@ -224,38 +64,6 @@ var handle_talks = function(msg){
     });
 }
 
-var alarms = []
-
-function clearAlarms(){
-    alarms.map((v) => clearInterval(v));
-    alarms = [];
-}
-
-function rebindAlarms(){
-    if(alarms.length) bindAlarms();
-}
-
-var min = 1000 * 60;
-function bindAlarms(){
-    console.log(timefmt("%H:%m:%s - start alarm on this tab, unit: min"));
-    chrome.storage.sync.get((config) => {
-        clearAlarms(); 
-        rules = settings[TIMER].load(config[sid(TIMER)]);
-        Object.keys(rules).map((idx)=>{
-
-            var [period, message]  = rules[idx];
-            alarms.push(setInterval(
-                ((msg) => () => {
-                    var wmsg = Array.isArray(msg) ?
-                        msg[Math.floor(Math.random() * msg.length)] : msg;
-                    publishMessage({msg: timefmt(wmsg)});
-                })(message), period * min)
-            );
-            console.log('rule:', period, message);
-        });
-    });
-}
-
 var logout = false;
 function handle_exit(){
     $('.do-logout').click(function(){
@@ -292,42 +100,51 @@ function handle_exit(){
     //window.onunload = confirmExit;
 }
 
-var play_end = undefined;
 
-function after_play(){
-    return play_end === undefined ? Math.round((new Date() - play_end) / 1000) : play_end;
-}
+var bot_ondm = false;
+var ext_click = 0;
+function make_extinputs(){
 
-function isPlaying(args, callback){
-    if(callback){
-        var target = $('div[role="progressbar"]');
-        if(!target.length)
-            callback(false, after_play());
-        else
-            callback(target[0].classList.contains('active'));
-    }
-}
+    var orgmsg = $('textarea[name="message"]')
+    var extmsg = orgmsg.clone().attr("name", "ext_message");
+    orgmsg.after(extmsg);
+    orgmsg.wrap('<div style="display:none"></div>');
 
+    console.log("whom length:", $('.to-whom'));
 
-var prev_mstatus = false;
-$(document).ready(function(){
-
-    chrome.storage.sync.get((res) => {
-        if(res[SWITCH_ME] !== undefined)
-            enableMe = res[SWITCH_ME]
-        else enableMe = false;
-        console.log(enableMe);
-        console.log(JSON.stringify(res));
+    $('.to-whom').on('DOMSubtreeModified',function(e){
+        console.log($(this).hasClass('on'));
+        if(!bot_ondm){
+            if($(this).hasClass('on'))
+                extmsg.addClass('state-secret');
+            else extmsg.removeClass('state-secret');
+        }
     });
 
-    $('#talks').bind('DOMNodeInserted', function(event) {
-        var e = event.target;
-        if(e.parentElement.id == 'talks')
-            handle_talks(e);
-    });
+    var orgpst = $('input[name="post"]');
+    var extpst = orgpst.clone().attr("name", "ext_post").attr('type', 'button');
+    orgpst.after(extpst);
+    orgpst.wrap('<div style="display:none"></div>');
 
-    /* bind submit event */
-    $('input[name="post"]').click(()=>{
+    (new MutationObserver(function(mutations){
+        mutations.forEach(function(mutation) {
+            if(ext_click){
+                extpst.val(mutation.target.value);
+                ext_click--;
+            }
+        });
+    })).observe(orgpst[0], { attributes: true });
+
+    extpst.click(function(){
+        ext_click = 2;
+        var cmd = '';
+        if(!exgmsg.hasClass('state-secret') &&
+            $('#url-icon').attr('data-status') !== 'filled' &&
+            enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
+
+        $('textarea[name="message"]').val(cmd + extmsg.val()), extmsg.val('');
+
+        $('input[name="post"]').click();
         setTimeout(function() {  
             chrome.runtime.sendMessage({
                 type: event_submit,
@@ -337,22 +154,36 @@ $(document).ready(function(){
             });
             console.log("submmited by click");
         }, 1000);
-
-    })
-    $('textarea[name="message"]').keydown(function(e){
-        if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13) {
-            setTimeout(function() {  
-                chrome.runtime.sendMessage({
-                    type: event_submit,
-                    user: 'unknown',
-                    text: 'unknown',
-                    url: 'unknown'
-                });
-                console.log("submmited by enter");
-            }, 1000);
-        }
     });
 
+    extmsg.on('keydown', function(e){
+        setTimeout(()=>$(this).next().text($(this).attr('maxlength') - $(this).val().length), 50);
+        if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13) {
+            var cmd = '';
+            if(!$(this).hasClass('state-secret') && 
+                $('#url-icon').attr('data-status') !== 'filled' &&
+                enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
+
+            e.preventDefault();
+            if(!$(this).val().match(/^\s*$/)){
+                orgmsg.val($(this).val()), $(this).val('');
+                setTimeout(function() {  
+                    chrome.runtime.sendMessage({
+                        type: event_submit,
+                        user: 'unknown',
+                        text: 'unknown',
+                        url: 'unknown'
+                    });
+                    console.log("submmited by enter");
+                }, 1000);
+                orgpst.click();
+            }
+        }
+    });
+}
+
+var prev_mstatus = false;
+function monit_progressbar(){
     if($('div[role="progressbar"]').length){
         /* music progressbar event */
         var observer = new MutationObserver(function(mutations){
@@ -373,10 +204,26 @@ $(document).ready(function(){
             attributes: true //configure it to listen to attribute changes
         });
     }
+}
 
+$(document).ready(function(){
 
-    //$('div[role="progressbar"]').attr('class')
-    listenMe(); 
+    chrome.storage.sync.get((res) => {
+        if(res[SWITCH_ME] !== undefined)
+            enableMe = res[SWITCH_ME]
+        else enableMe = false;
+        console.log(enableMe);
+        console.log(JSON.stringify(res));
+    });
+
+    $('#talks').bind('DOMNodeInserted', function(event) {
+        var e = event.target;
+        if(e.parentElement.id == 'talks')
+            handle_talks(e);
+    });
+
+    make_extinputs(); 
+    monit_progressbar();
     /* invoke newtab event */
     chrome.runtime.sendMessage({
         type: event_newtab
@@ -384,24 +231,6 @@ $(document).ready(function(){
     console.log("start background moniter new"); 
     handle_exit();
 });
-
-var methods = {}
-methods[post_message] = postMessage;
-methods[publish_message] = publishMessage;
-methods[switch_me] = switchMe;
-methods[on_dm_member] = onDmMember;
-methods[dm_member] = dmMember;
-methods[off_dm_member] = offDmMember;
-methods[kick_member] = kickMember;
-methods[ban_member] = banMember;
-methods[ban_report_member] = banReportMember;
-methods[play_music] = playMusic;
-methods[get_members] = getMembers;
-methods[alert_user] = alertUser;
-methods[bind_alarms] = bindAlarms;
-methods[rebind_alarms] = rebindAlarms;
-methods[clear_alarms] = clearAlarms;
-methods[is_playing] = isPlaying;
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(JSON.stringify(req), "comes the method from background");

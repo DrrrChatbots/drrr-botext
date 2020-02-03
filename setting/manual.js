@@ -91,7 +91,7 @@ var manual = {
 <li><code>addm</code> 加入音樂至清單 <code>["歌曲關鍵字"]</code></li>
 <li><code>delm</code> 從清單刪除音樂（依索引數字） <code>["數字"]</code></li>
 <li><code>lstm</code> 列出播放清單 <code>[]</code></li>
-<li><code>nxtm</code> 播放下一首曲子</li>
+<li><code>nxtm</code> 播放下一首曲子 <code>[]</code></li>
 <li><code>pndm</code> 將音樂加入清單或列出清單 <code>["歌曲關鍵字"]</code></li>
 </ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。）<br>
 （<code>pndm</code> 的 <code>"歌曲關鍵字"</code> 如果是空字串，則列出清單）</p><p>特殊參數變量：</p><ul>

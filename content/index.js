@@ -138,7 +138,7 @@ function make_extinputs(){
     extpst.click(function(){
         ext_click = 2;
         var cmd = '';
-        if(!exgmsg.hasClass('state-secret') &&
+        if(!extmsg.hasClass('state-secret') &&
             $('#url-icon').attr('data-status') !== 'filled' && !prevURLs.length &&
             enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
 

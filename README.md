@@ -1,5 +1,9 @@
 # DRRR 機器人插件設定手冊
 
+## 安裝
+
+請至 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
+
 ## 使用界面
 
 當有關鍵字時，操作界面會有細微差別（右下三個功能鍵）。

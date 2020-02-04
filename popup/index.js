@@ -47,6 +47,12 @@ var imm_play_btn = (args) =>
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
+var imm_pldl_btn = (args) =>
+`<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
+         data="${args.link}"     title="play the song immediately">
+     <i class="glyphicon glyphicon-play"></i>
+  </button>`
+
 var add_song_btn = (args) =>
 `<button class="btn btn-default add-song" type="submit"
          data="${args.link}"     title="add the song the playlist">
@@ -78,6 +84,17 @@ function bind_imm_play(){
             $(this).attr('data'),
             alert.bind(window)
         );
+    })
+}
+
+function bind_imm_pldl(){
+    $('.imm-pldl').click(function(){
+        playMusic(
+            $(this).parent().prev().text(),
+            $(this).attr('data'),
+            alert.bind(window)
+        );
+        del_song(PLAYLIST, $(this).attr('data-idx'), show_playlist, true);
     })
 }
 
@@ -121,6 +138,7 @@ function bind_vaf_song(){
 
 btn_funcbind = {
     [imm_play_btn]: bind_imm_play,
+    [imm_pldl_btn]: bind_imm_pldl,
     [fav_song_btn]: bind_fav_song,
     [add_song_btn]: bind_add_song,
     [del_song_btn]: bind_del_song,
@@ -173,7 +191,7 @@ function show_configlist(conf_type, callback, buttons, empty_name, icon){
 function show_playlist(callback){
     show_configlist(
         PLAYLIST, callback,
-        [del_song_btn, imm_play_btn, fav_song_btn],
+        [del_song_btn, imm_pldl_btn, fav_song_btn],
         'EMPTY PLAYLIST', 'glyphicon-list');
 }
 
@@ -273,7 +291,7 @@ $(document).ready(
             //    $target.collapse('hide');
             //}
             if($('#list_type').hasClass('glyphicon-list')){
-                $target.attr('data', 'playlist')
+                $target.attr('data', 'playlist');
                 if(!opening) show_playlist(()=>$target.collapse('show'));
                 else if(tartype == 'playlist') $target.collapse('hide');
                 else{
@@ -317,10 +335,14 @@ $(document).ready(
         });
 
         /* when search buttons clicked */
-        $('#play_search').click(()=>{
+        $('#play_search').click(function(){
             if($('#keyword').val().trim())
-                play_search(get_music, alert.bind(window))
-            else play_next(undefined, alert.bind(window));
+                play_search(get_music, alert.bind(window));
+            else{
+                var tartype = $($(this).attr("data-target")).attr('data');
+                play_next(undefined, alert.bind(window),
+                    tartype == 'playlist' ? show_playlist : undefined);
+            }
         });
     } 
 );

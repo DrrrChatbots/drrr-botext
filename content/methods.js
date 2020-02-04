@@ -1,3 +1,6 @@
+
+var prevURLs =[]
+
 var getTextNodesIn = function(el) {
     return $(el).find(":not(iframe)").addBack().contents().filter(function() {
         return this.nodeType == 3;
@@ -11,15 +14,14 @@ var postMessage = function(args){
 }
 
 var publishMessage = function(args){
-    var prevDm = '', prevURL = '', prevURLtype = '';
+    var prevDm = '';
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
         prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
         offDmMember();
     }
     if($('#url-input').val()){
-        prevURL = $('#url-input').val();
-        prevURLtype = $('#url-icon').text();
+        prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
         $('#url-input').val('');
     }
     if(args.url) $('#url-input').val(args.url);
@@ -32,9 +34,10 @@ var publishMessage = function(args){
             console.log("recover DM member:", prevDm);
             onDmMember({user: prevDm});
         }
-        if(prevURL){
-            $('#url-input').val(prevURL);
-            $('#url-icon').attr('data-status', "filled").text(prevURLtype);
+        if(prevURLs.length){
+            [url, type] = prevURLs.pop();
+            $('#url-input').val(url);
+            $('#url-icon').attr('data-status', "filled").text(type);
         }
         bot_ondm = false;
     }, 1000);
@@ -65,7 +68,7 @@ var offDmMember = function(args){
 }
 
 var dmMember = function(args){
-    var prevDm = '', prevURL = '', prevURLtype = '';
+    var prevDm = '';
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
         prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
@@ -73,8 +76,7 @@ var dmMember = function(args){
     }
     onDmMember(args);
     if($('#url-input').val()){
-        prevURL = $('#url-input').val();
-        prevURLtype = $('#url-icon').text();
+        prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
         $('#url-input').val('');
     }
     if(args.url) $('#url-input').val(args.url);
@@ -85,9 +87,10 @@ var dmMember = function(args){
             console.log("recover DM member:", prevDm);
             onDmMember({user: prevDm});
         }
-        if(prevURL){
-            $('#url-input').val(prevURL);
-            $('#url-icon').attr('data-status', "filled").text(prevURLtype);
+        if(prevURLs.length){
+            [url, type] = prevURLs.pop();
+            $('#url-input').val(url);
+            $('#url-icon').attr('data-status', "filled").text(type);
         }
         bot_ondm = false;
     }, 1000);

@@ -139,8 +139,14 @@ function make_extinputs(){
         ext_click = 2;
         var cmd = '';
         if(!exgmsg.hasClass('state-secret') &&
-            $('#url-icon').attr('data-status') !== 'filled' &&
+            $('#url-icon').attr('data-status') !== 'filled' && !prevURLs.length &&
             enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
+
+        if(prevURLs.length){
+            [url, type] = prevURLs.pop();
+            $('#url-input').val(url);
+            $('#url-icon').attr('data-status', "filled").text(type);
+        }
 
         $('textarea[name="message"]').val(cmd + extmsg.val()), extmsg.val('');
 
@@ -161,12 +167,20 @@ function make_extinputs(){
         if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13) {
             var cmd = '';
             if(!$(this).hasClass('state-secret') && 
-                $('#url-icon').attr('data-status') !== 'filled' &&
+                $('#url-icon').attr('data-status') !== 'filled' && !prevURLs.length &&
                 enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
 
             e.preventDefault();
             if(!$(this).val().match(/^\s*$/)){
-                orgmsg.val($(this).val()), $(this).val('');
+
+                if(prevURLs.length){
+                    [url, type] = prevURLs.pop();
+                    $('#url-input').val(url);
+                    $('#url-icon').attr('data-status', "filled").text(type);
+                }
+
+                orgmsg.val(cmd + $(this).val());
+                $(this).val('');
                 setTimeout(function() {  
                     chrome.runtime.sendMessage({
                         type: event_submit,

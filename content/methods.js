@@ -149,12 +149,12 @@ function bindAlarms(){
         rules = settings[TIMER].load(config[sid(TIMER)]);
         Object.keys(rules).map((idx)=>{
 
-            var [period, message]  = rules[idx];
+            var [period, message, url]  = rules[idx];
             alarms.push(setInterval(
                 ((msg) => () => {
                     var wmsg = Array.isArray(msg) ?
                         msg[Math.floor(Math.random() * msg.length)] : msg;
-                    publishMessage({msg: timefmt(wmsg)});
+                    publishMessage({msg: timefmt(wmsg), url: url});
                 })(message), period * min)
             );
             console.log('rule:', period, message);
@@ -173,17 +173,46 @@ function clearAlarms(){
 
 var play_end = undefined;
 
-function after_play(){
-    return play_end === undefined ? Math.round((new Date() - play_end) / 1000) : play_end;
+function after_play(end){
+    return end === undefined ? end : Math.round((new Date() - end) / 1000);
+}
+
+var prev_mstatus = false;
+function monit_progressbar(){
+    if($('div[role="progressbar"]').length){
+        /* music progressbar event */
+        var observer = new MutationObserver(function(mutations){
+            mutations.forEach(function(mutation) {
+                var status = mutation.target.classList.contains('active');
+                if(status != prev_mstatus){
+                    if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
+                    else{
+                        play_end = new Date();
+                        console.log('play_end = ', play_end);
+                        chrome.runtime.sendMessage({ type: event_musicend });
+                    }
+                    console.log(`contains active? ${status}`);
+                }
+                prev_mstatus = status;
+            });
+        });
+        observer.observe($('div[role="progressbar"]')[0], {
+            attributes: true //configure it to listen to attribute changes
+        });
+    }
 }
 
 function isPlaying(args, callback){
     if(callback){
         var target = $('div[role="progressbar"]');
-        if(!target.length)
-            callback(false, after_play());
-        else
-            callback(target[0].classList.contains('active'));
+        if(!target.length){
+            console.log('play_end:', play_end);
+            callback([false]);
+        }
+        else{
+            console.log('fuck', after_play(play_end), typeof after_play(play_end));
+            callback([target[0].classList.contains('active'), after_play(play_end)]);
+        }
     }
 }
 

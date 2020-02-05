@@ -103,10 +103,11 @@ function handle_exit(){
 
 var bot_ondm = false;
 var ext_click = 0;
+var orgmsg, extmsg, orgpst, extpst;
 function make_extinputs(){
 
-    var orgmsg = $('textarea[name="message"]')
-    var extmsg = orgmsg.clone().attr("name", "ext_message");
+    orgmsg = $('textarea[name="message"]')
+    extmsg = orgmsg.clone().attr("name", "ext_message");
     orgmsg.after(extmsg);
     orgmsg.wrap('<div style="display:none"></div>');
 
@@ -121,8 +122,8 @@ function make_extinputs(){
         }
     });
 
-    var orgpst = $('input[name="post"]');
-    var extpst = orgpst.clone().attr("name", "ext_post").attr('type', 'button');
+    orgpst = $('input[name="post"]');
+    extpst = orgpst.clone().attr("name", "ext_post").attr('type', 'button');
     orgpst.after(extpst);
     orgpst.wrap('<div style="display:none"></div>');
 
@@ -194,34 +195,17 @@ function make_extinputs(){
             }
         }
     });
-}
 
-var prev_mstatus = false;
-function monit_progressbar(){
-    if($('div[role="progressbar"]').length){
-        /* music progressbar event */
-        var observer = new MutationObserver(function(mutations){
-            mutations.forEach(function(mutation) {
-                var status = mutation.target.classList.contains('active');
-                if(status != prev_mstatus){
-                    if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
-                    else{
-                        play_end = new Date();
-                        chrome.runtime.sendMessage({ type: event_musicend });
-                    }
-                    console.log(`contains active? ${status}`);
-                }
-                prev_mstatus = status;
-            });
-        });
-        observer.observe($('div[role="progressbar"]')[0], {
-            attributes: true //configure it to listen to attribute changes
-        });
-    }
+    $(document).on('click', '.dropdown-item-reply', function(){
+        extmsg.val(extmsg.val() + $(this).text() + ' ');
+    });
+    $(document).on('click', '.avatar', function(){
+        extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
+    });
 }
 
 $(document).ready(function(){
-
+    
     chrome.storage.sync.get((res) => {
         if(res[SWITCH_ME] !== undefined)
             enableMe = res[SWITCH_ME]

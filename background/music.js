@@ -32,20 +32,24 @@ function pndMusic(config, song){
     if(song.length){
         sendTab({
             fn: is_playing,
-        }, undefined, (active, after) => {
+        }, undefined, ([active, after]) => {
             if(active)
                 add_search(get_music.bind(null, song), false, true);
             else{
                 if(config[PLAYLIST] && config[PLAYLIST].length){
                     add_search(get_music.bind(null, song), false, true);
-                    if(after === undefined || after > getDelay() + 5)
+                    if(after === undefined || after > getDelay(config) + 5)
                         setTimeout(()=> play_next(config, publish), 1000);
                     
                 }
-                else if(after === undefined || after > getDelay() + 5)
+                else if(after === undefined || after > getDelay(config) + 5){
                     play_search(get_music.bind(null, song), publish);
-                else
+                    console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
+                }
+                else{
                     add_search(get_music.bind(null, song), false, true);
+                    console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
+                }
             }
         });
     }

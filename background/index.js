@@ -1,25 +1,40 @@
 
 /* require global.js utility.js */
 
+function amazingTimeout(func, ms){
+    if(ms){
+        const at = 6000;
+        console.log('amazing ...')
+        period = ms <= at ? ms : at;
+        setTimeout(function(){
+            amazingTimeout(func, ms - period);
+        }, period);
+    }
+    else{
+        func();
+        console.log('amazing done.')
+    }
+}
+
 new Handler("music", [],
     {
         [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */
             precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
             onevent: (req, callback, config, uis, sender) => {
-                console.log("wait for delay", getDelay(config), 's');
                 function wake_check(){
                     sendTab({
                         fn: is_playing,
-                    }, undefined, (active, after) => {
+                    }, undefined, ([active, after]) => {
                         if(!active){
-                            if(after === undefined || after > getDelay() - 5)
+                            if(after === undefined || after > getDelay(config) - 5)
                                 play_next(config)
                             else
-                                setTimeout(wake_check, (getDelay() - after + 5) * 1000);
+                                amazingTimeout(wake_check, (getDelay(config) - after + 5) * 1000);
                         }
                     });
                 }
-                setTimeout(wake_check, getDelay(config) * 1000);
+                console.log("wait for delay", getDelay(config), 's');
+                amazingTimeout(wake_check, getDelay(config) * 1000);
             }
         },
     }

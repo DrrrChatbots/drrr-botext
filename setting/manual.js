@@ -1,8 +1,8 @@
 var manual = {
     [TIMER]: {
         desc: `<p>功能：定時推播訊息。<br>
-格式：兩種格式，推播字串可以多個（隨機選擇並發出）</p><pre><code class="js hljs">分鐘數, <span class="hljs-string">"字串"</span>
-分鐘數, [<span class="hljs-string">"推播字串"</span>, <span class="hljs-string">"推播字串"</span>, ...]
+格式：兩種格式，推播字串可以多個（隨機選擇並發出），URL 可加可不加</p><pre><code class="js hljs">分鐘數, <span class="hljs-string">"字串"</span>
+分鐘數, [<span class="hljs-string">"推播字串"</span>, <span class="hljs-string">"推播字串"</span>, ...], "URL"
 </code></pre><p>注意：字串記得要<strong>加雙引號</strong> <code>"</code>。</p><p>特殊時間變量：</p><ul>
 <li><code>%Y</code> 年份，四位數字西元年</li>
 <li><code>%年</code> 年份，中文數字</li>
@@ -96,8 +96,12 @@ var manual = {
 踢出使用者。</li>
 <li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
 播放音樂。</li>
+<li><code>plym</code> <code>["數字", "歌曲關鍵字"]</code><br>
+播放第 “數字” 個搜尋結果。</li>
 <li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
-加入音樂至清單。</li>
+加入音樂至待播清單。</li>
+<li><code>addm</code> <code>["數字", "歌曲關鍵字"]</code><br>
+加入第 “數字” 個搜尋結果至待播清單。</li>
 <li><code>delm</code> <code>["數字"]</code><br>
 從清單刪除音樂（依索引數字）。</li>
 <li><code>lstm</code> <code>[]</code><br>
@@ -110,8 +114,6 @@ var manual = {
 將音樂加入清單或列出待播清單（如果為關鍵字空字串）。</li>
 <li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
 列出搜尋結果。</li>
-<li><code>schm</code> <code>["數字", "歌曲關鍵字"]</code><br>
-播放第 “數字” 個搜尋結果。</li>
 </ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。）</p><p>特殊參數變量：</p><ul>
 <li><code>$user</code> 發送訊息的使用者名稱</li>
 <li><code>$cont</code> 使用者發送的內容</li>
@@ -147,23 +149,25 @@ $[-]
 
 </code></pre>
 <p>可以透過這個功能做出以下指令讓使用者以訊息發送：</p><pre><code>/play 剛好遇見你
+/play 2 剛好遇見你
 /add  山丘
+/add  2 山丘
 /pending 平凡之路
 /pending
 /del  1
 /list
 /next
 /sc 花心
-/sc 0 花心
 </code></pre><p>範例：對於上面的指令，可以參考以下配置。</p>`,
         def_conf:
-`"msg", "", "^/play .+", "plym", ["$args"]
-"msg", "", "^/next", "nxtm", []
-"msg", "", "^/add .+", "addm", ["$args"]
-"msg", "", "^/del \\d+", "delm", ["$1"]
+`"msg", "", "^/play (\\\\D|\\\\d\\\\S)", "plym", ["$args"]
+"msg", "", "^/play \\\\d \\\\S+", "plym", ["$1","$[2-]"]
+"msg", "", "^/add (\\\\D|\\\\d\\\\S)", "addm", ["$args"]
+"msg", "", "^/add \\\\d \\\\S+", "addm", ["$1","$[2-]"]
 "msg", "", "^/list", "lstm", []
+"msg", "", "^/next", "nxtm", []
+"msg", "", "^/del \\\\d+", "delm", ["$1"]
 "msg", "", "^/pending", "pndm", ["$args"]
-"msg", "", "^/sc [^0-9]* \\w+", "schm", ["$args"]
-"msg", "", "^/sc \\d* \\w+", "schm", ["$1","$[2-]"]`,
+"msg", "", "^/sc \\\\S+", "schm", ["$args"]`,
     },
 }

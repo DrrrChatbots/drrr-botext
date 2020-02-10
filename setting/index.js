@@ -262,12 +262,10 @@ $(document).ready(()=>{
     }
 
     $('.test-input').on('input focus',function(e){
-        console.log('focus');
         var valid = true,
             regex = $('#test-regex').val(),
             string = $('#test-string').val();
         try{
-            console.log('regex:', regex);
             regex = new RegExp(JSON.parse(`"${regex}"`));
         }
         catch(e){

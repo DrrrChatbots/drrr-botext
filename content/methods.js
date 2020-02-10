@@ -123,6 +123,7 @@ var banReportMember = function(args){
 }
 
 var playMusic = function(args){
+    console.log(`/share ${args.url} ${args.title}`);
     publishMessage({msg: `/share ${args.url} ${args.title}`});
 }
 

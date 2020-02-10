@@ -53,17 +53,19 @@ actions = {
                 args: { user: user }
             }), 500)
     },
-    [action_plym] : function(song){
-        play_search(
-            get_music.bind(null, song), 
+    [action_plym] : function(idx, keyword){
+        if(!keyword) [idx, keyword] = [undefined, idx];
+        setTimeout(()=> play_search(
+            get_music.bind(null, keyword), 
             (msg) => sendTab({ 
                 fn: publish_message, 
                 args: { msg: msg } 
-            })
-        )
+            }), idx
+        ), 1000);
     },
-    [action_addm] : function(song){
-        add_search(get_music.bind(null, song), false, true)
+    [action_addm] : function(idx, keyword){
+        if(!keyword) [idx, keyword] = [undefined, idx];
+        setTimeout(()=>add_search(get_music.bind(null, keyword), false, true, idx), 1000);
     },
     [action_delm] : function(idx){
         setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000);
@@ -77,10 +79,10 @@ actions = {
     [action_pndm] : function(song){
         setTimeout(()=>pndMusic(this, song), 1000);
     },
-    [action_schm] : function(...args){
-        if(args.length) setTimeout(()=>schMusic(this, ...args), 1000);
+    [action_schm] : function(keyword){
+        setTimeout(()=>schMusic(this, keyword), 1000);
     },
-    /* too quick leading play song failed in content script, so setTimout */
+    /* too quick leading play song failed in content script, so setTimeout */
 }
 
 function event_action(event, config, req){

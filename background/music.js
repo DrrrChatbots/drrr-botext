@@ -55,3 +55,46 @@ function pndMusic(config, song){
     }
     else lstMusic(config);
 }
+
+function schMusic(config, idx, keyword){
+    console.log("search music;");
+    if(!keyword) [idx, keyword] = [undefined, idx];
+    if(idx){
+        play_search(
+            get_music.bind(null, keyword), 
+            (msg) => sendTab({ 
+                fn: publish_message, 
+                args: { msg: msg } 
+            }), idx
+        )
+    }
+    else{
+        get_music(keyword, (keyword, source, data) => {
+            var msg0 = '', msg1 = '', songs = api[source].songs(data);
+            for(var i = 0; i < 5; i++)
+                if(songs[i]) msg0 += 
+                    `[${i}] ${ommited_name(
+                        api[source].name(data, i),
+                        api[source].singer(data, i), 28)}\n`;
+            for(var i = 5; i < 10; i++)
+                if(songs[i]) msg1 +=
+                    `[${i}] ${ommited_name(
+                        api[source].name(data, i),
+                        api[source].singer(data, i), 28)}\n`;
+            if(msg1){
+                sendTab({ 
+                    fn: publish_message, 
+                    args: { msg: msg1 } 
+                });
+            }
+            if(msg0){
+                setTimeout(function() {
+                    sendTab({
+                        fn: publish_message,
+                        args: { msg: msg0 } 
+                    });
+                }, 1000);
+            }
+        });
+    }
+}

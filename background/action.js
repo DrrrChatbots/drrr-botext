@@ -9,12 +9,40 @@ actions = {
                 }), 1000);
         }
     },
+    [action_umsg ] : function(url, ...msgs){
+        if(url && msgs.length){
+            setTimeout(
+                () => sendTab({
+                    fn: publish_message,
+                    args: { 
+                        url: url,
+                        msg: msgs[Math.floor(Math.random() * msgs.length)] 
+                    }
+                }), 1000);
+        }
+    },
     [action_dm  ] : function(user, ...msgs){
         if(msgs.length){
             setTimeout(
                 () => sendTab({
                     fn: dm_member,
-                    args: { user: user, msg: msgs[Math.floor(Math.random() * msgs.length)] }
+                    args: { 
+                        user: user, 
+                        msg: msgs[Math.floor(Math.random() * msgs.length)] 
+                    }
+                }), 1000);
+        }
+    },
+    [action_udm ] : function(user, url, ...msgs){
+        if(url && msgs.length){
+            setTimeout(
+                () => sendTab({
+                    fn: dm_member,
+                    args: {
+                        user: user,
+                        url: url,
+                        msg: msgs[Math.floor(Math.random() * msgs.length)]
+                    }
                 }), 1000);
         }
     },
@@ -26,7 +54,13 @@ actions = {
             }), 500)
     },
     [action_plym] : function(song){
-        play_search(get_music.bind(null, song), (msg) => sendTab({ fn: publish_message, args: { msg: msg } }))
+        play_search(
+            get_music.bind(null, song), 
+            (msg) => sendTab({ 
+                fn: publish_message, 
+                args: { msg: msg } 
+            })
+        )
     },
     [action_addm] : function(song){
         add_search(get_music.bind(null, song), false, true)
@@ -42,6 +76,9 @@ actions = {
     },
     [action_pndm] : function(song){
         setTimeout(()=>pndMusic(this, song), 1000);
+    },
+    [action_schm] : function(...args){
+        if(args.length) setTimeout(()=>schMusic(this, ...args), 1000);
     },
     /* too quick leading play song failed in content script, so setTimout */
 }

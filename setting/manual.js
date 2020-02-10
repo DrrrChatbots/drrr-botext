@@ -83,18 +83,36 @@ var manual = {
 <li><code>msg</code> 普通訊息</li>
 <li><code>dm</code> 私訊</li>
 <li><code>musicend</code> 音樂結束</li>
-</ul><p>函數[參數]：</p><ul>
-<li><code>msg</code> 推送訊息 <code>["要推送的訊息"]</code></li>
-<li><code>dm</code> 私訊 <code>["使用者名稱", "訊息"]</code></li>
-<li><code>kick</code> 踢出 <code>["使用者名稱"]</code></li>
-<li><code>plym</code> 播放音樂 <code>["歌曲關鍵字"]</code></li>
-<li><code>addm</code> 加入音樂至清單 <code>["歌曲關鍵字"]</code></li>
-<li><code>delm</code> 從清單刪除音樂（依索引數字） <code>["數字"]</code></li>
-<li><code>lstm</code> 列出播放清單 <code>[]</code></li>
-<li><code>nxtm</code> 播放下一首曲子 <code>[]</code></li>
-<li><code>pndm</code> 將音樂加入清單或列出清單 <code>["歌曲關鍵字"]</code></li>
-</ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。）<br>
-（<code>pndm</code> 的 <code>"歌曲關鍵字"</code> 如果是空字串，則列出清單）</p><p>特殊參數變量：</p><ul>
+</ul><p>函數 [參數列] 說明：</p><ul>
+<li><code>msg</code> <code>["訊息", "訊息", ...]</code><br>
+從訊息中選擇一個推送。</li>
+<li><code>umsg</code> <code>["URL", "訊息", ...]</code><br>
+夾帶 URL 並隨機選擇一個訊息推送。</li>
+<li><code>dm</code> <code>["使用者名稱", "訊息", "訊息", ...]</code><br>
+私訊使用者，選擇一個訊息私訊。</li>
+<li><code>udm</code> <code>["使用者名稱", "URL", "訊息", ...]</code><br>
+私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
+<li><code>kick</code> <code>["使用者名稱"]</code><br>
+踢出使用者。</li>
+<li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
+播放音樂。</li>
+<li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
+加入音樂至清單。</li>
+<li><code>delm</code> <code>["數字"]</code><br>
+從清單刪除音樂（依索引數字）。</li>
+<li><code>lstm</code> <code>[]</code><br>
+列出待播清單。</li>
+<li><code>nxtm</code> <code>[]</code><br>
+播放下一首曲子。</li>
+<li><code>pndm</code> <code>[]</code><br>
+列出待播清單。</li>
+<li><code>pndm</code> <code>["歌曲關鍵字"]</code><br>
+將音樂加入清單或列出待播清單（如果為關鍵字空字串）。</li>
+<li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
+列出搜尋結果。</li>
+<li><code>schm</code> <code>["數字", "歌曲關鍵字"]</code><br>
+播放第 “數字” 個搜尋結果。</li>
+</ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。）</p><p>特殊參數變量：</p><ul>
 <li><code>$user</code> 發送訊息的使用者名稱</li>
 <li><code>$cont</code> 使用者發送的內容</li>
 <li><code>$args</code> 使用者發送內容第一個空格後的所有內容<br>
@@ -135,13 +153,17 @@ $[-]
 /del  1
 /list
 /next
+/sc 花心
+/sc 0 花心
 </code></pre><p>範例：對於上面的指令，可以參考以下配置。</p>`,
         def_conf:
-`"msg", "", "^/play", "plym", ["$args"]
+`"msg", "", "^/play .+", "plym", ["$args"]
 "msg", "", "^/next", "nxtm", []
-"msg", "", "^/add", "addm", ["$args"]
-"msg", "", "^/del", "delm", ["$1"]
+"msg", "", "^/add .+", "addm", ["$args"]
+"msg", "", "^/del \\d+", "delm", ["$1"]
 "msg", "", "^/list", "lstm", []
-"msg", "", "^/pending", "pndm", ["$args"]`,
+"msg", "", "^/pending", "pndm", ["$args"]
+"msg", "", "^/sc [^0-9]* \\w+", "schm", ["$args"]
+"msg", "", "^/sc \\d* \\w+", "schm", ["$1","$[2-]"]`,
     },
 }

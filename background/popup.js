@@ -184,6 +184,10 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
                     title: `EMPTY ${func_name.toUpperCase()} RULE`,
                     message: `To enable ${func_name.toLowerCase()}, make some rules`
                 });
+            
+            chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')
+                + `#menu${Object.keys(settings).indexOf(func_name)}`});
+
             chrome.notifications.onClicked.addListener(function(notificationId) {
                 console.log(notificationId);
                 if(notificationId.match(new RegExp('chrome-extension://')))

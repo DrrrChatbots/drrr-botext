@@ -99,7 +99,7 @@ function make_tabs(tabs, index){
                     </div>
                 <form>
                     <div class="form-group">
-                      <textarea class="setting-input rounded-0"
+                      <textarea class="setting-input rounded-0" rows="10"
                       id="${sid(keys[idx])}" data="${keys[idx]}"></textarea>
                     </div>
                 </form>
@@ -267,8 +267,8 @@ $(document).ready(()=>{
             regex = $('#test-regex').val(),
             string = $('#test-string').val();
         try{
-            console.log('string:', regex);
-            regex = new RegExp(regex);
+            console.log('regex:', regex);
+            regex = new RegExp(JSON.parse(`"${regex}"`));
         }
         catch(e){
             valid = false;

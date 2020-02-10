@@ -1,6 +1,9 @@
 .setting-input {
-    height: 350px;
     width: 100%;
+}
+
+.test-input {
+    width: 200px !important;
 }
 
 textarea {

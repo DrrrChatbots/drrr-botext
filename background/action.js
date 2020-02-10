@@ -76,8 +76,9 @@ actions = {
     [action_nxtm] : function(){
         setTimeout(()=> play_next(this, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
     },
-    [action_pndm] : function(song){
-        setTimeout(()=>pndMusic(this, song), 1000);
+    [action_pndm] : function(idx, keyword){
+        if(!keyword) [idx, keyword] = [undefined, idx];
+        setTimeout(()=>pndMusic(this, idx, keyword), 1000);
     },
     [action_schm] : function(keyword){
         setTimeout(()=>schMusic(this, keyword), 1000);

@@ -99,7 +99,7 @@ function make_tabs(tabs, index){
                     </div>
                 <form>
                     <div class="form-group">
-                      <textarea class="setting-input rounded-0" rows="10"
+                      <textarea class="setting-input rounded-0" rows="12"
                       id="${sid(keys[idx])}" data="${keys[idx]}"></textarea>
                     </div>
                 </form>

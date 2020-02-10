@@ -111,9 +111,14 @@ var manual = {
 <li><code>pndm</code> <code>[]</code><br>
 列出待播清單。</li>
 <li><code>pndm</code> <code>["歌曲關鍵字"]</code><br>
-將音樂加入清單或列出待播清單（如果為關鍵字空字串）。</li>
+如當前沒音樂，播放音樂。<br>
+如有音樂，將音樂加入清單<br>
+如關鍵字為空字串，列出待播清單。</li>
+<li><code>pndm</code> <code>["數字", "歌曲關鍵字"]</code><br>
+同上，音樂為第 “數字” 個搜尋結果。</li>
 <li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
 列出搜尋結果。</li>
+
 </ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。）</p><p>特殊參數變量：</p><ul>
 <li><code>$user</code> 發送訊息的使用者名稱</li>
 <li><code>$cont</code> 使用者發送的內容</li>
@@ -160,14 +165,16 @@ $[-]
 /sc 花心
 </code></pre><p>範例：對於上面的指令，可以參考以下配置。</p>`,
         def_conf:
-`"msg", "", "^/play (\\\\D|\\\\d\\\\S)", "plym", ["$args"]
-"msg", "", "^/play \\\\d \\\\S+", "plym", ["$1","$[2-]"]
-"msg", "", "^/add (\\\\D|\\\\d\\\\S)", "addm", ["$args"]
-"msg", "", "^/add \\\\d \\\\S+", "addm", ["$1","$[2-]"]
+`"msg", "", "^/play\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$args"]
+"msg", "", "^/play\\\\s+\\\\d\\\\s+\\\\S+", "plym", ["$1","$[2-]"]
+"msg", "", "^/add\\\\s+(\\\\D|\\\\d\\\\S)", "addm", ["$args"]
+"msg", "", "^/add\\\\s+\\\\d\\\\s+\\\\S+", "addm", ["$1","$[2-]"]
 "msg", "", "^/list", "lstm", []
 "msg", "", "^/next", "nxtm", []
-"msg", "", "^/del \\\\d+", "delm", ["$1"]
-"msg", "", "^/pending", "pndm", ["$args"]
-"msg", "", "^/sc \\\\S+", "schm", ["$args"]`,
+"msg", "", "^/del\\\\s+\\\\d+", "delm", ["$1"]
+"msg", "", "^/pending\\\\s*$", "pndm", []
+"msg", "", "^/pending\\\\s+(\\\\D|\\\\d\\\\S)", "pndm", ["$args"]
+"msg", "", "^/pending\\\\s+\\\\d\\\\s+\\\\S+", "pndm", ["$1","$[2-]"]
+"msg", "", "^/sc\\\\s+\\\\S+", "schm", ["$args"]`,
     },
 }

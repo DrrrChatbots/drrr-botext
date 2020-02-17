@@ -190,7 +190,11 @@ function monit_progressbar(){
                     else{
                         play_end = new Date();
                         console.log('play_end = ', play_end);
-                        chrome.runtime.sendMessage({ type: event_musicend });
+                        cache(undefined, (config)=>{
+                            setTimeout(
+                                ()=>chrome.runtime.sendMessage({ type: event_musicend }),
+                                (getDelay(config) + 3) * 1000);
+                        });
                     }
                     console.log(`contains active? ${status}`);
                 }

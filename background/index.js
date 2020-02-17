@@ -34,7 +34,7 @@ new Handler("music", [],
                     });
                 }
                 console.log("wait for delay", getDelay(config), 's');
-                amazingTimeout(wake_check, getDelay(config) * 1000);
+                amazingTimeout(wake_check, 1000);
             }
         },
     }

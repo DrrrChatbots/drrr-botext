@@ -2,7 +2,7 @@
 /* GAME_GUESS_NUMBER EXAMPLE
 "msg", "", "^/start", "gnset", [""]
 "msg", "", "^\\d\\d\\d\\d$", "gnjdg", ["$cont"]
- */
+*/
 
 // export
 GAME_GUESS_NUMBER = "GAME_GUESS_NUMBER"
@@ -46,11 +46,13 @@ function gnjdg(guess, callback){
 }
 
 // action
-actions[action_gnset] = function(digits){
-    setTimeout(()=> sendTab({ fn: publish_message, args: { msg: gnset(digits) } }), 1000);
-}
+if(typeof actions !== 'undefined'){
+    actions[action_gnset] = function(digits){
+        setTimeout(()=> sendTab({ fn: publish_message, args: { msg: gnset(digits) } }), 1000);
+    }
 
-actions[action_gnjdg] = function(digits){
-    gnjdg(digits, (msg) =>
-        setTimeout(()=> sendTab({ fn: publish_message, args: { msg: msg } }), 1000));
+    actions[action_gnjdg] = function(digits){
+        gnjdg(digits, (msg) =>
+            setTimeout(()=> sendTab({ fn: publish_message, args: { msg: msg } }), 1000));
+    }
 }

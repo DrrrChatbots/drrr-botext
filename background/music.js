@@ -1,7 +1,6 @@
 
 
-function get_music(keyword, callback){
-    var source = '易';
+function get_music(keyword, source = '易', callback){
     if(keyword) {
         music_api(keyword, callback, {
             log: console.log, 
@@ -40,7 +39,7 @@ function lstMusic(config){
         })(msg[i]), i * 1000);
 }
 
-function pndMusic(config, idx, keyword = ''){
+function pndMusic(config, idx, keyword = '', source){
     console.log(idx, keyword);
     var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
     if(keyword.length){
@@ -49,21 +48,21 @@ function pndMusic(config, idx, keyword = ''){
         }, undefined, ([active, after]) => {
             console.log(active, after);
             if(active)
-                add_search(get_music.bind(null, keyword), false, true, idx);
+                add_search(get_music.bind(null, keyword, source), false, true, idx);
             else{
                 if(config[PLAYLIST] && config[PLAYLIST].length){
                     console.log("add and play first")
-                    add_search(get_music.bind(null, keyword), false, true, idx);
+                    add_search(get_music.bind(null, keyword, source), false, true, idx);
                     if(after === undefined || after === null || after > getDelay(config) + 5)
                         setTimeout(()=> play_next(config, publish), 1000);
 
                 }
                 else if(after === undefined || after === null || after > getDelay(config) + 5){
-                    play_search(get_music.bind(null, keyword), publish, idx);
+                    play_search(get_music.bind(null, keyword, source), publish, idx);
                     console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
                 }
                 else{
-                    add_search(get_music.bind(null, keyword), false, true, idx);
+                    add_search(get_music.bind(null, keyword, source), true, idx);
                     console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
                 }
             }
@@ -72,9 +71,9 @@ function pndMusic(config, idx, keyword = ''){
     else lstMusic(config);
 }
 
-function schMusic(config, keyword){
-    console.log("search music;\n\n\nsearch music;;");
-    get_music(keyword, (keyword, source, data) => {
+function schMusic(config, keyword, source){
+    console.log(`search music[${source}]: ${keyword}`);
+    get_music(keyword, source, (keyword, source, data) => {
         var msg0 = '', msg1 = '', songs = api[source].songs(data);
         for(var i = 0; i < 5; i++)
             if(songs[i]) msg0 += 

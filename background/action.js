@@ -53,19 +53,24 @@ actions = {
                 args: { user: user }
             }), 500)
     },
-    [action_plym] : function(idx, keyword){
-        if(!keyword) [idx, keyword] = [undefined, idx];
+    [action_plym] : function(keyword, p1, p2){
+        var idx = undefined, source = undefined;
+        if(p1){ if(p1 in api) source = p1; else idx = p1; }
+        if(p2){ if(p2 in api) source = p2; else idx = p2; }
+        console.log(`play music[${source}][${idx}]: ${keyword}`);
         setTimeout(()=> play_search(
-            get_music.bind(null, keyword), 
+            get_music.bind(null, keyword, source), 
             (msg) => sendTab({ 
                 fn: publish_message, 
                 args: { msg: msg } 
             }), idx
         ), 1000);
     },
-    [action_addm] : function(idx, keyword){
-        if(!keyword) [idx, keyword] = [undefined, idx];
-        setTimeout(()=>add_search(get_music.bind(null, keyword), false, true, idx), 1000);
+    [action_addm] : function(keyword, p1, p2){
+        var idx = undefined, source = undefined;
+        if(p1){ if(p1 in api) source = p1; else idx = p1; }
+        if(p2){ if(p2 in api) source = p2; else idx = p2; }
+        setTimeout(()=>add_search(get_music.bind(null, keyword, source), false, true, idx), 1000);
     },
     [action_delm] : function(idx){
         setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000);
@@ -76,12 +81,14 @@ actions = {
     [action_nxtm] : function(){
         setTimeout(()=> play_next(this, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
     },
-    [action_pndm] : function(idx, keyword){
-        if(!keyword) [idx, keyword] = [undefined, idx];
-        setTimeout(()=>pndMusic(this, idx, keyword), 1000);
+    [action_pndm] : function(keyword, p1, p2){
+        var idx = undefined, source = undefined;
+        if(p1){ if(p1 in api) source = p1; else idx = p1; }
+        if(p2){ if(p2 in api) source = p2; else idx = p2; }
+        setTimeout(()=>pndMusic(this, idx, keyword, source), 1000);
     },
-    [action_schm] : function(keyword){
-        setTimeout(()=>schMusic(this, keyword), 1000);
+    [action_schm] : function(keyword, source){
+        setTimeout(()=>schMusic(this, keyword, source), 1000);
     },
     /* too quick leading play song failed in content script, so setTimeout */
 }

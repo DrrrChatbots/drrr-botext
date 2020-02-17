@@ -15,3 +15,13 @@
 ## 使用說明
 
 請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/)。
+
+## TODO
+
+- add youtube music source
+- add sticker
+- detect protected music.168 source
+- auto exit and join specific room
+- friend list
+- timer support seq mode (current random only) and URL pair with every message
+- pokemon monster module 

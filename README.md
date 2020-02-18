@@ -6,7 +6,7 @@
 
 It's a chrome extension, so please use the google chrome browser, and goto [Google WebStore](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) to get the installation.
 
-If your browser is Opera, you can try the [Opera Extension](https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/) to *****Install Chrome Extensions**.
+If your browser is Opera, you can try the [Opera Extension](https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/) to **Install Chrome Extensions**.
 
 #### Phone:
 

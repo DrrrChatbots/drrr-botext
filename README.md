@@ -20,7 +20,7 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 ### user feedback
 
-- project translation
+- project translation (i18n)
 - lift the timer feature
 - support ban(and report) in white/blacklist
 - chat history
@@ -34,3 +34,5 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 - friend list
 - timer support seq mode (current random only) and URL pair with every message
 - pokemon monster module 
+- add tripcode identification to configuration
+- support room member variable (include self) in list

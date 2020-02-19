@@ -96,6 +96,17 @@ var dmMember = function(args){
     }, 1000);
 }
 
+var handOverRoom = function(args){
+    openFuncList(args, () => {
+        if($('.dropdown-item-handover').length){
+            $('.dropdown-item-handover')[0].click()
+            setTimeout(()=> $('.confirm')[0].click(), 500);
+            setTimeout(()=> $('.confirm')[0].click(), 1500);
+        }
+        else alert("you are not room owner, can't handover the room");
+    });
+}
+
 var kickMember = function(args){
     openFuncList(args, () => {
         if($('.dropdown-item-kick').length)
@@ -229,6 +240,7 @@ methods[on_dm_member] = onDmMember;
 methods[off_dm_member] = offDmMember;
 methods[dm_member] = dmMember;
 methods[kick_member] = kickMember;
+methods[handover_room] = handOverRoom;
 methods[ban_member] = banMember;
 methods[ban_report_member] = banReportMember;
 methods[play_music] = playMusic;

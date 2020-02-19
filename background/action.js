@@ -9,6 +9,15 @@ actions = {
                 }), 1000);
         }
     },
+    [action_horm ] : function(user){
+        setTimeout(
+            () => sendTab({ 
+                fn: handover_room,
+                args: { user: user }
+            }) 
+        , 1000);
+
+    },
     [action_umsg ] : function(url, ...msgs){
         if(url && msgs.length){
             setTimeout(

@@ -17,7 +17,7 @@ var state = [];
 //}
 
 
-var secs = 5;
+var secs = 3;
 //var countDownModal = `
 //<div id="myModal" class="modal show fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 //    <div class="modal-header">

@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.2",
+    "version": "1.3",
     "browser_action": {
         "default_icon": "icon.png",
         "default_popup": "/popup/index.html"
@@ -19,13 +19,22 @@
             "css": ["/content/index.css"],
             "run_at": "document_start",
             "js": ["/js/jquery-3.4.1.min.js", "/lib/globals.js", "/lib/format.js", "/content/methods.js", "/content/index.js"]
+        },
+        {
+            "matches": ["https://drrr.com/lounge/*"],
+            "run_at": "document_start",
+            "css": ["/css/bootstrap.min.css"],
+            "js": ["/js/jquery-3.4.1.min.js", "/js/bootstrap.min.js", "/lib/globals.js", "/lib/format.js", "/content/lounge.js"]
         }
+
     ],
     "permissions": [
         "tabs",
         "alarms",
         "storage",
         "notifications",
+        "cookies",
+        "*://drrr.com/*",
         "http://music.163.com/api/*",
         "http://tingapi.ting.baidu.com/*",
         "https://store.line.me/*"

@@ -27,12 +27,13 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 ### dev
 
+- cookie (for cross computer and anti-drop, consider multiple user support)
 - add YouTube music source
 - add sticker
 - detect protected music.168 source
 - auto exit and join specific room
-- friend list
+- friend list / check online status 
 - timer support seq mode (current random only) and URL pair with every message
 - pokemon monster module 
 - add tripcode identification to configuration
-- support room member variable (include self) in list
+- support room member variable (include self -> dm to self) in list

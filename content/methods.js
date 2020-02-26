@@ -147,6 +147,11 @@ var getMembers = function(args, callback){
     callback(list);
 }
 
+var leaveRoom = function(args, callback){
+    $('.do-logout')[0].click();
+    if(callback) callback();
+}
+
 var alertUser = function(args){
     alert(args.msg);
 }
@@ -250,3 +255,4 @@ methods[bind_alarms] = bindAlarms;
 methods[rebind_alarms] = rebindAlarms;
 methods[clear_alarms] = clearAlarms;
 methods[is_playing] = isPlaying;
+methods[leave_room] = leaveRoom;

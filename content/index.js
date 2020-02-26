@@ -127,14 +127,16 @@ function make_extinputs(){
     orgpst.after(extpst);
     orgpst.wrap('<div style="display:none"></div>');
 
-    (new MutationObserver(function(mutations){
-        mutations.forEach(function(mutation) {
-            if(ext_click){
-                extpst.val(mutation.target.value);
-                ext_click--;
-            }
-        });
-    })).observe(orgpst[0], { attributes: true });
+    if(orgpst[0]){
+        (new MutationObserver(function(mutations){
+            mutations.forEach(function(mutation) {
+                if(ext_click){
+                    extpst.val(mutation.target.value);
+                    ext_click--;
+                }
+            });
+        })).observe(orgpst[0], { attributes: true });
+    }
 
     extpst.click(function(){
         ext_click = 2;
@@ -204,8 +206,11 @@ function make_extinputs(){
     });
 }
 
+var rinfo = undefined;
+var lounge = undefined;
+
 $(document).ready(function(){
-    
+
     chrome.storage.sync.get((res) => {
         if(res[SWITCH_ME] !== undefined)
             enableMe = res[SWITCH_ME]
@@ -228,7 +233,57 @@ $(document).ready(function(){
     });
     console.log("start background moniter new"); 
     handle_exit();
-});
+
+    // check online status
+    var find = function(){
+        console.log('check once');
+        $.ajax({
+            type: "GET",
+            url: 'https://drrr.com//lounge?api=json',
+            dataType: 'json',
+            success: function(data){
+                lounge = data.rooms;
+                findUser(friends, data.rooms, function(users, room){
+                    url = room.total < room.limit ? 'https://drrr.com/room/?id=' + room.roomId : undefined;
+                    msg = room.total < room.limit ? `點擊前往 ${room.name} (${room.total}/${room.limit})` : '房間滿了 QwQ';
+                    chrome.runtime.sendMessage({ notification: {
+                        url: url,
+                        title: `野生的 "${users.map(u=>u.name).join('\", \"')}" 出現啦`,
+                        msg: msg,
+                        exit: 1
+                    } })
+                }, rinfo.room.roomId)
+            },
+            error: function(data){
+                alert("error", data);
+            }
+        })
+    }
+
+    $.ajax({
+        type: "GET",
+        url: 'https://drrr.com//room?api=json',
+        dataType: 'json',
+        success: function(RoomData){
+            rinfo = RoomData;
+            console.log('rinfo', rinfo);
+            if(rinfo.redirect){ chrome.storage.sync.remove('jumpToRoom'); }
+            chrome.storage.sync.get((config) => {
+                if(config['jumpToRoom'] == 'https://drrr.com/room/?id=' + rinfo.room.roomId){
+                    chrome.storage.sync.remove('jumpToRoom');
+                    console.log("remove jumped ROOM");
+                }
+            })
+            setTimeout(find, 5000);
+            setInterval(find, 90000);
+            //setInterval(find, 10000);
+        },
+        error: function(data){
+            alert("error", data);
+        }
+    })
+    console.log("start find");
+});// 
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(JSON.stringify(req), "comes the method from background");

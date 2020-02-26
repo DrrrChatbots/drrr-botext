@@ -14,7 +14,7 @@
     </head>
 
     <body>
-        <div class="panel panel-success" style="margin: 0px 0px 0px 0px; width: 450px">
+        <div class="panel panel-success" style="margin: 0px 0px 0px 0px; width: 450px; height:auto;">
             <div class="panel-heading" style="padding: 0px 0px 0px 0px;">
                 <div class="input-group" sytle="width:auto;">
 
@@ -23,10 +23,10 @@
                             <i class="glyphicon glyphicon-question-sign"></i>
                         </button>
                         <!--
-                        <button id="refresh" class="btn btn-default refresh" type="submit"
-                                                                             title="Reset all configurations">
+                            <button id="refresh" class="btn btn-default refresh" type="submit"
+                            title="Reset all configurations">
                             <i class="glyphicon glyphicon-refresh"></i>
-                        </button>
+                            </button>
                         -->
                     </div>
                     <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
@@ -43,6 +43,134 @@
                 <div id="switch_panel"></div>
 
                 <hr>
+
+                 <ul class="nav nav-tabs nav-justified">
+                    <li id="tab0" class="pop-tab"><a data-toggle="tab" href="#tab0-cont">MusicBar</a></li>
+                    <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Friends&Bio</a></li>
+                    <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">GamePanel</a></li>
+                    <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">LineSticker</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="tab0-cont" class="tab-pane fade">
+                        <br>
+                        <div class="input-group">
+
+                            <div class="input-group-btn">
+                                <button id="music_mode" class="btn btn-default" type="button"
+                                                                                title='album mode, continue playing if any song in playlist'>
+                                    <i id="mode_type" class="glyphicon glyphicon-cd"></i>
+                                </button>
+                            </div>
+
+                            <select id="music_source" name="source" class="form-control"
+                                                                    style="text-align:center;
+                                                                           padding-left: 4px;
+                                                                           padding-right: 0px;
+                                                                           padding-top: 4px;"
+                                                                    title="music source">
+                            </select>
+
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <input id="keyword" type="text" 
+                                                class="form-control" placeholder="Search Keyword and Play">
+
+                            <div class="input-group-btn">
+                                <button id="music_list_opener" class="btn btn-default" type="button"
+                                                                                       data-delayed-toggle="collapse" data-target="#music_list"
+                                                                                                                      title="show playlist">
+                                    <i id="list_type" class="glyphicon glyphicon-list"></i>
+                                </button>
+                                <button id="play_search" class="btn btn-default" data-target="#music_list"
+                                                                                 type="submit" title="play first song in playlist">
+                                    <i class="glyphicon glyphicon-play"></i>
+                                </button>
+                                <button id="fav_add_search" class="btn btn-default" type="submit"
+                                                                                    data-delayed-toggle="collapse" data-target="#music_list"
+                                                                                                                   title="show favorite songs">
+                                    <i id="fav_add_icon" class="glyphicon glyphicon-heart"></i>
+                                </button>
+                            </div>  
+                        </div> 
+                        <div id="music_list" class="collapse">
+                            <div class="row" style="height:100%">
+                                <div class="col-md-4">
+                                    <div class="list-group" style="margin-bottom: 0px;">
+                                        <hr>
+                                        <div id='list_container'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="tab1-cont" class="tab-pane fade">
+                        <br>
+                        <div class="input-group">
+
+
+                            <div class="input-group-btn">
+                                <button id="bios" class="btn btn-default" type="button"
+                                                            title='change your account'>
+                                    <i class="glyphicon glyphicon-transfer"></i>
+                                </button>
+                            </div>
+
+                            <!--
+                            <select id="bios" name="source" class="form-control"
+                                                                    style="text-align:center;
+                                                                           padding-left: 4px;
+                                                                           padding-right: 0px;
+                                                                           padding-top: 4px;"
+                                                                    title="music source">
+                                <option>bio0</option>
+                                <option>bio1</option>
+                                <option>bio2</option>
+                            </select>
+                            -->
+
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <input id="fb-input" type="text" 
+                                                class="form-control" placeholder="Friend Rule">
+
+                            <div class="input-group-btn">
+                                <button id="add_friend" class="btn btn-default" type="submit"
+                                                        data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                       title="add friend by rule">
+                                    <i id="add_friend_icon" class="glyphicon glyphicon-plus"></i>
+                                </button>
+                                <button id="friend-opener" class="btn btn-default fb-opener" type="button"
+                                                                                       data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                                                      title="show friend list">
+                                    <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
+                                </button>
+                                <button id="room-opener" class="btn btn-default fb-opener" data-target="#fb_list"
+                                                                                 type="submit" title="show all room">
+                                    <i class="glyphicon glyphicon-home"></i>
+                                </button> 
+                            </div>  
+                        </div> 
+                        <div id="fb_list" class="collapse">
+                            <div class="row" style="height:100%">
+                                <div class="col-md-4">
+                                    <div class="list-group" style="margin-bottom: 0px;">
+                                        <hr>
+                                        <div id='fb_list_container'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab2-cont" class="tab-pane fade">
+                        <h3>GameMenu</h3>
+                    </div>
+                    <div id="tab3-cont" class="tab-pane fade">
+                        <h3>StickerMenu</h3>
+                    </div>
+                </div>
+
 
                 <!-- image uploader: the <input type="file"/> need be newed in background page,
                     and It may cost my a lot of time to try,
@@ -79,55 +207,6 @@
                     <br>
                 -->
 
-                <div class="input-group">
-                    
-                    <div class="input-group-btn">
-                        <button id="music_mode" class="btn btn-default" type="button"
-                                                                        title='album mode, continue playing if any song in playlist'>
-                            <i id="mode_type" class="glyphicon glyphicon-cd"></i>
-                        </button>
-                    </div>
-
-                    <select id="music_source" name="source" class="form-control"
-                            style="text-align:center;
-                                   padding-left: 4px;
-                                   padding-right: 0px;
-                                   padding-top: 4px;"
-                            title="music source">
-                    </select>
-
-                    <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
-
-                    <input id="keyword" type="text" 
-                                        class="form-control" placeholder="Search Keyword and Play">
-                    
-                    <div class="input-group-btn">
-                        <button id="music_list_opener" class="btn btn-default" type="button"
-                                data-delayed-toggle="collapse" data-target="#music_list"
-                                title="show playlist">
-                            <i id="list_type" class="glyphicon glyphicon-list"></i>
-                        </button>
-                        <button id="play_search" class="btn btn-default" data-target="#music_list"
-                                 type="submit" title="play first song in playlist">
-                            <i class="glyphicon glyphicon-play"></i>
-                        </button>
-                        <button id="fav_add_search" class="btn btn-default" type="submit"
-                                data-delayed-toggle="collapse" data-target="#music_list"
-                                title="show favorite songs">
-                            <i id="fav_add_icon" class="glyphicon glyphicon-heart"></i>
-                        </button>
-                    </div>  
-                </div> 
-                <div id="music_list" class="collapse">
-                    <div class="row" style="height:100%">
-                        <div class="col-md-4">
-                            <div class="list-group" style="margin-bottom: 0px;">
-                                <hr>
-                                <div id='list_container'></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         </div>

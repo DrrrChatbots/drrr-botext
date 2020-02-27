@@ -35,11 +35,21 @@ var list_template = (args, btns) =>
      </div>  
  </div>`;
 
+var grid_row_template = (ctx) =>
+`<div class="row" style="display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; padding: 0 4px;">${ctx}</div>`
+
+var grid_col_template = (args, btns) =>
+`<div class="column hover09" style="${args.colstyle}">${btns.map((b) => b(args)).join('')} </div>`
+
+
 var empty_template = (name, icon) =>
 `<div class="input-group">
      <span class="input-group-addon"><i class="glyphicon ${icon ? icon : 'glyphicon-music'}"></i></span>
      <span class="input-group-addon form-control panel-footer text-center">${name}</span>
  </div>`;
+
+var sticker_btn = (args) =>
+    `<figure><img src="${args.url}" class="sticker-btn" style="${args.imgstyle}"></figure>`
 
 var imm_play_btn = (args) =>
 `<button class="btn btn-default imm-play" type="submit"
@@ -83,6 +93,18 @@ var goto_room_btn = (args) =>
          data="${args.url}"   title="goto the room">
      <i class="glyphicon glyphicon-plane"></i>
   </button>`
+
+function bind_sticker(){
+    $('.sticker-btn').click(function(){
+        sendTab({
+            fn: publish_message,
+            args: {
+                msg: '⠀',
+                url: this.src
+            }
+        });
+    })
+}
 
 function bind_imm_play(){
     $('.imm-play').click(function(){
@@ -152,43 +174,41 @@ function bind_goto_room(){
             chrome.runtime.sendMessage({ jumpto: toURL });
         });
         return;
-
-        $.ajax({
-            type: "POST",
-            data: {'leave':'leave'},
-            url: 'https://drrr.com//room',
-            dataType: 'json',
-            success: function(data){
-                alert('WTF', data);
-                if(data.status && data.status == "403"){
-
-
-                }
-                else{
-                    //alert($(this).attr('data'));
-                    chrome.storage.sync.set({'jumpToRoom': toURL });
-                }
-            },
-            error: function(data){
-                if(data.status && data.status == "403"){
-                    chrome.notifications.create(
-                        {
-                            type: "basic",
-                            iconUrl: '/icon.png',
-                            title: '離開失敗，稍後再試',
-                            message: '蟲洞開啟失敗'
-                        });
-                }
-                else{
-                    //alert($(this).attr('data'));
-                    chrome.storage.sync.set({'jumpToRoom': toURL });
-                }
-            }
-        });
+        //$.ajax({
+        //    type: "POST",
+        //    data: {'leave':'leave'},
+        //    url: 'https://drrr.com//room',
+        //    dataType: 'json',
+        //    success: function(data){
+        //        alert('WTF', data);
+        //        if(data.status && data.status == "403"){
+        //        }
+        //        else{
+        //            //alert($(this).attr('data'));
+        //            chrome.storage.sync.set({'jumpToRoom': toURL });
+        //        }
+        //    },
+        //    error: function(data){
+        //        if(data.status && data.status == "403"){
+        //            chrome.notifications.create(
+        //                {
+        //                    type: "basic",
+        //                    iconUrl: '/icon.png',
+        //                    title: '離開失敗，稍後再試',
+        //                    message: '蟲洞開啟失敗'
+        //                });
+        //        }
+        //        else{
+        //            //alert($(this).attr('data'));
+        //            chrome.storage.sync.set({'jumpToRoom': toURL });
+        //        }
+        //    }
+        //});
     });
 }
 
 btn_funcbind = {
+    [sticker_btn]: bind_sticker,
     [imm_play_btn]: bind_imm_play,
     [imm_pldl_btn]: bind_imm_pldl,
     [fav_song_btn]: bind_fav_song,
@@ -202,6 +222,25 @@ function show_list(cont_name, entries, btns, callback){
     $(cont_name).html(
         !Array.isArray(entries) ? entries :
         entries.map((args)=> list_template(args, btns)).join('')
+    ).promise().then(callback);
+    for(btn of btns) btn_funcbind[btn]();
+}
+
+
+function grid_of(list, n){
+    return list.reduce((acc, v, idx)=>{idx % n ? acc[acc.length - 1].push(v) : acc.push([v]); return acc}, [])
+}
+
+function show_grid(cont_name, entries, btns, callback){
+    $(cont_name).html(
+        !Array.isArray(entries) ? entries :
+        entries.map( rargs =>
+            grid_row_template(
+                rargs.map( col =>
+                    grid_col_template(col, btns)
+                ).join('')
+            )
+        )
     ).promise().then(callback);
     for(btn of btns) btn_funcbind[btn]();
 }
@@ -224,57 +263,105 @@ function show_searchlist(callback){
     );
 }
 
-function show_roomlist(callback){
+function show_stickergrid(stickerurl, callback){
     $.ajax({
         type: "GET",
-        url: 'https://drrr.com//lounge?api=json',
-        dataType: 'json',
+        url: stickerurl,
+        dataType: 'html',
         success: function(data){
-            lounge = data.rooms.sort(function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);} ).reverse();
+            //var urls = $(data).find('.FnImage > span').toArray().map(u=>{
+            //    var attr = $(u).css('background-image')
+            //    return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
+            //}).filter((v)=>v.length);
+            var nodes = $(data);
+            var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
+                (node) => {
+                    if($(node).attr('data-preview')){
+                        var attr = $(node).attr('data-preview');
+                        var view = JSON.parse(attr);
+                        if(view.animationUrl && view.animationUrl.length)
+                            return view.animationUrl;
+                        else return view.staticUrl;
+                    }
+                    return "";
+                }
+            ).filter((v)=>v.length);
 
-            show_list(
-                '#fb_list_container',
-                lounge.map((room)=>{
-                    var status = `(${room.total}/${String(room.limit).substring(0, 4)})`;
-                    var users = room.users.map(u=>`${room.host && room.host.name == u.name ? '👤': '👣'} ${u.name}`).join('\n');
-                    return ({
-                        icon: 'glyphicon-home',
-                        title: `${room.language} ${room.name}\n${room.description}\n${users}`,
-                        content: ommited_name(`${room.language}`, `${room.name} ${status}`, 100),
-                        can: room.total < room.limit,
-                        url: 'https://drrr.com/room/?id=' + room.roomId,
-                    });
-                }), [goto_room_btn], callback
-            )
+            show_grid(
+                '#sticker_list_container',
+                grid_of(urls.map((url)=>({
+                    url: url,
+                    colstyle: `flex: 50%; max-width: 50%; padding: 0 4px;`,
+                    imgstyle: `margin-top: 8px; vertical-align: middle; width: 100%; `,
+                })), 2), [sticker_btn], callback
+            );
 
         },
         error: function(data){
-            alert("error", data);
+            alert("Error: " + JSON.stringify(data));
         }
     });
 }
 
+var guests = (room, users) => {
+        names = users.map(u => u.name);
+        return room.users.map(u => {
+            var icon = '';
+            if(u.name == profile.name)
+                icon = '🐈';
+            else if(names.includes(u.name))
+                icon = room.host && room.host.name == u.name ? '🐱' : '🐾';
+            else
+                icon = room.host && room.host.name == u.name ? '👤' : '👣';
+            return `${icon} ${u.name}`
+        }).join('\n');
+    };
+
+var state = (room) => `(${room.total}/${String(room.limit).substring(0, 4)})`;
+
+var title = (room, users) => `${room.language} ${room.name} ${state(room)}\n${room.description}\n${guests(room, users)}`;
+
+function show_homelist(callback){
+    show_findlist(
+        findAsList.bind(null, {'home':true}),
+        title, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        callback
+    )
+}
+
 function show_friendlist(callback){
+    show_findlist(
+        findAsList.bind(null, {}),
+        title, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
+        callback
+    );
+}
+
+function show_roomlist(callback){
+    show_findlist(
+        (rooms) => Object.values(rooms).map((room) => [room, []]),
+        title, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        callback
+    );
+}
+
+function show_findlist(findGroups, title, content, callback){
     $.ajax({
         type: "GET",
         url: 'https://drrr.com//lounge?api=json',
         dataType: 'json',
         success: function(data){
+            profile = data.profile;
             lounge = data.rooms.sort(function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);} ).reverse();
-            var groups = findUserAsList(friends, lounge);
-            console.log('groups:', groups);
-            console.log("keys", Object.keys(groups));
+            var groups = findGroups(lounge);
             if(groups.length)
                 show_list(
                     '#fb_list_container',
                     groups.map(([room, users])=>{
-                        var status = `(${room.total}/${String(room.limit).substring(0, 4)})`;
-                        var usernames = users.map(u=>`${u.name}`).join(', ');
-                        var AllUsers = room.users.map(u=>`${room.host && room.host.name == u.name ? '👤': '👣'} ${u.name}`).join('\n');
                         return ({
                             icon: 'glyphicon-home',
-                            title: `${room.language} ${room.name}\n${room.description}\n${AllUsers}`,
-                            content: ommited_name(`${room.name}`, `${usernames}`, 100),
+                            title: title(room, users),
+                            content: content(room, users),
                             can: room.total < room.limit,
                             url: 'https://drrr.com/room/?id=' + room.roomId,
                         });
@@ -283,7 +370,7 @@ function show_friendlist(callback){
             else show_list('#fb_list_container', empty_template('NO FRIEND ONLINE', 'glyphicon-home'), [], callback);
         },
         error: function(data){
-            alert("error", data);
+            alert("Error: " + data.responseJSON.message);
         }
     });
 }
@@ -333,7 +420,7 @@ function emptyKeyword(){
     $('#play_search').attr('title', "play first song in playlist")
 }
 
-function music_bar_setup(){
+function music_bar_setup(config){
     /* music mode change */
     function mode_switch(bool){
         if(bool){
@@ -347,7 +434,7 @@ function music_bar_setup(){
     }
 
     /* handle config[MUSIC_MODE] be undefined slightly */
-    chrome.storage.sync.get((config)=> mode_switch(config[MUSIC_MODE] === SINGLE_MODE));
+    mode_switch(config[MUSIC_MODE] === SINGLE_MODE);
     $('#music_mode').click(()=>{
         chrome.storage.sync.set({
             [MUSIC_MODE]: $('#mode_type').hasClass('glyphicon-cd') ? SINGLE_MODE : ALBUM_MODE
@@ -386,10 +473,10 @@ function music_bar_setup(){
     Object.keys(api).forEach((v)=>{
         $('#music_source').append(`<option value="${v}">${v}</option>`);
     })
-    chrome.storage.sync.get((config) => {
-        if(config['music_source'])
-            $('#music_source').val(config['music_source']);
-    });
+
+    if(config['music_source'])
+        $('#music_source').val(config['music_source']);
+
     $('#music_source').change(function(){
         chrome.storage.sync.set({ music_source: $(this).val() });
     });
@@ -459,25 +546,17 @@ function music_bar_setup(){
     });
 }
 
-function friend_bio_setup(){
-
-
-    chrome.storage.sync.get((config)=>{
-        var tab = config['pop-tab'] ? config['pop-tab'] : 'tab0';
-        $(`#${tab}`).addClass('active');
-        $(`#${tab}-cont`).addClass('active').addClass('in');
-        //class="active" 
-    });
-
-    $('.pop-tab').on('click', function(){
-        chrome.storage.sync.set({'pop-tab': this.id});
-    })
+function friend_bio_setup(config){
 
     $('.fb-opener').on('click', function () {
         var $target = $($(this).attr("data-target"));
         var tartype = $target.attr('data');
         var opening = $target.hasClass('in');
-        var opener = {'friend-opener': show_friendlist, 'room-opener': show_roomlist}[this.id];
+        var opener = {
+            'home-opener': show_homelist,
+            'friend-opener': show_friendlist,
+            'room-opener': show_roomlist
+        }[this.id];
         $target.attr('data', this.id);
         if(!opening) opener(()=>$target.collapse('show'));
         else if(tartype == this.id) $target.collapse('hide');
@@ -491,6 +570,154 @@ function friend_bio_setup(){
             $target.collapse('hide');
         }
     });
+}
+
+var default_stickers = [
+    ["LV1.野生喵喵怪", "https://store.line.me/stickershop/product/6996333/zh-Hant"],
+    ["LV2.野生喵喵怪", "https://store.line.me/stickershop/product/7431735/zh-Hant"],
+    ["LV3.野生喵喵怪", "https://store.line.me/stickershop/product/8233424/zh-Hant"],
+    ["LV4.野生喵喵怪", "https://store.line.me/stickershop/product/9435002/zh-Hant"],
+    ["LV5.野生喵喵怪", "https://store.line.me/stickershop/product/9434741/zh-Hant"],
+    ["LV6.野生喵喵怪", "https://store.line.me/stickershop/product/9329100/zh-Hant"],
+    ["LV7.野生喵喵怪", "https://store.line.me/stickershop/product/9786706/zh-Hant"],
+    ["LV8.野生喵喵怪", "https://store.line.me/stickershop/product/10247167/zh-Hant"],
+    ["LV9.野生喵喵怪", "https://store.line.me/stickershop/product/10567103/zh-Hant"],
+    ["LV10.野生喵喵怪","https://store.line.me/stickershop/product/10514415/zh-Hant"],
+]
+
+function reset_stickers(){
+    var $stored = $('#store_stickers');
+    var stickers = default_stickers;
+    var select = stickers[stickers.length - 1][1]; 
+    chrome.storage.sync.set({
+        'stickers': default_stickers,
+        'select_stickers': select
+    });
+    $stored.find('option').remove();
+    stickers.forEach(([name, url])=>{
+        $stored.append(`<option value="${url}">${name}</option>`);
+    })
+    $stored.val(select);
+    $stored.change();
+}
+
+s = undefined;
+t = undefined;
+function sticker_setup(config){
+
+    var $stored = $('#store_stickers');
+    var $target = $($stored.attr("data-target"));
+
+    var stickers = config['stickers'];
+    var select = config['select_stickers'];
+    if(!stickers || !stickers.length) reset_stickers()
+    else{
+        if(!select){
+            select = stickers[stickers.length - 1][1];
+            chrome.storage.sync.set({'select_stickers': select });
+        }
+        stickers.forEach(([name, url])=>{
+            $stored.append(`<option value="${url}">${name}</option>`);
+        })
+        $stored.val(select);
+    }
+
+
+    $('.nav-tabs a').on('shown.bs.tab', ((showen) => function(event){
+        if('LineSticker' == $(event.target).text() && !showen){
+            showen = true;
+            show_stickergrid(select, ()=>$target.collapse('show'));
+        }
+    })(false));
+
+    $stored.on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        chrome.storage.sync.set({ 'select_stickers': valueSelected });
+
+        var $target = $($(this).attr("data-target"));
+        var tartype = $target.attr('data');
+        var opening = $target.hasClass('in');
+        t = $target;
+        $target.attr('data', this.id);
+
+        if(!opening) show_stickergrid(valueSelected, ()=>$target.collapse('show'));
+        else show_stickergrid(valueSelected, ()=>$target.collapse('show'));
+    });
+
+    $('#reset-sticker').on('click', reset_stickers);
+    $('#del_sticker').on('click', function(){
+        var $stored = $('#store_stickers');
+        var optionSelected = $("option:selected", $stored);
+        var valueSelected = $stored.val();
+        console.log('del', valueSelected);
+        if($("option", $stored).length > 1){
+            pop_value('stickers', (([name, url], idx, ary) => url == valueSelected))
+            optionSelected.remove();
+            $stored.change();
+        }
+        else{
+            alert("cannot delete last sticker");
+        }
+    });
+
+    $('#add_sticker').on('click', function(){
+        var error = () => alert(", you refer the 'goto store button'");
+        var url = prompt('input the Line sticker URL:');
+        if(url.match(new RegExp("^https://store.line.me/stickershop/product/.*"))){
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: 'html',
+                success: function(data){
+                    var nodes = $(data);
+                    s = nodes;
+                    var tidx = Object.values(nodes).findIndex((v)=>v.nodeName == 'TITLE')
+                    var name = tidx >= 0 ? nodes[tidx].textContent : '';
+                    var idx = name.indexOf(' – LINE貼圖 | LINE STORE')
+                    if(idx >= 0){
+                        name = name.substring(0, idx);
+                        //JSON.parse($(s.find('.FnStickerPreviewItem')[0]).attr('data-preview')).animationUrl
+                        //staticUrl
+
+                        //var urls = nodes.find('.FnImage > span').toArray().map(u=>{
+                        //    var attr = $(u).css('background-image')
+                        //    return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
+                        //}).filter((v)=>v.length);
+                        var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
+                            (node) => {
+                                if($(node).attr('data-preview')){
+                                    var attr = $(node).attr('data-preview');
+                                    var view = JSON.parse(attr);
+                                    if(view.animationUrl && view.animationUrl.length)
+                                        return view.animationUrl;
+                                    else return view.staticUrl;
+                                }
+                                return "";
+                            }
+                        ).filter((v)=>v.length);
+
+                        if(urls.length){
+                            push_value('stickers', [name, url]);
+                            $stored.append(`<option value="${url}">${name}</option>`);
+                            $stored.val(url);
+                            $stored.change();
+                            return;
+                        }
+                        else alert("cannot find any sticker in the page");
+                    }
+                    else alert("title of the page should be end with – LINE貼圖 | LINE STORE");
+                },
+                error: function(data){
+                    alert("Error: " + JSON.stringify(data));
+                }
+            });
+        } else alert('URL should be something likes https://store.line.me/stickershop/product/.*');
+    });
+
+    $('#stciker-store-opener').on('click', function(){
+        chrome.tabs.create({url: 'https://store.line.me/home/zh-Hant'});
+    });
 
 }
 
@@ -500,6 +727,17 @@ $(document).ready(function(){
     /* ensure activate the background page */
     chrome.runtime.sendMessage({ type: 'popup' },
         () => bkg().make_switch_panel($, '#switch_panel'));
-    music_bar_setup(); 
-    friend_bio_setup();
+
+    chrome.storage.sync.get((config)=>{
+        music_bar_setup(config); 
+        friend_bio_setup(config);
+        sticker_setup(config);
+        var tab = config['pop-tab'] ? config['pop-tab'] : 'tab0';
+        $(`#${tab} > a`).click();
+        //$(`#${tab}`).addClass('active');
+        //$(`#${tab}-cont`).addClass('active').addClass('in');
+        $('.pop-tab').on('click', function(){
+            chrome.storage.sync.set({'pop-tab': this.id});
+        })
+    });
 });

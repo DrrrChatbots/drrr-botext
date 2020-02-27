@@ -24,7 +24,7 @@
             "matches": ["https://drrr.com/lounge/*"],
             "run_at": "document_start",
             "css": ["/css/bootstrap.min.css"],
-            "js": ["/js/jquery-3.4.1.min.js", "/js/bootstrap.min.js", "/lib/globals.js", "/lib/format.js", "/content/lounge.js"]
+            "js": ["/js/jquery-3.4.1.min.js", "/js/bootstrap.min.js", "/js/animatedModal.min.js", "/lib/globals.js", "/lib/format.js", "/content/lounge.js"]
         }
 
     ],
@@ -38,5 +38,10 @@
         "http://music.163.com/api/*",
         "http://tingapi.ting.baidu.com/*",
         "https://store.line.me/*"
-    ]
+    ],
+    "web_accessible_resources": [
+         "images/*.png"
+    ],
+    "content_security_policy": "script-src 'self' https://static.line-scdn.net/line_store/1701dcf85d5/pc/js/lc.line.store.pc.main.js; object-src 'self'"
+
 }

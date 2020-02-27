@@ -234,6 +234,7 @@ $(document).ready(function(){
     console.log("start background moniter new"); 
     handle_exit();
 
+    chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
     // check online status
     var find = function(){
         console.log('check once');
@@ -243,9 +244,9 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(data){
                 lounge = data.rooms;
-                findUser(friends, data.rooms, function(users, room){
+                monitLounge(friends, data.rooms, function(users, room){
                     url = room.total < room.limit ? 'https://drrr.com/room/?id=' + room.roomId : undefined;
-                    msg = room.total < room.limit ? `點擊前往 ${room.name} (${room.total}/${room.limit})` : '房間滿了 QwQ';
+                    msg = room.total < room.limit ? `點擊前往 ${room.name} (${room.total}/${room.limit})` : `房間 ${room.name} 滿了 QwQ`;
                     chrome.runtime.sendMessage({ notification: {
                         url: url,
                         title: `野生的 "${users.map(u=>u.name).join('\", \"')}" 出現啦`,

@@ -72,3 +72,15 @@
     margin-bottom: 0 !important;
   }
 }
+
+
+.hover09 figure img {
+	-webkit-filter: sepia(100%);
+	filter: sepia(100%);
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+.hover09 figure:hover img {
+	-webkit-filter: sepia(0);
+	filter: sepia(0);
+}

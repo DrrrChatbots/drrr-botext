@@ -41,8 +41,18 @@ new Handler("music", [],
 );
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => { 
+    console.log(sender);
     if(req && req.jumpto){
-        chrome.tabs.update({ url: req.jumpto })
+        if(sender.tab && sender.tab.id)
+            chrome.tabs.update(sender.tab.id, { url: req.jumpto });
+        else chrome.tabs.update({ url: req.jumpto });
+    }
+    else if(req && req.clearNotes){
+        chrome.notifications.getAll((notes)=>{
+            for(n in notes)
+                if(n.match(new RegExp(req.clearNotes)))
+                    chrome.notifications.clear(n);
+        })
     }
     else if(req && req.notification){
         chrome.notifications.create(
@@ -54,9 +64,10 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
                 message: req.notification.msg 
             });
         if(req.notification.url)
-            chrome.notifications.onClicked.addListener(function(notificationId) {
+            chrome.notifications.onClicked.addListener(((exit)=>function(notificationId) {
                 console.log(notificationId);
-                if(req.notification.exit){
+
+                if(exit){
                     var lambda = function(){
                         $.ajax({
                             type: "POST",
@@ -70,7 +81,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
 
                                 }
                                 else{
-                                    chrome.storage.sync.set({'jumpToRoom': notificationId });
+                                    chrome.storage.sync.set({'jumpToRoom': notificationId }); 
                                 }
                             },
                             error: function(data){
@@ -92,8 +103,13 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
                 } else chrome.tabs.update({
                     url: notificationId
                 });
-                chrome.notifications.clear(notificationId);
-            });  
+                //chrome.notifications.clear(notificationId);
+                chrome.notifications.getAll((notes)=>{
+                    for(n in notes)
+                        if(n.startsWith('https://drrr.com/room/?id='))
+                            chrome.notifications.clear(n);
+                })
+            })(req.notification.exit));  
     }
     else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){ 
         console.log(req);

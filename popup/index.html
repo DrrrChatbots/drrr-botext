@@ -44,7 +44,7 @@
 
                 <hr>
 
-                 <ul class="nav nav-tabs nav-justified">
+                <ul class="nav nav-tabs nav-justified">
                     <li id="tab0" class="pop-tab"><a data-toggle="tab" href="#tab0-cont">MusicBar</a></li>
                     <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Friends&Bio</a></li>
                     <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">GamePanel</a></li>
@@ -65,9 +65,9 @@
 
                             <select id="music_source" name="source" class="form-control"
                                                                     style="text-align:center;
-                                                                           padding-left: 4px;
-                                                                           padding-right: 0px;
-                                                                           padding-top: 4px;"
+                                                                                             padding-left: 4px;
+                                                                                             padding-right: 0px;
+                                                                                             padding-top: 4px;"
                                                                     title="music source">
                             </select>
 
@@ -108,47 +108,40 @@
                     <div id="tab1-cont" class="tab-pane fade">
                         <br>
                         <div class="input-group">
-
-
                             <div class="input-group-btn">
                                 <button id="bios" class="btn btn-default" type="button"
-                                                            title='change your account'>
+                                                                          title='change your account'>
                                     <i class="glyphicon glyphicon-transfer"></i>
                                 </button>
                             </div>
-
-                            <!--
-                            <select id="bios" name="source" class="form-control"
-                                                                    style="text-align:center;
-                                                                           padding-left: 4px;
-                                                                           padding-right: 0px;
-                                                                           padding-top: 4px;"
-                                                                    title="music source">
-                                <option>bio0</option>
-                                <option>bio1</option>
-                                <option>bio2</option>
-                            </select>
-                            -->
-
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
                             <input id="fb-input" type="text" 
-                                                class="form-control" placeholder="Friend Rule">
-
+                                                 class="form-control" placeholder="Search Room/Friend">
                             <div class="input-group-btn">
-                                <button id="add_friend" class="btn btn-default" type="submit"
-                                                        data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                       title="add friend by rule">
-                                    <i id="add_friend_icon" class="glyphicon glyphicon-plus"></i>
+                               
+                                <button id="fb_search" class="btn btn-default" data-target="#fb_list"
+                                                                                 type="submit" title="search user or room">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+
+                                <button id="add_rule" class="btn btn-default" type="submit"
+                                                                                data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                                               title="add home/friend by rule">
+                                    <i id="" class="glyphicon glyphicon-plus"></i>
+                                </button>
+                                <button id="home-opener" class="btn btn-default fb-opener" data-target="#fb_list"
+                                                                                           type="submit" title="show home">
+                                    <i class="glyphicon glyphicon-home"></i>
                                 </button>
                                 <button id="friend-opener" class="btn btn-default fb-opener" type="button"
-                                                                                       data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                                                      title="show friend list">
+                                                                                             data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                                                            title="show friend list">
                                     <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
                                 </button>
                                 <button id="room-opener" class="btn btn-default fb-opener" data-target="#fb_list"
-                                                                                 type="submit" title="show all room">
-                                    <i class="glyphicon glyphicon-home"></i>
+                                                                                           type="submit" title="show all room">
+                                    <i class="glyphicon glyphicon-globe"></i>
                                 </button> 
                             </div>  
                         </div> 
@@ -167,7 +160,52 @@
                         <h3>GameMenu</h3>
                     </div>
                     <div id="tab3-cont" class="tab-pane fade">
-                        <h3>StickerMenu</h3>
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button id="reset-sticker" class="btn btn-default" type="button" title='reset stickers'>
+                                    <i class="glyphicon glyphicon-refresh"></i>
+                                </button>
+                            </div>
+
+                            <select id="store_stickers"
+                                    name="source" class="form-control"
+                                                  data-target="#sticker_list"
+                                                  style="text-align:center;"
+                                                  title="music source">
+                            </select>
+
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <div class="input-group-btn">
+                                <button id="add_sticker" class="btn btn-default" type="submit" title="add sticker by URL">
+                                    <i id="" class="glyphicon glyphicon-plus"></i>
+                                </button>
+                                <button id="del_sticker" class="btn btn-default" type="submit" title="del the selected sticker">
+                                    <i id="" class="glyphicon glyphicon-minus"></i>
+                                </button>
+                                <!--
+                                <button id="friend-opener" class="btn btn-default fb-opener" type="button"
+                                                                                             data-delayed-toggle="collapse" data-target="#sticker_list"
+                                                                                                                            title="show friend list">
+                                    <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
+                                </button>
+                                -->
+                                <button id="stciker-store-opener" class="btn btn-default" type="submit" title="goto store">
+                                    <i class="glyphicon glyphicon-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="sticker_list" class="collapse">
+                            <div class="row" style="height:100%">
+                                <div class="col-md-4">
+                                    <div class="list-group" style="margin-bottom: 0px;">
+                                        <hr>
+                                        <div id='sticker_list_container'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

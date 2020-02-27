@@ -23,7 +23,8 @@ var countDownModal = `
                     </div>`
 
 $(document).ready(function(){
-    chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
+    //chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
+    chrome.runtime.sendMessage({ clearNotes: '' });
     chrome.storage.sync.get((config) => {
         console.log('config', config);
         if(config['jumpToRoom']){

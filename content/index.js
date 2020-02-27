@@ -234,7 +234,8 @@ $(document).ready(function(){
     console.log("start background moniter new"); 
     handle_exit();
 
-    chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
+    chrome.runtime.sendMessage({ clearNotes: '' });
+    //chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
     // check online status
     var find = function(){
         console.log('check once');

@@ -40,6 +40,7 @@ new Handler("music", [],
     }
 );
 
+var error403 = 0;
 chrome.runtime.onMessage.addListener((req, sender, callback) => { 
     console.log(sender);
     if(req && req.jumpto){
@@ -85,17 +86,27 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
                                 }
                             },
                             error: function(data){
+                                console.log(data)
                                 if(data.status && data.status == "403"){
-                                    chrome.notifications.create(
-                                        {
-                                            type: "basic",
-                                            iconUrl: '/icon.png',
-                                            title: '離開失敗，十秒後為您重試',
-                                            message: '蟲洞即將開啟，請不要亂動'
+                                    if(!error403){
+                                        error403++;
+                                        chrome.notifications.getAll((notes)=>{
+                                            for(n in notes) chrome.notifications.clear(n);
+                                            chrome.notifications.create({
+                                                type: "basic",
+                                                iconUrl: '/icon.png',
+                                                title: '離開失敗，十秒後為您重試',
+                                                message: '蟲洞即將開啟，請不要亂動'
+                                            });
+                                            setTimeout(lambda, 10000);
+
                                         });
-                                    setTimeout(lambda, 10000);
+                                    }
                                 }
-                                else chrome.storage.sync.set({'jumpToRoom': notificationId });
+                                else {
+                                    chrome.storage.sync.set({'jumpToRoom': notificationId });
+                                    error403 = 0;
+                                }
                             }
                         })
                     }

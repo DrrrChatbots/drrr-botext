@@ -22,9 +22,8 @@ var countDownModal = `
                         </div>
                     </div>`
 
-
-
 $(document).ready(function(){
+    chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
     chrome.storage.sync.get((config) => {
         console.log('config', config);
         if(config['jumpToRoom']){
@@ -62,20 +61,15 @@ $(document).ready(function(){
                     url: 'https://drrr.com//lounge?api=json',
                     dataType: 'json',
                     success: function(data){
-                        monitLounge(friends, data.rooms, function(users, room){
-                            url = room.total < room.limit ? 'https://drrr.com/room/?id=' + room.roomId : undefined;
-                            msg = room.total < room.limit ? `點擊前往 ${room.name} (${room.total}/${room.limit})` : `房間 ${room.name} 滿了 QwQ`;
-                            chrome.runtime.sendMessage({ notification: {
-                                url: url,
-                                title: `野生的 "${users.map(u=>u.name).join('\", \"')}" 出現啦`,
-                                msg: msg,
-                            } })
-                        })
+                        monitLounge(friends, data.rooms, false);
+                    },
+                    error: function(data){
+                        console.log("Error:", JSON.stringify(data));
                     }
                 })
             }
-            find();
-            //setInterval(find, 20000);
+            setTimeout(find, 5000);
+            setInterval(find, 20000);
             console.log("start find");
         }
     });

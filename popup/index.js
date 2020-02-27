@@ -303,49 +303,31 @@ function show_stickergrid(stickerurl, callback){
     });
 }
 
-var guests = (room, users) => {
-        names = users.map(u => u.name);
-        return room.users.map(u => {
-            var icon = '';
-            if(u.name == profile.name)
-                icon = '🐈';
-            else if(names.includes(u.name))
-                icon = room.host && room.host.name == u.name ? '🐱' : '🐾';
-            else
-                icon = room.host && room.host.name == u.name ? '👤' : '👣';
-            return `${icon} ${u.name}`
-        }).join('\n');
-    };
-
-var state = (room) => `(${room.total}/${String(room.limit).substring(0, 4)})`;
-
-var title = (room, users) => `${room.language} ${room.name} ${state(room)}\n${room.description}\n${guests(room, users)}`;
-
 function show_homelist(callback){
     show_findlist(
         findAsList.bind(null, {'home':true}),
-        title, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
-        callback
+        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        callback, empty_template('NO MARKED PLACE ONLINE', 'glyphicon-home')
     )
 }
 
 function show_friendlist(callback){
     show_findlist(
-        findAsList.bind(null, {}),
-        title, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
-        callback
+        findAsList.bind(null, {'friend':true}),
+        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
+        callback, empty_template('NO FRIEND ONLINE', 'glyphicon-user')
     );
 }
 
 function show_roomlist(callback){
     show_findlist(
         (rooms) => Object.values(rooms).map((room) => [room, []]),
-        title, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
-        callback
+        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        callback, empty_template('NO ROOM ON DRRR (WTF)', 'glyphicon-globe')
     );
 }
 
-function show_findlist(findGroups, title, content, callback){
+function show_findlist(findGroups, title, content, callback, empty){
     $.ajax({
         type: "GET",
         url: 'https://drrr.com//lounge?api=json',
@@ -367,7 +349,7 @@ function show_findlist(findGroups, title, content, callback){
                         });
                     }), [goto_room_btn], callback
                 )
-            else show_list('#fb_list_container', empty_template('NO FRIEND ONLINE', 'glyphicon-home'), [], callback);
+            else show_list('#fb_list_container', empty, [], callback);
         },
         error: function(data){
             alert("Error: " + data.responseJSON.message);

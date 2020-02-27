@@ -244,16 +244,7 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(data){
                 lounge = data.rooms;
-                monitLounge(friends, data.rooms, function(users, room){
-                    url = room.total < room.limit ? 'https://drrr.com/room/?id=' + room.roomId : undefined;
-                    msg = room.total < room.limit ? `點擊前往 ${room.name} (${room.total}/${room.limit})` : `房間 ${room.name} 滿了 QwQ`;
-                    chrome.runtime.sendMessage({ notification: {
-                        url: url,
-                        title: `野生的 "${users.map(u=>u.name).join('\", \"')}" 出現啦`,
-                        msg: msg,
-                        exit: 1
-                    } })
-                }, rinfo.room.roomId)
+                monitLounge(friends, data.rooms, true, rinfo.room.roomId);
             },
             error: function(data){
                 alert("error", data);
@@ -276,7 +267,9 @@ $(document).ready(function(){
                 }
             })
             setTimeout(find, 5000);
-            setInterval(find, 90000);
+            setInterval(find, 10000);
+            //setInterval(find, 30000);
+            //setInterval(find, 90000);
             //setInterval(find, 10000);
         },
         error: function(data){

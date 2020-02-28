@@ -73,6 +73,10 @@
   }
 }
 
+.fb-on-input{
+    display:none;
+}
+
 
 .hover09 figure img {
 	-webkit-filter: sepia(100%);

@@ -268,7 +268,7 @@ $(document).ready(function(){
                 }
             })
             setTimeout(find, 5000);
-            setInterval(find, 10000);
+            setInterval(find, 90000);
             //setInterval(find, 30000);
             //setInterval(find, 90000);
             //setInterval(find, 10000);

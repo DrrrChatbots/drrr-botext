@@ -65,9 +65,9 @@
 
                             <select id="music_source" name="source" class="form-control"
                                                                     style="text-align:center;
-                                                                                             padding-left: 4px;
-                                                                                             padding-right: 0px;
-                                                                                             padding-top: 4px;"
+                                                                                                                                 padding-left: 4px;
+                                                                                                                                 padding-right: 0px;
+                                                                                                                                 padding-top: 4px;"
                                                                     title="music source">
                             </select>
 
@@ -109,40 +109,78 @@
                         <br>
                         <div class="input-group">
                             <div class="input-group-btn">
-                                <button id="bios" class="btn btn-default" type="button"
+                                <button id="bios" class="btn btn-default" type="button" disabled
                                                                           title='change your account'>
                                     <i class="glyphicon glyphicon-transfer"></i>
+                                </button>
+                                <button class="btn btn-default" type="button" disabled
+                                                                          title='change your account'>
+                                    <i class="glyphicon glyphicon-user"></i>
+                                </button>
+                            </div>
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <select id="bio_select"
+                                    class="form-control"
+                                    style="text-align:center;"
+                                    title="select bio">
+                            </select>
+
+                            <div class="input-group-btn">
+                                <button id="new_bios" class="btn btn-default" type="button"
+                                                                          title='create new user'>
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button id="fb_rule_type_btn" class="btn btn-default" type="button"
+                                                                                title='change the rule type'>
+                                    <i id="fb_rule_type" class="glyphicon glyphicon-user"></i>
                                 </button>
                             </div>
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
                             <input id="fb-input" type="text" 
-                                                 class="form-control" placeholder="Search Room/Friend">
+                                                 class="form-control" placeholder="rule here">
+
                             <div class="input-group-btn">
-                               
-                                <button id="fb_search" class="btn btn-default" data-target="#fb_list"
-                                                                                 type="submit" title="search user or room">
+
+                                <button id="fb_search" class="btn btn-default fb-on-input" data-target="#fb_list"
+                                                                                           type="submit" title="search by rule">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </button>
 
-                                <button id="add_rule" class="btn btn-default" type="submit"
-                                                                                data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                                               title="add home/friend by rule">
+                                <button id="add_rule" class="btn btn-default fb-on-input" type="submit"
+                                                                                          data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                                                         title="add by rule">
                                     <i id="" class="glyphicon glyphicon-plus"></i>
                                 </button>
-                                <button id="home-opener" class="btn btn-default fb-opener" data-target="#fb_list"
-                                                                                           type="submit" title="show home">
+
+                                <button id="fb_rule_opener" class="btn btn-default" type="button"
+                                                           data-delayed-toggle="collapse" data-target="#fb_list" title="show rules">
+                                    <i class="glyphicon glyphicon-list"></i>
+                                </button>
+
+
+                                <button id="home-opener" class="btn btn-default fb-opener fb-off-input" data-target="#fb_list"
+                                                                                                        type="submit" title="show home">
                                     <i class="glyphicon glyphicon-home"></i>
                                 </button>
-                                <button id="friend-opener" class="btn btn-default fb-opener" type="button"
-                                                                                             data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                                                            title="show friend list">
-                                    <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
+                                <button id="friend-opener" class="btn btn-default fb-opener fb-off-input" type="button"
+                                                                                                          data-delayed-toggle="collapse" data-target="#fb_list"
+                                                                                                                                         title="show friend list">
+                                    <i id="friend-list_type" class="glyphicon glyphicon-user fb-off-input"></i>
                                 </button>
                                 <button id="room-opener" class="btn btn-default fb-opener" data-target="#fb_list"
                                                                                            type="submit" title="show all room">
                                     <i class="glyphicon glyphicon-globe"></i>
-                                </button> 
+                                </button>
+
                             </div>  
                         </div> 
                         <div id="fb_list" class="collapse">
@@ -169,10 +207,10 @@
                             </div>
 
                             <select id="store_stickers"
-                                    name="source" class="form-control"
-                                                  data-target="#sticker_list"
-                                                  style="text-align:center;"
-                                                  title="music source">
+                                    class="form-control"
+                                    data-target="#sticker_list"
+                                    style="text-align:center;"
+                                    title="select sticker set">
                             </select>
 
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
@@ -185,11 +223,11 @@
                                     <i id="" class="glyphicon glyphicon-minus"></i>
                                 </button>
                                 <!--
-                                <button id="friend-opener" class="btn btn-default fb-opener" type="button"
-                                                                                             data-delayed-toggle="collapse" data-target="#sticker_list"
-                                                                                                                            title="show friend list">
+                                    <button id="friend-opener" class="btn btn-default fb-opener" type="button"
+                                    data-delayed-toggle="collapse" data-target="#sticker_list"
+                                    title="show friend list">
                                     <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
-                                </button>
+                                    </button>
                                 -->
                                 <button id="stciker-store-opener" class="btn btn-default" type="submit" title="goto store">
                                     <i class="glyphicon glyphicon-shopping-cart"></i>

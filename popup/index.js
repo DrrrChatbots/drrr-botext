@@ -327,13 +327,13 @@ function show_roomlist(callback){
     );
 }
 
-function show_findlist(findGroups, title, content, callback, empty){
+function show_findlist(findGroups, getTitle, getContent, callback, empty){
     $.ajax({
         type: "GET",
         url: 'https://drrr.com//lounge?api=json',
         dataType: 'json',
         success: function(data){
-            profile = data.profile;
+            Profile = data.profile;
             lounge = data.rooms.sort(function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);} ).reverse();
             var groups = findGroups(lounge);
             if(groups.length)
@@ -342,8 +342,8 @@ function show_findlist(findGroups, title, content, callback, empty){
                     groups.map(([room, users])=>{
                         return ({
                             icon: 'glyphicon-home',
-                            title: title(room, users),
-                            content: content(room, users),
+                            title: getTitle(room, users),
+                            content: getContent(room, users),
                             can: room.total < room.limit,
                             url: 'https://drrr.com/room/?id=' + room.roomId,
                         });
@@ -528,7 +528,38 @@ function music_bar_setup(config){
     });
 }
 
+// glyphicon-barcode glyphicon-qrcode
+var fb_rule_types = ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
+var fb_rule_info = ['Tripcode', 'User (RegExp)', 'Room (RegExp)'];
+function cur_fb_rule_type(){
+    for(i = 0; i < fb_rule_types.length; i++){
+        if($('#fb_rule_type').hasClass(fb_rule_types[i]))
+            return i;
+    }
+    return 0;
+}
+function next_fb_rule_type(){
+    return (cur_fb_rule_type() + 1) % fb_rule_types.length;
+}
+
 function friend_bio_setup(config){
+
+    
+    function type_switch(idx){
+        idx = idx ? idx : 0;
+        $('#fb-input').attr('placeholder', `Input ${fb_rule_info[idx]}`)
+        $('#fb_rule_type').attr('class', `glyphicon ${fb_rule_types[idx]}`);
+    }
+    type_switch(config['fb-rule-type']);
+    //$('#fb_rule_type_btn').on('click', function(){
+    $('#fb_rule_type_btn').click(()=>{
+        var type = next_fb_rule_type();
+        chrome.storage.sync.set({
+            'fb-rule-type': type 
+        });
+        type_switch(type);
+    });
+
 
     $('.fb-opener').on('click', function () {
         var $target = $($(this).attr("data-target"));
@@ -550,6 +581,39 @@ function friend_bio_setup(config){
             }
             $target.on('hidden.bs.collapse', callback);
             $target.collapse('hide');
+        }
+    });
+
+    /* 
+        // if add enter?
+    $('#fb-input')[0].addEventListener('keyup', function(v){
+        if(v.keyCode == 13){
+            if(!v.shiftKey && !v.ctrlKey)
+                $('#music_list_opener').click();
+            else if(v.shiftKey && !v.ctrlKey)
+                $('#play_search').click();
+            else if(!v.shiftKey && v.ctrlKey)
+                $('#fav_add_search').click();
+        }
+
+    }, false);
+    */
+
+    $('#fb-input').on('input focus',function(e){
+        if(e.type == 'focus') $('#fb_list').collapse('hide');
+        if($(this).val().trim()){
+            $('.fb-on-input').show();
+            $('.fb-off-input').hide();
+            //$('#list_type').attr('class', 'glyphicon glyphicon-search');
+            //$('#music_list_opener').attr('title', 'search and show available results');
+            //$('#fav_add_icon').attr('class', 'glyphicon glyphicon-plus');
+            //$('#fav_add_search').attr('title', 'search and add the song to playlist');
+            //$('#play_search').attr('title', "search and play the song immediately")
+        }
+        else{
+            emptyKeyword();
+            $('.fb-on-input').hide();
+            $('.fb-off-input').show();
         }
     });
 }

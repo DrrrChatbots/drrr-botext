@@ -27,7 +27,7 @@ function get_music(callback){
 
 var list_template = (args, btns) =>
 `<div class="input-group">
-     <span class="input-group-addon"><i class="glyphicon ${args.icon ? args.icon : 'glyphicon-music'}"></i></span>
+     <span class="input-group-addon"><i class="glyphicon ${args.icon || 'glyphicon-music'}"></i></span>
      <span class="input-group-addon form-control panel-footer text-center"
             title="${args.title}">${args.content}</span>
      <div class="input-group-btn">
@@ -44,7 +44,7 @@ var grid_col_template = (args, btns) =>
 
 var empty_template = (name, icon) =>
 `<div class="input-group">
-     <span class="input-group-addon"><i class="glyphicon ${icon ? icon : 'glyphicon-music'}"></i></span>
+     <span class="input-group-addon"><i class="glyphicon ${icon || 'glyphicon-music'}"></i></span>
      <span class="input-group-addon form-control panel-footer text-center">${name}</span>
  </div>`;
 
@@ -170,9 +170,10 @@ function bind_goto_room(){
         var toURL = $(this).attr('data');
 
         chrome.storage.sync.set({'jumpToRoom': toURL });
-        sendTab({ fn: leave_room }, function(){
-            chrome.runtime.sendMessage({ jumpto: toURL });
-        });
+        sendTab({ fn: leave_room });
+        //sendTab({ fn: leave_room }, function(){
+        //    chrome.runtime.sendMessage({ jumpto: toURL });
+        //});
         return;
         //$.ajax({
         //    type: "POST",
@@ -358,7 +359,7 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty){
 }
 
 function show_configlist(conf_type, callback, buttons, empty_name, icon){
-    chrome.storage.sync.get((config) => {
+    chrome.storage.sync.get(conf_type, (config) => {
         var list = config[conf_type];
         if(list && list.length){
             show_list(
@@ -542,11 +543,153 @@ function next_fb_rule_type(){
     return (cur_fb_rule_type() + 1) % fb_rule_types.length;
 }
 
-function friend_bio_setup(config){
+//var content = document.querySelector('#content');
+function setCookie(c, callabck) {
+    c['url'] = 'https://drrr.com';
+    chrome.cookies.set(c, callback);
+}
 
-    
+function getCookie(callback, url) {
+    var output = [];
+    chrome.cookies.getAll({
+        url  : url || 'https://drrr.com'
+    }, function(cookies){
+        callback(cookies);
+    });
+}
+
+function delCookie(name, url, callback) {
+    alert("fuck");
+    url = url || 'https://drrr.com' 
+    if(name) chrome.cookies.remove({
+        url  : url,
+        name : name
+    }, callback);
+}
+
+function store_bio(succ, fail){
+    getProfile(function(p){
+        if(p){
+            getCookie((cs)=>{
+                push_value('bio_cookies', [p, cs], (bios) => succ(bios[bios.length - 1])); 
+            });
+        }
+        else fail();
+    })
+}
+
+function redraw_bios(bio_cookies){
+    var $stored = $('#bio_select');
+
+    bio_cookies = bio_cookies || [];
+
+    getProfile(function(p){
+        $stored.find('option').remove();
+        if(p){
+            var cont = `🔖 ${p.name}${'#' + p.tripcode || ''}@${p.icon}`;
+            $stored.append(`<option value="${p.id}">${cont}</option>`);
+        }
+        else{
+            $stored.append(`<option value="">Need to Loggin</option>`);
+        }
+        bio_cookies.forEach(([pro, cookie])=>{
+            var c = `💾 ${pro.name}${'#' + pro.tripcode || ''}@${pro.icon}`;
+            $stored.append(`<option value="${pro.id}">${c}</option>`);
+        });
+    })
+}
+
+function bio_setup(config){
+    var $stored = $('#bio_select');
+
+    //$('.nav-tabs a').on('shown.bs.tab', ((showen) => function(event){
+    //if('Friends&Bio' == $(event.target).text() && !showen){
+    //    showen = true;
+    redraw_bios(config['bio_cookies']);
+        //cache(undefined, (config)=>redraw_bios(config), 'bio_cookies');
+    //}
+    //})(false));
+
+    $('#show_cookie').on('click', function(){
+        getCookie((x)=>alert(JSON.stringify(x)));
+    });
+
+    $('#ch_bios').on('click', function(){
+        alert("ch clicked");
+        return;
+        var $stored = $('#bio_select');
+        var optionSelected = $("option:selected", $stored);
+        var valueSelected = $stored.val();
+        getProfile(function(p){
+            if(valueSelected && p && p.id != valueSelected){
+                cache(undefined, (bios)=>{
+                    bios.forEach(([pro, cookies]) =>{
+                        if(pro.id === valueSelected){
+                            store_bio(()=>{
+                                cs.forEach((c)=> delCookie(c.name));
+                                var rec = function(cs){
+                                    setCookie(
+                                        cs.pop(),
+                                        function(){
+                                            if(cs.length && setCookie(cs.pop(), rec))
+                                                window.location.href = "https://drrr.com";
+                                        }
+                                    );
+                                }
+                                rec(cookies);
+                                window.location.href = "https://drrr.com";
+                            }, ()=> {window.location.href = "https://drrr.com";})
+                        }
+                    })
+                }, 'bio_cookies')
+            }
+            else alert("cannot change to the bio");
+        })
+    });
+
+    //$stored.on('change', function (e) {
+    //    var optionSelected = $("option:selected", this);
+    //    var valueSelected = this.value;
+    //    //chrome.storage.sync.set({ 'select_stickers': valueSelected });
+    //});
+
+    $('#new_bios').on('click', function(){
+        store_bio(
+            (cs)=>{
+                cs.forEach((c)=> delCookie(c.name));
+                window.location.href = "https://drrr.com";
+            }, 
+            ()=> {
+                window.location.href = "https://drrr.com";
+            }
+        )
+    });
+
+    $('#del_bios').on('click', function(){
+        var $stored = $('#bio_select');
+        var optionSelected = $("option:selected", $stored);
+        var valueSelected = $stored.val();
+        getProfile(function(p){
+            if(p && p.id == valueSelected){
+                getCookie((cs)=> {
+                    cs.forEach((c)=> delCookie(c.name))
+                    window.location.href = "https://drrr.com";
+                });
+            }
+            else{
+                pop_value(
+                    'bio_cookies',
+                    (([pro, cookies], idx, ary) => pro.id == valueSelected),
+                    (res, cookies) => redraw_bios(cookies)
+                )
+            }
+        })
+    });
+}
+
+function friend_setup(config){
     function type_switch(idx){
-        idx = idx ? idx : 0;
+        idx = idx || 0;
         $('#fb-input').attr('placeholder', `Input ${fb_rule_info[idx]}`)
         $('#fb_rule_type').attr('class', `glyphicon ${fb_rule_types[idx]}`);
     }
@@ -592,8 +735,6 @@ function friend_bio_setup(config){
                 $('#music_list_opener').click();
             else if(v.shiftKey && !v.ctrlKey)
                 $('#play_search').click();
-            else if(!v.shiftKey && v.ctrlKey)
-                $('#fav_add_search').click();
         }
 
     }, false);
@@ -604,11 +745,6 @@ function friend_bio_setup(config){
         if($(this).val().trim()){
             $('.fb-on-input').show();
             $('.fb-off-input').hide();
-            //$('#list_type').attr('class', 'glyphicon glyphicon-search');
-            //$('#music_list_opener').attr('title', 'search and show available results');
-            //$('#fav_add_icon').attr('class', 'glyphicon glyphicon-plus');
-            //$('#fav_add_search').attr('title', 'search and add the song to playlist');
-            //$('#play_search').attr('title', "search and play the song immediately")
         }
         else{
             emptyKeyword();
@@ -616,6 +752,12 @@ function friend_bio_setup(config){
             $('.fb-off-input').show();
         }
     });
+}
+
+
+function friend_bio_setup(config){
+    bio_setup(config);
+    friend_setup(config);
 }
 
 var default_stickers = [
@@ -778,7 +920,7 @@ $(document).ready(function(){
         music_bar_setup(config); 
         friend_bio_setup(config);
         sticker_setup(config);
-        var tab = config['pop-tab'] ? config['pop-tab'] : 'tab0';
+        var tab = config['pop-tab'] || 'tab0';
         $(`#${tab} > a`).click();
         //$(`#${tab}`).addClass('active');
         //$(`#${tab}-cont`).addClass('active').addClass('in');

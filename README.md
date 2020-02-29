@@ -31,7 +31,7 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 - add YouTube music source
 - detect protected music.168 source
 - auto exit and join specific room
-- friend list / check online status 
+- friend list / check online status (needs search)
 - timer support seq mode (current random only) and URL pair with every message
 - pokemon monster module 
 - add tripcode identification to configuration

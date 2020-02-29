@@ -65,9 +65,9 @@
 
                             <select id="music_source" name="source" class="form-control"
                                                                     style="text-align:center;
-                                                                                                                                 padding-left: 4px;
-                                                                                                                                 padding-right: 0px;
-                                                                                                                                 padding-top: 4px;"
+                                                                                                                                                   padding-left: 4px;
+                                                                                                                                                   padding-right: 0px;
+                                                                                                                                                   padding-top: 4px;"
                                                                     title="music source">
                             </select>
 
@@ -108,16 +108,15 @@
                     <div id="tab1-cont" class="tab-pane fade">
                         <br>
                         <div class="input-group">
-                            <div class="input-group-btn">
-                                <button id="bios" class="btn btn-default" type="button" disabled
-                                                                          title='change your account'>
-                                    <i class="glyphicon glyphicon-transfer"></i>
-                                </button>
-                                <button class="btn btn-default" type="button" disabled
-                                                                          title='change your account'>
+                            <!--
+                            <div id='show_cookie' class="input-group-btn"> 
+                                <button class="btn btn-default" type="button"
+                                                                title='select the bio to change cookie >'>
                                     <i class="glyphicon glyphicon-user"></i>
                                 </button>
                             </div>
+                            -->
+
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
                             <select id="bio_select"
@@ -127,9 +126,20 @@
                             </select>
 
                             <div class="input-group-btn">
+
                                 <button id="new_bios" class="btn btn-default" type="button"
-                                                                          title='create new user'>
+                                                                              title='create bio'>
                                     <i class="glyphicon glyphicon-plus"></i>
+                                </button>
+
+                                <button id="del_bios" class="btn btn-default" type="button"
+                                                                              title='delete bio'>
+                                    <i class="glyphicon glyphicon-minus"></i>
+                                </button>
+
+                                <button id="ch_bios" class="btn btn-default" type="button"
+                                                                          title='change your account'>
+                                    <i class="glyphicon glyphicon-transfer"></i>
                                 </button>
                             </div>
                         </div>
@@ -139,7 +149,7 @@
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <button id="fb_rule_type_btn" class="btn btn-default" type="button"
-                                                                                title='change the rule type'>
+                                                                                      title='change the rule type'>
                                     <i id="fb_rule_type" class="glyphicon glyphicon-user"></i>
                                 </button>
                             </div>
@@ -162,7 +172,7 @@
                                 </button>
 
                                 <button id="fb_rule_opener" class="btn btn-default fb-off-input" type="button"
-                                                           data-delayed-toggle="collapse" data-target="#fb_list" title="show rules">
+                                                                                                 data-delayed-toggle="collapse" data-target="#fb_list" title="show rules">
                                     <i class="glyphicon glyphicon-list"></i>
                                 </button>
 

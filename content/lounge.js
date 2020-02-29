@@ -27,15 +27,14 @@ $(document).ready(function(){
     chrome.runtime.sendMessage({ clearNotes: '' });
     chrome.storage.sync.get((config) => {
         console.log('config', config);
+        if(config['leaveRoom'])
+            chrome.storage.sync.remove('leaveRoom');
         if(config['jumpToRoom']){
-            //chrome.tabs.update({url: config['jumpToRoom']});
-            //window.location.href = ;
             $('#rooms-placeholder').prepend(countDownModal);
 
             $("#plane").animate({ left:"+=1000px", top:"-=1000px" }, 4000);
             var hand = setInterval(function(){
-                secs -= 1;
-                $('#seconds').text(secs)
+                $('#seconds').text(--secs)
                 if(!secs) chrome.runtime.sendMessage({ jumpto: config['jumpToRoom'] });
             }, 1000);
             setTimeout(()=>{
@@ -78,5 +77,8 @@ $(document).ready(function(){
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(req);
-    if(req && req.fn == leave_room) location.reload();
+    if(req){
+        (req.fn == leave_room && location.reload())
+        || (req.fn == cache_profile && callback(Profile))
+    }
 });

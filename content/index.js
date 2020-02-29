@@ -46,6 +46,9 @@ var handle_talks = function(msg){
                 user = $(msg).find('.name span').text();
                 type = msg.classList.contains("secret") ? event_dm : event_msg;
             }
+            if(type == event_dm || type == event_dmto){
+                if(user == Profile.name) return;
+            }
         }
     }
     catch(err){
@@ -208,76 +211,74 @@ function make_extinputs(){
 
 var rinfo = undefined;
 var lounge = undefined;
+var jumpToRoom = undefined;
 
 $(document).ready(function(){
 
-    chrome.storage.sync.get((res) => {
-        if(res[SWITCH_ME] !== undefined)
-            enableMe = res[SWITCH_ME]
-        else enableMe = false;
-        console.log(enableMe);
-        console.log(JSON.stringify(res));
-    });
+    chrome.storage.sync.get([SWITCH_ME, 'leaveRoom', 'jumpToRoom'], (config) => {
+        enableMe = config[SWITCH_ME] || false;
+        if(config['leaveRoom']) leaveRoom();
+        console.log(JSON.stringify(config));
+        jumpToRoom = config['jumpToRoom'];
 
-    $('#talks').bind('DOMNodeInserted', function(event) {
-        var e = event.target;
-        if(e.parentElement.id == 'talks')
-            handle_talks(e);
-    });
+        $('#talks').bind('DOMNodeInserted', function(event) {
+            var e = event.target;
+            if(e.parentElement.id == 'talks')
+                handle_talks(e);
+        });
 
-    make_extinputs(); 
-    monit_progressbar();
-    /* invoke newtab event */
-    chrome.runtime.sendMessage({
-        type: event_newtab
-    });
-    console.log("start background moniter new"); 
-    handle_exit();
+        make_extinputs(); 
+        monit_progressbar();
+        /* invoke newtab event */
+        chrome.runtime.sendMessage({
+            type: event_newtab
+        });
+        console.log("start background moniter new"); 
+        handle_exit();
 
-    chrome.runtime.sendMessage({ clearNotes: '' });
-    //chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
-    // check online status
-    var find = function(){
-        console.log('check once');
+        chrome.runtime.sendMessage({ clearNotes: '' });
+        //chrome.runtime.sendMessage({ clearNotes: 'https://drrr.com/room/.*' });
+        // check online status
+        var find = function(){
+            console.log('check once');
+            $.ajax({
+                type: "GET",
+                url: 'https://drrr.com//lounge?api=json',
+                dataType: 'json',
+                success: function(data){
+                    lounge = data.rooms;
+                    monitLounge(friends, data.rooms, true, rinfo.room.roomId);
+                },
+                error: function(data){
+                    alert("error", data);
+                }
+            })
+        }
+
         $.ajax({
             type: "GET",
-            url: 'https://drrr.com//lounge?api=json',
+            url: 'https://drrr.com//room?api=json',
             dataType: 'json',
-            success: function(data){
-                lounge = data.rooms;
-                monitLounge(friends, data.rooms, true, rinfo.room.roomId);
+            success: function(RoomData){
+                rinfo = RoomData;
+                Profile = rinfo.profile;
+                console.log('rinfo', rinfo);
+                // v if enter error, escape
+                if(rinfo.redirect || jumpToRoom == 'https://drrr.com/room/?id=' + rinfo.room.roomId){
+                    chrome.storage.sync.remove('jumpToRoom');
+                    console.log("remove jumped ROOM");
+                }
+                setTimeout(find, 5000);
+                setInterval(find, 90000);
+                //setInterval(find, 30000);
+                //setInterval(find, 90000);
+                //setInterval(find, 10000);
             },
             error: function(data){
                 alert("error", data);
             }
-        })
-    }
-
-    $.ajax({
-        type: "GET",
-        url: 'https://drrr.com//room?api=json',
-        dataType: 'json',
-        success: function(RoomData){
-            rinfo = RoomData;
-            Profile = rinfo.profile;
-            console.log('rinfo', rinfo);
-            if(rinfo.redirect){ chrome.storage.sync.remove('jumpToRoom'); }
-            chrome.storage.sync.get((config) => {
-                if(config['jumpToRoom'] == 'https://drrr.com/room/?id=' + rinfo.room.roomId){
-                    chrome.storage.sync.remove('jumpToRoom');
-                    console.log("remove jumped ROOM");
-                }
-            })
-            setTimeout(find, 5000);
-            setInterval(find, 90000);
-            //setInterval(find, 30000);
-            //setInterval(find, 90000);
-            //setInterval(find, 10000);
-        },
-        error: function(data){
-            alert("error", data);
-        }
-    })
+        });
+    });
 });
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {

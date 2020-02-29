@@ -167,7 +167,23 @@ var getMembers = function(args, callback){
 }
 
 var leaveRoom = function(args, callback){
-    $('.do-logout')[0].click();
+    chrome.storage.sync.set({'leaveRoom': true });
+    leave = () => {
+        $('.do-logout')[0].click();
+        setTimeout(()=>{
+            chrome.runtime.sendMessage({
+                notification: {
+                    title: '離開失敗，十秒後為您重試',
+                    msg: '蟲洞即將開啟，請不要亂動',
+                    clear: true,
+                    pattern: ''
+                }
+            });
+        }, 3600);
+    };
+    setInterval(leave, 10000);
+    leave();
+    // v useless?
     if(callback) callback();
 }
 
@@ -192,6 +208,10 @@ var keepRoom = function(args){
         $('#to-input').val(Profile.id);
         dmMember({msg:'unkeep'}, true);
     }
+}
+
+var cacheProfile = function(args, callback){
+    callback(Profile);
 }
 
 var alertUser = function(args){
@@ -299,3 +319,4 @@ methods[clear_alarms] = clearAlarms;
 methods[is_playing] = isPlaying;
 methods[leave_room] = leaveRoom;
 methods[keep_room] = keepRoom;
+methods[cache_profile] = cacheProfile;

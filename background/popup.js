@@ -2,10 +2,6 @@
 /* backend for popup.html below */
 /* require global.js utility.js */
 
-function cond_assign(obj, attr, val){
-    obj[attr] = obj[attr] === undefined ? val : obj[attr];
-}
-
 mulval_attr = ["class", "style"]
 
 function ui_object(type, template, def_attrs = {}){
@@ -19,9 +15,8 @@ function ui_object(type, template, def_attrs = {}){
                     attrs[k] +=  ` ${def_attrs[k]}`;
             }
 
-            cond_assign(attrs, 'id', `${hname.replace(/ /g, '-')}-${String(idx)}`);
-            cond_assign(attrs, 'class', '');
-            attrs['class'] += ` ${class_map[type]}`;
+            attrs.id = attrs.id || `${hname.replace(/ /g, '-')}-${String(idx)}`;
+            attrs.class = (attrs.class || '') + ` ${class_map[type]}`;
 
             this.childs = childs; 
             this.content = (config) => {
@@ -38,8 +33,6 @@ function ui_object(type, template, def_attrs = {}){
             for(name in childs) childs[name].bind(`${attrs.id}`, name);
 
             this.html = function(config){
-                //alert(JSON.stringify(config));
-                //console.log(this.content);
                 return template(
                     Object.keys(attrs).map(
                         (k) => `${k}="${attrs[k]}"`).join(' '),
@@ -229,14 +222,16 @@ var BanListH = new Handler("banlist",
             new button_ui({
                 'click': function(event, state){
                     chrome.storage.sync.get((config) => {
-                        var list = config[BANLIST] && config[BANLIST] == BLACKLIST ? WHITELIST : BLACKLIST;
+                        var types = [BLACKLIST, WHITELIST];
+                        var list = config[BANLIST] || WHITELIST;
+                        list = types[Math.abs(types.indexOf(list) - 1)];
                         event.data.$('#banlist_type').text(list);
                         chrome.storage.sync.set({
                             [BANLIST]: list
                         });
                     });
                 }
-            }, ((config) => config[BANLIST] ? config[BANLIST] : BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})
+            }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})
         ], {title: 'kick all the guests in the list (⚙ setting)'})
     ],
     {

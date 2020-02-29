@@ -21,7 +21,10 @@ function Handler(hname, uis, events){
         else reg_table[k] = [lift];
     }
     this.bindEvents = ($) =>{ for(ui of uis) ui.bindEvents($, uis); }
-    this.ui = () => uis.map((ui)=>ui.html()).join('');
+    this.ui = function(config){
+        //alert(this.hname)
+        return uis.map((ui)=>ui.html(config)).join('');
+    }
 }
 
 function ajax(request){

@@ -24,29 +24,40 @@ function ui_object(type, template, def_attrs = {}){
             attrs['class'] += ` ${class_map[type]}`;
 
             this.childs = childs; 
-            this.content = content === undefined ? hname : content;
+            this.content = (config) => {
+                var type = typeof content;
+                if(type === 'undefined')
+                    return hname;
+                else if(type === 'string')
+                    return content;
+                else if(type === 'function')
+                    return content(config);
+                else throw "Invalid type of UI content";
+            }
 
             for(name in childs) childs[name].bind(`${attrs.id}`, name);
 
-            this.html = () => {
+            this.html = function(config){
+                //alert(JSON.stringify(config));
                 //console.log(this.content);
                 return template(
                     Object.keys(attrs).map(
                         (k) => `${k}="${attrs[k]}"`).join(' '),
-                    this.content,
-                    childs
+                    this.content(config),
+                    childs, config
                 );
             }
 
+
             this.events = events === undefined ? {} : events; 
-            this.bindEvents = ($, uis) => {
+            this.bindEvents = function($, uis){
                 for(name in this.events){
-                    $(()=>
-                        $(`#${attrs.id}`).on(name, null, {
+                    $(((ename, events)=>function(){
+                        $(`#${attrs.id}`).on(ename, null, {
                             $: $,
                             uis: uis
-                        }, this.events[name])
-                    )
+                        }, events[ename])
+                    })(name, this.events)); // note the side effect, use iffi
                 }
                 Object.values(childs).forEach(
                     (child) => child.bindEvents($, uis));
@@ -56,10 +67,12 @@ function ui_object(type, template, def_attrs = {}){
     }
 }
 
-var merge_ui = (uis) => Object.values(uis).map((c)=>c.html()).join('');
+function merge_ui(uis, config){
+    return Object.values(uis).map((c)=>c.html(config)).join('');
+}
 
 var label_ui = ui_object(LABEL,
-    (attrs, content, uis) => `<label ${attrs}">${content}${merge_ui(uis)}</label>`,
+    (attrs, content, uis, config) => `<label ${attrs}">${content}${merge_ui(uis, config)}</label>`,
     {
         "class": "ui-unit"
     });
@@ -73,7 +86,7 @@ var switch_change = (callback) =>
     }
 
 var switch_ui = ui_object(SWITCH,
-    (attrs, content, uis) => `<input ${attrs}>`,
+    (attrs, content, uis, config) => `<input ${attrs}>`,
     {
         type: "checkbox",
         "class": "ui-unit",
@@ -83,10 +96,10 @@ var switch_ui = ui_object(SWITCH,
     });
 
 var select_ui = ui_object(SELECT,
-    (attrs, content, uis) => `<select ${attrs}> 
+    (attrs, content, uis, config) => `<select ${attrs}> 
                                  <!-- <option selected="selected"
                                      value="${content}">
-                                     ${content}${merge_ui(uis)}
+                                     ${content}${merge_ui(uis, config)}
                                  </option> -->
                               </select>`,
     {
@@ -101,14 +114,14 @@ var select_ui = ui_object(SELECT,
     });
 
 var button_ui = ui_object(BUTTON, 
-    (attrs, content, uis) => `<button ${attrs}>${content}${merge_ui(uis)}</button>`,
+    (attrs, content, uis, config) => `<button ${attrs}>${content}${merge_ui(uis, config)}</button>`,
     {
         type:"button",
         'class':"ui-unit btn btn-success btn-xs"
     });
 
 var pack_ui = ui_object(PACK,
-    (attrs, content, uis) => `<div ${attrs}>${content}${merge_ui(uis)}</div>`,
+    (attrs, content, uis, config) => `<div ${attrs}>${content}${merge_ui(uis, config)}</div>`,
     {
         'class': "ui-pack input-group col-xs-10 form-inline",
         style: "width:225px;"
@@ -116,7 +129,7 @@ var pack_ui = ui_object(PACK,
     });
 
 var modal_ui = ui_object(MODAL,
-    (attrs, content, uis) => `<div ${attrs}>
+    (attrs, content, uis, config) => `<div ${attrs}>
                           <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -125,11 +138,11 @@ var modal_ui = ui_object(MODAL,
                                 <h4 class="modal-title">${content}</h4>
                               </div>
                               <div class="modal-body">
-                                ${uis.body.html()}
+                                ${uis.body.html(config)}
                                 <p>Some text in the modal.</p>
                               </div>
                               <div class="modal-footer">
-                                ${uis.footer.html()} 
+                                ${uis.footer.html(config)} 
                               </div>
                             </div>
 
@@ -141,7 +154,7 @@ var modal_ui = ui_object(MODAL,
     });
 
 var textarea_ui = ui_object(TEXTAREA,
-    (attrs, content, uis) => `<textarea ${attrs}>${content}</textarea>`,
+    (attrs, content, uis, config) => `<textarea ${attrs}>${content}</textarea>`,
     {
         'class': "form-control",
         //style: "width:225px;"
@@ -173,20 +186,22 @@ function assoc(key, res, name){
 
 function noteEmptySetting(state, event, switch_id, func_name, callback){
     if(state) chrome.storage.sync.get((config) => {
-        if(!config[sid(func_name)]){
+        var the_sid = sid(func_name, config);
+        if(!config[the_sid]){
+            var setting_name = unsid(the_sid);
             event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
             chrome.notifications.create(
                 chrome.extension.getURL('setting/index.html')
-                + `#menu${Object.keys(settings).indexOf(func_name)}`,
+                + `#menu${Object.keys(settings).indexOf(setting_name)}`,
                 {
                     type: "basic",
                     iconUrl: '/icon.png',
-                    title: `EMPTY ${func_name.toUpperCase()} RULE`,
-                    message: `To enable ${func_name.toLowerCase()}, make some rules`
+                    title: `EMPTY ${setting_name.toUpperCase()} RULE`,
+                    message: `To enable ${setting_name.toLowerCase()}, make some rules`
                 });
-            
+
             chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')
-                + `#menu${Object.keys(settings).indexOf(func_name)}`});
+                + `#menu${Object.keys(settings).indexOf(setting_name)}`});
 
             chrome.notifications.onClicked.addListener(function(notificationId) {
                 console.log(notificationId);
@@ -204,368 +219,391 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
     else if(callback) callback();
 }
 
-var switches = [
-
-    new Handler("timer", 
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event)=>{
-                        noteEmptySetting(state, event, SWITCH_TIMER, TIMER, () =>
-                            roomTabs((tabs)=>{
-                                if(tabs.length){
-                                    if(state){
-                                        chrome.tabs.sendMessage(tabs[0].id, {
-                                            fn: bind_alarms
-                                        })
-                                        chrome.notifications.create({
-                                            type: "basic",
-                                            iconUrl: '/icon.png',
-                                            title: 'START TIMER',
-                                            message: 'Switch on, Timer will be started'
-                                        });
-                                    }
-                                    else{
-                                        bcastTabs({ fn: clear_alarms });
-                                        chrome.notifications.create({
-                                            type: "basic",
-                                            iconUrl: '/icon.png',
-                                            title: 'STOP TIMER',
-                                            message: 'Switch off, Timer will be disabled'
-                                        });
-                                    }
-                                }
-                            })
-                        )
-                    }) 
-                }, '', [], {id: SWITCH_TIMER}),
-                new label_ui({}, 'Timer')
-            ], {title: 'send some custom messages periodically (⚙ setting)'})
-        ], 
-        {
-            [event_newtab]: {
-                precond: (config, uis) => config[SWITCH_TIMER],
-                onevent: (req, callback, config, uis, sender) => {
-                    //check the chrome.alarm.api 
-                    roomTabs((tabs)=>{
-                        if(tabs.length == 1){
-                            chrome.tabs.sendMessage(tabs[0].id, {
-                                fn: bind_alarms
-                            })
-                            chrome.notifications.create({
-                                type: "basic",
-                                iconUrl: '/icon.png',
-                                title: 'START TIMER',
-                                message: 'Timer will be started on this tab'
-                            });
-                        }
-                    })  
-                }
-            },
-            [event_logout]: {
-                precond: (config, uis) => config[SWITCH_TIMER],
-                onevent: (req, callback, config, uis, sender) => {
-                    chrome.notifications.create({
-                        type: "basic",
-                        iconUrl: '/icon.png',
-                        title: 'STOP TIMER (LOGOUT)',
-                        message: 'Logout, Timer will be disabled'
+var BanListH = new Handler("banlist", 
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    noteEmptySetting(state, event, SWITCH_BLACKLIST, BANLIST))
+            }, '', [], {id: SWITCH_BLACKLIST}),
+            new button_ui({
+                'click': function(event, state){
+                    chrome.storage.sync.get((config) => {
+                        var list = config[BANLIST] && config[BANLIST] == BLACKLIST ? WHITELIST : BLACKLIST;
+                        event.data.$('#banlist_type').text(list);
+                        chrome.storage.sync.set({
+                            [BANLIST]: list
+                        });
                     });
                 }
-            },
-            [event_exitalarm]: {
-                precond: (config, uis) => config[SWITCH_TIMER],
-                onevent: (req, callback, config, uis, sender) => { 
-                    roomTabs((tabs)=>{
-                        if(tabs.length < 2){
-                            chrome.notifications.create({
-                                type: "basic",
-                                iconUrl: '/icon.png',
-                                title: 'WILL STOP TIMER (IF LAST TAB CLOSED)',
-                                message: 'If you close last tab, timer will be disabled'
-                            });
-                        }
-                        else{
-                            chrome.notifications.create({
-                                type: "basic",
-                                iconUrl: '/icon.png',
-                                title: 'TRANSFER TIMER',
-                                message: 'Active tab closed, Timer will be restart on other tab'
-                            });
-                            for(tab of tabs){
-                                if(tab.id !== sender.tab.id){
-                                    chrome.tabs.sendMessage(tab.id, {
-                                        fn: bind_alarms
-                                    })
-                                    break;
-                                }
-                            }
-                        }
+            }, ((config) => config[BANLIST] ? config[BANLIST] : BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})
+        ], {title: 'kick all the guests in the list (⚙ setting)'})
+    ],
+    {
+        [event_join]: {
+            precond: (config, uis) => config[SWITCH_BLACKLIST],
+            onevent: (req, callback, config, uis) => {
+                if(assoc(req.user, config, BLACKLIST)){
+                    console.log("kick");
+                    sendTab({
+                        fn: kick_member,
+                        args: { user: req.user }
                     })
                 }
-            },
-        }
-    ),
-
-    new Handler("welcome", 
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                        noteEmptySetting(state, event, SWITCH_WELCOME, WELCOME))
-
-                }, '', [], {id: SWITCH_WELCOME}),
-                new label_ui({}, 'Welcome')
-            ], {title: 'send some custom messages to welcome someone (⚙ setting)'})
-        ], 
-        {
-            [event_join]: {
-                precond: (config, uis) => config[SWITCH_WELCOME],
-                onevent: (req, callback, config, uis) => {
-                    if(!assoc(req.user, config, BLACKLIST)){
-                        ((wmsg) => {
-                            if(wmsg){
-                                if(Array.isArray(wmsg))
-                                    wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
-                                sendTab({
-                                    fn: publish_message,
-                                    args: {
-                                        msg: wmsg.replace(/(^|[^\$])\$user/g, `$1${req.user}`)
-                                        .replace(/(^|[^\$])\$/g, `$1$`)
-                                    }
-                                });
-                            }
-                        })(assoc(req.user, config, WELCOME));
-                    }
-                }
+                /* white list */
+                //if(!assoc(req.user, config, WHITELIST)){
+                //    sendTab({
+                //        fn: kick_member,
+                //        args: { user: req.user }
+                //    })
+                //}
             }
         }
-    ),
+    }
+);
 
 
-    new Handler("whitelist", 
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                        noteEmptySetting(state, event, SWITCH_WHITELIST, WHITELIST))
-                }, '', [], {id: SWITCH_WHITELIST}),
-                new label_ui({}, 'Whitelist')
-            ], {title: 'kick all the guests not in the list (⚙ setting)'})
-        ],
-        {
-            [event_join]: {
-                precond: (config, uis) => config[SWITCH_WHITELIST],
-                onevent: (req, callback, config, uis) => {
-                    if(!assoc(req.user, config, WHITELIST)){
-                        sendTab({
-                            fn: kick_member,
-                            args: { user: req.user }
-                        })
-                    }
-                }
-            }
-        }
-    ),
-
-    new Handler("blacklist", 
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                        noteEmptySetting(state, event, SWITCH_BLACKLIST, BLACKLIST))
-                }, '', [], {id: SWITCH_BLACKLIST}),
-                new label_ui({}, 'Blacklist')
-            ], {title: 'kick all the guests in the list (⚙ setting)'})
-        ],
-        {
-            [event_join]: {
-                precond: (config, uis) => config[SWITCH_BLACKLIST],
-                onevent: (req, callback, config, uis) => {
-                    if(assoc(req.user, config, BLACKLIST)){
-                        console.log("kick");
-                        sendTab({
-                            fn: kick_member,
-                            args: { user: req.user }
-                        })
-                    }
-                }
-            }
-        }
-    ),
-
-    new Handler("BanAbuse",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                        noteEmptySetting(state, event, SWITCH_BANABUSE, BANABUSE))
-                }, '', [], {id: SWITCH_BANABUSE}),
-                new label_ui({}, 'BanAbuse')
-            ], {title: 'kick member who send some abuse terms in the list (⚙ setting)'})
-        ],
-        {
-            [event_msg]: {
-                precond: (config, uis) => config[SWITCH_BANABUSE],
-                onevent: (req, callback, config, uis) => {
-                    if(assoc(req.text, config, BANABUSE)){
-                        console.log("abuse kick");
-                        sendTab({
-                            fn: kick_member,
-                            args: { user: req.user }
-                        })
-                    }
-                }
-            },
-
-            [event_dm]: {
-                precond: (config, uis) => config[SWITCH_BANABUSE],
-                onevent: (req, callback, config, uis) => {
-                    if(assoc(req.text, config, BANABUSE)){
-                        console.log("abuse kick");
-                        sendTab({
-                            fn: kick_member,
-                            args: { user: req.user }
-                        })
-                    }
-                }
-            }
-        }
-    ),
-
-    new Handler("event action",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                        noteEmptySetting(state, event, SWITCH_EVENTACT, EVENTACT))
-
-                }, '', [], {id: SWITCH_EVENTACT}),
-                new label_ui({}, 'EventAction')
-            ], {title: 'custom your actions on specific events (⚙ setting)'})
-        ],
-        {
-            [event_join]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_join, config, req)
-            },
-            [event_leave]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req) 
-            },
-            [event_newhost]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req) 
-            },
-            [event_me]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req) 
-            },
-            [event_msg]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req) 
-            },
-            [event_dm]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_dm, config, req)
-            },
-            [event_dmto]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_dmto, config, req)
-            },
-            [event_submit]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_submit, config, req)
-            },
-            [event_music]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_music, config, req)
-            },
-            [event_musicend]: {
-                precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-                onevent: (req, callback, config, uis, sender) => event_action(event_musicend, config, req)
-            }
-        }
-    ),
-
-    new Handler("AutoDM",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change((state) =>
-                        {
-                            if(state){
-                                chrome.storage.sync.get((config) => {
-                                    if(config[DM_USERNAME]){
-                                        bcastTabs({
-                                            fn: on_dm_member,
-                                            args: { user: config[DM_USERNAME] }
-                                        });
-                                    }
-                                })
-                            } else bcastTabs({ fn: off_dm_member });
-                        }
-                    ) 
-                }, '', [], {id: SWITCH_DM}),
-                new label_ui({}, 'AutoDM', [], {id: DM_USERNAME}),
-            ], {title: 'change to direct message automatically after sending message'})
-        ],
-        {
-            [event_dmto]: {
-                precond: (config, uis) => true,
-                onevent: (req, callback, config, uis) => {
-                    console.log("save the dm username");
-                    chrome.storage.sync.set({
-                        [DM_USERNAME]: req.user
-                    }); 
-                }
-            },
-
-            [event_submit]: {
-                precond: (config, uis) => config[SWITCH_DM],
-                onevent: (req, callback, config, uis) => {
-                    console.log("here you are");
-                    if(config[DM_USERNAME]){
-                        console.log("there");
-
-                        sendTab({
-                            fn: on_dm_member,
-                            args: { user: config[DM_USERNAME] }
-                        })
-                    }
-                }
-            } 
-        }
-    ),
-
-
-    new Handler("always me",
-        [
-            new pack_ui({}, '', [
-                new switch_ui({
-                    'switchChange.bootstrapSwitch': switch_change(
-                        (state) => {
-                            chrome.tabs.query({
-                                url: 'https://drrr.com/room/*'
-                            }, (tabs) => {
-                                console.log("switch function handling");
-                                for(tab of tabs){
-                                    chrome.tabs.sendMessage(tab.id, {
-                                        fn: switch_me,
-                                        args: { state: state }
+var TimerH = new Handler("timer", 
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event)=>{
+                    noteEmptySetting(state, event, SWITCH_TIMER, TIMER, () =>
+                        roomTabs((tabs)=>{
+                            if(tabs.length){
+                                if(state){
+                                    chrome.tabs.sendMessage(tabs[0].id, {
+                                        fn: bind_alarms
+                                    })
+                                    chrome.notifications.create({
+                                        type: "basic",
+                                        iconUrl: '/icon.png',
+                                        title: 'START TIMER',
+                                        message: 'Switch on, Timer will be started'
                                     });
                                 }
-                            });
-                        }),
-                }, '', [], {id: SWITCH_ME}),
-                new label_ui({}, 'Always/me')
-            ], {title: 'add /me automatically after sending message'})
-        ],
-        {
+                                else{
+                                    bcastTabs({ fn: clear_alarms });
+                                    chrome.notifications.create({
+                                        type: "basic",
+                                        iconUrl: '/icon.png',
+                                        title: 'STOP TIMER',
+                                        message: 'Switch off, Timer will be disabled'
+                                    });
+                                }
+                            }
+                        })
+                    )
+                }) 
+            }, '', [], {id: SWITCH_TIMER}),
+            new label_ui({}, 'Timer')
+        ], {title: 'send some custom messages periodically (⚙ setting)'})
+    ], 
+    {
+        [event_newtab]: {
+            precond: (config, uis) => config[SWITCH_TIMER],
+            onevent: (req, callback, config, uis, sender) => {
+                //check the chrome.alarm.api 
+                roomTabs((tabs)=>{
+                    if(tabs.length == 1){
+                        chrome.tabs.sendMessage(tabs[0].id, {
+                            fn: bind_alarms
+                        })
+                        chrome.notifications.create({
+                            type: "basic",
+                            iconUrl: '/icon.png',
+                            title: 'START TIMER',
+                            message: 'Timer will be started on this tab'
+                        });
+                    }
+                })
+            }
+        },
+        [event_logout]: {
+            precond: (config, uis) => config[SWITCH_TIMER],
+            onevent: (req, callback, config, uis, sender) => {
+                chrome.notifications.create({
+                    type: "basic",
+                    iconUrl: '/icon.png',
+                    title: 'STOP TIMER (LOGOUT)',
+                    message: 'Logout, Timer will be disabled'
+                });
+            }
+        },
+        [event_exitalarm]: {
+            precond: (config, uis) => config[SWITCH_TIMER],
+            onevent: (req, callback, config, uis, sender) => { 
+                roomTabs((tabs)=>{
+                    if(tabs.length < 2){
+                        chrome.notifications.create({
+                            type: "basic",
+                            iconUrl: '/icon.png',
+                            title: 'WILL STOP TIMER (IF LAST TAB CLOSED)',
+                            message: 'If you close last tab, timer will be disabled'
+                        });
+                    }
+                    else{
+                        chrome.notifications.create({
+                            type: "basic",
+                            iconUrl: '/icon.png',
+                            title: 'TRANSFER TIMER',
+                            message: 'Active tab closed, Timer will be restart on other tab'
+                        });
+                        for(tab of tabs){
+                            if(tab.id !== sender.tab.id){
+                                chrome.tabs.sendMessage(tab.id, {
+                                    fn: bind_alarms
+                                })
+                                break;
+                            }
+                        }
+                    }
+                })
+            }
+        },
+    }
+);
 
+var BanAbuseH = new Handler("BanAbuse",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    noteEmptySetting(state, event, SWITCH_BANABUSE, BANABUSE))
+            }, '', [], {id: SWITCH_BANABUSE}),
+            new label_ui({}, 'BanAbuse')
+        ], {title: 'kick member who send some abuse terms in the list (⚙ setting)'})
+    ],
+    {
+        [event_msg]: {
+            precond: (config, uis) => config[SWITCH_BANABUSE],
+            onevent: (req, callback, config, uis) => {
+                if(assoc(req.text, config, BANABUSE)){
+                    console.log("abuse kick");
+                    sendTab({
+                        fn: kick_member,
+                        args: { user: req.user }
+                    })
+                }
+            }
+        },
+
+        [event_dm]: {
+            precond: (config, uis) => config[SWITCH_BANABUSE],
+            onevent: (req, callback, config, uis) => {
+                if(assoc(req.text, config, BANABUSE)){
+                    console.log("abuse kick");
+                    sendTab({
+                        fn: kick_member,
+                        args: { user: req.user }
+                    })
+                }
+            }
         }
-    ),
-];
+    }
+);
+
+var WelcomeH = new Handler("welcome", 
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    noteEmptySetting(state, event, SWITCH_WELCOME, WELCOME))
+
+            }, '', [], {id: SWITCH_WELCOME}),
+            new label_ui({}, 'Welcome')
+        ], {title: 'send some custom messages to welcome someone (⚙ setting)'})
+    ], 
+    {
+        [event_join]: {
+            precond: (config, uis) => config[SWITCH_WELCOME],
+            onevent: (req, callback, config, uis) => {
+                if(!assoc(req.user, config, BLACKLIST)){
+                    ((wmsg) => {
+                        if(wmsg){
+                            if(Array.isArray(wmsg))
+                                wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
+                            sendTab({
+                                fn: publish_message,
+                                args: {
+                                    msg: wmsg.replace(/(^|[^\$])\$user/g, `$1${req.user}`)
+                                    .replace(/(^|[^\$])\$/g, `$1$`)
+                                }
+                            });
+                        }
+                    })(assoc(req.user, config, WELCOME));
+                }
+            }
+        }
+    }
+);
+
+var EventActionH = new Handler("event action",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    noteEmptySetting(state, event, SWITCH_EVENTACT, EVENTACT))
+
+            }, '', [], {id: SWITCH_EVENTACT}),
+            new label_ui({}, 'EventAction')
+        ], {title: 'custom your actions on specific events (⚙ setting)'})
+    ],
+    {
+        [event_join]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_join, config, req)
+        },
+        [event_leave]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req) 
+        },
+        [event_newhost]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req) 
+        },
+        [event_me]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req) 
+        },
+        [event_msg]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req) 
+        },
+        [event_dm]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_dm, config, req)
+        },
+        [event_dmto]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_dmto, config, req)
+        },
+        [event_submit]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_submit, config, req)
+        },
+        [event_music]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_music, config, req)
+        },
+        [event_musicend]: {
+            precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+            onevent: (req, callback, config, uis, sender) => event_action(event_musicend, config, req)
+        }
+    }
+);
+
+
+var AlwaysMeH = new Handler("always me",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change(
+                    (state) => {
+                        chrome.tabs.query({
+                            url: 'https://drrr.com/room/*'
+                        }, (tabs) => {
+                            console.log("switch function handling");
+                            for(tab of tabs){
+                                chrome.tabs.sendMessage(tab.id, {
+                                    fn: switch_me,
+                                    args: { state: state }
+                                });
+                            }
+                        });
+                    }),
+            }, '', [], {id: SWITCH_ME}),
+            new label_ui({}, 'Always/me')
+        ], {title: 'add /me automatically after sending message'})
+    ],
+    {
+
+    }
+);
+
+var AutoDMH = new Handler("AutoDM",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state) =>
+                    {
+                        if(state){
+                            chrome.storage.sync.get((config) => {
+                                if(config[DM_USERNAME]){
+                                    bcastTabs({
+                                        fn: on_dm_member,
+                                        args: { user: config[DM_USERNAME] }
+                                    });
+                                }
+                            })
+                        } else bcastTabs({ fn: off_dm_member });
+                    }
+                ) 
+            }, '', [], {id: SWITCH_DM}),
+            new label_ui({}, 'AutoDM', [], {id: DM_USERNAME}),
+        ], {title: 'change to direct message automatically after sending message'})
+    ],
+    {
+        [event_dmto]: {
+            precond: (config, uis) => true,
+            onevent: (req, callback, config, uis) => {
+                console.log("save the dm username");
+                chrome.storage.sync.set({
+                    [DM_USERNAME]: req.user
+                }); 
+            }
+        },
+
+        [event_submit]: {
+            precond: (config, uis) => config[SWITCH_DM],
+            onevent: (req, callback, config, uis) => {
+                console.log("here you are");
+                if(config[DM_USERNAME]){
+                    console.log("there");
+
+                    sendTab({
+                        fn: on_dm_member,
+                        args: { user: config[DM_USERNAME] }
+                    })
+                }
+            }
+        } 
+    }
+);
+
+var RoomKeeperH = new Handler("RoomKeeper",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    {
+                        sendTab({
+                            fn: keep_room,
+                            args: { state: state  }
+                        });
+                    })
+            }, '', [], {id: SWITCH_KEEPER}),
+            new label_ui({}, 'RoomKeeper')
+        ], {title: 'keep the room automatically'})
+    ],
+    {
+        [event_newtab]: {
+            precond: (config, uis) => config[SWITCH_KEEPER],
+            onevent: (req, callback, config, uis) => {
+                roomTabs((tabs)=>{
+                    if(tabs.length == 1){
+                        sendTab({
+                            fn: keep_room,
+                            args: { state: true  }
+                        });
+                    }
+                })
+            }
+        }
+    }
+);
+
+var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH];
 
 function unit_layout(units){
     return units.shift();
@@ -578,15 +616,13 @@ function pair_layout(units){
             </div>`;
 }
 
-function init_switches($, defaults){
-    chrome.storage.sync.get((res) => {
-        var state = {};
-        Object.assign(state, JSON.parse(JSON.stringify(
-            !Object.keys(res).length ? defaults : res)));
-        $(`.${class_map[SWITCH]}`).each(function(){
-            $(this).bootstrapSwitch('state', state[this.id], true);
-        })
-    });
+function init_switches($, defaults, config){
+    var state = {};
+    Object.assign(state, JSON.parse(JSON.stringify(
+        !Object.keys(config).length ? defaults : config)));
+    $(`.${class_map[SWITCH]}`).each(function(){
+        $(this).bootstrapSwitch('state', state[this.id], true);
+    })
 }
 
 function template_setting($){
@@ -605,14 +641,16 @@ switches_layout = [
 ]
 
 function make_switch_panel($, panel_id){
-    switches.ui = switches.map((h) => h.ui());
-    $(panel_id).append(
-        switches_layout.map((set) => 
-            set(switches.ui)).join(''));
-    $(`.${class_map[SWITCH]}`).bootstrapSwitch('size', 'mini');
-    defaults = template_setting($); 
-    init_switches($, defaults);
-    switches.map((h)=>h.bindEvents($));
+    chrome.storage.sync.get((config) => {
+        switches.ui = switches.map((h) => h.ui(config));
+        $(panel_id).append(
+            switches_layout.map((set) => 
+                set(switches.ui)).join(''));
+        $(`.${class_map[SWITCH]}`).bootstrapSwitch('size', 'mini');
+        defaults = template_setting($); 
+        init_switches($, defaults, config);
+        switches.map((h)=>h.bindEvents($));
+    });
 }
 
 var popupURL = chrome.extension.getURL('popup/index.html');

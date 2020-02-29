@@ -259,6 +259,7 @@ $(document).ready(function(){
         dataType: 'json',
         success: function(RoomData){
             rinfo = RoomData;
+            Profile = rinfo.profile;
             console.log('rinfo', rinfo);
             if(rinfo.redirect){ chrome.storage.sync.remove('jumpToRoom'); }
             chrome.storage.sync.get((config) => {
@@ -277,8 +278,7 @@ $(document).ready(function(){
             alert("error", data);
         }
     })
-    console.log("start find");
-});// 
+});
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(JSON.stringify(req), "comes the method from background");

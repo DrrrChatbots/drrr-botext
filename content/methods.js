@@ -1,5 +1,5 @@
 
-var prevURLs =[]
+var prevURLs =[], prevTo = '', prevWhom;
 
 var getTextNodesIn = function(el) {
     return $(el).find(":not(iframe)").addBack().contents().filter(function() {
@@ -14,11 +14,12 @@ var postMessage = function(args){
 }
 
 var publishMessage = function(args){
-    var prevDm = '';
+
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
-        prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
-        offDmMember();
+        prevTo = $('#to-input').val();
+        $('#to-input').val('');
+        prevWhom = $($('.to-whom')[0]).clone()
     }
     if($('#url-input').val()){
         prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
@@ -30,9 +31,17 @@ var publishMessage = function(args){
     $('input[name="post"]').click();
 
     setTimeout(()=>{
-        if(prevDm){
-            console.log("recover DM member:", prevDm);
-            onDmMember({user: prevDm});
+        if(prevTo){
+            console.log("recover DM member:", prevTo);
+            $('#to-input').val(prevTo)
+            prevWhom.find('a').click(()=>{
+                $('#to-input').val('');
+                prevWhom.removeClass("on").empty();
+                $('textarea[name="message"]').removeClass("state-secret");
+                $('textarea[name="ext_message"]').removeClass("state-secret");
+            })
+            $($('.to-whom')[0]).replaceWith(prevWhom);
+            console.log("replace");
         }
         if(prevURLs.length){
             [url, type] = prevURLs.pop();
@@ -40,7 +49,7 @@ var publishMessage = function(args){
             $('#url-icon').attr('data-status', "filled").text(type);
         }
         bot_ondm = false;
-    }, 1000);
+    }, 500);
 }
 
 var enableMe = true;
@@ -67,14 +76,16 @@ var offDmMember = function(args){
     if(to.length) to[0].click();
 }
 
-var dmMember = function(args){
-    var prevDm = '';
+var dmMember = function(args, passOn){
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
-        prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
-        offDmMember();
+        prevTo = $('#to-input').val();
+        $('#to-input').val('');
+        prevWhom = $($('.to-whom')[0]).clone()
     }
-    onDmMember(args);
+
+    if(!passOn) onDmMember(args);
+
     if($('#url-input').val()){
         prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
         $('#url-input').val('');
@@ -83,9 +94,17 @@ var dmMember = function(args){
     $('textarea[name="message"]').val(args.msg);
     $('input[name="post"]').click();
     setTimeout(()=>{
-        if(prevDm){
-            console.log("recover DM member:", prevDm);
-            onDmMember({user: prevDm});
+        if(prevTo){
+            console.log("recover DM member:", prevTo);
+            $('#to-input').val(prevTo)
+            prevWhom.find('a').click(()=>{
+                $('#to-input').val('');
+                prevWhom.removeClass("on").empty();
+                $('textarea[name="message"]').removeClass("state-secret");
+                $('textarea[name="ext_message"]').removeClass("state-secret");
+            })
+            $($('.to-whom')[0]).replaceWith(prevWhom);
+            console.log("replace");
         }
         if(prevURLs.length){
             [url, type] = prevURLs.pop();
@@ -150,6 +169,29 @@ var getMembers = function(args, callback){
 var leaveRoom = function(args, callback){
     $('.do-logout')[0].click();
     if(callback) callback();
+}
+
+var keepH = undefined;
+var keepRoom = function(args){
+    var keep = function(){
+        if(Profile){
+            $('#to-input').val(Profile.id);
+            dmMember({msg:'keep'}, true);
+        }
+        else initProfile(()=>{
+            $('#to-input').val(Profile.id);
+            dmMember({msg:'keep'}, true);
+        });
+    }
+    if(args.state){
+        keep();
+        keepH = setInterval(keep, 600000);
+    }
+    else{
+        clearInterval(keepH);
+        $('#to-input').val(Profile.id);
+        dmMember({msg:'unkeep'}, true);
+    }
 }
 
 var alertUser = function(args){
@@ -256,3 +298,4 @@ methods[rebind_alarms] = rebindAlarms;
 methods[clear_alarms] = clearAlarms;
 methods[is_playing] = isPlaying;
 methods[leave_room] = leaveRoom;
+methods[keep_room] = keepRoom;

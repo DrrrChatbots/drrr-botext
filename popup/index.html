@@ -65,9 +65,9 @@
 
                             <select id="music_source" name="source" class="form-control"
                                                                     style="text-align:center;
-                                                                                                                                                                     padding-left: 4px;
-                                                                                                                                                                     padding-right: 0px;
-                                                                                                                                                                     padding-top: 4px;"
+                                                                                                                                                                                                                           padding-left: 4px;
+                                                                                                                                                                                                                           padding-right: 0px;
+                                                                                                                                                                                                                           padding-top: 4px;"
                                                                     title="music source">
                             </select>
 
@@ -131,13 +131,13 @@
                                     <i class="glyphicon glyphicon-transfer"></i>
                                 </button>
                                 <button id="new_bios" class="btn btn-default" type="button"
-                                                                              title='create bio'>
-                                    <i class="glyphicon glyphicon-plus"></i>
+                                                                              title='save bio and goto new'>
+                                    <i class="glyphicon glyphicon-floppy-save"></i>
                                 </button>
 
                                 <button id="del_bios" class="btn btn-default" type="button"
                                                                               title='delete bio'>
-                                    <i class="glyphicon glyphicon-minus"></i>
+                                    <i class="glyphicon glyphicon-floppy-remove"></i>
                                 </button> 
                             </div>
                         </div>
@@ -158,34 +158,42 @@
 
                             <div class="input-group-btn">
 
-                                <button id="fb_search" class="btn btn-default fb-on-input" data-target="#fb_list"
-                                                                                           type="submit" title="search by rule">
+                                <button id="fb-search-opener"
+                                        class="btn btn-default fb-opener fb-on-input"
+                                        data-target="#fb_list" type="submit" title="search by rule">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </button>
 
-                                <button id="add_rule" class="btn btn-default fb-on-input" type="submit"
-                                                                                          data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                                                         title="add by rule">
+                                <button id="fb-add-rule"
+                                        class="btn btn-default fb-on-input"
+                                        type="submit" data-delayed-toggle="collapse" data-target="#fb_list" title="add by rule">
                                     <i id="" class="glyphicon glyphicon-plus"></i>
                                 </button>
 
-                                <button id="fb_rule_opener" class="btn btn-default fb-off-input" type="button"
-                                                                                                 data-delayed-toggle="collapse" data-target="#fb_list" title="show rules">
+                                <button id="fb-rule-opener"
+                                        class="btn btn-default fb-opener fb-off-input"
+                                        type="button" data-delayed-toggle="collapse" data-target="#fb_list" title="show rules">
                                     <i class="glyphicon glyphicon-list"></i>
                                 </button>
 
 
+                                <button id="tripcode-opener"
+                                        class="btn btn-default fb-opener fb-off-input"
+                                        type="button" data-delayed-toggle="collapse" data-target="#fb_list" title="show tripcode list">
+                                    <i class="glyphicon glyphicon-lock fb-off-input"></i>
+                                </button>
+                                <button id="friend-opener"
+                                        class="btn btn-default fb-opener fb-off-input"
+                                        type="button" data-delayed-toggle="collapse" data-target="#fb_list" title="show friend list">
+                                    <i class="glyphicon glyphicon-user fb-off-input"></i>
+                                </button>
                                 <button id="home-opener" class="btn btn-default fb-opener fb-off-input" data-target="#fb_list"
                                                                                                         type="submit" title="show home">
                                     <i class="glyphicon glyphicon-home"></i>
                                 </button>
-                                <button id="friend-opener" class="btn btn-default fb-opener fb-off-input" type="button"
-                                                                                                          data-delayed-toggle="collapse" data-target="#fb_list"
-                                                                                                                                         title="show friend list">
-                                    <i id="friend-list_type" class="glyphicon glyphicon-user fb-off-input"></i>
-                                </button>
-                                <button id="room-opener" class="btn btn-default fb-opener" data-target="#fb_list"
-                                                                                           type="submit" title="show all room">
+                                <button id="room-opener"
+                                        class="btn btn-default fb-opener"
+                                        data-target="#fb_list" type="submit" title="show all room">
                                     <i class="glyphicon glyphicon-globe"></i>
                                 </button>
 
@@ -203,7 +211,30 @@
                         </div>
                     </div>
                     <div id="tab2-cont" class="tab-pane fade">
-                        <h3>GameMenu</h3>
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button id="reset-sticker" class="btn btn-default" type="button" title='reset stickers'>
+                                    <i class="glyphicon glyphicon-knight"></i>
+                                </button>
+                            </div>
+
+                            <select id="game-select"
+                                    class="form-control"
+                                    data-target="#game_list"
+                                    style="text-align:center; text-align-last:center;"
+                                    title="select game">
+                                <option style="text-align:center; text-align-last:center;" value="">Guess The Number (NANB)</option>
+                                <option style="text-align:center; text-align-last:center;" value="">Pokemon Master</option>
+                            </select>
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <div class="input-group-btn">
+                                <button id="reset-sticker" class="btn btn-default" type="button" title='reset stickers'>
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div id="tab3-cont" class="tab-pane fade">
                         <br>

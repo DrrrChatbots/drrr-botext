@@ -94,6 +94,12 @@ var goto_room_btn = (args) =>
      <i class="glyphicon glyphicon-plane"></i>
   </button>`
 
+var del_fbrule_btn = (args) =>
+    `<button class="btn btn-default del-fbrule" type="submit"
+         data="${args.data}-${args.idx}"   title="remove the rule">
+     <i class="glyphicon glyphicon-remove"></i>
+  </button>`
+
 function bind_sticker(){
     $('.sticker-btn').click(function(){
         sendTab({
@@ -123,7 +129,7 @@ function bind_imm_pldl(){
             $(this).attr('data'),
             alert.bind(window)
         );
-        del_song(PLAYLIST, $(this).attr('data-idx'), show_playlist, true);
+        del_song(PLAYLIST, $(this).attr('data-idx'), (res) => res &&  show_playlist, true);
     })
 }
 
@@ -155,13 +161,13 @@ function bind_add_song(){
 
 function bind_del_song(){
     $('.del-song').click(function(){
-        del_song(PLAYLIST, $(this).attr('data'), show_playlist, false);
+        del_song(PLAYLIST, $(this).attr('data'), (res) => res && show_playlist, false);
     });
 }
 
 function bind_vaf_song(){
     $('.vaf-song').click(function(){
-        del_song(FAVLIST, $(this).attr('data'), show_favlist, false);
+        del_song(FAVLIST, $(this).attr('data'), (res) => res && show_favlist, false);
     });
 }
 
@@ -178,6 +184,26 @@ function bind_goto_room(){
     });
 }
 
+function bind_del_fbrule(){
+    $('.del-fbrule').click(function(){
+        [conf, idx] = $(this).attr('data').split('-');
+        del_value(conf, idx, show_fbrulelist,
+            (cn, item) => chrome.notifications.create({
+                type: "basic",
+                iconUrl: '/icon.png',
+                title: `${cn.toUpperCase()} UPDATE`,
+                message: `RegExp Rule "${item}" is deleted from ${cn}`
+            }),
+            (cn, item) => sendTab({
+                fn: publish_message,
+                args: {
+                    msg: `RegExp Rule "${item}" is deleted from ${cn}`
+                }
+            }), false
+        )
+    });
+}
+
 btn_funcbind = {
     [sticker_btn]: bind_sticker,
     [imm_play_btn]: bind_imm_play,
@@ -187,14 +213,18 @@ btn_funcbind = {
     [del_song_btn]: bind_del_song,
     [vaf_song_btn]: bind_vaf_song,
     [goto_room_btn]: bind_goto_room,
+    [del_fbrule_btn]: bind_del_fbrule,
 }
 
-function show_list(cont_name, entries, btns, callback){
+function show_list(cont_name, entries, btns, callback, extend){
     $(cont_name).html(
-        !Array.isArray(entries) ? entries :
-        entries.map((args)=> list_template(args, btns)).join('')
-    ).promise().then(callback);
-    for(btn of btns) btn_funcbind[btn]();
+        (extend ? $(cont_name).html() : '') +
+        (!Array.isArray(entries) ? entries :
+            entries.map((args)=> list_template(args, btns)).join(''))
+    ).promise().then(()=>{
+        callback();
+        for(btn of btns) btn_funcbind[btn]();
+    });
 }
 
 
@@ -278,7 +308,7 @@ function show_homelist(callback){
     show_findlist(
         findAsList.bind(null, {'home':true}),
         roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
-        callback, empty_template('NO MARKED PLACE ONLINE', 'glyphicon-home')
+        callback, empty_template('NO MARKED PLACE ONLINE', 'glyphicon-home'), 'glyphicon-home'
     )
 }
 
@@ -286,78 +316,177 @@ function show_friendlist(callback){
     show_findlist(
         findAsList.bind(null, {'friend':true}),
         roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
-        callback, empty_template('NO FRIEND ONLINE', 'glyphicon-user')
+        callback, empty_template('NO FRIEND ONLINE', 'glyphicon-user'), 'glyphicon-user'
+    );
+}
+
+function show_tripcodelist(callback){
+    show_findlist(
+        findAsList.bind(null, {'tripcode':true}),
+        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`#${u.tripcode}`).join(', ')}`, 100),
+        callback, empty_template('NO TRIPCODE USER ONLINE', 'glyphicon-lock'), 'glyphicon-lock' 
     );
 }
 
 function show_roomlist(callback){
     show_findlist(
-        (rooms) => Object.values(rooms).map((room) => [room, []]),
+        (rooms, ignore, callback) => callback(Object.values(rooms).map((room) => [room, []])),
         roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
-        callback, empty_template('NO ROOM ON DRRR (WTF)', 'glyphicon-globe')
+        callback, empty_template('NO ROOM ON DRRR (WTF)', 'glyphicon-globe'), 'glyphicon-globe'
     );
 }
 
-function show_findlist(findGroups, getTitle, getContent, callback, empty){
+// ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
+function show_fbsearchlist(callback){
+    var option = {};
+    var type = cur_fb_rule_type();
+    rule = $('#fb-input').val();
+    try{
+        new RegExp(rule);
+    }
+    catch(e){
+        return alert(e);
+    }
+    op = ['trip', 'user', 'room'][type];
+    show = [
+        (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.tripcode}`).join(', ')}`, 100),
+        (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
+        (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+    ][type];
+
+    option[op] = [rule];
+    show_findlist(
+        findAsList.bind(null, option),
+        roomTitle, show, callback, empty_template('NO SEARCH RESULT', 'glyphicon-search'),
+        ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'][type]
+    )
+}
+
+function show_fbrulelist(callback){
+    show_configlist(
+        '#fb_list_container',
+        [TRIPCODES, FRIENDS, HOMES], callback,
+        [del_fbrule_btn],
+        (c)=>`EMPTY ${c.toUpperCase()} RULE LIST`, {
+            title: (c, l) => `${c.substring(0, c.length - 1)} RegExp Rule: ${l}`,
+            content: (c, l) => l,
+            data: (c, l) => c,
+            icon: (c) => ({ [TRIPCODES]:'glyphicon-lock', [FRIENDS]: 'glyphicon-user', [HOMES]: 'glyphicon-home' }[c])
+        });
+}
+
+function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
     ajaxRooms(
         function(data){
             lounge = data.rooms.sort(
                 function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);}
             ).reverse();
-            var groups = findGroups(lounge);
-            if(groups.length)
-                show_list(
-                    '#fb_list_container',
-                    groups.map(([room, users])=>{
-                        return ({
-                            icon: 'glyphicon-home',
-                            title: getTitle(room, users),
-                            content: getContent(room, users),
-                            can: room.total < room.limit,
-                            url: 'https://drrr.com/room/?id=' + room.roomId,
-                        });
-                    }), [goto_room_btn], callback
-                )
-            else show_list('#fb_list_container', empty, [], callback);
+            findGroups(lounge, undefined, (groups) =>{
+                if(groups.length)
+                    show_list(
+                        '#fb_list_container',
+                        groups.map(([room, users])=>{
+                            return ({
+                                icon: icon || 'glyphicon-home',
+                                title: getTitle(room, users),
+                                content: getContent(room, users),
+                                can: room.total < room.limit,
+                                url: 'https://drrr.com/room/?id=' + room.roomId,
+                            });
+                        }), [goto_room_btn], callback
+                    )
+                else show_list('#fb_list_container', empty, [], callback);
+            });
         }
     );
 }
 
-function show_configlist(conf_type, callback, buttons, empty_name, icon){
+function show_configlist(container, conf_type, callback, buttons, empty_name, attrs){
     chrome.storage.sync.get(conf_type, (config) => {
-        var list = config[conf_type];
-        if(list && list.length){
-            show_list(
-                '#list_container',
-                Object.keys(list).map((idx) => {
-                    var name = list[idx].name;
-                    var singer = list[idx].singer;
-                    return ({
-                        idx: idx,
-                        icon: icon,
-                        title: `${name} - ${singer}`,
-                        content: ommited_name(name, singer),
-                        data: list[idx].link,
-                    });
-                }), buttons, callback
-            )
+        function recursive(cfs, callback, ext){
+            if(cfs.length){
+                conf = cfs[0];
+                var list = config[conf];
+                if(list && list.length){
+                    show_list(
+                        container,
+                        Object.keys(list).map((idx) => {
+                            var icon = attrs.icon;
+                            icon = typeof icon === 'string' ? icon : icon(conf, list[idx]);
+                            var title = attrs.title(conf, list[idx]);
+                            var content = attrs.content(conf, list[idx]);
+                            var data = attrs.data(conf, list[idx]);
+                            return ({
+                                idx: idx,
+                                conf: conf,
+                                icon: icon,
+                                title: title,
+                                content: content,
+                                data: data,
+                            });
+                        }), buttons, ()=>recursive(cfs.slice(1), callback, true), ext
+                    )
+                }
+                else{
+                    show_list(
+                        container,
+                        empty_template(
+                            typeof empty_name === 'string' ? empty_name : empty_name(conf),
+                            typeof attrs.icon === 'string' ? attrs.icon : attrs.icon(conf, undefined)),
+                        [], ()=>recursive(cfs.slice(1), callback, true), ext);
+                }
+            }
+            else callback && callback();
         }
-        else show_list('#list_container', empty_template(empty_name, icon), [], callback);
+        confs = Array.isArray(conf_type) ? conf_type : [conf_type];
+        recursive(confs, callback);
+        //confs.forEach(conf=>{
+        //    var list = config[conf];
+        //    if(list && list.length){
+        //        show_list(
+        //            '#list_container',
+        //            Object.keys(list).map((idx) => {
+        //                var name = list[idx].name;
+        //                var singer = list[idx].singer;
+        //                return ({
+        //                    idx: idx,
+        //                    icon: typeof icon === 'string' ? icon : icon(conf),
+        //                    title: `${name} - ${singer}`,
+        //                    content: ommited_name(name, singer),
+        //                    data: list[idx].link,
+        //                });
+        //            }), buttons, callback
+        //        )
+        //    }
+        //    else show_list('#list_container', empty_template(empty_name, icon), [], callback);
+        //});
     });
 }
 
 function show_playlist(callback){
     show_configlist(
+        '#list_container',
         PLAYLIST, callback,
         [del_song_btn, imm_pldl_btn, fav_song_btn],
-        'EMPTY PLAYLIST', 'glyphicon-list');
+        'EMPTY PLAYLIST', {
+            title: (c, l) => `${l.name} - ${l.singer}`,
+            content: (c, l) => ommited_name(l.name, l.singer),
+            data: (c, l) => l.link,
+            icon: 'glyphicon-list'
+        });
 }
 
 function show_favlist(callback){
     show_configlist(
+        '#list_container',
         FAVLIST, callback,
         [add_song_btn, imm_play_btn, vaf_song_btn],
-        'EMPTY FAVLIST', 'glyphicon-heart');
+        'EMPTY FAVLIST', {
+            title: (c, l) => `${l.name} - ${l.singer}`,
+            content: (c, l) => ommited_name(l.name, l.singer),
+            data: (c, l) => l.link,
+            icon: 'glyphicon-heart'
+        });
 }
 
 function emptyKeyword(){
@@ -496,7 +625,7 @@ function music_bar_setup(config){
 
 // glyphicon-barcode glyphicon-qrcode
 var fb_rule_types = ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
-var fb_rule_info = ['Tripcode', 'User (RegExp)', 'Room (RegExp)'];
+var fb_rule_info = ['Tripcode (RegExp)', 'User (RegExp)', 'Room (RegExp)'];
 function cur_fb_rule_type(){
     for(i = 0; i < fb_rule_types.length; i++){
         if($('#fb_rule_type').hasClass(fb_rule_types[i]))
@@ -597,7 +726,9 @@ function bio_setup(config){
         getProfile(function(p){
             if(valueSelected){
                 if(p){
-                    if(p.id == valueSelected) alert("this is current bio");
+                    if(p.id == valueSelected){
+                        chrome.tabs.create({url: 'https://drrr.com'});
+                    }
                     else{
                         cache(undefined, (config)=>{
                             var bios = config['bio_cookies']
@@ -721,7 +852,10 @@ function friend_setup(config){
         var opener = {
             'home-opener': show_homelist,
             'friend-opener': show_friendlist,
-            'room-opener': show_roomlist
+            'tripcode-opener': show_tripcodelist,
+            'room-opener': show_roomlist,
+            'fb-search-opener': show_fbsearchlist,
+            'fb-rule-opener': show_fbrulelist,
         }[this.id];
         $target.attr('data', this.id);
         if(!opening){
@@ -739,20 +873,30 @@ function friend_setup(config){
         }
     });
 
-    /* 
-        // if add enter?
+    // if add enter?
     $('#fb-input')[0].addEventListener('keyup', function(v){
         if(v.keyCode == 13){
-            if(!v.shiftKey && !v.ctrlKey)
-                $('#music_list_opener').click();
-            else if(v.shiftKey && !v.ctrlKey)
-                $('#play_search').click();
+            if($(this).val().length){
+                if(!v.shiftKey && !v.ctrlKey)
+                    $('#fb-search-opener').click();
+                else if(v.shiftKey && !v.ctrlKey)
+                    $('#fb-add-rule').click();
+                else if(!v.shiftKey && v.ctrlKey)
+                    $('#room-opener').click();
+            }
+            else{
+                if(!v.shiftKey && !v.ctrlKey)
+                    $('#home-opener').click();
+                else if(v.shiftKey && !v.ctrlKey)
+                    $('#friend-opener').click();
+                else if(!v.shiftKey && v.ctrlKey)
+                    $('#room-opener').click();
+            }
         }
 
     }, false);
-    */
 
-    $('#fb-input').on('input focus',function(e){
+    $('#fb-input').on('input focus', function(e){
         if(e.type == 'focus') $('#fb_list').collapse('hide');
         if($(this).val().trim()){
             $('.fb-on-input').show();
@@ -764,6 +908,25 @@ function friend_setup(config){
             $('.fb-off-input').show();
         }
     });
+
+    $('#fb-add-rule').on('click', function(e){
+        var type = cur_fb_rule_type();
+        var list = [TRIPCODES, FRIENDS, HOMES][type]
+        var rule = $('#fb-input').val();
+        try{
+            new RegExp(rule);
+        } 
+        catch(e){
+            return alert(e);
+        }
+        push_value(list, rule);
+        chrome.notifications.create({
+            type: "basic",
+            iconUrl: '/icon.png',
+            title: `${list.toUpperCase()} UPDATE`,
+            message: `RegExp Rule ${rule} is added to ${list}`
+        });
+    })
 }
 
 
@@ -940,4 +1103,13 @@ $(document).ready(function(){
             chrome.storage.sync.set({'pop-tab': this.id});
         })
     });
+});
+
+
+chrome.runtime.onMessage.addListener((req, sender, callback) => { 
+    if(req && req.expired_bio){
+        var $stored = $('#bio_select');
+        var optionSelected = $("option:selected", $stored);
+        optionSelected.replaceWith(`<option value="">Not Logined</option>`);
+    }
 });

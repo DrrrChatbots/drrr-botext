@@ -43,7 +43,7 @@ new Handler("music", [],
 function generate_notification(req){
     var func = () =>
         chrome.notifications.create(
-            req.notification.url || undefined, {
+            req.notification.url || req.notification.sel || undefined, {
                 type: "basic",
                 iconUrl: '/icon.png',
                 title: req.notification.title,
@@ -63,9 +63,10 @@ function generate_notification(req){
 
     if(req.notification.url)
         chrome.notifications.onClicked.addListener(
-            ((exit)=>
+            ((exit, url)=>
                 function(toURL) {
                     console.log(toURL);
+                    if(toURL !== url) return;
                     chrome.storage.sync.set(
                         {'jumpToRoom': toURL },
                         ()=>{
@@ -81,9 +82,17 @@ function generate_notification(req){
                             });
                         }
                     );
-
                 }
-            )(req.notification.exit));
+            )(req.notification.exit, req.notification.url));
+    else if(req.notification.sel)
+        chrome.notifications.onClicked.addListener(
+            ((sel)=>
+                function(toSel) {
+                    console.log(toSel);
+                    if(toSel !== sel) return;
+                    sendTab({ fn: scroll_to, args: {sel: sel}}, undefined, undefined, undefined, 'https://drrr.com/lounge/*');
+                }
+            )(req.notification.sel));
 }
 
 var error403 = 0;
@@ -102,7 +111,6 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
         })
     }
     else if(req && req.saveCookie){
-        alert("update cookie");
         chrome.cookies.getAll({
             url : 'https://drrr.com'
         }, function(cookies){

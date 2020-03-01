@@ -7,7 +7,16 @@ $(document).ready(function(){
             if(config['profile'] && config['cookie']){
                 chrome.runtime.sendMessage(
                     { setCookies: true, cookies: config['cookie'] },
-                    ()=>{ location.reload(); }
+                    ()=>{
+                        ajaxProfile(function(p){
+                            if(p) setTimeout(()=>location.reload(), 1000); 
+                            else{
+                                alert("Bio Expired");
+                                chrome.storage.sync.remove(['profile', 'cookie']);
+                                chrome.runtime.sendMessage({expired_bio: true});
+                            }
+                        }, true);
+                    }
                 )
             }
             else if(config['profile'] || config['cookie']){

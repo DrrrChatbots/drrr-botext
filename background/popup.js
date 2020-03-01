@@ -72,10 +72,10 @@ var label_ui = ui_object(LABEL,
 
 var switch_change = (callback) =>
     function(event, state){
-        chrome.storage.sync.set({
-            [this.id]: state
-        });
-        if(callback) callback(state, event);
+        chrome.storage.sync.set(
+            { [this.id]: state },
+            () => callback && callback(state, event)
+        );
     }
 
 var switch_ui = ui_object(SWITCH,
@@ -205,7 +205,6 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
             chrome.storage.sync.set({
                 [switch_id]: false
             }); 
-            return;
         }
         else if(callback) callback();
     });
@@ -223,7 +222,7 @@ var BanListH = new Handler("banlist",
                 'click': function(event, state){
                     chrome.storage.sync.get((config) => {
                         var types = [BLACKLIST, WHITELIST];
-                        var list = config[BANLIST] || WHITELIST;
+                        var list = config[BANLIST] || BLACKLIST;
                         list = types[Math.abs(types.indexOf(list) - 1)];
                         event.data.$('#banlist_type').text(list);
                         chrome.storage.sync.set({
@@ -545,7 +544,7 @@ var AutoDMH = new Handler("AutoDM",
                 console.log("save the dm username");
                 chrome.storage.sync.set({
                     [DM_USERNAME]: req.user
-                }); 
+                });
             }
         },
 

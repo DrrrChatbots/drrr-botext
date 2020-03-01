@@ -1,4 +1,17 @@
 
+function roomProfile(){
+    Profile = {
+        "device":"desktop",
+        "icon": $("#user_icon").text(),
+        "id": $("#user_id").text(),
+        "lang":$('html').attr('lang'),
+        "name": $('#user_name').text(),
+        "tripcode": $('#user_tripcode').text(),
+        "uid": $("#user_id").text()
+    };
+    return Profile;
+}
+
 var prevURLs =[], prevTo = '', prevWhom;
 
 var getTextNodesIn = function(el) {
@@ -166,38 +179,40 @@ var getMembers = function(args, callback){
     callback(list);
 }
 
-var leaveRoom = function(args, callback){
-    chrome.storage.sync.set({'leaveRoom': true });
-    leave = () => {
-        $('.do-logout')[0].click();
-        setTimeout(()=>{
-            chrome.runtime.sendMessage({
-                notification: {
-                    title: '離開失敗，十秒後為您重試',
-                    msg: '蟲洞即將開啟，請不要亂動',
-                    clear: true,
-                    pattern: ''
-                }
-            });
-        }, 3600);
-    };
-    setInterval(leave, 10000);
-    leave();
-    // v useless?
-    if(callback) callback();
+var disableLeave = false;
+var leaveRoom = function(args, callback, force){
+    if(disableLeave && !force) return;
+    chrome.storage.sync.set(
+        {'leaveRoom': true },
+        ()=>{
+            var leave = () => {
+                $('.do-logout')[0].click();
+                setTimeout(()=>{
+                    chrome.runtime.sendMessage({
+                        notification: {
+                            title: '離開失敗，十秒後為您重試（ONCLICK）',
+                            msg: '蟲洞即將開啟，請不要亂動',
+                            clear: true,
+                            pattern: ''
+                        }
+                    });
+                }, 10000);
+            };
+            setInterval(leave, 10000);
+            leave();
+            // v useless?
+            callback && callback();
+        }
+    );
+
 }
 
 var keepH = undefined;
 var keepRoom = function(args){
+    uid = roomProfile().id;
     var keep = function(){
-        if(Profile){
-            $('#to-input').val(Profile.id);
-            dmMember({msg:'keep'}, true);
-        }
-        else initProfile(()=>{
-            $('#to-input').val(Profile.id);
-            dmMember({msg:'keep'}, true);
-        });
+        $('#to-input').val(uid);
+        dmMember({msg:'keep'}, true);
     }
     if(args.state){
         keep();
@@ -205,13 +220,17 @@ var keepRoom = function(args){
     }
     else{
         clearInterval(keepH);
-        $('#to-input').val(Profile.id);
+        $('#to-input').val(uid);
         dmMember({msg:'unkeep'}, true);
     }
 }
 
 var cacheProfile = function(args, callback){
-    callback(Profile);
+    callback(roomProfile());
+}
+
+var updateProfile = function(args, callback){
+    // useless
 }
 
 var alertUser = function(args){
@@ -320,3 +339,5 @@ methods[is_playing] = isPlaying;
 methods[leave_room] = leaveRoom;
 methods[keep_room] = keepRoom;
 methods[cache_profile] = cacheProfile;
+methods[update_profile] = updateProfile;
+

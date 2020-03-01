@@ -40,6 +40,52 @@ new Handler("music", [],
     }
 );
 
+function generate_notification(req){
+    var func = () =>
+        chrome.notifications.create(
+            req.notification.url || undefined, {
+                type: "basic",
+                iconUrl: '/icon.png',
+                title: req.notification.title,
+                message: req.notification.msg 
+            }
+        );
+
+    if(req.notification.clear){
+        chrome.notifications.getAll((notes)=>{
+            for(n in notes)
+                if(n.match(new RegExp(req.notification.pattern)))
+                    chrome.notifications.clear(n);
+            func();
+        })
+    }
+    else func();
+
+    if(req.notification.url)
+        chrome.notifications.onClicked.addListener(
+            ((exit)=>
+                function(toURL) {
+                    console.log(toURL);
+                    chrome.storage.sync.set(
+                        {'jumpToRoom': toURL },
+                        ()=>{
+                            if(exit){
+                                sendTab({ fn: leave_room });
+                            } else chrome.tabs.update({
+                                url: toURL
+                            });
+                            chrome.notifications.getAll((notes)=>{
+                                for(n in notes)
+                                    if(n.startsWith('https://drrr.com/room/?id='))
+                                        chrome.notifications.clear(n);
+                            });
+                        }
+                    );
+
+                }
+            )(req.notification.exit));
+}
+
 var error403 = 0;
 chrome.runtime.onMessage.addListener((req, sender, callback) => { 
     console.log(sender);
@@ -51,86 +97,26 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     else if(req && req.clearNotes){
         chrome.notifications.getAll((notes)=>{
             for(n in notes)
-                if(n.match(new RegExp(req.clearNotes)))
+                if(n.match(new RegExp(req.pattern)))
                     chrome.notifications.clear(n);
         })
     }
+    else if(req && req.saveCookie){
+        alert("update cookie");
+        chrome.cookies.getAll({
+            url : 'https://drrr.com'
+        }, function(cookies){
+            chrome.storage.sync.set({
+                'profile': req.profile,
+                'cookie':cookies
+            }, ()=> callback && callback());
+        });
+    }
+    else if(req && req.setCookies){
+        setCookies(req.cookies, callback);
+    }
     else if(req && req.notification){
-
-        var func = () =>
-            chrome.notifications.create(
-                req.notification.url || undefined, {
-                    type: "basic",
-                    iconUrl: '/icon.png',
-                    title: req.notification.title,
-                    message: req.notification.msg 
-                }
-            );
-
-        if(req.notification.clear){
-            chrome.notifications.getAll((notes)=>{
-                for(n in notes)
-                    if(n.match(new RegExp(req.notification.pattern)))
-                        chrome.notifications.clear(n);
-                func();
-            })
-        }
-        else func();
-
-        if(req.notification.url)
-            chrome.notifications.onClicked.addListener(((exit)=>function(notificationId) {
-                console.log(notificationId);
-                chrome.notifications.getAll((notes)=>{
-                    for(n in notes)
-                        if(n.startsWith('https://drrr.com/room/?id='))
-                            chrome.notifications.clear(n);
-                })
-
-                if(exit){
-                    sendTab({ fn: leave_room });
-                    //var lambda = function(){
-                    //    $.ajax({
-                    //        type: "POST",
-                    //        data: {'leave':'leave'},
-                    //        url: 'https://drrr.com//room',
-                    //        dataType: 'json',
-                    //        success: function(data){
-                    //            alert('WTF', data);
-                    //            if(data.status && data.status == "403"){
-                    //            }
-                    //            else{
-                    //                chrome.storage.sync.set({'jumpToRoom': notificationId }); 
-                    //            }
-                    //        },
-                    //        error: function(data){
-                    //            console.log(data)
-                    //            if(data.status && data.status == "403"){
-                    //                if(!error403){
-                    //                    error403++;
-                    //                    chrome.notifications.getAll((notes)=>{
-                    //                        for(n in notes) chrome.notifications.clear(n);
-                    //                        chrome.notifications.create({
-                    //                            type: "basic",
-                    //                            iconUrl: '/icon.png',
-                    //                            title: '離開失敗，十秒後為您重試',
-                    //                            message: '蟲洞即將開啟，請不要亂動'
-                    //                        });
-                    //                        setTimeout(lambda, 10000);
-                    //                    });
-                    //                }
-                    //            }
-                    //            else {
-                    //                chrome.storage.sync.set({'jumpToRoom': notificationId });
-                    //                error403 = 0;
-                    //            }
-                    //        }
-                    //    })
-                    //}
-                    //lambda();
-                } else chrome.tabs.update({
-                    url: notificationId
-                });
-            })(req.notification.exit));  
+        generate_notification(req);
     }
     else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){ 
         console.log(req);

@@ -169,42 +169,12 @@ function bind_goto_room(){
     $('.goto-room').click(function(){
         var toURL = $(this).attr('data');
 
-        chrome.storage.sync.set({'jumpToRoom': toURL });
-        sendTab({ fn: leave_room });
-        //sendTab({ fn: leave_room }, function(){
-        //    chrome.runtime.sendMessage({ jumpto: toURL });
-        //});
-        return;
-        //$.ajax({
-        //    type: "POST",
-        //    data: {'leave':'leave'},
-        //    url: 'https://drrr.com//room',
-        //    dataType: 'json',
-        //    success: function(data){
-        //        alert('WTF', data);
-        //        if(data.status && data.status == "403"){
-        //        }
-        //        else{
-        //            //alert($(this).attr('data'));
-        //            chrome.storage.sync.set({'jumpToRoom': toURL });
-        //        }
-        //    },
-        //    error: function(data){
-        //        if(data.status && data.status == "403"){
-        //            chrome.notifications.create(
-        //                {
-        //                    type: "basic",
-        //                    iconUrl: '/icon.png',
-        //                    title: '離開失敗，稍後再試',
-        //                    message: '蟲洞開啟失敗'
-        //                });
-        //        }
-        //        else{
-        //            //alert($(this).attr('data'));
-        //            chrome.storage.sync.set({'jumpToRoom': toURL });
-        //        }
-        //    }
-        //});
+        chrome.storage.sync.set(
+            {'jumpToRoom': toURL },
+            ()=> sendTab({ fn: leave_room }, ()=>{
+                chrome.tabs.update({ url: toURL });
+            })
+        );
     });
 }
 
@@ -329,13 +299,11 @@ function show_roomlist(callback){
 }
 
 function show_findlist(findGroups, getTitle, getContent, callback, empty){
-    $.ajax({
-        type: "GET",
-        url: 'https://drrr.com//lounge?api=json',
-        dataType: 'json',
-        success: function(data){
-            Profile = data.profile;
-            lounge = data.rooms.sort(function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);} ).reverse();
+    ajaxRooms(
+        function(data){
+            lounge = data.rooms.sort(
+                function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);}
+            ).reverse();
             var groups = findGroups(lounge);
             if(groups.length)
                 show_list(
@@ -351,11 +319,8 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty){
                     }), [goto_room_btn], callback
                 )
             else show_list('#fb_list_container', empty, [], callback);
-        },
-        error: function(data){
-            alert("Error: " + data.responseJSON.message);
         }
-    });
+    );
 }
 
 function show_configlist(conf_type, callback, buttons, empty_name, icon){
@@ -544,7 +509,7 @@ function next_fb_rule_type(){
 }
 
 //var content = document.querySelector('#content');
-function setCookie(c, callabck) {
+function setCookie(c, callback) {
     c['url'] = 'https://drrr.com';
     chrome.cookies.set(c, callback);
 }
@@ -552,19 +517,32 @@ function setCookie(c, callabck) {
 function getCookie(callback, url) {
     var output = [];
     chrome.cookies.getAll({
-        url  : url || 'https://drrr.com'
+        url : url || 'https://drrr.com'
     }, function(cookies){
         callback(cookies);
     });
 }
 
 function delCookie(name, url, callback) {
-    alert("fuck");
     url = url || 'https://drrr.com' 
     if(name) chrome.cookies.remove({
         url  : url,
         name : name
     }, callback);
+}
+
+function delCookies(list, callback, url) {
+    url = url || 'https://drrr.com';
+    function recursive(list, cb){
+        if(list.length){
+            var name = list[0];
+            chrome.cookies.remove({
+                url  : url,
+                name : name
+            }, ()=> recursive(list.slice(1), cb));
+        } else cb && cb();
+    }
+    recursive(list, callback);
 }
 
 function store_bio(succ, fail){
@@ -578,19 +556,23 @@ function store_bio(succ, fail){
     })
 }
 
-function redraw_bios(bio_cookies){
+function redraw_bios(bio_cookies, data){
     var $stored = $('#bio_select');
 
     bio_cookies = bio_cookies || [];
 
-    getProfile(function(p){
+    getProfile(function(p, err){
+        if(data){
+            Profile = data.profile;
+            p = data.profile;
+        }
         $stored.find('option').remove();
         if(p){
             var cont = `🔖 ${p.name}${'#' + p.tripcode || ''}@${p.icon}`;
             $stored.append(`<option value="${p.id}">${cont}</option>`);
         }
         else{
-            $stored.append(`<option value="">Need to Loggin</option>`);
+            $stored.append(`<option value="">Not Logined</option>`);
         }
         bio_cookies.forEach(([pro, cookie])=>{
             var c = `💾 ${pro.name}${'#' + pro.tripcode || ''}@${pro.icon}`;
@@ -602,67 +584,91 @@ function redraw_bios(bio_cookies){
 function bio_setup(config){
     var $stored = $('#bio_select');
 
-    //$('.nav-tabs a').on('shown.bs.tab', ((showen) => function(event){
-    //if('Friends&Bio' == $(event.target).text() && !showen){
-    //    showen = true;
     redraw_bios(config['bio_cookies']);
-        //cache(undefined, (config)=>redraw_bios(config), 'bio_cookies');
-    //}
-    //})(false));
 
     $('#show_cookie').on('click', function(){
         getCookie((x)=>alert(JSON.stringify(x)));
     });
 
     $('#ch_bios').on('click', function(){
-        alert("ch clicked");
-        return;
         var $stored = $('#bio_select');
         var optionSelected = $("option:selected", $stored);
         var valueSelected = $stored.val();
         getProfile(function(p){
-            if(valueSelected && p && p.id != valueSelected){
-                cache(undefined, (bios)=>{
-                    bios.forEach(([pro, cookies]) =>{
-                        if(pro.id === valueSelected){
-                            store_bio(()=>{
-                                cs.forEach((c)=> delCookie(c.name));
-                                var rec = function(cs){
-                                    setCookie(
-                                        cs.pop(),
-                                        function(){
-                                            if(cs.length && setCookie(cs.pop(), rec))
-                                                window.location.href = "https://drrr.com";
-                                        }
-                                    );
-                                }
-                                rec(cookies);
-                                window.location.href = "https://drrr.com";
-                            }, ()=> {window.location.href = "https://drrr.com";})
-                        }
-                    })
-                }, 'bio_cookies')
+            if(valueSelected){
+                if(p){
+                    if(p.id == valueSelected) alert("this is current bio");
+                    else{
+                        cache(undefined, (config)=>{
+                            var bios = config['bio_cookies']
+                            var idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+
+                            getCookie((cs)=>{
+                                var curbio = [p, cs];
+                                var [nprofile, ncookies] = bios[idx];
+                                setCookies(ncookies, ()=> {
+                                    console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
+                                    bios.splice(idx, 1);
+                                    bios.unshift(curbio);
+                                    console.log(JSON.stringify(bios));
+                                    chrome.storage.sync.set({
+                                        'bio_cookies': bios,
+                                        'profile': nprofile,
+                                        'cookie': ncookies
+                                    }, ()=> chrome.tabs.update(
+                                        { url: "https://drrr.com" },
+                                        ()=>redraw_bios(bios, {profile: nprofile})));
+                                });
+                            });
+                        }, 'bio_cookies')
+                    }
+                }
+                else{
+                    cache(undefined, (config)=>{
+                        var bios = config['bio_cookies']
+                        var idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+                        var [nprofile, ncookies] = bios[idx];
+                        setCookies(ncookies, ()=> {
+                            console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
+                            bios.splice(idx, 1);
+                            console.log(JSON.stringify(bios));
+                            chrome.storage.sync.set({
+                                'bio_cookies': bios,
+                                'profile': nprofile,
+                                'cookie': ncookies
+                            }, ()=> chrome.tabs.update(
+                                { url: "https://drrr.com" },
+                                ()=>redraw_bios(bios, {profile: nprofile})));
+                        });
+                    }, 'bio_cookies')
+
+                }
             }
-            else alert("cannot change to the bio");
+            else alert("cannot change to not logined bio");
         })
     });
 
-    //$stored.on('change', function (e) {
-    //    var optionSelected = $("option:selected", this);
-    //    var valueSelected = this.value;
-    //    //chrome.storage.sync.set({ 'select_stickers': valueSelected });
-    //});
-
     $('#new_bios').on('click', function(){
-        store_bio(
-            (cs)=>{
-                cs.forEach((c)=> delCookie(c.name));
-                window.location.href = "https://drrr.com";
-            }, 
-            ()=> {
-                window.location.href = "https://drrr.com";
+        getProfile((p)=>{
+            if(p){
+                getCookie((cs)=>{
+                    var curbio = [p, cs]
+                    delCookies(cs.map(c=>c.name), ()=>{
+                        push_value('bio_cookies', curbio, (list)=>{
+                            chrome.storage.sync.remove(
+                                ['profile', 'cookie'],
+                                ()=>chrome.tabs.update(
+                                    { url: "https://drrr.com" },
+                                    (tab)=>redraw_bios(list, {profile:undefined})));
+                        });
+                    });
+
+                });
+            } else {
+                alert("no cookie to store");
+                chrome.tabs.update({ url: "https://drrr.com" });
             }
-        )
+        })
     });
 
     $('#del_bios').on('click', function(){
@@ -672,8 +678,12 @@ function bio_setup(config){
         getProfile(function(p){
             if(p && p.id == valueSelected){
                 getCookie((cs)=> {
-                    cs.forEach((c)=> delCookie(c.name))
-                    window.location.href = "https://drrr.com";
+                    delCookies(cs.map(c=>c.name), ()=>{
+                        chrome.storage.sync.remove(
+                            ['profile', 'cookie'],
+                            ()=>chrome.tabs.update({ url: "https://drrr.com" },
+                                ()=> optionSelected.replaceWith(`<option value="">Not Logined</option>`)));
+                    });
                 });
             }
             else{
@@ -714,7 +724,9 @@ function friend_setup(config){
             'room-opener': show_roomlist
         }[this.id];
         $target.attr('data', this.id);
-        if(!opening) opener(()=>$target.collapse('show'));
+        if(!opening){
+            opener(()=>$target.collapse('show'));
+        }
         else if(tartype == this.id) $target.collapse('hide');
         else{
             //show roomlist
@@ -756,8 +768,8 @@ function friend_setup(config){
 
 
 function friend_bio_setup(config){
-    bio_setup(config);
     friend_setup(config);
+    bio_setup(config);
 }
 
 var default_stickers = [
@@ -918,8 +930,8 @@ $(document).ready(function(){
 
     chrome.storage.sync.get((config)=>{
         music_bar_setup(config); 
-        friend_bio_setup(config);
         sticker_setup(config);
+        friend_bio_setup(config);
         var tab = config['pop-tab'] || 'tab0';
         $(`#${tab} > a`).click();
         //$(`#${tab}`).addClass('active');

@@ -24,6 +24,10 @@ var countDownModal = `
 $(document).ready(function(){
     chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
     //'https://drrr.com/room/.*'
+    $('form[action="//drrr.com/logout/"] > input').click(function(){
+        chrome.storage.sync.remove(['profile', 'cookie']);
+    })
+
     chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile'], (config) => {
         console.log('config', config);
 

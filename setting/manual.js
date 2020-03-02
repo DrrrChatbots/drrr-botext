@@ -175,6 +175,8 @@ $[-]
 "msg", "", "^/pending\\\\s*$", "pndm", []
 "msg", "", "^/pending\\\\s+(\\\\D|\\\\d\\\\S)", "pndm", ["$args"]
 "msg", "", "^/pending\\\\s+\\\\d\\\\s+\\\\S+", "pndm", ["$1","$[2-]"]
-"msg", "", "^/sc\\\\s+\\\\S+", "schm", ["$args"]`,
+"msg", "", "^/sc\\\\s+\\\\S+", "schm", ["$args"]
+"msg", "", "^/start", "gnset", [""]
+"msg", "", "^\\\\d\\\\d\\\\d\\\\d$", "gnjdg", ["$cont"]`,
     },
 }

@@ -1,4 +1,5 @@
 .two-side-container{ width:100%; height:35px;}
+.one-side-container{ width:100%; height:35px;}
 .align-left{ float: left;width:50%; margin-top:10px; height:25px;}
 .align-right{ float: right;width:50%; margin-top:10px; height:25px;}
 

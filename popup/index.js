@@ -264,29 +264,67 @@ function show_searchlist(callback){
     );
 }
 
-function show_stickergrid(stickerurl, callback){
+function maxFreqElt(array)
+{
+    if(array.length == 0)
+        return null;
+    var modeMap = {};
+    var maxEl = array[0], maxCount = 1;
+    for(var i = 0; i < array.length; i++)
+    {
+        var el = array[i];
+        if(modeMap[el] == null)
+            modeMap[el] = 1;
+        else
+            modeMap[el]++;  
+        if(modeMap[el] > maxCount)
+        {
+            maxEl = el;
+            maxCount = modeMap[el];
+        }
+    }
+    return maxEl;
+}
+
+function extractImagesFromNodes(nodes){
+    var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
+        (node) => {
+            if($(node).attr('data-preview')){
+                var attr = $(node).attr('data-preview');
+                var view = JSON.parse(attr);
+                if(view.animationUrl && view.animationUrl.length)
+                    return view.animationUrl;
+                else return view.staticUrl;
+            }
+            return "";
+        }
+    ).filter((v)=>v.length);
+    if(urls.length) return urls;
+    urls = nodes.find('.FnImage').toArray().map(u=>{
+        var attr = $(u).css('background-image')
+        return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
+    }).filter((v)=>v.length);
+    if(urls.length) return urls;
+
+    var k = maxFreqElt(nodes.find('span').map(function(){ return this.className; }))
+    urls = nodes.find(`.${k}`).toArray().map(u=>{
+        var attr = $(u).css('background-image')
+        return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
+    }).filter((v)=>v.length);
+    return urls.unique();
+
+}
+
+function show_stickergrid(url, callback){
     $.ajax({
         type: "GET",
-        url: stickerurl,
+        url: url,
         dataType: 'html',
         success: function(data){
-            //var urls = $(data).find('.FnImage > span').toArray().map(u=>{
-            //    var attr = $(u).css('background-image')
-            //    return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
-            //}).filter((v)=>v.length);
+
             var nodes = $(data);
-            var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
-                (node) => {
-                    if($(node).attr('data-preview')){
-                        var attr = $(node).attr('data-preview');
-                        var view = JSON.parse(attr);
-                        if(view.animationUrl && view.animationUrl.length)
-                            return view.animationUrl;
-                        else return view.staticUrl;
-                    }
-                    return "";
-                }
-            ).filter((v)=>v.length);
+
+            var urls = extractImagesFromNodes(nodes);
 
             show_grid(
                 '#sticker_list_container',
@@ -935,33 +973,43 @@ function friend_bio_setup(config){
     bio_setup(config);
 }
 
+function extract_sticker_data(url){
+    return (x=>x && x.filter(x=>x).slice(1))(url.match(/.*store.line.me\/(.*\/product)\/(\w*)|.*store.line.me\/(.*\/sticker)\/(\w*)/));
+}
+
 var default_stickers = [
-    ["LV1.野生喵喵怪", "https://store.line.me/stickershop/product/6996333/zh-Hant"],
-    ["LV2.野生喵喵怪", "https://store.line.me/stickershop/product/7431735/zh-Hant"],
-    ["LV3.野生喵喵怪", "https://store.line.me/stickershop/product/8233424/zh-Hant"],
-    ["LV4.野生喵喵怪", "https://store.line.me/stickershop/product/9435002/zh-Hant"],
-    ["LV5.野生喵喵怪", "https://store.line.me/stickershop/product/9434741/zh-Hant"],
-    ["LV6.野生喵喵怪", "https://store.line.me/stickershop/product/9329100/zh-Hant"],
-    ["LV7.野生喵喵怪", "https://store.line.me/stickershop/product/9786706/zh-Hant"],
-    ["LV8.野生喵喵怪", "https://store.line.me/stickershop/product/10247167/zh-Hant"],
-    ["LV9.野生喵喵怪", "https://store.line.me/stickershop/product/10567103/zh-Hant"],
-    ["LV10.野生喵喵怪","https://store.line.me/stickershop/product/10514415/zh-Hant"],
+    ["LV1.野生喵喵怪", "stickershop/product", "6996333"],
+    ["LV2.野生喵喵怪", "stickershop/product", "7431735"],
+    ["LV3.野生喵喵怪", "stickershop/product", "8233424"],
+    ["LV4.野生喵喵怪", "stickershop/product", "9435002"],
+    ["LV5.野生喵喵怪", "stickershop/product", "9434741"],
+    ["LV6.野生喵喵怪", "stickershop/product", "9329100"],
+    ["LV7.野生喵喵怪", "stickershop/product", "9786706"],
+    ["LV8.野生喵喵怪", "stickershop/product", "10247167"],
+    ["LV9.野生喵喵怪", "stickershop/product", "10567103"],
+    ["LV10.野生喵喵怪","stickershop/product", "10514415"],
 ]
+
+function sticker_url(data){
+    return `https://store.line.me/${data[data.length - 2]}/${data[data.length - 1]}`;
+}
 
 function reset_stickers(){
     var $stored = $('#store_stickers');
     var stickers = default_stickers;
-    var select = stickers[stickers.length - 1][1]; 
+    var select_data = stickers[0];
+    var select = sticker_url(select_data);
     chrome.storage.sync.set({
         'stickers': default_stickers,
-        'select_stickers': select
+        'select_stickers': select_data
     });
     $stored.find('option').remove();
-    stickers.forEach(([name, url])=>{
-        $stored.append(`<option value="${url}">${name}</option>`);
+    stickers.forEach((data)=>{
+        $stored.append(`<option value="${sticker_url(data)}">${data[0]}</option>`);
     })
     $stored.val(select);
     $stored.change();
+    return [stickers, select];
 }
 
 s = undefined;
@@ -972,15 +1020,17 @@ function sticker_setup(config){
     var $target = $($stored.attr("data-target"));
 
     var stickers = config['stickers'];
-    var select = config['select_stickers'];
-    if(!stickers || !stickers.length) reset_stickers()
+    var select_data = config['select_stickers'];
+    var select = select_data && sticker_url(select_data);
+    if(!stickers || !stickers.length) [stickers, select] = reset_stickers();
     else{
         if(!select){
-            select = stickers[stickers.length - 1][1];
-            chrome.storage.sync.set({'select_stickers': select });
+            select_data = stickers[0];
+            chrome.storage.sync.set({'select_stickers': select_data });
+            select = sticker_url(select_data);
         }
-        stickers.forEach(([name, url])=>{
-            $stored.append(`<option value="${url}">${name}</option>`);
+        stickers.forEach((data)=>{
+            $stored.append(`<option value="${sticker_url(data)}">${data[0]}</option>`);
         })
         $stored.val(select);
     }
@@ -996,16 +1046,13 @@ function sticker_setup(config){
     $stored.on('change', function (e) {
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
-        chrome.storage.sync.set({ 'select_stickers': valueSelected });
-
         var $target = $($(this).attr("data-target"));
         var tartype = $target.attr('data');
         var opening = $target.hasClass('in');
         t = $target;
         $target.attr('data', this.id);
-
-        if(!opening) show_stickergrid(valueSelected, ()=>$target.collapse('show'));
-        else show_stickergrid(valueSelected, ()=>$target.collapse('show'));
+        show_stickergrid(valueSelected, ()=>$target.collapse('show'));
+        chrome.storage.sync.set({ 'select_stickers': extract_sticker_data(valueSelected) });
     });
 
     $('#reset-sticker').on('click', reset_stickers);
@@ -1015,7 +1062,7 @@ function sticker_setup(config){
         var valueSelected = $stored.val();
         console.log('del', valueSelected);
         if($("option", $stored).length > 1){
-            pop_value('stickers', (([name, url], idx, ary) => url == valueSelected))
+            pop_value('stickers', ((data, idx, ary) => data[0] === optionSelected.text() && sticker_url(data) == valueSelected))
             optionSelected.remove();
             $stored.change();
         }
@@ -1027,7 +1074,8 @@ function sticker_setup(config){
     $('#add_sticker').on('click', function(){
         var error = () => alert(", you refer the 'goto store button'");
         var url = prompt('input the Line sticker URL:');
-        if(url.match(new RegExp("^https://store.line.me/stickershop/product/.*"))){
+        sticker_data = extract_sticker_data(url);
+        if(sticker_data){
             $.ajax({
                 type: "GET",
                 url: url,
@@ -1038,44 +1086,33 @@ function sticker_setup(config){
                     var tidx = Object.values(nodes).findIndex((v)=>v.nodeName == 'TITLE')
                     var name = tidx >= 0 ? nodes[tidx].textContent : '';
                     var idx = name.indexOf(' – LINE貼圖 | LINE STORE')
-                    if(idx >= 0){
-                        name = name.substring(0, idx);
-                        //JSON.parse($(s.find('.FnStickerPreviewItem')[0]).attr('data-preview')).animationUrl
-                        //staticUrl
+                    var idx = idx < 0 ? name.indexOf(' – LINE表情貼 | LINE STORE') : idx;
+                    name = name.substring(0, idx);
+                    var urls = extractImagesFromNodes(nodes);
 
-                        //var urls = nodes.find('.FnImage > span').toArray().map(u=>{
-                        //    var attr = $(u).css('background-image')
-                        //    return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
-                        //}).filter((v)=>v.length);
-                        var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
-                            (node) => {
-                                if($(node).attr('data-preview')){
-                                    var attr = $(node).attr('data-preview');
-                                    var view = JSON.parse(attr);
-                                    if(view.animationUrl && view.animationUrl.length)
-                                        return view.animationUrl;
-                                    else return view.staticUrl;
-                                }
-                                return "";
-                            }
-                        ).filter((v)=>v.length);
+                    if(!urls.length) return alert("cannot find any sticker in the page");
 
-                        if(urls.length){
-                            push_value('stickers', [name, url]);
-                            $stored.append(`<option value="${url}">${name}</option>`);
-                            $stored.val(url);
-                            $stored.change();
-                            return;
-                        }
-                        else alert("cannot find any sticker in the page");
+                    if(!name){
+                        //var i = Object.values(nodes).findIndex((v)=>v.nodeName == 'H3');
+                        var tags = nodes.find('h3')
+                        if(tags.length) name = tags[0].textContent;
                     }
-                    else alert("title of the page should be end with – LINE貼圖 | LINE STORE");
+
+                    name = prompt("取名為？", name ? name : '貼圖');
+                    name = name ? name : '貼圖';
+
+                    push_value('stickers', [name].concat(sticker_data));
+                    var select = sticker_url(sticker_data);
+                    var idx = $('option', $stored).length;
+                    $stored.append(`<option value="${select}">${name}</option>`);
+                    $stored[0].selectedIndex = idx;
+                    $stored.change();
                 },
                 error: function(data){
                     alert("Error: " + JSON.stringify(data));
                 }
             });
-        } else alert('URL should be something likes https://store.line.me/stickershop/product/.*');
+        } else alert('URL should be something likes https://store.line.me/\\.*/(product|sticker)/\\w*');
     });
 
     $('#stciker-store-opener').on('click', function(){

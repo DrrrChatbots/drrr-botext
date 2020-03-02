@@ -201,7 +201,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
                 if(notificationId.match(new RegExp('chrome-extension://')))
                     chrome.tabs.create({url: notificationId});
                 chrome.notifications.clear(notificationId);
-            });  
+            });
             chrome.storage.sync.set({
                 [switch_id]: false
             }); 
@@ -211,13 +211,50 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
     else if(callback) callback();
 }
 
+function noteEmptyPrompt(state, event, switch_id, func_name, question, validate, callback){
+    if(state) chrome.storage.sync.get((config) => {
+        if(!config[func_name]){
+            var answer = '';
+            while(answer !== null && !answer){
+                answer = prompt(question); 
+            }
+            if(!validate){
+                alert("Please Give The Validator");
+                chrome.storage.sync.set({
+                    [switch_id]: false
+                });
+            }
+            else{
+                validate(answer, (v, code, desc)=>{
+                    if(v){
+                        return chrome.storage.sync.set({
+                            [func_name]: answer
+                        }, callback);
+                    }
+                    else{
+                        if(answer === null);
+                        else if(code == 88) alert(desc);
+                        else alert(`Invalid Value ${code}: ${desc}`);
+                        chrome.storage.sync.set({
+                            [switch_id]: false
+                        });
+                    }
+                })
+            }
+        }
+        else if(callback) callback();
+    });
+    else if(callback) callback();
+    event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
+}
+
 var BanListH = new Handler("banlist", 
     [
         new pack_ui({}, '', [
             new switch_ui({
                 'switchChange.bootstrapSwitch': switch_change((state, event) =>
-                    noteEmptySetting(state, event, SWITCH_BLACKLIST, BANLIST))
-            }, '', [], {id: SWITCH_BLACKLIST}),
+                    noteEmptySetting(state, event, SWITCH_BANLIST, BANLIST))
+            }, '', [], {id: SWITCH_BANLIST}),
             new button_ui({
                 'click': function(event, state){
                     chrome.storage.sync.get((config) => {
@@ -228,6 +265,7 @@ var BanListH = new Handler("banlist",
                         chrome.storage.sync.set({
                             [BANLIST]: list
                         });
+                        noteEmptySetting(config[BANLIST], event, SWITCH_BANLIST, BANLIST);
                     });
                 }
             }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})
@@ -235,22 +273,25 @@ var BanListH = new Handler("banlist",
     ],
     {
         [event_join]: {
-            precond: (config, uis) => config[SWITCH_BLACKLIST],
+            precond: (config, uis) => config[SWITCH_BANLIST],
             onevent: (req, callback, config, uis) => {
-                if(assoc(req.user, config, BLACKLIST)){
-                    console.log("kick");
-                    sendTab({
-                        fn: kick_member,
-                        args: { user: req.user }
-                    })
+                if(config[BANLIST] === BLACKLIST){
+                    if(assoc(req.user, config, BLACKLIST)){
+                        console.log("kick");
+                        sendTab({
+                            fn: kick_member,
+                            args: { user: req.user }
+                        })
+                    }
                 }
-                /* white list */
-                //if(!assoc(req.user, config, WHITELIST)){
-                //    sendTab({
-                //        fn: kick_member,
-                //        args: { user: req.user }
-                //    })
-                //}
+                else if(config[BANLIST] === WHITELIST){
+                    if(!assoc(req.user, config, WHITELIST)){
+                        sendTab({
+                            fn: kick_member,
+                            args: { user: req.user }
+                        })
+                    }
+                }
             }
         }
     }
@@ -597,16 +638,173 @@ var RoomKeeperH = new Handler("RoomKeeper",
     }
 );
 
-var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH];
+function validateTgToken(token, callback){
+    $.ajax({
+        type: "GET",
+        url: `https://api.telegram.org/bot${token}/getUpdates`,
+        dataType: 'json',
+        success: function(data){ 
+            if(data.ok){
+                function df(v){ return v ? v : ''; }
+                function descOf(type, chat){
+                    var fj = (...a)=>a.filter(x=>x).join(' ');
+                    var uname = (chat.username && `@${chat.username}`) || '';
+                    var name = fj((chat.first_name || ''), ((chat.last_name && ` ${chat.last_name}` || '')));
+                    var title = chat.title || '';
+                    var desc = chat.description || '';
+                    var link = chat.invite_link || '';
+                    return ({
+                        'private': `${fj(uname, name)}`,
+                        'group': `${fj(title, desc, link)}`,
+                        'supergroup': `${fj(uname, title, desc, link)}`,
+                        'channel': `${fj(uname, title, desc, link)}`
+                    })[type]
+                }
+
+                var options = {};
+                data.result.forEach(o=>{
+                    try{
+                        v = options[o.message.chat.id]
+                        if(!v) options[o.message.chat.id] = o.message.chat;
+                    }
+                    catch(e){ console.log('error on validate Tg token:', e); }
+                });
+                var ids = Object.keys(options);
+                if(ids.length){
+                    var display = ids.map(key=>{
+                        var chat = options[key];
+                        return `ChatID ${chat.id}: [${chat.type}] ${descOf(chat.type, chat)}`
+                    }).join('\n');
+
+                    var id = '';
+                    while(!id){
+                        id = prompt(`Select a ChatID below and Input:\n\n${display}`, ids[0]);
+                        if(id === null) return callback(false, 88, 'Cancel the Setting Process');
+                    }
+                    if(options[id]){
+                        chrome.storage.sync.set({
+                            [TGBOTCHATID]: id
+                        }, ()=>callback(data.ok, 200, 'done'));
+                    }
+                    else callback(false, 500, `Invalid ChatID "${id}", Must be "${ids.join('" or "')}""`)
+                }
+                else callback(false, 404, 'No Available Update Get, send Meesage to your bot first')
+            }
+            else{
+                callback(data.ok, data.error_code, data.description)
+            }
+        },
+        error: function(err){
+            data = err.responseJSON;
+            callback && callback(data.ok, data.error_code, data.description)
+        }
+    });
+}
+
+function log2mkd(type, e){
+    //type, user, text, url
+    console.log('log data', e);
+    if(type === event_msg)
+        return `*${e.user}*: ${e.text}${e.url? ` [URL](${e.url})`: ''}`
+    if(type === event_me)
+        return `_${e.user}_: ${e.text}${e.url? ` [URL](${e.url})`: ''}`
+    if(type === event_dm)
+        return `${e.user}: ${e.text}${e.url? ` [URL](${e.url})`: ''}`
+    if(type === event_join)
+        return `${e.user} join the room`
+    if(type === event_leave)
+        return `${e.user} leave the room`
+    if(type === event_newhost)
+        return `${e.user} become the room owner`
+}
+
+function sendTg(config, type, e){
+    let data = {
+        chat_id: config[TGBOTCHATID],
+        text: log2mkd(event_msg, e),
+        parse_mode: "Markdown",
+        disable_web_page_preview: false,
+    }
+
+    $.ajax({
+        type: "POST",
+        url: `https://api.telegram.org/bot${config[TGBOTTOKEN]}/sendMessage`,
+        dataType: 'json',
+        data: data,
+        success: function(data){
+            console.log('logged:', data);
+        },
+        error: function(data){
+            console.log('failed:', data);
+        }
+    });
+
+}
+
+function TgEvents(){
+    var ts = [event_msg, event_me, event_dm, event_join, event_leave, event_newhost];
+    var es = {}
+    ts.forEach((t)=>{
+        es[t] = {
+            precond: (config, uis) => config[SWITCH_TGBOT] && config[TGBOTTOKEN] && config[TGBOTCHATID],
+            onevent: (et => (req, callback, config, uis) => { sendTg(config, t, req); })(t)
+        }
+    })
+    return es;
+}
+
+var TgBotH = new Handler("TgBot",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+                    noteEmptyPrompt(state, event, SWITCH_TGBOT, TGBOTTOKEN, 'please input the telegram bot ID:', validateTgToken))
+            }, '', [], {id: SWITCH_TGBOT}),
+            new button_ui({
+                'click': function(event, state){
+                    chrome.storage.sync.get([TGBOTTOKEN], (config)=>{
+                        if(config[TGBOTTOKEN] && confirm('clear exist bot settings?')){
+                            event.data.$(`#${SWITCH_TGBOT}`).bootstrapSwitch('state', false, true);
+                            chrome.storage.sync.remove([TGBOTTOKEN, TGBOTCHATID]);
+                        }
+                    });
+                }
+            }, 'TgBotLogger', [], {id:'tgbot-setting', title:"clear exist bot setting"})
+        ], {title: 'store the log by telegram bot'})
+    ], TgEvents()
+);
+
+//var TgBotH = new Handler("TgBot",
+//    [
+//        new pack_ui({}, '', [
+//            new switch_ui({
+//                'switchChange.bootstrapSwitch': switch_change((state, event) =>
+//                    noteEmptySetting(state, event, SWITCH_TGBOT, TGBOT))
+//            }, '', [], {id: SWITCH_TGBOT}),
+//            new label_ui({}, 'TgBotLogger')
+//        ], {title: 'store the log by telegram bot'})
+//    ],
+//    {
+//        [event_msg]: {
+//            precond: (config, uis) => config[SWITCH_TGBOT],
+//            onevent: (req, callback, config, uis) => {
+//            }
+//        }
+//    }
+//);
+
+var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH, TgBotH];
 
 function unit_layout(units){
-    return units.shift();
+    return `<div class='one-side-container'>
+                <div class="align-left">${units.shift()}</div>
+            </div>`;
 }
 
 function pair_layout(units){
     return `<div class='two-side-container'>
-                <div class="align-left">${units.shift()}</div>
-                <div class="align-right">${units.shift()}</div>
+                ${units.length ? `<div class="align-left">${units.shift()}</div>`: ''}
+                ${units.length ? `<div class="align-right">${units.shift()}</div>`: ''}
             </div>`;
 }
 
@@ -632,6 +830,7 @@ switches_layout = [
     pair_layout,
     pair_layout,
     pair_layout,
+    unit_layout,
 ]
 
 function make_switch_panel($, panel_id){

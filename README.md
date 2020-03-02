@@ -37,3 +37,4 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 - add tripcode identification to configuration
 - support room member variable (include self -> dm to self) in list
 - telegram bot
+- shorter sticker storage

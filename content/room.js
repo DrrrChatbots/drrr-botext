@@ -1,8 +1,8 @@
 
 var handle_talks = function(msg){
 
-    var type = 'unknown', user = 'unknown',
-        text = 'unknown', url = 'unknown';
+    var type = '', user = '',
+        text = '', url = '';
     try{
         if(msg.classList.contains("system")){
             if(msg.classList.contains("me")){
@@ -79,9 +79,6 @@ function handle_exit(){
             if(alarms.length) // for alarms only
                 chrome.runtime.sendMessage({
                     type: event_logout,
-                    user: 'unknown',
-                    text: 'unknown',
-                    url: 'unknown'
                 });
             else console.log("logout without alarms");
         }
@@ -89,9 +86,6 @@ function handle_exit(){
             if(alarms.length){
                 chrome.runtime.sendMessage({
                     type: event_exitalarm,
-                    user: 'unknown',
-                    text: 'unknown',
-                    url: 'unknown'
                 });
                 // return "are you sure exit?";
             }
@@ -160,9 +154,6 @@ function make_extinputs(){
         setTimeout(function() {  
             chrome.runtime.sendMessage({
                 type: event_submit,
-                user: 'unknown',
-                text: 'unknown',
-                url: 'unknown'
             });
             console.log("submmited by click");
         }, 1000);
@@ -190,9 +181,6 @@ function make_extinputs(){
                 setTimeout(function() {  
                     chrome.runtime.sendMessage({
                         type: event_submit,
-                        user: 'unknown',
-                        text: 'unknown',
-                        url: 'unknown'
                     });
                     console.log("submmited by enter");
                 }, 1000);

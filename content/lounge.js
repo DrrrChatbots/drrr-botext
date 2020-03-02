@@ -87,7 +87,7 @@ function jump_countdown(config){
 
 function blinkElt(sel, callback){
     if(!$('.rooms').length){
-        setTimeout(()=>blinkElt(sel), 1500);
+        setTimeout(()=>blinkElt(sel, callback), 1500);
     }
     else if($(sel).length){
         $(sel)[0].scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});

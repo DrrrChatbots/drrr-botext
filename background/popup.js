@@ -266,7 +266,8 @@ var BanListH = new Handler("banlist",
                         chrome.storage.sync.set({
                             [BANLIST]: list
                         });
-                        noteEmptySetting(config[BANLIST], event, SWITCH_BANLIST, BANLIST);
+                        if(config[SWITCH_BANLIST])
+                            noteEmptySetting(config[BANLIST], event, SWITCH_BANLIST, BANLIST);
                     });
                 }
             }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})

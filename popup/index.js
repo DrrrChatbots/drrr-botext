@@ -368,7 +368,7 @@ function show_tripcodelist(callback){
 
 function show_roomlist(callback){
     show_findlist(
-        (rooms, ignore, callback) => callback(Object.values(rooms).map((room) => [room, []])),
+        findAsList.bind(null, {'all':true}),
         roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
         callback, empty_template('NO ROOM ON DRRR (WTF)', 'glyphicon-globe'), 'glyphicon-globe'
     );
@@ -419,15 +419,15 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
             lounge = data.rooms.sort(
                 function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);}
             ).reverse();
-            findGroups(lounge, undefined, (groups) =>{
+            findGroups(lounge, undefined, (groups, config) =>{
                 if(groups.length)
                     show_list(
                         '#fb_list_container',
                         groups.map(([room, users])=>{
                             return ({
                                 icon: icon || 'glyphicon-home',
-                                title: getTitle(room, users),
-                                content: getContent(room, users),
+                                title: getTitle(room, users, config),
+                                content: getContent(room, users, config),
                                 can: room.total < room.limit,
                                 url: 'https://drrr.com/room/?id=' + room.roomId,
                             });
@@ -734,15 +734,16 @@ function redraw_bios(bio_cookies, data){
             p = data.profile;
         }
         $stored.find('option').remove();
+        var add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
         if(p){
-            var cont = `🔖 ${p.name}${'#' + p.tripcode || ''}@${p.icon}`;
+            var cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
             $stored.append(`<option value="${p.id}">${cont}</option>`);
         }
         else{
             $stored.append(`<option value="">Not Logined</option>`);
         }
         bio_cookies.forEach(([pro, cookie])=>{
-            var c = `💾 ${pro.name}${'#' + pro.tripcode || ''}@${pro.icon}`;
+            var c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
             $stored.append(`<option value="${pro.id}">${c}</option>`);
         });
     })
@@ -930,8 +931,8 @@ function friend_setup(config){
                 else if(!v.shiftKey && v.ctrlKey)
                     $('#room-opener').click();
             }
+            this.value = '';
         }
-
     }, false);
 
     $('#fb-input').on('input focus', function(e){
@@ -941,7 +942,7 @@ function friend_setup(config){
             $('.fb-off-input').hide();
         }
         else{
-            emptyKeyword();
+            this.value = '';
             $('.fb-on-input').hide();
             $('.fb-off-input').show();
         }
@@ -1115,7 +1116,7 @@ function sticker_setup(config){
         } else alert('URL should be something likes https://store.line.me/\\.*/(product|sticker)/\\w*');
     });
 
-    $('#stciker-store-opener').on('click', function(){
+    $('#sticker-store-opener').on('click', function(){
         chrome.tabs.create({url: 'https://store.line.me/home/zh-Hant'});
     });
 

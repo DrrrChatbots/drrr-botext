@@ -74,7 +74,7 @@ var openFuncList = function(args, callback){
     var s = $(`li[title="${args.user}"] div[class="name-wrap"]`);
     console.log(`$('li[title="${args.user}"] div[class="name-wrap"]')`)
     if(!s.length) s = $(`li[title="${args.user} (host)"] div[class="name-wrap"]`);
-    if(s.length) s.click()[0], setTimeout(callback, 100);
+    if(s.length) s.click()[0], setTimeout(callback, 500);
 }
 
 var onDmMember = function(args){
@@ -141,16 +141,20 @@ var handOverRoom = function(args){
 
 var kickMember = function(args){
     openFuncList(args, () => {
-        if($('.dropdown-item-kick').length)
+        if($('.dropdown-item-kick').length){
             $('.dropdown-item-kick')[0].click()
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
+        }
         else alert("you are not room owner, can't kick anyone");
     });
 }
 
 var banMember = function(args){
     openFuncList(args, () => {
-        if($('.dropdown-item-ban').length)
+        if($('.dropdown-item-ban').length){
             $('.dropdown-item-ban')[0].click()
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
+        }
         else alert("you are not room owner, can't kick anyone");
     });
 }
@@ -159,7 +163,7 @@ var banReportMember = function(args){
     openFuncList(args, () => {
         if($('.dropdown-item-report-user').length){
             $('.dropdown-item-report-user')[0].click();
-            setTimeout(()=> $('.confirm')[0].click(), 500);
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
         }
         else alert("you are not room owner, can't kick anyone");
     });

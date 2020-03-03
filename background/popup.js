@@ -227,6 +227,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
             else{
                 validate(answer, (v, code, desc)=>{
                     if(v){
+                        event.data.$(`#${switch_id}`).bootstrapSwitch('state', true, true);
                         return chrome.storage.sync.set({
                             [func_name]: answer
                         }, callback);
@@ -528,6 +529,79 @@ var EventActionH = new Handler("event action",
     }
 );
 
+function log2note(type, e){
+    //type, user, text, url
+    if(type === event_msg)
+        return [`[PUBLIC]`, `${e.user}: ${e.text}${URL_TYPE(e.url)}`]
+    if(type === event_me)
+        return [`[MOTION]`, `${e.user}: /me ${e.text}${URL_TYPE(e.url)}`]
+    if(type === event_dm)
+        return [`[DIRECT]`, `${e.user}... ${e.text}${URL_TYPE(e.url)}`]
+    if(type === event_join)
+        return [`[ JOIN ]`, `${e.user} join the room`]
+    if(type === event_leave)
+        return [`[ WENT ]`, `${e.user} leave the room`]
+    if(type === event_newhost)
+        return [`[ HOST ]`, `${e.user} become the room owner`]
+}
+
+function isImageURL(url) {
+    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
+
+function URL_TYPE(url){
+    return url ? (isImageURL(url) ? ' [IMAGE]' : ' [URL]') : '';
+}
+
+function sendNoti(config, type, e){
+    [title, content] = log2note(type, e);
+    chrome.notifications.create(
+        e.url ? `URL${e.url}` : undefined,
+        {
+            type: "basic",
+            iconUrl: '/icon.png',
+            title: `ROOM ${title}`,
+            message: content
+        });
+    if(e.url){
+        chrome.notifications.onClicked.addListener(function(notificationId) {
+            if(notificationId.startsWith('URL')){
+                chrome.tabs.create({url: notificationId.substring(3)});
+                chrome.notifications.clear(notificationId);
+            }
+        });
+    }
+}
+
+function NotiEvents(){
+    var ts = [event_msg, event_me, event_dm, event_join, event_leave, event_newhost];
+    var es = {}
+    ts.forEach((t)=>{
+        es[t] = {
+            precond: (config, uis) => config[SWITCH_NOTIF],
+            onevent: (et => (req, callback, config, uis) => {
+                chrome.tabs.query({active:true, url: 'https://drrr.com/room/*'}, (tabs) => {
+                    if(!tabs.length)
+                        return sendNoti(config, et, req); 
+                });
+            })(t)
+        }
+    })
+    return es;
+}
+
+var NotifH = new Handler("notfi",
+    [
+        new pack_ui({}, '', [
+            new switch_ui({
+                'switchChange.bootstrapSwitch': switch_change()
+            }, '', [], {id: SWITCH_NOTIF}),
+            new label_ui({}, 'RoomNotification')
+        ], {title: 'custom your actions on specific events (⚙ setting)'})
+    ], NotiEvents()
+
+);
+
 
 var AlwaysMeH = new Handler("always me",
     [
@@ -747,7 +821,7 @@ function TgEvents(){
     ts.forEach((t)=>{
         es[t] = {
             precond: (config, uis) => config[SWITCH_TGBOT] && config[TGBOTTOKEN] && config[TGBOTCHATID],
-            onevent: (et => (req, callback, config, uis) => { sendTg(config, t, req); })(t)
+            onevent: (et => (req, callback, config, uis) => { sendTg(config, et, req); })(t)
         }
     })
     return es;
@@ -793,7 +867,7 @@ var TgBotH = new Handler("TgBot",
 //    }
 //);
 
-var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH, TgBotH];
+var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH, TgBotH, NotifH];
 
 function unit_layout(units){
     return `<div class='one-side-container'>
@@ -830,7 +904,7 @@ switches_layout = [
     pair_layout,
     pair_layout,
     pair_layout,
-    unit_layout,
+    pair_layout,
 ]
 
 function make_switch_panel($, panel_id){

@@ -238,7 +238,7 @@ function show_list(cont_name, entries, btns, callback, extend){
             entries.map((args)=> list_template(args, btns)).join(''))
     ).promise().then(()=>{
         callback();
-        entries.forEach((args) => {
+        Array.isArray(entries) && entries.forEach((args) => {
             for(btn of btns) btn_funcbind[btn](args);
         })
     });
@@ -261,7 +261,7 @@ function show_grid(cont_name, entries, btns, callback){
         )
     ).promise().then(()=>{
         callback();
-        entries.forEach((rargs) => {
+        Array.isArray(entries) && entries.forEach((rargs) => {
             rargs.forEach((args)=>{
                 for(btn of btns) btn_funcbind[btn](args);
             })

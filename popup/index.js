@@ -98,12 +98,11 @@ var vaf_song_btn = (args) =>
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
-var goto_room_data = (args) => `${args.url}`
+var goto_room_data = (args) => `${args.can ? args.url : args.roomId}`
 var goto_room_btn = (args) =>
-    `<button class="btn btn-default goto-room" type="submit"
-        ${args.can ? '' : 'disabled="disabled"'}
-         data="${goto_room_data(args)}"   title="goto the room">
-     <i class="glyphicon glyphicon-plane"></i>
+    `<button class="btn btn-default goto-room" type="submit" 
+         data="${goto_room_data(args)}"   title="${args.can ? 'goto the room' : 'wait to join'}">
+     <i class="glyphicon  ${args.can ? 'glyphicon-plane' : 'glyphicon-tag'}"></i>
   </button>`
 
 
@@ -188,13 +187,22 @@ function bind_vaf_song(args){
 function bind_goto_room(args){
     $(`.goto-room[data="${goto_room_data(args)}"]`).click(function(){
         var toURL = $(this).attr('data');
-
-        chrome.storage.sync.set(
-            {'jumpToRoom': toURL },
-            ()=> sendTab({ fn: leave_room }, ()=>{
-                chrome.tabs.update({ url: toURL });
-            })
-        );
+        if(toURL.startsWith('https'))
+            chrome.storage.sync.set(
+                {'jumpToRoom': toURL },
+                ()=> sendTab({ fn: leave_room }, ()=>{
+                    chrome.tabs.update({ url: toURL });
+                })
+            );
+        else{
+            var type = 0;
+            chrome.storage.sync.set({
+                'eager-type': type,
+                'eager-input': toURL
+            });
+            type_switch(type, '#eager-input', '#eager_type', 'Join Room when Avail by', eager_info, eager_types);
+            $('#eager-input').val(toURL);
+        }
     });
 }
 
@@ -399,7 +407,7 @@ function show_roomlist(callback){
 // ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
 function show_fbsearchlist(callback){
     var option = {};
-    var type = cur_fb_rule_type();
+    var type = cur_type('#fb_rule_type', fb_rule_types);
     rule = $('#fb-input').val();
     try{
         new RegExp(rule);
@@ -451,6 +459,7 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
                                 title: getTitle(room, users, config),
                                 content: getContent(room, users, config),
                                 can: checkAvail(room),
+                                roomId: room.roomId,
                                 url: 'https://drrr.com/room/?id=' + room.roomId,
                             });
                         }), [goto_room_btn], callback
@@ -663,20 +672,6 @@ function music_bar_setup(config){
     });
 }
 
-// glyphicon-barcode glyphicon-qrcode
-var fb_rule_types = ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
-var fb_rule_info = ['Tripcode (RegExp)', 'User (RegExp)', 'Room (RegExp)'];
-function cur_fb_rule_type(){
-    for(i = 0; i < fb_rule_types.length; i++){
-        if($('#fb_rule_type').hasClass(fb_rule_types[i]))
-            return i;
-    }
-    return 0;
-}
-function next_fb_rule_type(){
-    return (cur_fb_rule_type() + 1) % fb_rule_types.length;
-}
-
 //var content = document.querySelector('#content');
 function setCookie(c, callback) {
     c['url'] = 'https://drrr.com';
@@ -871,23 +866,78 @@ function bio_setup(config){
     });
 }
 
+// glyphicon-barcode glyphicon-qrcode
+var fb_rule_types = ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
+var fb_rule_info = ['UserTripcode (RegExp)', 'UserName (RegExp)', 'RoomName (RegExp)'];
+
+var eager_types = ['glyphicon-barcode', 'glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
+var eager_info = ['RoomID', 'UserTripcode (RegExp)', 'UserName (RegExp)', 'RoomName (RegExp)'];
+
+function cur_type(selector, type){
+    for(i = 0; i < type.length; i++){
+        if($(selector).hasClass(type[i]))
+            return i;
+    }
+    return 0;
+}
+
+function next_type(selector, type){
+    return (cur_type(selector, type) + 1) % type.length;
+}
+
+function type_switch(idx, input_s, icon_s, prefix, info, type){
+    idx = idx || 0;
+    $(input_s).attr('placeholder', `${prefix} ${info[idx]}`)
+    $(icon_s).attr('class', `glyphicon ${type[idx]}`);
+}
+
 function friend_setup(config){
 
-    function type_switch(idx){
-        idx = idx || 0;
-        $('#fb-input').attr('placeholder', `Input ${fb_rule_info[idx]}`)
-        $('#fb_rule_type').attr('class', `glyphicon ${fb_rule_types[idx]}`);
-    }
-    type_switch(config['fb-rule-type']);
-    //$('#fb_rule_type_btn').on('click', function(){
+
+    type_switch(config['fb-rule-type'], '#fb-input', '#fb_rule_type', '', fb_rule_info, fb_rule_types);
+    type_switch(config['eager-type'], '#eager-input', '#eager_type', 'Join Room when Avail by', eager_info, eager_types);
+    if(config['eager-input']) $('#eager-input').val(config['eager-input']);
+
     $('#fb_rule_type_btn').click(()=>{
-        var type = next_fb_rule_type();
+        var type = next_type('#fb_rule_type', fb_rule_types);
         chrome.storage.sync.set({
             'fb-rule-type': type 
         });
-        type_switch(type);
+        type_switch(type, '#fb-input', '#fb_rule_type', '', fb_rule_info, fb_rule_types);
     });
 
+    $('#eager_type_btn').click(()=>{
+        var type = next_type('#eager_type', eager_types);
+        chrome.storage.sync.set({
+            'eager-type': type
+        });
+        chrome.storage.sync.remove('eager-input');
+        $('#eager-input').val('');
+        type_switch(type, '#eager-input', '#eager_type', 'Join Room when Avail by', eager_info, eager_types);
+    });
+
+
+    $('#eager-input').on('input', function(){
+        $('#eager-input').parent().addClass('has-warning').removeClass('has-success').removeClass('has-error');
+    });
+
+    $('#eager-set').click(()=>{
+        var input = $('#eager-input').val();
+        if(cur_type('#eager_type', eager_types)){
+            try{
+                new RegExp(input);
+            }
+            catch(e){
+                alert(e);
+                $('#eager-input').parent().addClass('has-error').removeClass('has-success').removeClass('has-warning');
+                return;
+            }
+        }
+        chrome.storage.sync.set({
+            'eager-input': input
+        });
+        $('#eager-input').parent().addClass('has-success').removeClass('has-error').removeClass('has-warning');
+    });
 
     $('.fb-opener').on('click', function () {
         var $target = $($(this).attr("data-target"));
@@ -960,7 +1010,7 @@ function friend_setup(config){
     });
 
     $('#fb-add-rule').on('click', function(e){
-        var type = cur_fb_rule_type();
+        var type = cur_type('#fb_rule_type', fb_rule_types);
         var list = [TRIPCODES, FRIENDS, HOMES][type]
         var rule = $('#fb-input').val();
         try{

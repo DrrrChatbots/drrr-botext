@@ -15,7 +15,7 @@ $(document).ready(function(){
                                 chrome.storage.sync.remove(['profile', 'cookie']);
                                 chrome.runtime.sendMessage({expired_bio: true});
                             }
-                        }, true);
+                        }, true, 'login');
                     }
                 )
             }

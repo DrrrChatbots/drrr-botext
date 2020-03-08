@@ -31,8 +31,11 @@ $(document).ready(function(){
     chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile'], (config) => {
         console.log('config', config);
 
-        if(!config['profile']) ajaxProfile();
+        if(!config['profile']) ajaxProfile(undefined, undefined, 'lounge');
         else Profile = config['profile'];
+        Profile.loc = 'lounge';
+        chrome.storage.sync.set({'profile': Profile});
+
 
         if(config['leaveRoom'])
             chrome.storage.sync.remove('leaveRoom');
@@ -115,6 +118,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
         if(req.fn == leave_room)
             location.reload();
         else if(req.fn == cache_profile){
+            if(Profile) Profile.loc = 'lounge';
             console.log("lounge cache", Profile ? "succ": "failed");
             callback(Profile)
         }

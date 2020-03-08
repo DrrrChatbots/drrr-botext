@@ -7,7 +7,8 @@ function roomProfile(){
         "lang":$('html').attr('lang'),
         "name": $('#user_name').text(),
         "tripcode": $('#user_tripcode').text(),
-        "uid": $("#user_id").text()
+        "uid": $("#user_id").text(),
+        "loc": $('.room-title-name').text()
     };
     return Profile;
 }

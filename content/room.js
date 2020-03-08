@@ -210,9 +210,11 @@ $(document).ready(function(){
         (config) => {
             console.log(JSON.stringify(config));
             
-            if(!config['profile'] ||
-                config['profile'].id !== roomProfile().id)
-                ajaxProfile(undefined, true);
+            //if(!config['profile'] ||
+            //    config['profile'].id !== roomProfile().id)
+            //    ajaxProfile(undefined, true, $('.room-title-name').text());
+            
+            chrome.storage.sync.set({'profile': roomProfile()});
 
 
             if(config['leaveRoom']){

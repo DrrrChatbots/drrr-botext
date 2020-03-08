@@ -738,14 +738,16 @@ function redraw_bios(bio_cookies, data){
         $stored.find('option').remove();
         var add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
         if(p){
-            var cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
+            //var cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
+            var cont = HtmlUtil.htmlEncode(`🔖 ${p.name}@${p.loc}`);
             $stored.append(`<option value="${p.id}">${cont}</option>`);
         }
         else{
             $stored.append(`<option value="">Not Logined</option>`);
         }
         bio_cookies.forEach(([pro, cookie])=>{
-            var c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
+            //var c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
+            var c = HtmlUtil.htmlEncode(`💾 ${pro.name}@${pro.loc}`);
             $stored.append(`<option value="${pro.id}">${c}</option>`);
         });
     })

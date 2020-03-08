@@ -193,7 +193,8 @@ function make_extinputs(){
         extmsg.val(extmsg.val() + $(this).text() + ' ');
     });
     $(document).on('click', '.avatar', function(){
-        extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
+        if(!$(this).parent().parent().hasClass('secret'))
+            extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
     });
 }
 

@@ -186,8 +186,12 @@ var getMembers = function(args, callback){
 var disableLeave = false;
 var leaveRoom = function(args, callback, force){
     if(disableLeave && !force) return;
+    update_val = {'leaveRoom': true }
+    if(args.ret) update_val['jumpToRoom'] = window.location.href;
+    if(args.jump) update_val['jumpToRoom'] = args.jump;
+
     chrome.storage.sync.set(
-        {'leaveRoom': true },
+        update_val,
         ()=>{
             var leave = () => {
                 $('.do-logout')[0].click();
@@ -251,18 +255,24 @@ function bindAlarms(){
         rules = settings[TIMER].load(config[sid(TIMER)]);
         Object.keys(rules).map((idx)=>{
 
-            var [period, message, url]  = rules[idx];
+            var [period, action, arglist]  = rules[idx];
             alarms.push(setInterval(
-                ((msg) => () => {
-                    var wmsg = Array.isArray(msg) ?
-                        msg[Math.floor(Math.random() * msg.length)] : msg;
-                    publishMessage({msg: timefmt(wmsg), url: url});
-                })(message), period * min)
+                ((act, args) => () => {
+                    chrome.runtime.sendMessage({
+                        type: event_timer,
+                        action: act,
+                        arglist: args,
+                        user: $('#user_name').text(),
+                        text: '',
+                        url: ''
+                    });
+                })(action, arglist), period * min)
             );
             console.log('rule:', period, message);
         });
     });
 }
+
 
 function rebindAlarms(){
     if(alarms.length) bindAlarms();

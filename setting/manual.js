@@ -20,8 +20,8 @@ var manual = {
 <li><code>%%</code> 轉義字符 <code>%</code></li>
 </ul><p>範例：</p>`,
         def_conf:
-`10, "every 10 mins report once!"
-2, ["It's a Report Message", "Now is %H:%m!"]`,
+`10, "msg", ["every 10 mins report once!"]
+2, "msg", ["It's a Report Message", "Now is %H:%m!"]`,
     },
     [WELCOME]: {
         desc: `<p>功能：有人進入房間後，如果名稱匹配<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，則自動發出歡迎詞。<br>
@@ -175,8 +175,6 @@ $[-]
 "msg", "", "^/pending\\\\s*$", "pndm", []
 "msg", "", "^/pending\\\\s+(\\\\D|\\\\d\\\\S)", "pndm", ["$args"]
 "msg", "", "^/pending\\\\s+\\\\d\\\\s+\\\\S+", "pndm", ["$1","$[2-]"]
-"msg", "", "^/sc\\\\s+\\\\S+", "schm", ["$args"]
-"msg", "", "^/start", "gnset", [""]
-"msg", "", "^\\\\d\\\\d\\\\d\\\\d$", "gnjdg", ["$cont"]`,
+"msg", "", "^/sc\\\\s+\\\\S+", "schm", ["$args"]`,
     },
 }

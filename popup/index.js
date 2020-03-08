@@ -8,6 +8,10 @@ function open_background(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')});
 }
 
+function open_tripgen(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/tripcode.html')});
+}
+
 function get_music(callback){
     var keyword = $('#keyword').val();
     var source = $('#music_source').val();
@@ -48,60 +52,70 @@ var empty_template = (name, icon) =>
      <span class="input-group-addon form-control panel-footer text-center">${name}</span>
  </div>`;
 
+var sticker_src = (args) => `${args.url}`
 var sticker_btn = (args) =>
-    `<figure><img src="${args.url}" class="sticker-btn" style="${args.imgstyle}"></figure>`
+    `<figure><img src="${sticker_src(args)}" class="sticker-btn" style="${args.imgstyle}"></figure>`
 
+var imm_play_data = (args) => `${args.data}`
 var imm_play_btn = (args) =>
 `<button class="btn btn-default imm-play" type="submit"
-         data="${args.data}"     title="play the song immediately">
+         data="${imm_play_data(args)}"     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
+var imm_pldl_data = (args) => `${args.data}`
 var imm_pldl_btn = (args) =>
 `<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
-         data="${args.data}"     title="play the song immediately">
+         data="${imm_pldl_data(args)}"     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
+var add_song_data = (args) => `${args.data}`
 var add_song_btn = (args) =>
 `<button class="btn btn-default add-song" type="submit"
-         data="${args.data}"     title="add the song the playlist">
+         data="${add_song_data(args)}"     title="add the song the playlist">
      <i class="glyphicon glyphicon-plus"></i>
  </button>`
 
+var fav_song_data = (args) => `${args.data}`
 var fav_song_btn = (args) =>
 `<button class="btn btn-default fav-song" type="submit"
-         data="${args.data}"     title="add the song the favlist">
+         data="${fav_song_data(args)}"     title="add the song the favlist">
      <i class="glyphicon glyphicon-heart"></i>
  </button>`
 
+var del_song_data = (args) => `${args.idx}`
 var del_song_btn = (args) =>
     `<button class="btn btn-default del-song" type="submit"
-         data="${args.idx}"   title="remove the song from playlist">
+         data="${del_song_data(args)}"   title="remove the song from playlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
+var vaf_song_data = (args) => `${args.idx}`
 var vaf_song_btn = (args) =>
     `<button class="btn btn-default vaf-song" type="submit"
-         data="${args.idx}"   title="remove the song from favlist">
+         data="${vaf_song_data(args)}"   title="remove the song from favlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
+var goto_room_data = (args) => `${args.url}`
 var goto_room_btn = (args) =>
     `<button class="btn btn-default goto-room" type="submit"
         ${args.can ? '' : 'disabled="disabled"'}
-         data="${args.url}"   title="goto the room">
+         data="${goto_room_data(args)}"   title="goto the room">
      <i class="glyphicon glyphicon-plane"></i>
   </button>`
 
+
+var del_fbrule_data = (args) => `${args.data}-${args.idx}`
 var del_fbrule_btn = (args) =>
     `<button class="btn btn-default del-fbrule" type="submit"
-         data="${args.data}-${args.idx}"   title="remove the rule">
+         data="${del_fbrule_data(args)}"   title="remove the rule">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
-function bind_sticker(){
-    $('.sticker-btn').click(function(){
+function bind_sticker(args){
+    $(`img[src="${sticker_src(args)}"]`).click(function(){
         sendTab({
             fn: publish_message,
             args: {
@@ -112,8 +126,8 @@ function bind_sticker(){
     })
 }
 
-function bind_imm_play(){
-    $('.imm-play').click(function(){
+function bind_imm_play(args){
+    $(`.imm-play[data="${imm_play_data(args)}"]`).click(function(){
         playMusic(
             $(this).parent().prev().text(),
             $(this).attr('data'),
@@ -122,19 +136,19 @@ function bind_imm_play(){
     })
 }
 
-function bind_imm_pldl(){
-    $('.imm-pldl').click(function(){
+function bind_imm_pldl(args){
+    $(`.imm-pldl[data="${imm_pldl_data(args)}"]`).click(function(){
         playMusic(
             $(this).parent().prev().text(),
             $(this).attr('data'),
             alert.bind(window)
         );
-        del_song(PLAYLIST, $(this).attr('data-idx'), (res) => res &&  show_playlist, true);
+        del_song(PLAYLIST, $(this).attr('data-idx'), (res) => res && show_playlist(), true);
     })
 }
 
-function bind_fav_song(){
-    $('.fav-song').click(function(){
+function bind_fav_song(args){
+    $(`.fav-song[data="${fav_song_data(args)}"]`).click(function(){
         var title = $(this).parent().prev().attr('title');
         var idx = title.lastIndexOf(' - ');
         add_song(
@@ -146,8 +160,8 @@ function bind_fav_song(){
     })
 }
 
-function bind_add_song(){
-    $('.add-song').click(function(){
+function bind_add_song(args){
+    $(`.add-song[data="${add_song_data(args)}"]`).click(function(){
         var title = $(this).parent().prev().attr('title');
         var idx = title.lastIndexOf(' - ');
         add_song(
@@ -159,20 +173,20 @@ function bind_add_song(){
     })
 }
 
-function bind_del_song(){
-    $('.del-song').click(function(){
-        del_song(PLAYLIST, $(this).attr('data'), (res) => res && show_playlist, false);
+function bind_del_song(args){
+    $(`.del-song[data="${del_song_data(args)}"]`).click(function(){
+        del_song(PLAYLIST, $(this).attr('data'), (res) => res && show_playlist(), false);
     });
 }
 
-function bind_vaf_song(){
-    $('.vaf-song').click(function(){
-        del_song(FAVLIST, $(this).attr('data'), (res) => res && show_favlist, false);
+function bind_vaf_song(args){
+    $(`.vaf-song[data="${vaf_song_data(args)}"]`).click(function(){
+        del_song(FAVLIST, $(this).attr('data'), (res) => res && show_favlist(), false);
     });
 }
 
-function bind_goto_room(){
-    $('.goto-room').click(function(){
+function bind_goto_room(args){
+    $(`.goto-room[data="${goto_room_data(args)}"]`).click(function(){
         var toURL = $(this).attr('data');
 
         chrome.storage.sync.set(
@@ -184,10 +198,10 @@ function bind_goto_room(){
     });
 }
 
-function bind_del_fbrule(){
-    $('.del-fbrule').click(function(){
+function bind_del_fbrule(args){
+    $(`.del-fbrule[data="${del_fbrule_data(args)}"]`).click(function(){
         [conf, idx] = $(this).attr('data').split('-');
-        del_value(conf, idx, show_fbrulelist,
+        del_value(conf, idx, (v) => v && show_fbrulelist(),
             (cn, item) => chrome.notifications.create({
                 type: "basic",
                 iconUrl: '/icon.png',
@@ -217,13 +231,16 @@ btn_funcbind = {
 }
 
 function show_list(cont_name, entries, btns, callback, extend){
+    //alert(JSON.stringify(entries));
     $(cont_name).html(
         (extend ? $(cont_name).html() : '') +
         (!Array.isArray(entries) ? entries :
             entries.map((args)=> list_template(args, btns)).join(''))
     ).promise().then(()=>{
         callback();
-        for(btn of btns) btn_funcbind[btn]();
+        entries.forEach((args) => {
+            for(btn of btns) btn_funcbind[btn](args);
+        })
     });
 }
 
@@ -242,8 +259,14 @@ function show_grid(cont_name, entries, btns, callback){
                 ).join('')
             )
         )
-    ).promise().then(callback);
-    for(btn of btns) btn_funcbind[btn]();
+    ).promise().then(()=>{
+        callback();
+        entries.forEach((rargs) => {
+            rargs.forEach((args)=>{
+                for(btn of btns) btn_funcbind[btn](args);
+            })
+        })
+    });
 }
 
 function show_searchlist(callback){
@@ -345,7 +368,7 @@ function show_stickergrid(url, callback){
 function show_homelist(callback){
     show_findlist(
         findAsList.bind(null, {'home':true}),
-        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 40),
         callback, empty_template('NO MARKED PLACE ONLINE', 'glyphicon-home'), 'glyphicon-home'
     )
 }
@@ -353,7 +376,7 @@ function show_homelist(callback){
 function show_friendlist(callback){
     show_findlist(
         findAsList.bind(null, {'friend':true}),
-        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 100),
+        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`${u.name}`).join(', ')}`, 40),
         callback, empty_template('NO FRIEND ONLINE', 'glyphicon-user'), 'glyphicon-user'
     );
 }
@@ -361,7 +384,7 @@ function show_friendlist(callback){
 function show_tripcodelist(callback){
     show_findlist(
         findAsList.bind(null, {'tripcode':true}),
-        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`#${u.tripcode}`).join(', ')}`, 100),
+        roomTitle, (room, users) => ommited_name(`${room.name}`, `${users.map(u=>`#${u.tripcode}`).join(', ')}`, 40),
         callback, empty_template('NO TRIPCODE USER ONLINE', 'glyphicon-lock'), 'glyphicon-lock' 
     );
 }
@@ -369,7 +392,7 @@ function show_tripcodelist(callback){
 function show_roomlist(callback){
     show_findlist(
         findAsList.bind(null, {'all':true}),
-        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 100),
+        roomTitle, (room, users) => ommited_name(`${room.language}`, `${room.name}`, 40),
         callback, empty_template('NO ROOM ON DRRR (WTF)', 'glyphicon-globe'), 'glyphicon-globe'
     );
 }
@@ -428,7 +451,7 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
                                 icon: icon || 'glyphicon-home',
                                 title: getTitle(room, users, config),
                                 content: getContent(room, users, config),
-                                can: room.total < room.limit,
+                                can: checkAvail(room),
                                 url: 'https://drrr.com/room/?id=' + room.roomId,
                             });
                         }), [goto_room_btn], callback
@@ -478,26 +501,6 @@ function show_configlist(container, conf_type, callback, buttons, empty_name, at
         }
         confs = Array.isArray(conf_type) ? conf_type : [conf_type];
         recursive(confs, callback);
-        //confs.forEach(conf=>{
-        //    var list = config[conf];
-        //    if(list && list.length){
-        //        show_list(
-        //            '#list_container',
-        //            Object.keys(list).map((idx) => {
-        //                var name = list[idx].name;
-        //                var singer = list[idx].singer;
-        //                return ({
-        //                    idx: idx,
-        //                    icon: typeof icon === 'string' ? icon : icon(conf),
-        //                    title: `${name} - ${singer}`,
-        //                    content: ommited_name(name, singer),
-        //                    data: list[idx].link,
-        //                });
-        //            }), buttons, callback
-        //        )
-        //    }
-        //    else show_list('#list_container', empty_template(empty_name, icon), [], callback);
-        //});
     });
 }
 
@@ -910,6 +913,7 @@ function friend_setup(config){
             $target.on('hidden.bs.collapse', callback);
             $target.collapse('hide');
         }
+        $('#fb-input').val('');
     });
 
     // if add enter?
@@ -925,13 +929,17 @@ function friend_setup(config){
             }
             else{
                 if(!v.shiftKey && !v.ctrlKey)
-                    $('#home-opener').click();
+                    $('#tripcode-opener').click();
                 else if(v.shiftKey && !v.ctrlKey)
                     $('#friend-opener').click();
                 else if(!v.shiftKey && v.ctrlKey)
+                    $('#home-opener').click();
+                else if(v.shiftKey && v.ctrlKey)
                     $('#room-opener').click();
             }
-            this.value = '';
+            $('#fb-input').val('');
+            $('#fb-input').change();
+            $('#fb-input').focus();
         }
     }, false);
 
@@ -942,7 +950,8 @@ function friend_setup(config){
             $('.fb-off-input').hide();
         }
         else{
-            this.value = '';
+            $('#fb-input').val('');
+            $('#fb-input').change();
             $('.fb-on-input').hide();
             $('.fb-off-input').show();
         }
@@ -965,6 +974,9 @@ function friend_setup(config){
             title: `${list.toUpperCase()} UPDATE`,
             message: `RegExp Rule ${rule} is added to ${list}`
         });
+        $('#fb-input').val('');
+        $('#fb-input').change();
+        $('#fb-input').focus();
     })
 }
 
@@ -1050,7 +1062,6 @@ function sticker_setup(config){
         var $target = $($(this).attr("data-target"));
         var tartype = $target.attr('data');
         var opening = $target.hasClass('in');
-        t = $target;
         $target.attr('data', this.id);
         show_stickergrid(valueSelected, ()=>$target.collapse('show'));
         chrome.storage.sync.set({ 'select_stickers': extract_sticker_data(valueSelected) });
@@ -1122,9 +1133,65 @@ function sticker_setup(config){
 
 }
 
+function game_setup(config){
+    Object.keys(game_mapping).forEach((v)=>{
+        $('#game-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
+    })
+
+    var select_game = config['select_game'];
+    if(!select_game) select_game = 'none';
+    $('#game-select').val(select_game);
+
+    var $target = $($('#game-select').attr("data-target"));
+    import(`/game/${game_mapping[select_game]}`).then(
+            (module)=>{
+                if(module.ui && module.ui_event){
+                    $('#game_list_container').html(module.ui())
+                        .promise().then(()=>{
+                            $target.collapse('show').promise().then(
+                                ()=> module.ui_event(config)
+                            );
+                        });
+                } else $target.collapse('hide');
+            });
+
+    $('#game-select').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        var $target = $($(this).attr("data-target"));
+        var tartype = $target.attr('data');
+        var opening = $target.hasClass('in');
+
+        $target.attr('data', this.id);
+
+        chrome.storage.sync.set({
+            'select_game': valueSelected
+        });
+
+        chrome.storage.sync.get((config)=>{
+            import(`/game/${game_mapping[valueSelected]}`).then(
+            (module)=>{
+                if(module.ui && module.ui_event){
+                    $('#game_list_container').html(module.ui(config))
+                        .promise().then(()=>{
+                            $target.collapse('show').promise().then(
+                                ()=> module.ui_event(config)
+                            )
+                        });
+                } else $target.collapse('hide');
+            });
+        })
+    });
+}
+
 $(document).ready(function(){
     $("#manual").click(open_manual);
     $("#cog").click(open_background); 
+    $("#tripgen").click(open_tripgen); 
+    $("#game-knight").click(function(){
+        import('/game/echo.js');
+    }); 
+    
     /* ensure activate the background page */
     chrome.runtime.sendMessage({ type: 'popup' },
         () => bkg().make_switch_panel($, '#switch_panel'));
@@ -1133,6 +1200,7 @@ $(document).ready(function(){
         music_bar_setup(config); 
         sticker_setup(config);
         friend_bio_setup(config);
+        game_setup(config);
         var tab = config['pop-tab'] || 'tab0';
         $(`#${tab} > a`).click();
         //$(`#${tab}`).addClass('active');

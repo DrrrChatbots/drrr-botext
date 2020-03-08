@@ -41,10 +41,11 @@
         "*://drrr.com/*",
         "http://music.163.com/api/*",
         "http://tingapi.ting.baidu.com/*",
-        "https://store.line.me/*"
+        "https://store.line.me/*",
+        "https://static.line-scdn.net/line_store/*"
     ],
     "web_accessible_resources": [
          "images/*.png"
     ],
-    "content_security_policy": "script-src 'self' https://static.line-scdn.net/line_store/1701dcf85d5/pc/js/lc.line.store.pc.main.js; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://static.line-scdn.net/line_store/1709a5ef903/pc/js/lc.line.store.pc.main.js; object-src 'self'"
 }

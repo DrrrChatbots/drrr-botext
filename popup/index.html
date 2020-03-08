@@ -7,6 +7,7 @@
         <link href="/popup/index.css" rel="stylesheet">
         <script src="/lib/globals.js" type="text/javascript" charset="utf-8"></script>
         <script src="/lib/api.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/game/index.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/jquery-3.4.1.min.js"></script>
         <script src="/js/bootstrap-switch.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
@@ -28,7 +29,8 @@
                             <i class="glyphicon glyphicon-refresh"></i>
                             </button>
                         -->
-                    </div>
+                    </div> 
+
                     <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
                     <div class="input-group-btn">
                         <button id="cog" class="btn btn-default cog" type="submit"
@@ -64,10 +66,7 @@
                             </div>
 
                             <select id="music_source" name="source" class="form-control"
-                                                                    style="text-align:center;
-                                                                                                                                                                                                                           padding-left: 4px;
-                                                                                                                                                                                                                           padding-right: 0px;
-                                                                                                                                                                                                                           padding-top: 4px;"
+                                                                    style="text-align:center; padding-left: 4px; padding-right: 0px; padding-top: 4px;"
                                                                     title="music source">
                             </select>
 
@@ -139,7 +138,13 @@
                                                                               title='delete bio'>
                                     <i class="glyphicon glyphicon-floppy-remove"></i>
                                 </button> 
+
+                                <button id="tripgen" class="btn btn-default" title="tripcode generator">
+                                    <i class="glyphicon glyphicon-qrcode"></i>
+                                </button>
                             </div>
+
+
                         </div>
 
                         <br>
@@ -215,7 +220,7 @@
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <button id="icon-game" class="btn btn-default" type="button" title='reset stickers'>
-                                    <i class="glyphicon glyphicon-knight"></i>
+                                    <i id="game-knight" class="glyphicon glyphicon-knight"></i>
                                 </button>
                             </div>
 
@@ -224,8 +229,6 @@
                                     data-target="#game_list"
                                     style="text-align:center; text-align-last:center;"
                                     title="select game">
-                                <option style="text-align:center; text-align-last:center;" value="">Guess The Number (NANB)</option>
-                                <option style="text-align:center; text-align-last:center;" value="">Pokemon Master</option>
                             </select>
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
@@ -233,6 +236,16 @@
                                 <button id="set-game" class="btn btn-default" type="button" title='reset stickers'>
                                     <i class="glyphicon glyphicon-cog"></i>
                                 </button>
+                            </div> 
+                        </div>
+                        <div id="game_list" class="collapse">
+                            <div class="row" style="height:100%">
+                                <div class="col-md-4">
+                                    <div class="list-group" style="margin-bottom: 0px;">
+                                        <hr>
+                                        <div id='game_list_container'></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

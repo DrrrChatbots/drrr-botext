@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/setting/tripcode.css" rel="stylesheet">
+        <script src="/js/jquery-3.4.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/tripcode.min.js"></script>
+        <script src="/setting/tripcode.js"></script>
+    </head>
+    <body>
+        <div class="container" style="margin-top:50px">
+            <h3 style="float:left;margin-top: 0px;margin-right: 20px;margin-bottom: 15px;">tripcode<span style="font-weight:bolder;color:#00cc00">#</span>explorer:</h3>
+            <form style="float:left;" class="form-inline">
+
+                <div id="test-regex-status" class="form-group has-success has-feedback">
+                    <input type="text" class="form-control test-input" id="test-regex" placeholder="RegExp">
+                    <span id="test-regex-icon" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-success has-feedback">
+                    <button id="search" type="button" 
+                                        onclick="searchCodes();"
+                                        class="btn btn-default fix-btn">Search</button>
+                </div>
+
+                <div id="test-string-status" class="form-group has-success has-feedback">
+                    <input type="text" class="form-control test-input" id="test-string" placeholder="test string">
+                    <span id="test-string-icon" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>  
+
+                <div class="form-group has-success has-feedback">
+                    <button id="dump" type="button" 
+                                      onclick="dumpTrip();"
+                                      title="download the result"
+                                      class="btn btn-default fix-btn">Save</button>
+                </div>
+
+                <p> Note: for <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank">RegExp</a>, use <code>\</code> to escape. ex:<code>\d</code> to match digit, <code>\\</code> to match <code>\</code> </p>
+            </form>
+            <hr style="clear:both;"/>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-xs-2">
+                        <label class="checkbox-inline"><input id="igcase" type="checkbox" value="" checked>Ignore Case</label>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <label class="checkbox-inline"><input id="sequential" type="checkbox" value="" >Sequential</label>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <label class="checkbox-inline"><input id="scratch" type="checkbox" value="" disabled>From Scratch</label>
+                    </div>
+
+                    <div class="col-xs-2">
+                        batch size: <input type="number" id="batch_size" name="batch_size" min="1" max="5000" value="100">
+                    </div>
+                </div>
+
+            </div>
+
+            <hr style="clear:both;"/>
+            <div id="example" class="list-group">
+
+                <a id="example-list" href="#" class="list-group-item">
+                    <form style="margin-bottom: 0px;" class="form-inline">
+                        <div id="test-password-status" class="form-group has-success has-feedback">
+                            <label><span id="test-trip">[tripcode]</span><span style="font-weight:bolder;color:#00cc00">#</span></label><input type="text" class="form-control" id="test-password" placeholder="password">
+                            <span id="test-password-icon" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                        </div><span>  </span><span id="count">(0/0)</span><span id="warn-pass" style="display:none;"> May be <strong>invalid</strong> or <strong>different</strong> on drrr.com</span>
+                    </form>
+                </a>
+
+            </div>
+            <div id="result" class="list-group">
+            </div>
+        </div>
+    </body>
+</html>

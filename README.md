@@ -21,20 +21,11 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 ### user feedback
 
 - project translation (i18n)
-- lift the timer feature
-- support ban(and report) in white/blacklist
-- chat history 
 
 ### dev
 
-- cookie (for cross computer and anti-drop, consider multiple user support)
 - add YouTube music source
 - detect protected music.168 source
-- auto exit and join specific room
-- friend list / check online status (needs search)
-- timer support seq mode (current random only) and URL pair with every message
 - pokemon monster module 
 - add tripcode identification to configuration
 - support room member variable (include self -> dm to self) in list
-- telegram bot
-- shorter sticker storage

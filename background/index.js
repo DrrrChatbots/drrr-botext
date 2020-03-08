@@ -133,6 +133,13 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
             var reg_funcs = reg_table[req.type] || [];
             for(handle of reg_funcs)
                 handle(req, callback, config, sender)
+            if(config['select_game'])
+                import(`/game/${game_mapping[config['select_game']]}`).then(
+                    (module)=>{
+                        module.event_action(req.type, req)
+                    }
+                )
+
             if(callback) callback("done.");
         });   
     }

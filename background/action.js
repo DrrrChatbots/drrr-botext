@@ -15,7 +15,7 @@ actions = {
                 fn: handover_room,
                 args: { user: user }
             }) 
-        , 1000);
+            , 1000);
 
     },
     [action_umsg ] : function(url, ...msgs){
@@ -99,6 +99,28 @@ actions = {
     [action_schm] : function(keyword, source){
         setTimeout(()=>schMusic(this, keyword, source), 1000);
     },
+    [action_ocdr] : function(){
+        sendTab({ fn: leave_room, args: {ret: true} });
+    },
+    [action_gofr] : function(roomRegex){
+        ajaxRooms(
+            function(data){
+                lounge = data.rooms;
+                var findRule = {'friend':true, 'home':true, 'tripcode':true, 'AVAIL': true};
+                if(typeof roomRegex === 'string') findRule = {'room': [roomRegex], 'AVAIL': true};
+                findAsList(
+                    findRule,
+                    lounge, undefined, (groups, config)=>{
+                        if(groups.length){
+                            sendTab({ fn: leave_room, args: {jump: `https://drrr.com/room/?id=${groups[Math.floor(Math.random() * groups.length)][0].roomId}`} });
+                        }
+                        else{
+                            sendTab({ fn: leave_room, args: {ret: true} });
+                        }
+                    }
+                );
+            });
+    }
     /* too quick leading play song failed in content script, so setTimeout */
 }
 

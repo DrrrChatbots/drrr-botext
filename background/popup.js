@@ -367,6 +367,12 @@ var TimerH = new Handler("timer",
                 });
             }
         },
+        [event_timer]: {
+            precond: (config, uis) => true,
+            onevent: (req, callback, config, uis, sender) => {
+                actions[req.action].apply(config, argfmt(req.arglist, req.user, req.text, req.url).map(timefmt));
+            }
+        },
         [event_exitalarm]: {
             precond: (config, uis) => config[SWITCH_TIMER],
             onevent: (req, callback, config, uis, sender) => { 

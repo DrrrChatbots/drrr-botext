@@ -185,10 +185,11 @@ var getMembers = function(args, callback){
 
 var disableLeave = false;
 var leaveRoom = function(args, callback, force){
+    console.log("leave Room");
     if(disableLeave && !force) return;
     update_val = {'leaveRoom': true }
-    if(args.ret) update_val['jumpToRoom'] = window.location.href;
-    if(args.jump) update_val['jumpToRoom'] = args.jump;
+    if(args && args.ret) update_val['jumpToRoom'] = window.location.href;
+    if(args && args.jump) update_val['jumpToRoom'] = args.jump;
 
     chrome.storage.sync.set(
         update_val,

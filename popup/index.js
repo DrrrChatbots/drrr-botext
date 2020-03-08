@@ -201,6 +201,7 @@ function bind_goto_room(args){
 function bind_del_fbrule(args){
     $(`.del-fbrule[data="${del_fbrule_data(args)}"]`).click(function(){
         [conf, idx] = $(this).attr('data').split('-');
+        console.log(conf, idx);
         del_value(conf, idx, (v) => v && show_fbrulelist(),
             (cn, item) => chrome.notifications.create({
                 type: "basic",
@@ -231,16 +232,14 @@ btn_funcbind = {
 }
 
 function show_list(cont_name, entries, btns, callback, extend){
-    //alert(JSON.stringify(entries));
-    $(cont_name).html(
-        (extend ? $(cont_name).html() : '') +
-        (!Array.isArray(entries) ? entries :
-            entries.map((args)=> list_template(args, btns)).join(''))
-    ).promise().then(()=>{
+    var cont = (!Array.isArray(entries) ? entries :
+        entries.map((args)=> list_template(args, btns)).join(''))
+    var func = extend ? 'append' : 'html';
+    $(cont_name)[func](cont).promise().then(()=>{
         callback();
         Array.isArray(entries) && entries.forEach((args) => {
             for(btn of btns) btn_funcbind[btn](args);
-        })
+        });
     });
 }
 
@@ -1144,16 +1143,16 @@ function game_setup(config){
 
     var $target = $($('#game-select').attr("data-target"));
     import(`/game/${game_mapping[select_game]}`).then(
-            (module)=>{
-                if(module.ui && module.ui_event){
-                    $('#game_list_container').html(module.ui())
-                        .promise().then(()=>{
-                            $target.collapse('show').promise().then(
-                                ()=> module.ui_event(config)
-                            );
-                        });
-                } else $target.collapse('hide');
-            });
+        (module)=>{
+            if(module.ui && module.ui_event){
+                $('#game_list_container').html(module.ui())
+                    .promise().then(()=>{
+                        $target.collapse('show').promise().then(
+                            ()=> module.ui_event(config)
+                        );
+                    });
+            } else $target.collapse('hide');
+        });
 
     $('#game-select').on('change', function (e) {
         var optionSelected = $("option:selected", this);
@@ -1170,16 +1169,16 @@ function game_setup(config){
 
         chrome.storage.sync.get((config)=>{
             import(`/game/${game_mapping[valueSelected]}`).then(
-            (module)=>{
-                if(module.ui && module.ui_event){
-                    $('#game_list_container').html(module.ui(config))
-                        .promise().then(()=>{
-                            $target.collapse('show').promise().then(
-                                ()=> module.ui_event(config)
-                            )
-                        });
-                } else $target.collapse('hide');
-            });
+                (module)=>{
+                    if(module.ui && module.ui_event){
+                        $('#game_list_container').html(module.ui(config))
+                            .promise().then(()=>{
+                                $target.collapse('show').promise().then(
+                                    ()=> module.ui_event(config)
+                                )
+                            });
+                    } else $target.collapse('hide');
+                });
         })
     });
 }
@@ -1191,7 +1190,7 @@ $(document).ready(function(){
     $("#game-knight").click(function(){
         import('/game/echo.js');
     }); 
-    
+
     /* ensure activate the background page */
     chrome.runtime.sendMessage({ type: 'popup' },
         () => bkg().make_switch_panel($, '#switch_panel'));

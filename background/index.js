@@ -67,21 +67,16 @@ function generate_notification(req){
                 function(toURL) {
                     console.log(toURL);
                     if(toURL !== url) return;
-                    chrome.storage.sync.set(
-                        {'jumpToRoom': toURL },
-                        ()=>{
-                            if(exit){
-                                sendTab({ fn: leave_room });
-                            } else chrome.tabs.update({
-                                url: toURL
-                            });
-                            chrome.notifications.getAll((notes)=>{
-                                for(n in notes)
-                                    if(n.startsWith('https://drrr.com/room/?id='))
-                                        chrome.notifications.clear(n);
-                            });
-                        }
-                    );
+                    if(exit){
+                        sendTab({ fn: leave_room, args: {jump: toURL} });
+                    } else chrome.tabs.update({
+                        url: toURL
+                    });
+                    chrome.notifications.getAll((notes)=>{
+                        for(n in notes)
+                            if(n.startsWith('https://drrr.com/room/?id='))
+                                chrome.notifications.clear(n);
+                    });
                 }
             )(req.notification.exit, req.notification.url));
     else if(req.notification.sel)
@@ -136,7 +131,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
             if(config['select_game'])
                 import(`/game/${game_mapping[config['select_game']]}`).then(
                     (module)=>{
-                        module.event_action(req.type, req)
+                        module.event_action && module.event_action(req.type, req);
                     }
                 )
 

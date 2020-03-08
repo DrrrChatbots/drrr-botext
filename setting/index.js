@@ -1,10 +1,10 @@
 /* setting.html */
 
 var infos = `
-<li><a href="https://nobodyzxc.github.io/drrr-botext-manual" target="_blank" title="在線文檔"><i class="glyphicon glyphicon-question-sign"></i></a></li>
-<li><a href="${chrome.extension.getURL('manual.html')}" target="_blank" title="本地文檔"><i class="glyphicon glyphicon-question-sign"></i></a></li>
-<li><a data-toggle="modal" data-target="#info-modal" title="關於開發者"><i class="glyphicon glyphicon-info-sign"></i></a></li>
-<li><a id="reset" title="重置所有設定"><i class="glyphicon glyphicon-refresh"></i></a></li>
+<li><a href="https://nobodyzxc.github.io/drrr-botext-manual" target="_blank" title="online doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a href="${chrome.extension.getURL('manual.html')}" target="_blank" title="local doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a data-toggle="modal" data-target="#info-modal" title="about developer"><i class="glyphicon glyphicon-info-sign"></i></a></li>
+<li><a id="reset" title="reset all setting"><i class="glyphicon glyphicon-refresh"></i></a></li>
 `
 
 var infopop = `
@@ -13,14 +13,14 @@ var infopop = `
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">關於開發者</h4>
+            <h4 class="modal-title">about developer</h4>
           </div>
           <div class="modal-body">
             $ whoami <br><br>
             lambda.catノ#L/CaT//Hsk <br><br><br>
             $ finger lambda.catノ <br><br> 
-            drrr.com 上的一般用戶，約於 2017 秋開始出沒於 drrr.com。<br>
-            Email 為 lambdacat.tw@gmail.com <br>
+            as a normal user on drrr.com, apper on drrr.com around fall, 2017.<br>
+            Email: lambdacat.tw@gmail.com <br>
           </div>
           <div class="modal-footer">
             <button type="button"

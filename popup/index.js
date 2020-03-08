@@ -872,6 +872,7 @@ function bio_setup(config){
 }
 
 function friend_setup(config){
+
     function type_switch(idx){
         idx = idx || 0;
         $('#fb-input').attr('placeholder', `Input ${fb_rule_info[idx]}`)

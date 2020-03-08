@@ -47,10 +47,11 @@
                 <hr>
 
                 <ul class="nav nav-tabs nav-justified">
+                    <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Bio</a></li>
+                    <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">Friends</a></li>
                     <li id="tab0" class="pop-tab"><a data-toggle="tab" href="#tab0-cont">MusicBar</a></li>
-                    <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Friends&Bio</a></li>
-                    <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">GamePanel</a></li>
-                    <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">LineSticker</a></li>
+                    <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">GamePanel</a></li>
+                    <li id="tab4" class="pop-tab"><a data-toggle="tab" href="#tab4-cont">LineSticker</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -107,14 +108,6 @@
                     <div id="tab1-cont" class="tab-pane fade">
                         <br>
                         <div class="input-group">
-                            <!--
-                                <div id='show_cookie' class="input-group-btn"> 
-                                <button class="btn btn-default" type="button"
-                                title='select the bio to change cookie >'>
-                                <i class="glyphicon glyphicon-user"></i>
-                                </button>
-                                </div>
-                            -->
 
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
@@ -143,11 +136,32 @@
                                     <i class="glyphicon glyphicon-qrcode"></i>
                                 </button>
                             </div>
+                        </div>
+                        
+                    </div>
 
+                    <div id="tab2-cont" class="tab-pane fade">
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                </button>
+                            </div>
 
+                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+                            <input id="eagerkey" type="text" class="form-control" placeholder="Room to Join (by user/tripcode/room Regex)">
+
+                            <div class="input-group-btn">
+                                <button id="set_eagerkey" class="btn btn-default" type="button"
+                                                                                data-delayed-toggle="collapse" data-target="#music_list"
+                                                                                                               title="set digits">
+                                    <i class="glyphicon glyphicon glyphicon-pencil"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <br>
 
                         <div class="input-group">
                             <div class="input-group-btn">
@@ -158,7 +172,7 @@
                             </div>
                             <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
-                            <input id="fb-input" type="text" 
+                            <input id="fb-input" type="text"
                                                  class="form-control" placeholder="rule here">
 
                             <div class="input-group-btn">
@@ -202,8 +216,8 @@
                                     <i class="glyphicon glyphicon-globe"></i>
                                 </button>
 
-                            </div>  
-                        </div> 
+                            </div>
+                        </div>
                         <div id="fb_list" class="collapse">
                             <div class="row" style="height:100%">
                                 <div class="col-md-4">
@@ -215,7 +229,8 @@
                             </div>
                         </div>
                     </div>
-                    <div id="tab2-cont" class="tab-pane fade">
+
+                    <div id="tab3-cont" class="tab-pane fade">
                         <br>
                         <div class="input-group">
                             <div class="input-group-btn">
@@ -249,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="tab3-cont" class="tab-pane fade">
+                    <div id="tab4-cont" class="tab-pane fade">
                         <br>
                         <div class="input-group">
                             <div class="input-group-btn">

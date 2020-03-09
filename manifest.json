@@ -47,5 +47,6 @@
     "web_accessible_resources": [
          "images/*.png"
     ],
-    "content_security_policy": "script-src 'self' https://static.line-scdn.net/line_store/1709a5ef903/pc/js/lc.line.store.pc.main.js; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'"
+
 }

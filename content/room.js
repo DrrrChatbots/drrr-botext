@@ -191,10 +191,12 @@ function make_extinputs(){
 
     $(document).on('click', '.dropdown-item-reply', function(){
         extmsg.val(extmsg.val() + $(this).text() + ' ');
+        extmsg.focus();
     });
     $(document).on('click', '.avatar', function(){
         if(!$(this).parent().parent().hasClass('secret'))
             extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
+            extmsg.focus();
     });
 }
 

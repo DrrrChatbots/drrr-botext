@@ -269,6 +269,9 @@ $(document).ready(function(){
             .attr('title', title);
     }
 
+    $('#search').click(searchCodes);
+    $('#dump').click(dumpTrip);
+
     $('.test-input').on('input focus',function(e){
         var valid = true,
             regex = $('#test-regex').val(),

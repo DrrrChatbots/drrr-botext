@@ -894,7 +894,7 @@ function type_switch(idx, input_s, icon_s, prefix, info, type){
 function friend_setup(config){
 
 
-    type_switch(config['fb-rule-type'], '#fb-input', '#fb_rule_type', '', fb_rule_info, fb_rule_types);
+    type_switch(config['fb-rule-type'], '#fb-input', '#fb_rule_type', 'Search/AddRule by', fb_rule_info, fb_rule_types);
     type_switch(config['eager-type'], '#eager-input', '#eager_type', 'Join Room when Avail by', eager_info, eager_types);
     if(config['eager-input']) $('#eager-input').val(config['eager-input']);
 
@@ -903,7 +903,7 @@ function friend_setup(config){
         chrome.storage.sync.set({
             'fb-rule-type': type 
         });
-        type_switch(type, '#fb-input', '#fb_rule_type', '', fb_rule_info, fb_rule_types);
+        type_switch(type, '#fb-input', '#fb_rule_type', 'Search/AddRule by', fb_rule_info, fb_rule_types);
     });
 
     $('#eager_type_btn').click(()=>{
@@ -938,6 +938,19 @@ function friend_setup(config){
         });
         $('#eager-input').parent().addClass('has-success').removeClass('has-error').removeClass('has-warning');
     });
+
+
+    function rule_note_mode_switch(bool){
+        $('#rule-note-icon').attr('class', `glyphicon glyphicon-volume-${bool? 'up' : 'off'}`);
+    }
+    rule_note_mode_switch(config[RULE_NOTE]);
+    $('.rule-note').click(function(){
+        var v = !$('#rule-note-icon').hasClass('glyphicon-volume-up');
+        chrome.storage.sync.set({
+            [RULE_NOTE]: v
+        });
+        rule_note_mode_switch(v);
+    })
 
     $('.fb-opener').on('click', function () {
         var $target = $($(this).attr("data-target"));
@@ -999,13 +1012,13 @@ function friend_setup(config){
         if(e.type == 'focus') $('#fb_list').collapse('hide');
         if($(this).val().trim()){
             $('.fb-on-input').show();
-            $('.fb-off-input').hide();
+            ////$('.fb-off-input').hide();
         }
         else{
-            $('#fb-input').val('');
-            $('#fb-input').change();
-            $('.fb-on-input').hide();
-            $('.fb-off-input').show();
+            //$('#fb-input').val('');
+            //$('#fb-input').change();
+            //$('.fb-on-input').hide();
+            //$('.fb-off-input').show();
         }
     });
 

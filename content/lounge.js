@@ -33,8 +33,9 @@ $(document).ready(function(){
 
         if(!config['profile']) ajaxProfile(undefined, undefined, 'lounge');
         else Profile = config['profile'];
-        Profile.loc = 'lounge';
-        chrome.storage.sync.set({'profile': Profile});
+
+        //Profile.loc = 'lounge';
+        //chrome.storage.sync.set({'profile': Profile});
 
 
         if(config['leaveRoom'])
@@ -75,7 +76,7 @@ function show_jump_dialogue(config){
         if(confirm('OK to stay in the lounge.\nCancel will lead you to to the room!')){
             chrome.storage.sync.remove('jumpToRoom');
         }
-        else{ chrome.runtime.sendMessage({ jumpto: config['jumpToRoom'] }); }
+        else{ setTimeout(()=>chrome.runtime.sendMessage({ jumpto: config['jumpToRoom'] }), 2000); }
     })
 }
 

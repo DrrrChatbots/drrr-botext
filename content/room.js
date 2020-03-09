@@ -203,6 +203,7 @@ var lounge = undefined;
 var jumpToRoom = undefined;
 
 $(document).ready(function(){
+    
     console.log($('#user_name').text());
 
     chrome.storage.sync.get(

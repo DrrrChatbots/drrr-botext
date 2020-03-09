@@ -334,6 +334,21 @@ function isPlaying(args, callback){
     }
 }
 
+var effects = {
+    'snow': 'snowStorm.start()',
+    'firework': 'firework.start()',
+    'visualizer': 'visualizer.setup(0.8), visualizer.play(0.8)',
+    'elevator': 'elevator.start()',
+}
+
+function bgEffect(args){
+    //$('<script/>', {src: location.baseURL + "/js/extra.min.js"}).appendTo("head"); snowStorm.start();
+    console.log(`start ${args.name}`);
+    $('head').append(`<script src="//drrr.com/js/extra.min.js"></script>`).promise().then(
+        ()=>$('head').append(`<script>setTimeout(()=>${effects[args.name]}, 2000);</script>`)
+    );
+}
+
 var methods = {}
 methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
@@ -356,4 +371,5 @@ methods[leave_room] = leaveRoom;
 methods[keep_room] = keepRoom;
 methods[cache_profile] = cacheProfile;
 methods[update_profile] = updateProfile;
+methods[bg_effect] = bgEffect;
 

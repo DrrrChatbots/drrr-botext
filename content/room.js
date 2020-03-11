@@ -218,9 +218,10 @@ $(document).ready(function(){
             //    ajaxProfile(undefined, true, $('.room-title-name').text());
             
             chrome.storage.sync.set({'profile': roomProfile()});
-
-
-            if(config['leaveRoom']){
+ 
+            enableMe = config[SWITCH_ME] || false;
+            
+            if(config['leaveRoom'] && confirm('leave Room on enter?')){
                 disableLeave = true;
                 planeGo(true, 12000);
                 chrome.runtime.sendMessage({
@@ -234,8 +235,16 @@ $(document).ready(function(){
                 //return setTimeout(()=>leaveRoom(undefined, undefined, true), 8000);
                 return setTimeout(()=>leaveRoom(undefined, undefined, true), 9000);
             }
-            enableMe = config[SWITCH_ME] || false;
+
             jumpToRoom = config['jumpToRoom'];
+            if(jumpToRoom == window.location.href){
+                chrome.storage.sync.remove('jumpToRoom');
+                console.log("remove jumped ROOM");
+                planeArrive(true);
+            }
+            else if(jumpToRoom){
+                config("You Are Not @TargetRoom, jump?") && leaveRoom(undefined, undefined, true);
+            }
 
             $('#talks').bind('DOMNodeInserted', function(event) {
                 var e = event.target;
@@ -254,11 +263,7 @@ $(document).ready(function(){
 
             chrome.runtime.sendMessage({ clearNotes: true, pattern:'' }); //'https://drrr.com/room/.*'
 
-            if(jumpToRoom == window.location.href){
-                chrome.storage.sync.remove('jumpToRoom');
-                console.log("remove jumped ROOM");
-                planeArrive(true);
-            }
+            
 
             $.ajax({
                 type: "GET",

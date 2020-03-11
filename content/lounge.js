@@ -21,6 +21,27 @@ var countDownModal = `
         </div>
     </div>`
 
+function checkGoToRoom(config){
+    if(config['jumpToRoom']){
+        planeGo();
+        show_jump_dialogue(config);
+        var url = config['jumpToRoom'];
+        var idx = url.indexOf('?id=');
+        if(idx > 0){
+            roomid = url.substring(idx + 4);
+            console.log(`button[value="${roomid}"]`);
+            setTimeout(()=>blinkElt(`button[value="${roomid}"]`, jump_countdown.bind(null, config)), 1500);
+        }
+        else jump_countdown(config);
+    }
+    else{
+        var monit = ()=>monitRooms(false);
+        setTimeout(monit, 5000);
+        setInterval(monit, 20000);
+        console.log("start find");
+    }
+}
+
 $(document).ready(function(){
     chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
     //'https://drrr.com/room/.*'
@@ -37,27 +58,9 @@ $(document).ready(function(){
         //Profile.loc = 'lounge';
         //chrome.storage.sync.set({'profile': Profile});
 
-
         if(config['leaveRoom'])
-            chrome.storage.sync.remove('leaveRoom');
-        if(config['jumpToRoom']){
-            planeGo();
-            show_jump_dialogue(config);
-            var url = config['jumpToRoom'];
-            var idx = url.indexOf('?id=');
-            if(idx > 0){
-                roomid = url.substring(idx + 4);
-                console.log(`button[value="${roomid}"]`);
-                setTimeout(()=>blinkElt(`button[value="${roomid}"]`, jump_countdown.bind(null, config)), 1500);
-            }
-            else jump_countdown(config);
-        }
-        else{
-            var monit = ()=>monitRooms(false);
-            setTimeout(monit, 5000);
-            setInterval(monit, 20000);
-            console.log("start find");
-        }
+            chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));
+        else checkGoToRoom(config);
     });
 })
 

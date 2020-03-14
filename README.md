@@ -24,9 +24,8 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 ### dev
 
-- add YouTube music source
 - detect protected music.168 source
-- pokemon monster module 
 - add tripcode identification to configuration
-- support room member variable (include self -> dm to self) in list
+- support room member variable (include self -> dm to self, roomOwner) in list
 - add neteaseWorld support
+- pokemon monster module 

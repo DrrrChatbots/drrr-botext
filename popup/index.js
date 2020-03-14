@@ -1,7 +1,11 @@
 var bkg = chrome.extension.getBackgroundPage;
 
 function open_manual(){
-    chrome.tabs.create({url: chrome.extension.getURL('manual.html')});
+    var language = window.navigator.userLanguage || window.navigator.language;
+    if(language == 'zh-CN' || language == 'zh-TW')
+        chrome.tabs.create({url: chrome.extension.getURL('manuals/manual-zh.html')});
+    else
+        chrome.tabs.create({url: chrome.extension.getURL('manuals/manual-en.html')});
 }
 
 function open_background(){

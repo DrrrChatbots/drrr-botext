@@ -40,6 +40,7 @@
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",
+        "*://youtube-cat.herokuapp.com/*",
         "http://music.163.com/api/*",
         "http://tingapi.ting.baidu.com/*",
         "https://store.line.me/*",

@@ -154,10 +154,11 @@
                             <input id="eager-input" type="text" class="form-control" placeholder="regex here">
 
                             <div class="input-group-btn">
-                                <button id="eager-set" class="btn btn-default" type="button"
-                                                                                data-delayed-toggle="collapse" data-target="#music_list"
-                                                                                                               title="set regex">
+                                <button id="eager-set" class="btn btn-default" type="button" title="set the jump rule">
                                     <i class="glyphicon glyphicon glyphicon-tag"></i>
+                                </button>
+                                <button id="eager-ask" class="btn btn-default" type="button" title="ask before jump">
+                                    <i id="eager-ask-icon" class="glyphicon glyphicon-comment"></i>
                                 </button>
                             </div>
                         </div>
@@ -225,10 +226,6 @@
                                     <i id="rule-note-icon" class="glyphicon glyphicon-volume-up"></i>
                                 </button>
                             </div>
-
-                            <!--
-                            <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
-                            -->
 
                             <input type="button" class="btn btn-default form-control rule-note" value="RULE NOTIFICATION">
 

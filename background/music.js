@@ -66,6 +66,7 @@ function pndMusic(config, idx, keyword = '', source){
 
                 }
                 else if(after === undefined || after === null || after > getDelay(config) + 5){
+                    console.log("bitch idx is", idx);
                     play_search(get_music.bind(null, keyword, source), publish, idx);
                     console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
                 }

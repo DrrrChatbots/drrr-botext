@@ -36,7 +36,7 @@ function checkGoToRoom(config){
     }
     else{
         var monit = ()=>monitRooms(false);
-        setTimeout(monit, 5000);
+        setTimeout(monit, 3000);
         setInterval(monit, 20000);
         console.log("start find");
     }

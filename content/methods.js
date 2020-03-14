@@ -328,7 +328,6 @@ function isPlaying(args, callback){
             callback([false]);
         }
         else{
-            console.log('fuck', after_play(play_end), typeof after_play(play_end));
             callback([target[0].classList.contains('active'), after_play(play_end)]);
         }
     }

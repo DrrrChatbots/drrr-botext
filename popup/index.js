@@ -938,16 +938,28 @@ function friend_setup(config){
         });
         $('#eager-input').parent().addClass('has-success').removeClass('has-error').removeClass('has-warning');
     });
+    function eager_ask_mode_switch(bool){
+        $('#eager-ask-icon').attr('class', `glyphicon glyphicon-${bool? 'comment' : 'send'}`);
+        $('#eager-ask').attr('title', ["jump without asking", "ask before jump"][Number(bool)]);
+    }
+    eager_ask_mode_switch(config[EAGER_ASK]);
+    $('#eager-ask').click(function(){
+        var v = !$('#eager-ask-icon').hasClass('glyphicon-comment');
+        chrome.storage.sync.set({
+            [EAGER_ASK]: v
+        });
+        eager_ask_mode_switch(v);
+    })
 
 
     function rule_note_mode_switch(bool){
-        $('#rule-note-icon').attr('class', `glyphicon glyphicon-volume-${bool? 'up' : 'off'}`);
+        $('#rule-note-icon').attr('class', `glyphicon glyphicon-volume-${bool? 'off' : 'up'}`);
     }
-    rule_note_mode_switch(config[RULE_NOTE]);
+    rule_note_mode_switch(config[RULE_NOTE_MUTE]);
     $('.rule-note').click(function(){
-        var v = !$('#rule-note-icon').hasClass('glyphicon-volume-up');
+        var v = !$('#rule-note-icon').hasClass('glyphicon-volume-off');
         chrome.storage.sync.set({
-            [RULE_NOTE]: v
+            [RULE_NOTE_MUTE]: v
         });
         rule_note_mode_switch(v);
     })

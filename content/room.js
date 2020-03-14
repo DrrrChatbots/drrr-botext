@@ -221,7 +221,7 @@ $(document).ready(function(){
  
             enableMe = config[SWITCH_ME] || false;
             
-            if(config['leaveRoom'] && confirm('leave Room on enter?')){
+            if(config['leaveRoom']){
                 disableLeave = true;
                 planeGo(true, 12000);
                 chrome.runtime.sendMessage({

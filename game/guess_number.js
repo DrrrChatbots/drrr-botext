@@ -2,8 +2,7 @@ var GAME_GUESS_NUMBER = "GAME_GUESS_NUMBER"
 
 var language = window.navigator.userLanguage || window.navigator.language;
 var intro = (language == 'zh-CN' || language == 'zh-TW') ?
-    `<p>在聊天室使用 <code>/start</code> 設定隨機數字，<br>或者你可以用上面的設定欄位設定（留空為隨機）</p><p>在聊天室發送四個數字開始猜數字。</p>`:`<p>Use <code>/start</code> in chatroom to set numbers randomly, <br>or you can use input above to set a number<br>(empty would be random)</p>
-<p>Type four digits in chatroom to guess the number</p>`
+    `<p>在聊天室使用 <code>/start</code> 設定隨機數字，<br>或者你可以用上面的設定欄位設定（留空為隨機）</p><p>在聊天室發送四個數字開始猜數字。</p>`:`<p>Use <code>/start</code> in chatroom to set numbers randomly, <br>or you can use input above to set a number<br>(empty would be random)</p><p>Type four digits in chatroom to guess the number</p>`
 
 
 export const ui = (config) => {
@@ -118,15 +117,3 @@ function gnjdg(guess, callback){
         } else callback(`guess number must be 4 non-repeat digits: ${guess}`);
     });
 }
-
-//// action
-//if(typeof actions !== 'undefined'){
-//    actions[action_gnset] = function(digits){
-//        setTimeout(()=> sendTab({ fn: publish_message, args: { msg: gnset(digits) } }), 1000);
-//    }
-//
-//    actions[action_gnjdg] = function(digits){
-//        gnjdg(digits, (msg) =>
-//            setTimeout(()=> sendTab({ fn: publish_message, args: { msg: msg } }), 1000));
-//    }
-//}

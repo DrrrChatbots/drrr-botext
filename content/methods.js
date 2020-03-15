@@ -200,8 +200,8 @@ var leaveRoom = function(args, callback, force){
                 setTimeout(()=>{
                     chrome.runtime.sendMessage({
                         notification: {
-                            title: '離開失敗，十秒後為您重試（ONCLICK）',
-                            msg: '蟲洞即將開啟，請不要亂動',
+                            title: `${chrome.i18n.getMessage("fail_leave_title")}（ONCLICK）`,
+                            msg: chrome.i18n.getMessage("fail_leave_msg"),
                             clear: true,
                             pattern: ''
                         }

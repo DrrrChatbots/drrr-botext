@@ -226,8 +226,8 @@ $(document).ready(function(){
                 planeGo(true, 12000);
                 chrome.runtime.sendMessage({
                     notification: {
-                        title: '離開失敗，九秒後為您重試',
-                        msg: '蟲洞即將開啟，請不要亂動',
+                        title: chrome.i18n.getMessage("fail_leave_title"),
+                        msg: chrome.i18n.getMessage("fail_leave_msg"),
                         clear: true,
                         pattern: ''
                     }

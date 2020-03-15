@@ -18,10 +18,6 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 ## TODO
 
-### user feedback
-
-- project translation (i18n)
-
 ### dev
 
 - detect protected music.168 source

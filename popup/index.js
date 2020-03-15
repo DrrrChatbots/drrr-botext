@@ -1191,8 +1191,9 @@ function sticker_setup(config){
                         if(tags.length) name = tags[0].textContent;
                     }
 
-                    name = prompt("取名為？", name ? name : '貼圖');
-                    name = name ? name : '貼圖';
+                    name = prompt(chrome.i18n.getMessage("rename_as"),
+                                    name ? name : chrome.i18n.getMessage("sticker"));
+                    name = name ? name : chrome.i18n.getMessage("sticker");
 
                     push_value('stickers', [name].concat(sticker_data));
                     var select = sticker_url(sticker_data);

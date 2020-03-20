@@ -14,14 +14,9 @@
 
 ## 使用說明
 
-請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/)。
+請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-zh.html)。
 
-## 待辦
+## v1.5 更新
 
-### 開發者手紀
+新增貼圖，多帳戶切換，找尋朋友，tripcode 產生器，房間訊息紀錄，守房功能，遊戲模組。
 
-- 偵測 music.168 音源版權保護 
-- 於設置加入 tripcode 識別
-- 房間成員變數，包括自身和房主。
-- 突破網易海外限制
-- 口袋怪獸遊戲模組 

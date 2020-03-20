@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>
+        DRRR ChatBot Extension Setting Manual - HackMD
+    
+    </title>
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/ionicons.min.css" integrity="sha256-3iu9jgsy9TpTwXKb7bNQzqWekRX7pPK+2OLj3R922fo=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/octicons.min.css" integrity="sha256-QiWfLIsCT02Sdwkogf6YMiQlj4NE84MKkzEMkZnMGdg=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/prism.min.css" integrity="sha256-vtR0hSWRc3Tb26iuN2oZHt3KRUomwTufNIf5/4oeCyg=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/emojify.min.css" integrity="sha256-UOrvMOsSDSrW6szVLe8ZDZezBxh5IoIfgTwdNDgTjiU=" crossorigin="anonymous" />
+        
+                            <style>
+        @charset "UTF-8";@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i|Source+Code+Pro:300,400,500|Source+Sans+Pro:300,300i,400,400i,600,600i|Source+Serif+Pro&subset=latin-ext);.hljs{display:block;background:#fff;padding:.5em;color:#333;overflow-x:auto}.hljs-comment,.hljs-meta{color:#969896}.hljs-emphasis,.hljs-quote,.hljs-string,.hljs-strong,.hljs-template-variable,.hljs-variable{color:#df5000}.hljs-keyword,.hljs-selector-tag,.hljs-type{color:#a71d5d}.hljs-attribute,.hljs-bullet,.hljs-literal,.hljs-number,.hljs-symbol{color:#0086b3}.hljs-built_in,.hljs-builtin-name{color:#005cc5}.hljs-name,.hljs-section{color:#63a35c}.hljs-tag{color:#333}.hljs-attr,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-selector-pseudo,.hljs-title{color:#795da3}.hljs-addition{color:#55a532;background-color:#eaffea}.hljs-deletion{color:#bd2c00;background-color:#ffecec}.hljs-link{text-decoration:underline}.markdown-body{font-size:16px;line-height:1.5;word-wrap:break-word}.markdown-body:after,.markdown-body:before{display:table;content:""}.markdown-body:after{clear:both}.markdown-body>:first-child{margin-top:0!important}.markdown-body>:last-child{margin-bottom:0!important}.markdown-body a:not([href]){color:inherit;text-decoration:none}.markdown-body .absent{color:#c00}.markdown-body .anchor{float:left;padding-right:4px;margin-left:-20px;line-height:1}.markdown-body .anchor:focus{outline:none}.markdown-body blockquote,.markdown-body dl,.markdown-body ol,.markdown-body p,.markdown-body pre,.markdown-body table,.markdown-body ul{margin-top:0;margin-bottom:16px}.markdown-body hr{height:.25em;padding:0;margin:24px 0;background-color:#e7e7e7;border:0}.markdown-body blockquote{font-size:16px;padding:0 1em;color:#777;border-left:.25em solid #ddd}.markdown-body blockquote>:first-child{margin-top:0}.markdown-body blockquote>:last-child{margin-bottom:0}.markdown-body kbd,.popover kbd{display:inline-block;padding:3px 5px;font-size:11px;line-height:10px;color:#555;vertical-align:middle;background-color:#fcfcfc;border:1px solid #ccc;border-bottom-color:#bbb;border-radius:3px;box-shadow:inset 0 -1px 0 #bbb}.markdown-body .loweralpha{list-style-type:lower-alpha}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{margin-top:24px;margin-bottom:16px;font-weight:600;line-height:1.25}.markdown-body h1 .octicon-link,.markdown-body h2 .octicon-link,.markdown-body h3 .octicon-link,.markdown-body h4 .octicon-link,.markdown-body h5 .octicon-link,.markdown-body h6 .octicon-link{color:#000;vertical-align:middle;visibility:hidden}.markdown-body h1:hover .anchor,.markdown-body h2:hover .anchor,.markdown-body h3:hover .anchor,.markdown-body h4:hover .anchor,.markdown-body h5:hover .anchor,.markdown-body h6:hover .anchor{text-decoration:none}.markdown-body h1:hover .anchor .octicon-link,.markdown-body h2:hover .anchor .octicon-link,.markdown-body h3:hover .anchor .octicon-link,.markdown-body h4:hover .anchor .octicon-link,.markdown-body h5:hover .anchor .octicon-link,.markdown-body h6:hover .anchor .octicon-link{visibility:visible}.markdown-body h1 code,.markdown-body h1 tt,.markdown-body h2 code,.markdown-body h2 tt,.markdown-body h3 code,.markdown-body h3 tt,.markdown-body h4 code,.markdown-body h4 tt,.markdown-body h5 code,.markdown-body h5 tt,.markdown-body h6 code,.markdown-body h6 tt{font-size:inherit}.markdown-body h1{font-size:2em}.markdown-body h1,.markdown-body h2{padding-bottom:.3em;border-bottom:1px solid #eee}.markdown-body h2{font-size:1.5em}.markdown-body h3{font-size:1.25em}.markdown-body h4{font-size:1em}.markdown-body h5{font-size:.875em}.markdown-body h6{font-size:.85em;color:#777}.markdown-body ol,.markdown-body ul{padding-left:2em}.markdown-body ol.no-list,.markdown-body ul.no-list{padding:0;list-style-type:none}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:0;margin-bottom:0}.markdown-body li>p{margin-top:16px}.markdown-body li+li{padding-top:.25em}.markdown-body dl{padding:0}.markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}.markdown-body dl dd{padding:0 16px;margin-bottom:16px}.markdown-body table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}.markdown-body table th{font-weight:700}.markdown-body table td,.markdown-body table th{padding:6px 13px;border:1px solid #ddd}.markdown-body table tr{background-color:#fff;border-top:1px solid #ccc}.markdown-body table tr:nth-child(2n){background-color:#f8f8f8}.markdown-body img{max-width:100%;box-sizing:content-box;background-color:#fff}.markdown-body img[align=right]{padding-left:20px}.markdown-body img[align=left]{padding-right:20px}.markdown-body .emoji{max-width:none;vertical-align:text-top;background-color:transparent}.markdown-body span.frame{display:block;overflow:hidden}.markdown-body span.frame>span{display:block;float:left;width:auto;padding:7px;margin:13px 0 0;overflow:hidden;border:1px solid #ddd}.markdown-body span.frame span img{display:block;float:left}.markdown-body span.frame span span{display:block;padding:5px 0 0;clear:both;color:#333}.markdown-body span.align-center{display:block;overflow:hidden;clear:both}.markdown-body span.align-center>span{display:block;margin:13px auto 0;overflow:hidden;text-align:center}.markdown-body span.align-center span img{margin:0 auto;text-align:center}.markdown-body span.align-right{display:block;overflow:hidden;clear:both}.markdown-body span.align-right>span{display:block;margin:13px 0 0;overflow:hidden;text-align:right}.markdown-body span.align-right span img{margin:0;text-align:right}.markdown-body span.float-left{display:block;float:left;margin-right:13px;overflow:hidden}.markdown-body span.float-left span{margin:13px 0 0}.markdown-body span.float-right{display:block;float:right;margin-left:13px;overflow:hidden}.markdown-body span.float-right>span{display:block;margin:13px auto 0;overflow:hidden;text-align:right}.markdown-body code,.markdown-body tt{padding:0;padding-top:.2em;padding-bottom:.2em;margin:0;font-size:85%;background-color:rgba(0,0,0,.04);border-radius:3px}.markdown-body code:after,.markdown-body code:before,.markdown-body tt:after,.markdown-body tt:before{letter-spacing:-.2em;content:"\00a0"}.markdown-body code br,.markdown-body tt br{display:none}.markdown-body del code{text-decoration:inherit}.markdown-body pre{word-wrap:normal}.markdown-body pre>code{padding:0;margin:0;font-size:100%;word-break:normal;white-space:pre;background:transparent;border:0}.markdown-body .highlight{margin-bottom:16px}.markdown-body .highlight pre{margin-bottom:0;word-break:normal}.markdown-body .highlight pre,.markdown-body pre{padding:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px}.markdown-body pre code,.markdown-body pre tt{display:inline;max-width:auto;padding:0;margin:0;overflow:visible;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}.markdown-body pre code:after,.markdown-body pre code:before,.markdown-body pre tt:after,.markdown-body pre tt:before{content:normal}.markdown-body .csv-data td,.markdown-body .csv-data th{padding:5px;overflow:hidden;font-size:12px;line-height:1;text-align:left;white-space:nowrap}.markdown-body .csv-data .blob-line-num{padding:10px 8px 9px;text-align:right;background:#fff;border:0}.markdown-body .csv-data tr{border-top:0}.markdown-body .csv-data th{font-weight:700;background:#f8f8f8;border-top:0}.news .alert .markdown-body blockquote{padding:0 0 0 40px;border:0 none}.activity-tab .news .alert .commits,.activity-tab .news .markdown-body blockquote{padding-left:0}.task-list-item{list-style-type:none}.task-list-item label{font-weight:400}.task-list-item.enabled label{cursor:pointer}.task-list-item+.task-list-item{margin-top:3px}.task-list-item-checkbox{float:left;margin:.31em 0 .2em -1.3em!important;vertical-align:middle;cursor:default!important}.markdown-body{padding-top:40px;padding-bottom:40px;max-width:758px;overflow:visible!important}.markdown-body .emoji{vertical-align:top}.markdown-body pre{border:inherit!important}.markdown-body code{color:inherit!important}.markdown-body pre code .wrapper{display:-moz-inline-flex;display:-ms-inline-flex;display:-o-inline-flex;display:inline-flex}.markdown-body pre code .gutter{float:left;overflow:hidden;-webkit-user-select:none;user-select:none}.markdown-body pre code .gutter.linenumber{text-align:right;position:relative;display:inline-block;cursor:default;z-index:4;padding:0 8px 0 0;min-width:20px;box-sizing:content-box;color:#afafaf!important;border-right:3px solid #6ce26c!important}.markdown-body pre code .gutter.linenumber>span:before{content:attr(data-linenumber)}.markdown-body pre code .code{float:left;margin:0 0 0 16px}.markdown-body .gist .line-numbers{border-left:none;border-top:none;border-bottom:none}.markdown-body .gist .line-data{border:none}.markdown-body .gist table{border-spacing:0;border-collapse:inherit!important}.markdown-body code[data-gist-id]{background:none;padding:0}.markdown-body code[data-gist-id]:after,.markdown-body code[data-gist-id]:before{content:""}.markdown-body code[data-gist-id] .blob-num{border:unset}.markdown-body code[data-gist-id] table{overflow:unset;margin-bottom:unset}.markdown-body code[data-gist-id] table tr{background:unset}.markdown-body[dir=rtl] pre{direction:ltr}.markdown-body[dir=rtl] code{direction:ltr;unicode-bidi:embed}.markdown-body .alert>p{margin-bottom:0}.markdown-body pre.abc,.markdown-body pre.flow-chart,.markdown-body pre.graphviz,.markdown-body pre.mermaid,.markdown-body pre.sequence-diagram,.markdown-body pre.vega{text-align:center;background-color:inherit;border-radius:0;white-space:inherit}.markdown-body pre.abc>code,.markdown-body pre.flow-chart>code,.markdown-body pre.graphviz>code,.markdown-body pre.mermaid>code,.markdown-body pre.sequence-diagram>code,.markdown-body pre.vega>code{text-align:left}.markdown-body pre.abc>svg,.markdown-body pre.flow-chart>svg,.markdown-body pre.graphviz>svg,.markdown-body pre.mermaid>svg,.markdown-body pre.sequence-diagram>svg,.markdown-body pre.vega>svg{max-width:100%;height:100%}.markdown-body pre>code.wrap{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word}.markdown-body .alert>p,.markdown-body .alert>ul{margin-bottom:0}.markdown-body summary{display:list-item}.markdown-body summary:focus{outline:none}.markdown-body details summary{cursor:pointer}.markdown-body details:not([open])>:not(summary){display:none}.markdown-body figure{margin:1em 40px}.markdown-body .mark,.markdown-body mark{background-color:#fff1a7}.vimeo,.youtube{cursor:pointer;display:table;text-align:center;background-position:50%;background-repeat:no-repeat;background-size:contain;background-color:#000;overflow:hidden}.vimeo,.youtube{position:relative;width:100%}.youtube{padding-bottom:56.25%}.vimeo img{width:100%;object-fit:contain;z-index:0}.youtube img{object-fit:cover;z-index:0}.vimeo iframe,.youtube iframe,.youtube img{width:100%;height:100%;position:absolute;top:0;left:0}.vimeo iframe,.youtube iframe{vertical-align:middle;z-index:1}.vimeo .icon,.youtube .icon{position:absolute;height:auto;width:auto;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;opacity:.3;transition:opacity .2s;z-index:0}.vimeo:hover .icon,.youtube:hover .icon{opacity:.6;transition:opacity .2s}.slideshare .inner,.speakerdeck .inner{position:relative;width:100%}.slideshare .inner iframe,.speakerdeck .inner iframe{position:absolute;top:0;bottom:0;left:0;right:0;width:100%;height:100%}.MJX_Assistive_MathML{display:none}.ui-infobar{position:relative;z-index:2;max-width:760px;margin:25px auto -25px;padding:0 15px;color:#777}.toc .invisable-node{list-style-type:none}.ui-toc{position:fixed;bottom:20px;z-index:998}.ui-toc-label{opacity:.3;background-color:#ccc;border:none;transition:opacity .2s}.ui-toc .open .ui-toc-label{opacity:1;color:#fff;transition:opacity .2s}.ui-toc-label:focus{opacity:.3;background-color:#ccc;color:#000}.ui-toc-label:hover{opacity:1;background-color:#ccc;transition:opacity .2s}.ui-toc-dropdown{margin-top:23px;margin-bottom:20px;padding-left:10px;padding-right:10px;max-width:45vw;width:25vw;max-height:70vh;overflow:auto;text-align:inherit}.ui-toc-dropdown>.toc{max-height:calc(70vh - 100px);overflow:auto}.ui-toc-dropdown[dir=rtl] .nav{padding-right:0;letter-spacing:.0029em}.ui-toc-dropdown a{overflow:hidden;text-overflow:ellipsis;white-space:pre}.ui-toc-dropdown .nav>li>a{display:block;padding:4px 20px;font-size:13px;font-weight:500;color:#767676}.ui-toc-dropdown .nav>li:first-child:last-child > ul,.ui-toc-dropdown .toc.expand ul{display:block}.ui-toc-dropdown .nav>li>a:focus,.ui-toc-dropdown .nav>li>a:hover{padding-left:19px;color:#000;text-decoration:none;background-color:transparent;border-left:1px solid #000}.ui-toc-dropdown[dir=rtl] .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav>li>a:hover{padding-right:19px;border-left:none;border-right:1px solid #000}.ui-toc-dropdown .nav>.active:focus>a,.ui-toc-dropdown .nav>.active:hover>a,.ui-toc-dropdown .nav>.active>a{padding-left:18px;font-weight:700;color:#000;background-color:transparent;border-left:2px solid #000}.ui-toc-dropdown[dir=rtl] .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav>.active>a{padding-right:18px;border-left:none;border-right:2px solid #000}.ui-toc-dropdown .nav .nav{display:none;padding-bottom:10px}.ui-toc-dropdown .nav>.active>ul{display:block}.ui-toc-dropdown .nav .nav>li>a{padding-top:1px;padding-bottom:1px;padding-left:30px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a{padding-right:30px}.ui-toc-dropdown .nav .nav>li>ul>li>a{padding-top:1px;padding-bottom:1px;padding-left:40px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a{padding-right:40px}.ui-toc-dropdown .nav .nav>li>a:focus,.ui-toc-dropdown .nav .nav>li>a:hover{padding-left:29px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:hover{padding-right:29px}.ui-toc-dropdown .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown .nav .nav>li>ul>li>a:hover{padding-left:39px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:hover{padding-right:39px}.ui-toc-dropdown .nav .nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>a{padding-left:28px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>a{padding-right:28px}.ui-toc-dropdown .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active>a{padding-left:38px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active>a{padding-right:38px}.markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,sans-serif}html[lang^=ja] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html .markdown-body[lang^=ja]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html .markdown-body[lang=zh-tw]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html .markdown-body[lang=zh-cn]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html[lang^=ja] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html[lang=zh-tw] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html[lang=zh-cn] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}html .ui-toc-dropdown[lang^=ja]{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html .ui-toc-dropdown[lang=zh-tw]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html .ui-toc-dropdown[lang=zh-cn]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}.ui-affix-toc{position:fixed;top:0;max-width:15vw;max-height:70vh;overflow:auto}.back-to-top,.expand-toggle,.go-to-bottom{display:block;padding:4px 10px;margin-top:10px;margin-left:10px;font-size:12px;font-weight:500;color:#999}.back-to-top:focus,.back-to-top:hover,.expand-toggle:focus,.expand-toggle:hover,.go-to-bottom:focus,.go-to-bottom:hover{color:#563d7c;text-decoration:none}.back-to-top,.go-to-bottom{margin-top:0}.ui-user-icon{width:20px;height:20px;display:block;border-radius:3px;margin-top:2px;margin-bottom:2px;margin-right:5px;background-position:50%;background-repeat:no-repeat;background-size:cover}.ui-user-icon.small{width:18px;height:18px;display:inline-block;vertical-align:middle;margin:0 0 .2em}.ui-infobar>small>span{line-height:22px}.ui-infobar>small .dropdown{display:inline-block}.ui-infobar>small .dropdown a:focus,.ui-infobar>small .dropdown a:hover{text-decoration:none}.ui-published-note{color:#337ab7}.ui-published-note .fa{font-size:20px;vertical-align:top}.unselectable{-webkit-user-select:none;-o-user-select:none;user-select:none}@media print{blockquote,div,img,pre,table{page-break-inside:avoid!important}a[href]:after{font-size:12px!important}}.markdown-body.slides{position:relative;z-index:1;color:#222}.markdown-body.slides:before{content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background-color:currentColor;box-shadow:0 0 0 50vw}.markdown-body.slides section[data-markdown]{position:relative;margin-bottom:1.5em;background-color:#fff;text-align:center}.markdown-body.slides section[data-markdown] code{text-align:left}.markdown-body.slides section[data-markdown]:before{content:"";display:block;padding-bottom:56.23%}.markdown-body.slides section[data-markdown]>div:first-child{position:absolute;top:50%;left:1em;right:1em;transform:translateY(-50%);max-height:100%;overflow:hidden}.markdown-body.slides section[data-markdown]>ul{display:inline-block}.markdown-body.slides>section>section+section:after{content:"";position:absolute;top:-1.5em;right:1em;height:1.5em;border:3px solid #777}body{font-smoothing:subpixel-antialiased!important;-webkit-font-smoothing:subpixel-antialiased!important;-moz-osx-font-smoothing:auto!important;text-shadow:0 0 1em transparent,1px 1px 1.2px rgba(0,0,0,.004);-webkit-overflow-scrolling:touch;letter-spacing:.025em}.focus,:focus{outline:none!important}::-moz-focus-inner{border:0!important}body{font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] body{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}abbr[data-original-title],abbr[title]{cursor:help}body.modal-open{overflow-y:auto;padding-right:0!important}
+    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    	
+    	
+		
+    <![endif]-->
+</head>
+
+<body>
+    <div id="doc" class="markdown-body container-fluid comment-enabled" data-hard-breaks="true"><h1 id="DRRR-ChatBot-Extension-Setting-Manual"><a class="anchor hidden-xs" href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR-ChatBot-Extension-Setting-Manual"><span class="octicon octicon-link"></span></a>DRRR ChatBot Extension Setting Manual</h1><h2 id="Installation"><a class="anchor hidden-xs" href="#Installation" title="Installation"><span class="octicon octicon-link"></span></a>Installation</h2><p>PC version:</p><p>Since it is a Chrome extension, please use the Chrome browser and install it from the <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web Store</a>.</p><p>In addition, if you use Opera, you can try Opera <a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener">Install Chrome Extensions</a>.</p><p>Mobile version:</p><p>The mobile version of Chrome does not provide plugin installation on the phone, but you can use the Yandex browser (<a href="https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&amp;hlen_US" target="_blank" rel="noopener">Android</a>, <a href="https://apps.apple.com/tw/app/yandex-browser/id483693909" target="_blank" rel="noopener">iOS</a>), it uses Chrome kernel, so it can also get the installation from <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web App Store</a>.</p><h2 id="User-interface"><a class="anchor hidden-xs" href="#User-interface" title="User-interface"><span class="octicon octicon-link"></span></a>User interface</h2><p><i class="glyphicon glyphicon-question-sign"></i> Go to this help page <i class="glyphicon glyphicon-cog"></i> Go to background settings</p><p><img src="https://i.imgur.com/hxIuCTT.png" alt=""></p><h3 id="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><a class="anchor hidden-xs" href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><span class="octicon octicon-link"></span></a>Function switch <br>(<i class="glyphicon glyphicon-cog"></i> means you must do some setting before you turning it on)</h3><p><img src="https://i.imgur.com/dQb3byt.png" alt=""></p><ul>
+<li>AutoDM<br>
+Automatically lock the last dm user after sending a message</li>
+<li>Timer <i class="glyphicon glyphicon-cog"></i><br>
+Scheduled execution of set actions</li>
+<li>Black / Whitelist <i class="glyphicon glyphicon-cog"></i><br>
+Room black / white list (auto kick out visitors)</li>
+<li>Welcome <i class="glyphicon glyphicon-cog"></i><br>
+Automatically send out a greeting on visitors entering the room</li>
+<li>BanAbuse <i class="glyphicon glyphicon-cog"></i><br>
+List of banned words. When the user’s words match the forbidden words, they will be kicked out automatically.</li>
+<li>Always/me<br>
+Add the /me command automatically</li>
+<li>EventAction<br>
+When the event occurs, perform the set action</li>
+<li>RoomKeeper<br>
+Automatically send messages to yourself to prevent the room from disappearing</li>
+<li>TgBotLogger<br>
+Record chat messages via Telegram Bot</li>
+<li>RoomNotification<br>
+Send chat notification when browser tab is not on chatroom page</li>
+</ul><h3 id="Features-tab"><a class="anchor hidden-xs" href="#Features-tab" title="Features-tab"><span class="octicon octicon-link"></span></a>Features tab</h3><h4 id="Bio"><a class="anchor hidden-xs" href="#Bio" title="Bio"><span class="octicon octicon-link"></span></a>Bio</h4><p><img src="https://i.imgur.com/hW9d7oS.png" alt=""></p><p>🔖 Current login account<br>
+💾 Saved account<br>
+<i class="glyphicon glyphicon-transfer"></i> Switch the selected account<br>
+<i class="glyphicon glyphicon-floppy-save"></i> Save the current account<br>
+<i class="glyphicon glyphicon-floppy-remove"></i> delete the selected account<br>
+<i class="glyphicon glyphicon-qrcode"></i> tripcode explorer</p><h4 id="Friends"><a class="anchor hidden-xs" href="#Friends" title="Friends"><span class="octicon octicon-link"></span></a>Friends</h4><p><img src="https://i.imgur.com/myrXucu.png" alt=""></p><h5 id="Waiting-room-function"><a class="anchor hidden-xs" href="#Waiting-room-function" title="Waiting-room-function"><span class="octicon octicon-link"></span></a>Waiting room function</h5><p>Check whether the room is available at regular intervals, and if so, jump to that room.</p><p>Match rule pattern:</p><ul>
+<li><i class="glyphicon glyphicon-barcode"></i> by room ID</li>
+<li><i class="glyphicon glyphicon-lock"></i> with tripcode</li>
+<li><i class="glyphicon glyphicon-user"></i> by username</li>
+<li><i class="glyphicon glyphicon-home"></i> by room name</li>
+</ul><p><i class="glyphicon glyphicon-tag"></i> Store rules</p><ul>
+<li><i class="glyphicon glyphicon-send"></i> Jump directly</li>
+<li><i class="glyphicon glyphicon-comment"></i> Ask before jumping</li>
+</ul><h5 id="Searching-for-users--rooms"><a class="anchor hidden-xs" href="#Searching-for-users--rooms" title="Searching-for-users--rooms"><span class="octicon octicon-link"></span></a>Searching for users / rooms</h5><p>Search mode:</p><ul>
+<li><i class="glyphicon glyphicon-lock"></i> search by tripcode</li>
+<li><i class="glyphicon glyphicon-user"></i> search by username</li>
+<li><i class="glyphicon glyphicon-home"></i> search by room name</li>
+</ul><p><i class="glyphicon glyphicon-search"></i> search<br>
+<i class="glyphicon glyphicon-plus"></i> Add to favorites</p><h5 id="Favorites-notification--list"><a class="anchor hidden-xs" href="#Favorites-notification--list" title="Favorites-notification--list"><span class="octicon octicon-link"></span></a>Favorites notification / list</h5><p><i class="glyphicon glyphicon-volume-up"></i> Open favorites notice (someone goes online or creates a room)<br>
+<i class="glyphicon glyphicon-list"></i> Show all favorites rules<br>
+<i class="glyphicon glyphicon-lock"></i> Show all matching tripcode users online<br>
+<i class="glyphicon glyphicon-user"></i> Show all users who meet the rules online<br>
+<i class="glyphicon glyphicon-home"></i> Show all rooms that meet the rules on the line<br>
+<i class="glyphicon glyphicon-globe"></i> Show all rooms online</p><h4 id="Music"><a class="anchor hidden-xs" href="#Music" title="Music"><span class="octicon octicon-link"></span></a>Music</h4><p><img src="https://i.imgur.com/w60X55P.png" alt=""></p><h5 id="Play-mode-click-to-switch"><a class="anchor hidden-xs" href="#Play-mode-click-to-switch" title="Play-mode-click-to-switch"><span class="octicon octicon-link"></span></a>Play mode (click to switch)</h5><ul>
+<li><i class="glyphicon glyphicon-cd"></i> List mode: After the song ends, the song in the playlist is automatically played</li>
+<li><i class="glyphicon glyphicon-music"></i> Single song mode: Stop after every song</li>
+</ul><h5 id="Sound-source"><a class="anchor hidden-xs" href="#Sound-source" title="Sound-source"><span class="octicon octicon-link"></span></a>Sound source</h5><ul>
+<li><strong>易</strong> Netease Music</li>
+<li><strong>千</strong> Baidu Music Boxes</li>
+<li><strong>Ｙ</strong> YouTube</li>
+</ul><h5 id="Search-Keyword-and-Play"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play" title="Search-Keyword-and-Play"><span class="octicon octicon-link"></span></a>Search Keyword and Play</h5><p>Enter keywords and function keys to query.<br>
+Directly after input:</p><ul>
+<li>Enter to press the left function key.</li>
+<li>Shift + Enter to press the middle function key.</li>
+<li>Ctrl + Enter to press the right function key.</li>
+</ul><h3 id="Function-keys-no-keywords"><a class="anchor hidden-xs" href="#Function-keys-no-keywords" title="Function-keys-no-keywords"><span class="octicon octicon-link"></span></a>Function keys (no keywords):</h3><p><img src="https://i.imgur.com/lUoXg90.png" alt=""></p><p><i class="glyphicon glyphicon-list"></i> Expand the list to play <i class="glyphicon glyphicon-play"></i> Play the first song in playlist <i class="glyphicon glyphicon-heart"></i> Expand favorites list</p><hr><p><img src="https://i.imgur.com/BaeZgDK.png" alt=""></p><p><i class="glyphicon glyphicon-remove"></i> Remove from playlist <i class="glyphicon glyphicon-play"></i> play the song <i class="glyphicon glyphicon-heart"></i> add to favorites</p><hr><p><img src="https://i.imgur.com/G2MhLFm.png" alt=""></p><p><i class="glyphicon glyphicon-plus"></i> Add to playlist <i class="glyphicon glyphicon-play"></i> Play now <i class="glyphicon glyphicon-remove"></i> Remove from favorites</p><hr><h3 id="Function-keys-with-keywords"><a class="anchor hidden-xs" href="#Function-keys-with-keywords" title="Function-keys-with-keywords"><span class="octicon octicon-link"></span></a>Function keys (with keywords)</h3><p><img src="https://i.imgur.com/zqXoPW8.png" alt=""></p><p><i class="glyphicon glyphicon-search"></i> Expand results <i class="glyphicon glyphicon-play"></i> Play the most relevant song <i class="glyphicon glyphicon-plus"></i> Add the most relevant song to playlist</p><hr><p><img src="https://i.imgur.com/dp0X0a8.png" alt=""></p><p><i class="glyphicon glyphicon-plus"></i> Add to playlist <i class="glyphicon glyphicon-play"></i> Play now <i class="glyphicon glyphicon-heart"></i> Add to favorites</p><hr><h4 id="GamePanel"><a class="anchor hidden-xs" href="#GamePanel" title="GamePanel"><span class="octicon octicon-link"></span></a>GamePanel</h4><p><img src="https://i.imgur.com/nMHidhk.png" alt=""></p><p>Select a game and it will only start when selected.</p><h4 id="LineSticker"><a class="anchor hidden-xs" href="#LineSticker" title="LineSticker"><span class="octicon octicon-link"></span></a>LineSticker</h4><p><img src="https://i.imgur.com/fcQCFBW.png" alt=""></p><p><i class="glyphicon glyphicon-refresh"></i> restore the ten preset stickers<br>
+<i class="glyphicon glyphicon-plus"></i> Add stickers<br>
+<i class="glyphicon glyphicon-minus"></i> delete the selected texture<br>
+<i class="glyphicon glyphicon-shopping-cart"></i> Go to the sticker website</p><h2 id="Background-settings"><a class="anchor hidden-xs" href="#Background-settings" title="Background-settings"><span class="octicon octicon-link"></span></a>Background settings</h2><p><i class="glyphicon glyphicon-question-sign"></i> Go to the help page <i class="glyphicon glyphicon-info-sign"></i> About the author <i class="glyphicon glyphicon-refresh"></i> Reset all settings<br>
+Click HELP to open the introduction page of the setting.</p><p><img src="https://i.imgur.com/JllLXvZ.png" alt=""></p><h3 id="Quick-Regex-Tester-Quick-Regular-Expression-Test"><a class="anchor hidden-xs" href="#Quick-Regex-Tester-Quick-Regular-Expression-Test" title="Quick-Regex-Tester-Quick-Regular-Expression-Test"><span class="octicon octicon-link"></span></a>Quick Regex Tester (Quick Regular Expression Test)</h3><p>Quick test for easy rule setting</p><h3 id="Music-Delay"><a class="anchor hidden-xs" href="#Music-Delay" title="Music-Delay"><span class="octicon octicon-link"></span></a>Music Delay</h3><p>In continuous playback mode, songs and songs are spaced.<br>
+(There is a synchronization problem between room members, sometimes songs will be covered, so the delay is set)</p><h3 id="Timer-Configuration"><a class="anchor hidden-xs" href="#Timer-Configuration" title="Timer-Configuration"><span class="octicon octicon-link"></span></a>Timer Configuration</h3><p>Function: Perform the defined action regularly.</p><pre><code class="js hljs"><span class="hljs-symbol">Minutes</span>, <span class="hljs-string">"function"</span>, [<span class="hljs-string">"parameter"</span>, ...]
+</code></pre><p>Function [“parameter”, …] Description:</p><ul>
+<li><code>msg</code> <code>["message", "message", ...] </code><br>
+Select a message to publish.</li>
+<li><code>umsg</code> <code>["URL", "Message", ...] </code><br>
+Publish the URL and a randomly selected message.</li>
+<li><code>dm</code> <code>["username", "message", "message", ...] </code><br>
+Select a message to dm the username.</li>
+<li><code>udm</code> <code>["username", "URL", "message", ...] </code><br>
+Private messaging users, with a URL and a randomly selected message.</li>
+<li><code>kick</code> <code>["username"] </code><br>
+Kick out the user.</li>
+<li><code>plym</code> <code>["Song Keywords"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Number"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Number", "Sound Source"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Sound Source", "Number"] </code><br>
+play music.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: There are currently “Thousand”, “Yi” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>addm</code> <code>["Song Keywords"] </code><br>
+<code>addm</code> <code>["Song Keywords", "Number"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Number", "Sound Source"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Sound Source", "Number"] </code><br>
+Add music to your playlist.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>delm</code> <code>["number"] </code><br>
+Remove music (by index number) from the list.</li>
+<li><code>lstm</code> <code>[] </code><br>
+show the playlist.</li>
+<li><code>nxtm</code> <code>[] </code><br>
+Play the next song.</li>
+<li><code>pndm</code> <code>[] </code><br>
+<code>pndm</code> <code>["Song Keywords"] </code><br>
+<code>pndm</code> <code>["song keyword", "number"] </code><br>
+<code>pndm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>pndm</code> <code>["song keyword", "number", "audio source"] </code><br>
+<code>pndm</code> <code>["song keyword", "sound source", "number"] </code><br>
+If there is no parameter, the list to be played is listed.<br>
+If there is no music currently, play music.<br>
+If there is music, add it to the list<br>
+If the keyword is an empty string, list it for play.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>schm</code> <code>["Song Keyword"] </code><br>
+<code>schm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+List search results.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>horm</code> <code>["username"] </code><br>
+Transfer owner permissions to the user.</li>
+<li><code>ocdr</code> <code>[] </code><br>
+Leaving the room and entering the room again.</li>
+<li><code>gofr</code> <code>["Room Name (RegExp)"] </code><br>
+Go to the room that matches the room name. If it fails, return to the origin room.</li>
+</ul><p>(<code>Me</code> can be achieved in msg with<code> / me + push message</code>) ~</p><p>You can use special time variables in parameters:</p><ul>
+<li><code>%Y</code> year, four-digit year</li>
+<li><code>%年</code> year, Chinese numerals</li>
+<li><code>%M</code> month, one or two digits</li>
+<li><code>%月</code> month, Chinese numerals (one to twelve)</li>
+<li><code>%D</code> date, one or two digits</li>
+<li><code>%日</code> date, Chinese numerals</li>
+<li><code>%d</code> weekday, full English</li>
+<li><code>%拜</code> week, Chinese</li>
+<li>Number at <code>%H</code> (24 hour clock)</li>
+<li>number at <code>%h</code> (12 hours)</li>
+<li><code>%c</code> In the afternoon, English<code> a.m.</code> <code>p.m.</code></li>
+<li><code>%m</code> minutes, numbers</li>
+<li><code>%s</code> seconds, numbers</li>
+<li><code>%%</code> escape character <code>%</code></li>
+</ul><p>example:</p><pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
+<span class="hljs-number">2</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"It's a Report Message"</span>, <span class="hljs-string">"Now is%H:%m!"</span>]
+</code></pre><h3 id="Welcome-Configuration"><a class="anchor hidden-xs" href="#Welcome-Configuration" title="Welcome-Configuration"><span class="octicon octicon-link"></span></a>Welcome Configuration</h3><p>Function: After someone enters the room, if the name matches <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expression</a>, the greeting will be sent out automatically .<br>
+Format: Two formats, multiple welcome words (choose randomly and send out)</p><pre><code class="js hljs"><span class="hljs-string">"Username (regular expression)"</span>, <span class="hljs-string">"Welcome"</span>
+<span class="hljs-string">"Username (regular expression)"</span>, [<span class="hljs-string">"Hola"</span>, <span class="hljs-string">"Hello"</span>, ...]
+</code></pre><p>note:</p><ul>
+<li>Match from top to bottom. If the match is successful, the following rule will not be matched.</li>
+<li>The empty string <code>""</code> or the regular string <code>".*"</code> Can <strong>match all</strong>.</li>
+</ul><p>Special variables:</p><ul>
+<li><code>$user</code> The name of the member who entered the room.</li>
+<li><code>$</code> escape character <code>$</code>.</li>
+</ul><p>Example: Say <code>hello, kitty</code> to users who have lambda in their name followed by cat (possibly with some words in between), and <code>hello/HI!! </code>to others.</p><pre><code class="js hljs"><span class="hljs-string">"lambda.*cat"</span>, <span class="hljs-string">"hello, kitty"</span>
+<span class="hljs-string">".*"</span>, [<span class="hljs-string">"hello <span class="hljs-variable">$user</span>"</span>, <span class="hljs-string">"HI !! <span class="hljs-variable">$user</span>"</span>]
+</code></pre><h3 id="WhiteList-Configuration"><a class="anchor hidden-xs" href="#WhiteList-Configuration" title="WhiteList-Configuration"><span class="octicon octicon-link"></span></a>WhiteList Configuration</h3><p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specifics ** not in the list ** user.<br>
+format:</p><pre><code class="js hljs"><span class="hljs-attribute">Username</span> (regular expression)
+</code></pre><p>Example: Only users whose names end with <code>cat</code> or begin with <code>mysterious</code> are allowed.</p><pre><code class="js hljs"><span class="hljs-meta">cat$</span><span class="bash"></span>
+^mysterious
+</code></pre><h3 id="BlackList-Configuration"><a class="anchor hidden-xs" href="#BlackList-Configuration" title="BlackList-Configuration"><span class="octicon octicon-link"></span></a>BlackList Configuration</h3><p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specific uses in list.<br>
+format:</p><pre><code class="js hljs"><span class="hljs-attribute">Username</span> (regular expression)
+</code></pre><p>Example: kick out users who have <code>otoko</code> in their names and some qualified robots.</p><pre><code class="js hljs"><span class="hljs-attribute">otoko</span>
+.*Robot
+</code></pre><h3 id="BanAbuse-Configuration"><a class="anchor hidden-xs" href="#BanAbuse-Configuration" title="BanAbuse-Configuration"><span class="octicon octicon-link"></span></a>BanAbuse Configuration</h3><p>Function: use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to filter the chat content and automatically kick out <strong>speak prohibited words</strong> users.<br>
+format:</p><pre><code class="js hljs"><span class="hljs-keyword">Stop</span> word (regular expression)
+</code></pre><p>Example: Chats containing members who say <code>dog</code> or<code> foobar</code> will be kicked out.</p><pre><code class="js hljs"><span class="hljs-attribute">dog</span>
+foobar
+</code></pre><h3 id="EventAction-Configuration"><a class="anchor hidden-xs" href="#EventAction-Configuration" title="EventAction-Configuration"><span class="octicon octicon-link"></span></a>EventAction Configuration</h3><p>Function: For some events, here are some functions that can order some corresponding actions.<br>
+The defined actions will be performed only when the <strong>username</strong> and the <strong>contents sent by the user</strong> match the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expression</a>.<br>
+In fact, the previous functions: welcome words / whitelist / blacklist / banned words can be implemented with this function.</p><p>format:</p><pre><code class="js hljs"><span class="hljs-string">"Event type"</span>, <span class="hljs-string">"User name (regular expression)"</span>, <span class="hljs-string">"Content matching (regular expression)"</span>, <span class="hljs-string">"Function"</span>, [<span class="hljs-string">"Arguments"</span>, ...]
+[<span class="hljs-string">"Event type"</span>, ...], <span class="hljs-string">"User name (regular expression)"</span>, <span class="hljs-string">"Content matching (regular expression)"</span>, <span class="hljs-string">"Function"</span>, [<span class="hljs-string">"Arguments"</span>, ...]
+</code></pre><p>Event type:</p><ul>
+<li><code>me</code> as<code> /me</code></li>
+<li><code>music</code> play music</li>
+<li><code>leave</code> members leave</li>
+<li><code>join</code> members join</li>
+<li><code>msg</code> general message</li>
+<li><code>dm</code> Private Message</li>
+<li><code>musicend</code> music ends</li>
+</ul><p>Function [“parameter”, …] Description:</p><ul>
+<li><code>msg</code> <code>["message", "message", ...] </code><br>
+Select a message to publish.</li>
+<li><code>umsg</code> <code>["URL", "Message", ...] </code><br>
+Publish the URL and a randomly selected message.</li>
+<li><code>dm</code> <code>["username", "message", "message", ...] </code><br>
+Select a message to dm the username.</li>
+<li><code>udm</code> <code>["username", "URL", "message", ...] </code><br>
+Private messaging users, with a URL and a randomly selected message.</li>
+<li><code>kick</code> <code>["username"] </code><br>
+Kick out the user.</li>
+<li><code>plym</code> <code>["Song Keywords"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Number"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Number", "Sound Source"] </code><br>
+<code>plym</code> <code>["Song Keyword", "Sound Source", "Number"] </code><br>
+play music.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: There are currently “Thousand”, “Yi” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>addm</code> <code>["Song Keywords"] </code><br>
+<code>addm</code> <code>["Song Keywords", "Number"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Number", "Sound Source"] </code><br>
+<code>addm</code> <code>["Song Keyword", "Sound Source", "Number"] </code><br>
+Add music to your playlist.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>delm</code> <code>["number"] </code><br>
+Remove music (by index number) from the list.</li>
+<li><code>lstm</code> <code>[] </code><br>
+show the playlist.</li>
+<li><code>nxtm</code> <code>[] </code><br>
+Play the next song.</li>
+<li><code>pndm</code> <code>[] </code><br>
+<code>pndm</code> <code>["Song Keywords"] </code><br>
+<code>pndm</code> <code>["song keyword", "number"] </code><br>
+<code>pndm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+<code>pndm</code> <code>["song keyword", "number", "audio source"] </code><br>
+<code>pndm</code> <code>["song keyword", "sound source", "number"] </code><br>
+If there is no parameter, the list to be played is listed.<br>
+If there is no music currently, play music.<br>
+If there is music, add it to the list<br>
+If the keyword is an empty string, list it for play.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Number”: Index of search results.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>schm</code> <code>["Song Keyword"] </code><br>
+<code>schm</code> <code>["Song Keyword", "Sound Source"] </code><br>
+List search results.
+<ol>
+<li>“Keywords”: Song keywords.</li>
+<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+</ol>
+</li>
+<li><code>horm</code> <code>["username"] </code><br>
+Transfer owner permissions to the user.</li>
+<li><code>ocdr</code> <code>[] </code><br>
+Leaving the room and entering the room again.</li>
+<li><code>gofr</code> <code>["Room Name (RegExp)"] </code><br>
+Go to the room that matches the room name. If it fails, return to the origin room.</li>
+</ul><p>Special parameter variables:</p><ul>
+<li><code>$user</code> username for sending message</li>
+<li><code>$cont</code> content sent by the user</li>
+<li><code>$args</code> User sends everything after the first space<br>
+User sends: <code>play BUMP OF CHICKEN「 Hello, world! 」</code><br>
+<code>$args</code>:<code>BUMP OF CHICKEN "Hello, world!"</code></li>
+<li><code>$url</code> URL on user folder</li>
+<li><code>$</code> escape character <code>$</code></li>
+</ul><p>There are some special uses here.<br>
+For received messages, the parameters are separated by spaces, and quotation marks are used to avoid separation.<br>
+For separate content, the following methods can be used as parameters.</p><ul>
+<li><code>$N</code> N is a number. Take the Nth parameter from the number, starting from zero.</li>
+<li><code>$[N-M]</code> takes parameters from N to M. If N does not give, it will start from zero, and if M does not give, it will take to the end.</li>
+</ul><pre><code>this is  a  message send from user
+---- --  -  ------- ---- ---- ----
+$0   $1  $2 $3      $4   $5   $6
+----------------------------------
+$cont
+
+Send string:
+this is a "another message" send from 'another user'
+
+The quotes will be removed, but the spaces inside will not be cut:
+this is a  another message  send from  another user
+---- -- -  ---------------  ---- ----  ------------
+$0   $1 $2 $3               $4   $5    $6
+     ----------------------------------------------
+     $args
+---------  --------------------- ------------------
+$[-2]      $[3-4]                $[5-]
+---------------------------------------------------                     
+$[-]
+
+</code></pre><p>Example: Bind the song function.</p><pre><code class="js hljs"><span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$args"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/add\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$args"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/add\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/addsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/addsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/list"</span>, <span class="hljs-string">"lstm"</span>, []
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/next"</span>, <span class="hljs-string">"nxtm"</span>, []
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/del\\\\s+\\\\d+"</span>, <span class="hljs-string">"delm"</span>, [<span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s*$"</span>, <span class="hljs-string">"pndm"</span>, []
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$args"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pendsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pendsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/sc\\\\s+([千易]\\\\S+|[^千易])"</span>, <span class="hljs-string">"schm"</span>, [<span class="hljs-string">"$args"</span>]
+<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/sc\\\\s+[千易]\\\\s+\\\\S+"</span>, <span class="hljs-string">"schm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
+</code></pre><p>The user sends the following strings to trigger the set function:</p><pre><code>/play yellow
+/play 2 yellow
+/playsrc 千 yellow
+/play 易 2 yellow
+/add  21Guns
+/add  2 21Guns
+/addsrc 千 21Guns
+/addsrc 易 2 21Guns
+/pending
+/pending 21Guns
+/pending 2 21Guns
+/pendsrc 千 21Guns
+/pendsrc 易 2 21Guns
+/del  1
+/list
+/next
+/sc 21Guns
+/sc 千 21Guns
+</code></pre></div>
+    <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
+        <div class="pull-right dropdown">
+            <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
+                <div class="toc"><ul class="nav">
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li><a href="#Installation" title="Installation">Installation</a></li>
+<li><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
+<li><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
+<li><a href="#Features-tab" title="Features tab">Features tab</a></li>
+<li><a href="#Function-keys-no-keywords" title="Function keys (no keywords):">Function keys (no keywords):</a></li>
+<li><a href="#Function-keys-with-keywords" title="Function keys (with keywords)">Function keys (with keywords)</a></li>
+</ul>
+</li>
+<li><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
+<li><a href="#Quick-Regex-Tester-Quick-Regular-Expression-Test" title="Quick Regex Tester (Quick Regular Expression Test)">Quick Regex Tester (Quick Regular Expression Test)</a></li>
+<li><a href="#Music-Delay" title="Music Delay">Music Delay</a></li>
+<li><a href="#Timer-Configuration" title="Timer Configuration">Timer Configuration</a></li>
+<li><a href="#Welcome-Configuration" title="Welcome Configuration">Welcome Configuration</a></li>
+<li><a href="#WhiteList-Configuration" title="WhiteList Configuration">WhiteList Configuration</a></li>
+<li><a href="#BlackList-Configuration" title="BlackList Configuration">BlackList Configuration</a></li>
+<li><a href="#BanAbuse-Configuration" title="BanAbuse Configuration">BanAbuse Configuration</a></li>
+<li><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+            </ul>
+        </div>
+    </div>
+    <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
+        <div class="toc"><ul class="nav">
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li><a href="#Installation" title="Installation">Installation</a></li>
+<li><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
+<li><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
+<li><a href="#Features-tab" title="Features tab">Features tab</a></li>
+<li><a href="#Function-keys-no-keywords" title="Function keys (no keywords):">Function keys (no keywords):</a></li>
+<li><a href="#Function-keys-with-keywords" title="Function keys (with keywords)">Function keys (with keywords)</a></li>
+</ul>
+</li>
+<li><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
+<li><a href="#Quick-Regex-Tester-Quick-Regular-Expression-Test" title="Quick Regex Tester (Quick Regular Expression Test)">Quick Regex Tester (Quick Regular Expression Test)</a></li>
+<li><a href="#Music-Delay" title="Music Delay">Music Delay</a></li>
+<li><a href="#Timer-Configuration" title="Timer Configuration">Timer Configuration</a></li>
+<li><a href="#Welcome-Configuration" title="Welcome Configuration">Welcome Configuration</a></li>
+<li><a href="#WhiteList-Configuration" title="WhiteList Configuration">WhiteList Configuration</a></li>
+<li><a href="#BlackList-Configuration" title="BlackList Configuration">BlackList Configuration</a></li>
+<li><a href="#BanAbuse-Configuration" title="BanAbuse Configuration">BanAbuse Configuration</a></li>
+<li><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+    </div>
+    
+    
+    
+    
+
+    <script src="/js/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/js/bootstrap-3.3.7.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" defer></script>
+    <script src="/js/gist-embed.min.js" integrity="sha256-KyF2D6xPIJUW5sUDSs93vWyZm+1RzIpKCexxElmxl8g=" crossorigin="anonymous" defer></script>
+    <script src="/js/manual-inline.js" crossorigin="anonymous" defer></script></body>
+
+</html>
+

@@ -1,13 +1,21 @@
 
 
-function get_music(keyword, source = '易', callback){
-    if(keyword) {
-        music_api(keyword, callback, {
-            log: console.log, 
-            error: (msg) => sendTab({ fn: publish_message, args: { msg: msg } }),
-            ajax: ajax
-        }, source);
-    } else console.log("please input keyword"); 
+function get_music(keyword, source, callback){
+    var get = function(src){
+        if(keyword) {
+            music_api(keyword, callback, {
+                log: console.log, 
+                error: (msg) => sendTab({ fn: publish_message, args: { msg: msg } }),
+                ajax: ajax
+            }, src);
+        } else console.log("please input keyword"); 
+    }
+
+    if(!source){
+        chrome.storage.sync.get((config) => {
+            if(config['music_source']) get(config['music_source']); else get('易');
+        });
+    } else get(source);
 }
 
 function lstMusic(config){
@@ -58,6 +66,7 @@ function pndMusic(config, idx, keyword = '', source){
 
                 }
                 else if(after === undefined || after === null || after > getDelay(config) + 5){
+                    console.log("bitch idx is", idx);
                     play_search(get_music.bind(null, keyword, source), publish, idx);
                     console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
                 }

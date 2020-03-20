@@ -14,25 +14,8 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 ## Manual
 
-Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english version is in translation)
+Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-en.html)
 
-## TODO
+## v1.5 Update
 
-### user feedback
-
-- project translation (i18n)
-- lift the timer feature
-- support ban(and report) in white/blacklist
-- chat history
-
-### dev
-
-- add YouTube music source
-- add sticker
-- detect protected music.168 source
-- auto exit and join specific room
-- friend list
-- timer support seq mode (current random only) and URL pair with every message
-- pokemon monster module 
-- add tripcode identification to configuration
-- support room member variable (include self) in list
+add sticker, multi-account, friend search, tripcode generator, room notification, room keeper, game module

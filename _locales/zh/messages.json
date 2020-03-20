@@ -1,0 +1,161 @@
+{
+    
+    "fail_leave_title": {
+        "message": "離開失敗，九秒後為您重試",
+        "description": ""
+    },
+    "fail_leave_msg": {
+        "message": "蟲洞即將開啟，請不要亂動",
+        "description": ""
+    },
+    "goto_room": {
+        "message": "點擊前往 $roomname$",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "full_room": {
+        "message": "房間 $roomname$ 滿了 QwQ",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "open_room": {
+        "message": "$roomname$ 開房啦！",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "opened_room": {
+        "message": "$roomname$ 已經開一段時間囉！",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "change_room": {
+        "message": "$roomname$ 成員變動！",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "collapsed_room": {
+        "message": "$roomname$ 垮掉啦！",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "in_room": {
+        "message": "裡面有 $users$",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "show_user": {
+        "message": "$users$ 也出現辣",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "show_wild_user": {
+        "message": "野生的 $users$ 出沒啦",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "onlined_user": {
+        "message": "$users$ 已經在線上囉",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "leave_user": {
+        "message": "$users$ 離開了 $roomname$",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            },
+            "roomname": {
+                "content": "$2",
+                "example": ""
+            }
+        }
+    },
+    "new_user": {
+        "message": "$newusers$ 把 $oldusers$ 從 $roomname$ 擠掉啦",
+        "description": "",
+        "placeholders": {
+            "newusers": {
+                "content": "$1",
+                "example": ""
+            },
+            "oldusers": {
+                "content": "$2",
+                "example": ""
+            },
+            "roomname": {
+                "content": "$3",
+                "example": ""
+            }
+        }
+    },
+    "gone_user": {
+        "message": "$users$ 跑路啦！！",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "rename_as": {
+        "message": "取名為？",
+        "description": ""
+    },
+    "sticker": {
+        "message": "貼圖",
+        "description": ""
+    }
+}

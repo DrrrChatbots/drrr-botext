@@ -1,0 +1,161 @@
+{
+    
+    "fail_leave_title": {
+        "message": "leave failed, will retry after 9 secs",
+        "description": ""
+    },
+    "fail_leave_msg": {
+        "message": "please don't do anything during the retry",
+        "description": ""
+    },
+    "goto_room": {
+        "message": "click to goto $roomname$",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "full_room": {
+        "message": "room $roomname$ is full QwQ",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "open_room": {
+        "message": "$roomname$ just opened!",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "opened_room": {
+        "message": "$roomname$ has opened for a while",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "change_room": {
+        "message": "$roomname$ member changed!",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "collapsed_room": {
+        "message": "$roomname$ collapsed!",
+        "description": "",
+        "placeholders": {
+            "roomname": {
+                "content": "$1",
+                "example": "baka city"
+            }
+        }
+    },
+    "in_room": {
+        "message": "there are $users$ in it.",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "show_user": {
+        "message": "$users$ show up!",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "show_wild_user": {
+        "message": "wild $users$ show up!!",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "onlined_user": {
+        "message": "$users$ is online",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "leave_user": {
+        "message": "$users$ leave $roomname$",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            },
+            "roomname": {
+                "content": "$2",
+                "example": ""
+            }
+        }
+    },
+    "new_user": {
+        "message": "$newusers$ kicked $oldusers$ from $roomname$",
+        "description": "",
+        "placeholders": {
+            "newusers": {
+                "content": "$1",
+                "example": ""
+            },
+            "oldusers": {
+                "content": "$2",
+                "example": ""
+            },
+            "roomname": {
+                "content": "$3",
+                "example": ""
+            }
+        }
+    },
+    "gone_user": {
+        "message": "$users$ went away",
+        "description": "",
+        "placeholders": {
+            "users": {
+                "content": "$1",
+                "example": ""
+            }
+        }
+    },
+    "rename_as": {
+        "message": "Rename as?",
+        "description": ""
+    },
+    "sticker": {
+        "message": "sticker",
+        "description": ""
+    }
+}

@@ -1,5 +1,19 @@
 
-var prevURLs =[]
+function roomProfile(){
+    Profile = {
+        "device":"desktop",
+        "icon": $("#user_icon").text(),
+        "id": $("#user_id").text(),
+        "lang":$('html').attr('lang'),
+        "name": $('#user_name').text(),
+        "tripcode": $('#user_tripcode').text(),
+        "uid": $("#user_id").text(),
+        "loc": $('.room-title-name').text()
+    };
+    return Profile;
+}
+
+var prevURLs =[], prevTo = '', prevWhom;
 
 var getTextNodesIn = function(el) {
     return $(el).find(":not(iframe)").addBack().contents().filter(function() {
@@ -14,11 +28,12 @@ var postMessage = function(args){
 }
 
 var publishMessage = function(args){
-    var prevDm = '';
+
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
-        prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
-        offDmMember();
+        prevTo = $('#to-input').val();
+        $('#to-input').val('');
+        prevWhom = $($('.to-whom')[0]).clone()
     }
     if($('#url-input').val()){
         prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
@@ -30,9 +45,17 @@ var publishMessage = function(args){
     $('input[name="post"]').click();
 
     setTimeout(()=>{
-        if(prevDm){
-            console.log("recover DM member:", prevDm);
-            onDmMember({user: prevDm});
+        if(prevTo){
+            console.log("recover DM member:", prevTo);
+            $('#to-input').val(prevTo)
+            prevWhom.find('a').click(()=>{
+                $('#to-input').val('');
+                prevWhom.removeClass("on").empty();
+                $('textarea[name="message"]').removeClass("state-secret");
+                $('textarea[name="ext_message"]').removeClass("state-secret");
+            })
+            $($('.to-whom')[0]).replaceWith(prevWhom);
+            console.log("replace");
         }
         if(prevURLs.length){
             [url, type] = prevURLs.pop();
@@ -40,7 +63,7 @@ var publishMessage = function(args){
             $('#url-icon').attr('data-status', "filled").text(type);
         }
         bot_ondm = false;
-    }, 1000);
+    }, 500);
 }
 
 var enableMe = true;
@@ -52,7 +75,7 @@ var openFuncList = function(args, callback){
     var s = $(`li[title="${args.user}"] div[class="name-wrap"]`);
     console.log(`$('li[title="${args.user}"] div[class="name-wrap"]')`)
     if(!s.length) s = $(`li[title="${args.user} (host)"] div[class="name-wrap"]`);
-    if(s.length) s.click()[0], setTimeout(callback, 100);
+    if(s.length) s.click()[0], setTimeout(callback, 500);
 }
 
 var onDmMember = function(args){
@@ -67,14 +90,16 @@ var offDmMember = function(args){
     if(to.length) to[0].click();
 }
 
-var dmMember = function(args){
-    var prevDm = '';
+var dmMember = function(args, passOn){
     bot_ondm = true;
     if($('.to-whom').hasClass('on')){
-        prevDm = getTextNodesIn($('.to-whom'))[1].textContent.slice(0, -1);
-        offDmMember();
+        prevTo = $('#to-input').val();
+        $('#to-input').val('');
+        prevWhom = $($('.to-whom')[0]).clone()
     }
-    onDmMember(args);
+
+    if(!passOn) onDmMember(args);
+
     if($('#url-input').val()){
         prevURLs.push([$('#url-input').val(), $('#url-icon').text()])
         $('#url-input').val('');
@@ -83,9 +108,17 @@ var dmMember = function(args){
     $('textarea[name="message"]').val(args.msg);
     $('input[name="post"]').click();
     setTimeout(()=>{
-        if(prevDm){
-            console.log("recover DM member:", prevDm);
-            onDmMember({user: prevDm});
+        if(prevTo){
+            console.log("recover DM member:", prevTo);
+            $('#to-input').val(prevTo)
+            prevWhom.find('a').click(()=>{
+                $('#to-input').val('');
+                prevWhom.removeClass("on").empty();
+                $('textarea[name="message"]').removeClass("state-secret");
+                $('textarea[name="ext_message"]').removeClass("state-secret");
+            })
+            $($('.to-whom')[0]).replaceWith(prevWhom);
+            console.log("replace");
         }
         if(prevURLs.length){
             [url, type] = prevURLs.pop();
@@ -109,16 +142,20 @@ var handOverRoom = function(args){
 
 var kickMember = function(args){
     openFuncList(args, () => {
-        if($('.dropdown-item-kick').length)
+        if($('.dropdown-item-kick').length){
             $('.dropdown-item-kick')[0].click()
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
+        }
         else alert("you are not room owner, can't kick anyone");
     });
 }
 
 var banMember = function(args){
     openFuncList(args, () => {
-        if($('.dropdown-item-ban').length)
+        if($('.dropdown-item-ban').length){
             $('.dropdown-item-ban')[0].click()
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
+        }
         else alert("you are not room owner, can't kick anyone");
     });
 }
@@ -127,7 +164,7 @@ var banReportMember = function(args){
     openFuncList(args, () => {
         if($('.dropdown-item-report-user').length){
             $('.dropdown-item-report-user')[0].click();
-            setTimeout(()=> $('.confirm')[0].click(), 500);
+            setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
         }
         else alert("you are not room owner, can't kick anyone");
     });
@@ -147,6 +184,65 @@ var getMembers = function(args, callback){
     callback(list);
 }
 
+var disableLeave = false;
+var leaveRoom = function(args, callback, force){
+    console.log("leave Room");
+    if(disableLeave && !force) return;
+    update_val = {'leaveRoom': true }
+    if(args && args.ret) update_val['jumpToRoom'] = window.location.href;
+    if(args && args.jump) update_val['jumpToRoom'] = args.jump;
+
+    chrome.storage.sync.set(
+        update_val,
+        ()=>{
+            var leave = () => {
+                $('.do-logout')[0].click();
+                setTimeout(()=>{
+                    chrome.runtime.sendMessage({
+                        notification: {
+                            title: `${chrome.i18n.getMessage("fail_leave_title")}（ONCLICK）`,
+                            msg: chrome.i18n.getMessage("fail_leave_msg"),
+                            clear: true,
+                            pattern: ''
+                        }
+                    });
+                }, 10000);
+            };
+            setInterval(leave, 10000);
+            leave();
+            // v useless?
+            callback && callback();
+        }
+    );
+
+}
+
+var keepH = undefined;
+var keepRoom = function(args){
+    uid = roomProfile().id;
+    var keep = function(){
+        $('#to-input').val(uid);
+        dmMember({msg:'keep'}, true);
+    }
+    if(args.state){
+        keep();
+        keepH = setInterval(keep, 600000);
+    }
+    else{
+        clearInterval(keepH);
+        $('#to-input').val(uid);
+        dmMember({msg:'unkeep'}, true);
+    }
+}
+
+var cacheProfile = function(args, callback){
+    callback(roomProfile());
+}
+
+var updateProfile = function(args, callback){
+    // useless
+}
+
 var alertUser = function(args){
     alert(args.msg);
 }
@@ -161,18 +257,24 @@ function bindAlarms(){
         rules = settings[TIMER].load(config[sid(TIMER)]);
         Object.keys(rules).map((idx)=>{
 
-            var [period, message, url]  = rules[idx];
+            var [period, action, arglist]  = rules[idx];
             alarms.push(setInterval(
-                ((msg) => () => {
-                    var wmsg = Array.isArray(msg) ?
-                        msg[Math.floor(Math.random() * msg.length)] : msg;
-                    publishMessage({msg: timefmt(wmsg), url: url});
-                })(message), period * min)
+                ((act, args) => () => {
+                    chrome.runtime.sendMessage({
+                        type: event_timer,
+                        action: act,
+                        arglist: args,
+                        user: $('#user_name').text(),
+                        text: '',
+                        url: ''
+                    });
+                })(action, arglist), period * min)
             );
             console.log('rule:', period, message);
         });
     });
 }
+
 
 function rebindAlarms(){
     if(alarms.length) bindAlarms();
@@ -226,10 +328,24 @@ function isPlaying(args, callback){
             callback([false]);
         }
         else{
-            console.log('fuck', after_play(play_end), typeof after_play(play_end));
             callback([target[0].classList.contains('active'), after_play(play_end)]);
         }
     }
+}
+
+var effects = {
+    'snow': 'snowStorm.start()',
+    'firework': 'firework.start()',
+    'visualizer': 'visualizer.setup(0.8), visualizer.play(0.8)',
+    'elevator': 'elevator.start()',
+}
+
+function bgEffect(args){
+    //$('<script/>', {src: location.baseURL + "/js/extra.min.js"}).appendTo("head"); snowStorm.start();
+    console.log(`start ${args.name}`);
+    $('head').append(`<script src="//drrr.com/js/extra.min.js"></script>`).promise().then(
+        ()=>$('head').append(`<script>setTimeout(()=>${effects[args.name]}, 2000);</script>`)
+    );
 }
 
 var methods = {}
@@ -250,3 +366,9 @@ methods[bind_alarms] = bindAlarms;
 methods[rebind_alarms] = rebindAlarms;
 methods[clear_alarms] = clearAlarms;
 methods[is_playing] = isPlaying;
+methods[leave_room] = leaveRoom;
+methods[keep_room] = keepRoom;
+methods[cache_profile] = cacheProfile;
+methods[update_profile] = updateProfile;
+methods[bg_effect] = bgEffect;
+

@@ -62,6 +62,20 @@ actions = {
                 args: { user: user }
             }), 500)
     },
+    [action_ban] : function(user){
+        setTimeout(
+            () => sendTab({
+                fn: ban_member,
+                args: { user: user }
+            }), 500)
+    },
+    [action_banrpt] : function(user){
+        setTimeout(
+            () => sendTab({
+                fn: ban_report_member,
+                args: { user: user }
+            }), 500)
+    },
     [action_plym] : function(keyword, p1, p2){
         var idx = undefined, source = undefined;
         if(p1){ if(p1 in api) source = p1; else idx = p1; }

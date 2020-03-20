@@ -55,8 +55,8 @@ $(document).ready(function(){
         if(!config['profile']) ajaxProfile(undefined, undefined, 'lounge');
         else Profile = config['profile'];
 
-        //Profile.loc = 'lounge';
-        //chrome.storage.sync.set({'profile': Profile});
+        Profile.loc = 'lounge';
+        chrome.storage.sync.set({'profile': Profile});
 
         if(config['leaveRoom'])
             chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));

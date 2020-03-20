@@ -10,7 +10,7 @@ If your browser is Opera, you can try the [Opera Extension](https://addons.opera
 
 #### Phone:
 
-The extension on Chrome App is not available, but you can use Yandex browser([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), [iOS](https://apps.apple.com/tw/app/yandex-browser/id483693909)), the App use chrome kernel, so you can goto [Google WebStore](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) to install the chatbot extension.
+The extension on Chrome App is not available, but you can use Yandex browser([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), [iOS](https://apps.apple.com/tw/app/yandex-browser/id483693909)), the App uses chrome kernel, so you can goto [Google WebStore](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) to install the chatbot extension.
 
 ## Manual
 

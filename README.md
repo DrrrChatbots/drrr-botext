@@ -16,12 +16,6 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-en.html)
 
-## TODO
+## v1.5 Update
 
-### dev
-
-- detect protected music.168 source
-- add tripcode identification to configuration
-- support room member variable (include self -> dm to self, roomOwner) in list
-- add neteaseWorld support
-- pokemon monster module 
+add sticker, multi-account, friend search, tripcode generator, room notification, room keeper, game module

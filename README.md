@@ -18,4 +18,4 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 ## v1.6 Update
 
-add 2 music src, optimize yt source, add ban mode
+add 2 music src, optimize yt source, black/whitelist add ban mode.

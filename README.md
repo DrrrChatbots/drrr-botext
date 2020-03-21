@@ -14,8 +14,10 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 ## Manual
 
-Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english version is in translation)
+Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-en.html)
+
 
 ## v1.6 Update
 
 add 2 music src, optimize yt source, black/whitelist add ban mode.
+

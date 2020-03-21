@@ -86,6 +86,8 @@ Send chat notification when browser tab is not on chatroom page</li>
 <li><strong>易</strong> Netease Music</li>
 <li><strong>千</strong> Baidu Music Boxes</li>
 <li><strong>Ｙ</strong> YouTube</li>
+<li><strong>狗</strong> Kugou</li>
+<li><strong>我</strong> Kuwu</li>
 </ul><h5 id="Search-Keyword-and-Play"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play" title="Search-Keyword-and-Play"><span class="octicon octicon-link"></span></a>Search Keyword and Play</h5><p>Enter keywords and function keys to query.<br>
 Directly after input:</p><ul>
 <li>Enter to press the left function key.</li>
@@ -121,7 +123,7 @@ play music.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “Thousand”, “Yi” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>addm</code> <code>["Song Keywords"] </code><br>
@@ -133,7 +135,7 @@ Add music to your playlist.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: There are currently “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["number"] </code><br>
@@ -155,7 +157,7 @@ If the keyword is an empty string, list it for play.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["Song Keyword"] </code><br>
@@ -163,7 +165,7 @@ If the keyword is an empty string, list it for play.
 List search results.
 <ol>
 <li>“Keywords”: Song keywords.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: There are currently “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["username"] </code><br>
@@ -260,7 +262,7 @@ Add music to your playlist.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["number"] </code><br>
@@ -282,7 +284,7 @@ If the keyword is an empty string, list it for play.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["Song Keyword"] </code><br>
@@ -290,7 +292,7 @@ If the keyword is an empty string, list it for play.
 List search results.
 <ol>
 <li>“Keywords”: Song keywords.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: There are currently “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["username"] </code><br>
@@ -378,14 +380,14 @@ $[-]
                 <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
 <li><a href="#Installation" title="Installation">Installation</a></li>
-<li><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
-<li><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
+<li class=""><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
+<li class=""><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
 <li><a href="#Features-tab" title="Features tab">Features tab</a></li>
 <li><a href="#Function-keys-no-keywords" title="Function keys (no keywords):">Function keys (no keywords):</a></li>
 <li><a href="#Function-keys-with-keywords" title="Function keys (with keywords)">Function keys (with keywords)</a></li>
 </ul>
 </li>
-<li><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
+<li class=""><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
 <li><a href="#Quick-Regex-Tester-Quick-Regular-Expression-Test" title="Quick Regex Tester (Quick Regular Expression Test)">Quick Regex Tester (Quick Regular Expression Test)</a></li>
 <li><a href="#Music-Delay" title="Music Delay">Music Delay</a></li>
 <li><a href="#Timer-Configuration" title="Timer Configuration">Timer Configuration</a></li>
@@ -393,7 +395,7 @@ $[-]
 <li><a href="#WhiteList-Configuration" title="WhiteList Configuration">WhiteList Configuration</a></li>
 <li><a href="#BlackList-Configuration" title="BlackList Configuration">BlackList Configuration</a></li>
 <li><a href="#BanAbuse-Configuration" title="BanAbuse Configuration">BanAbuse Configuration</a></li>
-<li><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
+<li class=""><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -407,14 +409,14 @@ $[-]
         <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
 <li><a href="#Installation" title="Installation">Installation</a></li>
-<li><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
-<li><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
+<li class=""><a href="#User-interface" title="User interface">User interface</a><ul class="nav">
+<li class=""><a href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function switch ( means you must do some setting before you turning it on)">Function switch ( means you must do some setting before you turning it on)</a></li>
 <li><a href="#Features-tab" title="Features tab">Features tab</a></li>
 <li><a href="#Function-keys-no-keywords" title="Function keys (no keywords):">Function keys (no keywords):</a></li>
 <li><a href="#Function-keys-with-keywords" title="Function keys (with keywords)">Function keys (with keywords)</a></li>
 </ul>
 </li>
-<li><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
+<li class=""><a href="#Background-settings" title="Background settings">Background settings</a><ul class="nav">
 <li><a href="#Quick-Regex-Tester-Quick-Regular-Expression-Test" title="Quick Regex Tester (Quick Regular Expression Test)">Quick Regex Tester (Quick Regular Expression Test)</a></li>
 <li><a href="#Music-Delay" title="Music Delay">Music Delay</a></li>
 <li><a href="#Timer-Configuration" title="Timer Configuration">Timer Configuration</a></li>
@@ -422,7 +424,7 @@ $[-]
 <li><a href="#WhiteList-Configuration" title="WhiteList Configuration">WhiteList Configuration</a></li>
 <li><a href="#BlackList-Configuration" title="BlackList Configuration">BlackList Configuration</a></li>
 <li><a href="#BanAbuse-Configuration" title="BanAbuse Configuration">BanAbuse Configuration</a></li>
-<li><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
+<li class=""><a href="#EventAction-Configuration" title="EventAction Configuration">EventAction Configuration</a></li>
 </ul>
 </li>
 </ul>

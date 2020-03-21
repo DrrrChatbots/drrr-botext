@@ -64,7 +64,7 @@ Add music to your playlist.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["number"] </code><br>
@@ -86,7 +86,7 @@ If the keyword is an empty string, list it for play.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["Song Keyword"] </code><br>
@@ -94,7 +94,7 @@ If the keyword is an empty string, list it for play.
 List search results.
 <ol>
 <li>“Keywords”: Song keywords.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["username"] </code><br>
@@ -211,7 +211,7 @@ Add music to your playlist.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["number"] </code><br>
@@ -233,7 +233,7 @@ If the keyword is an empty string, list it for play.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: Sound source. Currently there are “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["Song Keyword"] </code><br>
@@ -241,7 +241,7 @@ If the keyword is an empty string, list it for play.
 List search results.
 <ol>
 <li>“Keywords”: Song keywords.</li>
-<li>“Sound Source”: There are currently “千”, “易” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["username"] </code><br>

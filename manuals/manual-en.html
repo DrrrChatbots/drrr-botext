@@ -35,13 +35,13 @@
 </head>
 
 <body>
-    <div id="doc" class="markdown-body container-fluid comment-enabled" data-hard-breaks="true"><h1 id="DRRR-ChatBot-Extension-Setting-Manual"><a class="anchor hidden-xs" href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR-ChatBot-Extension-Setting-Manual"><span class="octicon octicon-link"></span></a>DRRR ChatBot Extension Setting Manual</h1><h2 id="Installation"><a class="anchor hidden-xs" href="#Installation" title="Installation"><span class="octicon octicon-link"></span></a>Installation</h2><p>PC version:</p><p>Since it is a Chrome extension, please use the Chrome browser and install it from the <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web Store</a>.</p><p>In addition, if you use Opera, you can try Opera <a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener">Install Chrome Extensions</a>.</p><p>Mobile version:</p><p>The mobile version of Chrome does not provide plugin installation on the phone, but you can use the Yandex browser (<a href="https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&amp;hlen_US" target="_blank" rel="noopener">Android</a>, <a href="https://apps.apple.com/tw/app/yandex-browser/id483693909" target="_blank" rel="noopener">iOS</a>), it uses Chrome kernel, so it can also get the installation from <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web App Store</a>.</p><h2 id="User-interface"><a class="anchor hidden-xs" href="#User-interface" title="User-interface"><span class="octicon octicon-link"></span></a>User interface</h2><p><i class="glyphicon glyphicon-question-sign"></i> Go to this help page <i class="glyphicon glyphicon-cog"></i> Go to background settings</p><p><img src="https://i.imgur.com/hxIuCTT.png" alt=""></p><h3 id="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><a class="anchor hidden-xs" href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><span class="octicon octicon-link"></span></a>Function switch <br>(<i class="glyphicon glyphicon-cog"></i> means you must do some setting before you turning it on)</h3><p><img src="https://i.imgur.com/dQb3byt.png" alt=""></p><ul>
+    <div id="doc" class="markdown-body container-fluid comment-enabled" data-hard-breaks="true" style="position: relative;"><h1 id="DRRR-ChatBot-Extension-Setting-Manual"><a class="anchor hidden-xs" href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR-ChatBot-Extension-Setting-Manual"><span class="octicon octicon-link"></span></a>DRRR ChatBot Extension Setting Manual</h1><h2 id="Installation"><a class="anchor hidden-xs" href="#Installation" title="Installation"><span class="octicon octicon-link"></span></a>Installation</h2><p>PC version:</p><p>Since it is a Chrome extension, please use the Chrome browser and install it from the <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web Store</a>.</p><p>In addition, if you use Opera, you can try Opera <a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener">Install Chrome Extensions</a>.</p><p>Mobile version:</p><p>The mobile version of Chrome does not provide plugin installation on the phone, but you can use the Yandex browser (<a href="https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&amp;hlen_US" target="_blank" rel="noopener">Android</a>, <a href="https://apps.apple.com/tw/app/yandex-browser/id483693909" target="_blank" rel="noopener">iOS</a>), it uses Chrome kernel, so it can also get the installation from <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google Web App Store</a>.</p><h2 id="User-interface"><a class="anchor hidden-xs" href="#User-interface" title="User-interface"><span class="octicon octicon-link"></span></a>User interface</h2><p><i class="glyphicon glyphicon-question-sign"></i> Go to this help page <i class="glyphicon glyphicon-cog"></i> Go to background settings</p><p><img src="https://i.imgur.com/Z1JZkdd.png" alt=""></p><h3 id="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><a class="anchor hidden-xs" href="#Function-switch--means-you-must-do-some-setting-before-you-turning-it-on" title="Function-switch--means-you-must-do-some-setting-before-you-turning-it-on"><span class="octicon octicon-link"></span></a>Function switch <br>(<i class="glyphicon glyphicon-cog"></i> means you must do some setting before you turning it on)</h3><p><img src="https://i.imgur.com/jctHIHN.png" alt=""></p><ul>
 <li>AutoDM<br>
 Automatically lock the last dm user after sending a message</li>
 <li>Timer <i class="glyphicon glyphicon-cog"></i><br>
 Scheduled execution of set actions</li>
 <li>Black / Whitelist <i class="glyphicon glyphicon-cog"></i><br>
-Room black / white list (auto kick out visitors)</li>
+Room black / white list (auto kick out/ban/report visitors)</li>
 <li>Welcome <i class="glyphicon glyphicon-cog"></i><br>
 Automatically send out a greeting on visitors entering the room</li>
 <li>BanAbuse <i class="glyphicon glyphicon-cog"></i><br>
@@ -108,6 +108,10 @@ Select a message to dm the username.</li>
 Private messaging users, with a URL and a randomly selected message.</li>
 <li><code>kick</code> <code>["username"] </code><br>
 Kick out the user.</li>
+<li><code>ban</code> <code>["username"] </code><br>
+Kick out and ban the user.</li>
+<li><code>banrpt</code> <code>["username"] </code><br>
+Kick out, ban and report the user.</li>
 <li><code>plym</code> <code>["Song Keywords"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Number"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>
@@ -231,6 +235,10 @@ Select a message to dm the username.</li>
 Private messaging users, with a URL and a randomly selected message.</li>
 <li><code>kick</code> <code>["username"] </code><br>
 Kick out the user.</li>
+<li><code>ban</code> <code>["username"] </code><br>
+Kick out and ban the user.</li>
+<li><code>banrpt</code> <code>["username"] </code><br>
+Kick out, ban and report the user.</li>
 <li><code>plym</code> <code>["Song Keywords"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Number"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>
@@ -324,7 +332,7 @@ $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------                     
 $[-]
 
-</code></pre><p>Example: Bind the song function.</p><pre><code class="js hljs"><span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$args"</span>]
+</code></pre><p>Example: Connect the song function.</p><pre><code class="js hljs"><span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$args"</span>]
 <span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
 <span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>]
 <span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
@@ -391,7 +399,7 @@ $[-]
 </ul>
 </li>
 </ul>
-</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">全部展開</a><a class="back-to-top" href="#">回到頂部</a><a class="go-to-bottom" href="#">移至底部</a></div>
             </ul>
         </div>
     </div>
@@ -420,7 +428,7 @@ $[-]
 </ul>
 </li>
 </ul>
-</div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
+</div><div class="toc-menu"><a class="expand-toggle" href="#">全部展開</a><a class="back-to-top" href="#">回到頂部</a><a class="go-to-bottom" href="#">移至底部</a></div>
     </div>
     
     

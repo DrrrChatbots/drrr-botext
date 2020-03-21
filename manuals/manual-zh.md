@@ -18,12 +18,12 @@
 
 <i class="glyphicon glyphicon-question-sign"></i> 前往本說明頁面 <i class="glyphicon glyphicon-cog"></i> 前往後台設定
 
-![](https://i.imgur.com/hxIuCTT.png)
-
+![](https://i.imgur.com/Z1JZkdd.png)
 
 ### 功能開關（<i class="glyphicon glyphicon-cog"></i> 表示須先設定才能開啟）
 
-![](https://i.imgur.com/dQb3byt.png)
+![](https://i.imgur.com/jctHIHN.png)
+
 
 - AutoDM 
   發訊後自動鎖定上次私訊對象
@@ -34,7 +34,7 @@
 - Welcome <i class="glyphicon glyphicon-cog"></i>
   訪客進房，自動送出歡迎詞
 - BanAbuse <i class="glyphicon glyphicon-cog"></i>
-  禁止用語名單，當用戶用語匹配到禁用詞，會被自動踢出
+  禁止用語名單，當用戶用語匹配到禁用詞，會被自動踢出/屏蔽/舉報
 - Always/me 
   自動加上 /me 指令
 - EventAction
@@ -212,6 +212,10 @@
   私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
 - `kick` `["使用者名稱"]`
   踢出使用者。
+- `ban` `["使用者名稱"]`
+  踢出並屏蔽使用者。
+- `banrpt` `["使用者名稱"]`
+  踢出並屏蔽舉報使用者。
 - `plym` `["歌曲關鍵字"]` 
   `plym` `["歌曲關鍵字", "數字"]`
   `plym` `["歌曲關鍵字", "音源"]`
@@ -404,6 +408,10 @@ otoko
   私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
 - `kick` `["使用者名稱"]`
   踢出使用者。
+- `ban` `["使用者名稱"]`
+  踢出並屏蔽使用者。
+- `banrpt` `["使用者名稱"]`
+  踢出並屏蔽舉報使用者。
 - `plym` `["歌曲關鍵字"]` 
   `plym` `["歌曲關鍵字", "數字"]`
   `plym` `["歌曲關鍵字", "音源"]`

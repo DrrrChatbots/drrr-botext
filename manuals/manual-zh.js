@@ -40,6 +40,10 @@ export const manual = {
 私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
 <li><code>kick</code> <code>["使用者名稱"]</code><br>
 踢出使用者。</li>
+<li><code>ban</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽使用者。</li>
+<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽舉報使用者。</li>
 <li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>
@@ -49,7 +53,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 及 “Ｙ” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
@@ -61,7 +65,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 及 “Ｙ” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["數字"]</code><br>
@@ -83,7 +87,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
@@ -91,7 +95,7 @@ export const manual = {
 列出搜尋結果。
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["使用者名稱"]</code><br>
@@ -191,6 +195,10 @@ export const manual = {
 私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
 <li><code>kick</code> <code>["使用者名稱"]</code><br>
 踢出使用者。</li>
+<li><code>ban</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽使用者。</li>
+<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽舉報使用者。</li>
 <li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>
@@ -200,7 +208,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 及 “Ｙ” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
@@ -212,7 +220,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 及 “Ｙ” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>delm</code> <code>["數字"]</code><br>
@@ -234,7 +242,7 @@ export const manual = {
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
 <li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
@@ -242,7 +250,7 @@ export const manual = {
 列出搜尋結果。
 <ol>
 <li>“關鍵字”：歌曲關鍵字。</li>
-<li>“音源”：音源，目前有 “千” 和 “易” 可以使用。</li>
+<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
 </ol>
 </li>
 <li><code>horm</code> <code>["使用者名稱"]</code><br>

@@ -1,4 +1,3 @@
-
 /* backend for popup.html below */
 /* require global.js utility.js */
 
@@ -40,7 +39,6 @@ function ui_object(type, template, def_attrs = {}){
                     childs, config
                 );
             }
-
 
             this.events = events === undefined ? {} : events; 
             this.bindEvents = function($, uis){
@@ -270,18 +268,37 @@ var BanListH = new Handler("banlist",
                             noteEmptySetting(config[BANLIST], event, SWITCH_BANLIST, BANLIST);
                     });
                 }
-            }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"})
+            }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"}),
+            new button_ui({
+                'click': function(event, state){
+                    chrome.storage.sync.get((config) => {
+                        var types = [action_kick, action_ban, action_banrpt];
+                        var bt = config[BANTYPE] || action_kick;
+                        bt = types[(types.indexOf(bt) + 1) % 3];
+                        event.data.$('#ban_type').text(bt);
+                        chrome.storage.sync.set({
+                            [BANTYPE]: bt
+                        });
+                    });
+                }
+            }, ((config) => config[BANTYPE] || action_kick), [], {id:'ban_type', style:"width:50px;"}),
         ], {title: 'kick all the guests in the list (⚙ setting)'})
     ],
     {
         [event_join]: {
             precond: (config, uis) => config[SWITCH_BANLIST],
             onevent: (req, callback, config, uis) => {
+                var banm = {
+                    [action_kick]: kick_member,
+                    [action_ban]: ban_member,
+                    [action_banrpt]: ban_report_member
+                }
+                var ban_way = banm[config[BANTYPE] || action_kick];
                 if(config[BANLIST] === BLACKLIST){
                     if(assoc(req.user, config, BLACKLIST)){
                         console.log("kick");
                         sendTab({
-                            fn: kick_member,
+                            fn: ban_way,
                             args: { user: req.user }
                         })
                     }
@@ -289,7 +306,7 @@ var BanListH = new Handler("banlist",
                 else if(config[BANLIST] === WHITELIST){
                     if(!assoc(req.user, config, WHITELIST)){
                         sendTab({
-                            fn: kick_member,
+                            fn: ban_way,
                             args: { user: req.user }
                         })
                     }

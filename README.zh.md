@@ -16,7 +16,8 @@
 
 請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-zh.html)。
 
-## v1.5 更新
 
-新增貼圖，多帳戶切換，找尋朋友，tripcode 產生器，房間訊息紀錄，守房功能，遊戲模組。
+## v1.6 更新
+
+增加兩個音源，優化音源，黑白名單加上屏蔽模式。
 

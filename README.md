@@ -16,6 +16,8 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/v1.5-en.html)
 
-## v1.5 Update
 
-add sticker, multi-account, friend search, tripcode generator, room notification, room keeper, game module
+## v1.6 Update
+
+add 2 music src, optimize yt source, black/whitelist add ban mode.
+

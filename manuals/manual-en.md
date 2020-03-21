@@ -18,19 +18,19 @@ The mobile version of Chrome does not provide plugin installation on the phone, 
 
 <i class="glyphicon glyphicon-question-sign"></i> Go to this help page <i class="glyphicon glyphicon-cog"></i> Go to background settings
 
-![](https://i.imgur.com/hxIuCTT.png)
+![](https://i.imgur.com/Z1JZkdd.png)
 
 
 ### Function switch <br>(<i class="glyphicon glyphicon-cog"></i> means you must do some setting before you turning it on)
 
-![](https://i.imgur.com/dQb3byt.png)
+![](https://i.imgur.com/jctHIHN.png)
 
 - AutoDM
   Automatically lock the last dm user after sending a message
 - Timer <i class="glyphicon glyphicon-cog"></i>
   Scheduled execution of set actions
 - Black / Whitelist <i class="glyphicon glyphicon-cog"></i>
-  Room black / white list (auto kick out visitors)
+  Room black / white list (auto kick out/ban/report visitors)
 - Welcome <i class="glyphicon glyphicon-cog"></i>
   Automatically send out a greeting on visitors entering the room
 - BanAbuse <i class="glyphicon glyphicon-cog"></i>
@@ -111,6 +111,8 @@ Search mode:
 - **易** Netease Music
 - **千** Baidu Music Boxes
 - **Ｙ** YouTube
+- **狗** Kugou
+- **我** Kuwu
 
 ##### Search Keyword and Play
 
@@ -212,6 +214,10 @@ Function ["parameter", ...] Description:
   Private messaging users, with a URL and a randomly selected message.
 - `kick` `["username"] `
   Kick out the user.
+- `ban` `["username"] `
+  Kick out and ban the user.
+- `banrpt` `["username"] `
+  Kick out, ban and report the user.
 - `plym` `["Song Keywords"] `
   `plym` `["Song Keyword", "Number"] `
   `plym` `["Song Keyword", "Sound Source"] `
@@ -220,7 +226,7 @@ Function ["parameter", ...] Description:
   play music.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": There are currently "Thousand", "Yi" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `addm` `["Song Keywords"] `
   `addm` `["Song Keywords", "Number"] `
   `addm` `["Song Keyword", "Sound Source"] `
@@ -229,7 +235,7 @@ Function ["parameter", ...] Description:
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": There are currently "千", "易" and "Ｙ" available.
+  3. "Sound Source": There are currently "千", "易", "我", "狗" and "Ｙ" available.
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -248,12 +254,12 @@ Function ["parameter", ...] Description:
   If the keyword is an empty string, list it for play.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "易" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results.
   1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "易" and "Ｙ" available.
+  2. "Sound Source": There are currently "千", "易", "我", "狗" and "Ｙ" available.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `
@@ -394,6 +400,10 @@ Function ["parameter", ...] Description:
   Private messaging users, with a URL and a randomly selected message.
 - `kick` `["username"] `
   Kick out the user.
+- `ban` `["username"] `
+  Kick out and ban the user.
+- `banrpt` `["username"] `
+  Kick out, ban and report the user.
 - `plym` `["Song Keywords"] `
   `plym` `["Song Keyword", "Number"] `
   `plym` `["Song Keyword", "Sound Source"] `
@@ -411,7 +421,7 @@ Function ["parameter", ...] Description:
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": There are currently "千", "易" and "Ｙ" available.
+    3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -430,12 +440,12 @@ Function ["parameter", ...] Description:
   If the keyword is an empty string, list it for play.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "易" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results.
   1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "易" and "Ｙ" available.
+  2. "Sound Source": There are currently "千", "易", "我", "狗" and "Ｙ" available.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

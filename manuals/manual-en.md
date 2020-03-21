@@ -18,19 +18,19 @@ The mobile version of Chrome does not provide plugin installation on the phone, 
 
 <i class="glyphicon glyphicon-question-sign"></i> Go to this help page <i class="glyphicon glyphicon-cog"></i> Go to background settings
 
-![](https://i.imgur.com/hxIuCTT.png)
+![](https://i.imgur.com/Z1JZkdd.png)
 
 
 ### Function switch <br>(<i class="glyphicon glyphicon-cog"></i> means you must do some setting before you turning it on)
 
-![](https://i.imgur.com/dQb3byt.png)
+![](https://i.imgur.com/jctHIHN.png)
 
 - AutoDM
   Automatically lock the last dm user after sending a message
 - Timer <i class="glyphicon glyphicon-cog"></i>
   Scheduled execution of set actions
 - Black / Whitelist <i class="glyphicon glyphicon-cog"></i>
-  Room black / white list (auto kick out visitors)
+  Room black / white list (auto kick out/ban/report visitors)
 - Welcome <i class="glyphicon glyphicon-cog"></i>
   Automatically send out a greeting on visitors entering the room
 - BanAbuse <i class="glyphicon glyphicon-cog"></i>
@@ -212,6 +212,10 @@ Function ["parameter", ...] Description:
   Private messaging users, with a URL and a randomly selected message.
 - `kick` `["username"] `
   Kick out the user.
+- `ban` `["username"] `
+  Kick out and ban the user.
+- `banrpt` `["username"] `
+  Kick out, ban and report the user.
 - `plym` `["Song Keywords"] `
   `plym` `["Song Keyword", "Number"] `
   `plym` `["Song Keyword", "Sound Source"] `
@@ -394,6 +398,10 @@ Function ["parameter", ...] Description:
   Private messaging users, with a URL and a randomly selected message.
 - `kick` `["username"] `
   Kick out the user.
+- `ban` `["username"] `
+  Kick out and ban the user.
+- `banrpt` `["username"] `
+  Kick out, ban and report the user.
 - `plym` `["Song Keywords"] `
   `plym` `["Song Keyword", "Number"] `
   `plym` `["Song Keyword", "Sound Source"] `

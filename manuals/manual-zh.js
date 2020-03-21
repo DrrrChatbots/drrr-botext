@@ -40,6 +40,10 @@ export const manual = {
 私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
 <li><code>kick</code> <code>["使用者名稱"]</code><br>
 踢出使用者。</li>
+<li><code>ban</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽使用者。</li>
+<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽舉報使用者。</li>
 <li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>
@@ -191,6 +195,10 @@ export const manual = {
 私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
 <li><code>kick</code> <code>["使用者名稱"]</code><br>
 踢出使用者。</li>
+<li><code>ban</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽使用者。</li>
+<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
+踢出並屏蔽舉報使用者。</li>
 <li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
 <code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>

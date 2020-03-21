@@ -39,6 +39,10 @@ Select a message to dm the username.</li>
 Private messaging users, with a URL and a randomly selected message.</li>
 <li><code>kick</code> <code>["username"] </code><br>
 Kick out the user.</li>
+<li><code>ban</code> <code>["username"] </code><br>
+Kick out and ban the user.</li>
+<li><code>banrpt</code> <code>["username"] </code><br>
+Kick out, ban and report the user.</li>
 <li><code>plym</code> <code>["Song Keywords"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Number"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>
@@ -182,6 +186,10 @@ Select a message to dm the username.</li>
 Private messaging users, with a URL and a randomly selected message.</li>
 <li><code>kick</code> <code>["username"] </code><br>
 Kick out the user.</li>
+<li><code>ban</code> <code>["username"] </code><br>
+Kick out and ban the user.</li>
+<li><code>banrpt</code> <code>["username"] </code><br>
+Kick out, ban and report the user.</li>
 <li><code>plym</code> <code>["Song Keywords"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Number"] </code><br>
 <code>plym</code> <code>["Song Keyword", "Sound Source"] </code><br>

@@ -52,7 +52,7 @@ play music.
 <ol>
 <li>“Keywords”: Song keywords.</li>
 <li>“Number”: Index of search results.</li>
-<li>“Sound Source”: There are currently “Thousand”, “Yi” and “Ｙ” available.</li>
+<li>“Sound Source”: Sound source. Currently there are “千”, “易”, “我”, “狗” and “Ｙ” available.</li>
 </ol>
 </li>
 <li><code>addm</code> <code>["Song Keywords"] </code><br>

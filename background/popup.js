@@ -17,7 +17,7 @@ function ui_object(type, template, def_attrs = {}){
             attrs.id = attrs.id || `${hname.replace(/ /g, '-')}-${String(idx)}`;
             attrs.class = (attrs.class || '') + ` ${class_map[type]}`;
 
-            this.childs = childs; 
+            this.childs = childs;
             this.content = (config) => {
                 var type = typeof content;
                 if(type === 'undefined')
@@ -40,7 +40,7 @@ function ui_object(type, template, def_attrs = {}){
                 );
             }
 
-            this.events = events === undefined ? {} : events; 
+            this.events = events === undefined ? {} : events;
             this.bindEvents = function($, uis){
                 for(name in this.events){
                     $(((ename, events)=>function(){
@@ -87,7 +87,7 @@ var switch_ui = ui_object(SWITCH,
     });
 
 var select_ui = ui_object(SELECT,
-    (attrs, content, uis, config) => `<select ${attrs}> 
+    (attrs, content, uis, config) => `<select ${attrs}>
                                  <!-- <option selected="selected"
                                      value="${content}">
                                      ${content}${merge_ui(uis, config)}
@@ -104,7 +104,7 @@ var select_ui = ui_object(SELECT,
               float: none;`
     });
 
-var button_ui = ui_object(BUTTON, 
+var button_ui = ui_object(BUTTON,
     (attrs, content, uis, config) => `<button ${attrs}>${content}${merge_ui(uis, config)}</button>`,
     {
         type:"button",
@@ -133,7 +133,7 @@ var modal_ui = ui_object(MODAL,
                                 <p>Some text in the modal.</p>
                               </div>
                               <div class="modal-footer">
-                                ${uis.footer.html(config)} 
+                                ${uis.footer.html(config)}
                               </div>
                             </div>
 
@@ -169,7 +169,7 @@ function assoc(key, res, name){
         for(exp of set){
             console.log('matching...', exp)
             if(key.match(new RegExp(exp)))
-                return true; 
+                return true;
         }
         return false;
     }
@@ -202,7 +202,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
             });
             chrome.storage.sync.set({
                 [switch_id]: false
-            }); 
+            });
         }
         else if(callback) callback();
     });
@@ -214,7 +214,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
         if(!config[func_name]){
             var answer = '';
             while(answer !== null && !answer){
-                answer = prompt(question); 
+                answer = prompt(question);
             }
             if(!validate){
                 alert("Please Give The Validator");
@@ -247,7 +247,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
     event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
 }
 
-var BanListH = new Handler("banlist", 
+var BanListH = new Handler("banlist",
     [
         new pack_ui({}, '', [
             new switch_ui({
@@ -317,7 +317,7 @@ var BanListH = new Handler("banlist",
 );
 
 
-var TimerH = new Handler("timer", 
+var TimerH = new Handler("timer",
     [
         new pack_ui({}, '', [
             new switch_ui({
@@ -348,16 +348,16 @@ var TimerH = new Handler("timer",
                             }
                         })
                     )
-                }) 
+                })
             }, '', [], {id: SWITCH_TIMER}),
             new label_ui({}, 'Timer')
         ], {title: 'send some custom messages periodically (⚙ setting)'})
-    ], 
+    ],
     {
         [event_newtab]: {
             precond: (config, uis) => config[SWITCH_TIMER],
             onevent: (req, callback, config, uis, sender) => {
-                //check the chrome.alarm.api 
+                //check the chrome.alarm.api
                 roomTabs((tabs)=>{
                     if(tabs.length == 1){
                         chrome.tabs.sendMessage(tabs[0].id, {
@@ -392,7 +392,7 @@ var TimerH = new Handler("timer",
         },
         [event_exitalarm]: {
             precond: (config, uis) => config[SWITCH_TIMER],
-            onevent: (req, callback, config, uis, sender) => { 
+            onevent: (req, callback, config, uis, sender) => {
                 roomTabs((tabs)=>{
                     if(tabs.length < 2){
                         chrome.notifications.create({
@@ -463,7 +463,7 @@ var BanAbuseH = new Handler("BanAbuse",
     }
 );
 
-var WelcomeH = new Handler("welcome", 
+var WelcomeH = new Handler("welcome",
     [
         new pack_ui({}, '', [
             new switch_ui({
@@ -473,26 +473,39 @@ var WelcomeH = new Handler("welcome",
             }, '', [], {id: SWITCH_WELCOME}),
             new label_ui({}, 'Welcome')
         ], {title: 'send some custom messages to welcome someone (⚙ setting)'})
-    ], 
+    ],
     {
         [event_join]: {
             precond: (config, uis) => config[SWITCH_WELCOME],
             onevent: (req, callback, config, uis) => {
-                if(!assoc(req.user, config, BLACKLIST)){
-                    ((wmsg) => {
-                        if(wmsg){
-                            if(Array.isArray(wmsg))
-                                wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
-                            sendTab({
-                                fn: publish_message,
-                                args: {
-                                    msg: wmsg.replace(/(^|[^\$])\$user/g, `$1${req.user}`)
-                                    .replace(/(^|[^\$])\$/g, `$1$`)
-                                }
-                            });
+                // avoid welcome banlist user
+                if(config[SWITCH_BANLIST]){
+                    if(config[BANLIST] === BLACKLIST){
+                        if(assoc(req.user, config, BLACKLIST)){
+                           return;
                         }
-                    })(assoc(req.user, config, WELCOME));
+                    }
+                    else if(config[BANLIST] === WHITELIST){
+                        if(!assoc(req.user, config, WHITELIST)){
+                           return;
+                        }
+                    }
                 }
+                // welcome user
+                ((wmsg) => {
+                    if(wmsg){
+                        if(Array.isArray(wmsg))
+                            wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
+                        sendTab({
+                            fn: publish_message,
+                            args: {
+                                msg: wmsg
+                                .replace(/(^|[^\$])\$user/g, `$1${req.user}`)
+                                .replace(/(^|[^\$])\$/g, `$1$`)
+                            }
+                        });
+                    }
+                })(assoc(req.user, config, WELCOME));
             }
         }
     }
@@ -516,19 +529,19 @@ var EventActionH = new Handler("event action",
         },
         [event_leave]: {
             precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-            onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req) 
+            onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req)
         },
         [event_newhost]: {
             precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-            onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req) 
+            onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req)
         },
         [event_me]: {
             precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-            onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req) 
+            onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req)
         },
         [event_msg]: {
             precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-            onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req) 
+            onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req)
         },
         [event_dm]: {
             precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
@@ -606,7 +619,7 @@ function NotiEvents(){
             onevent: (et => (req, callback, config, uis) => {
                 chrome.tabs.query({active:true, url: 'https://drrr.com/room/*'}, (tabs) => {
                     if(!tabs.length)
-                        return sendNoti(config, et, req); 
+                        return sendNoti(config, et, req);
                 });
             })(t)
         }
@@ -671,7 +684,7 @@ var AutoDMH = new Handler("AutoDM",
                             })
                         } else bcastTabs({ fn: off_dm_member });
                     }
-                ) 
+                )
             }, '', [], {id: SWITCH_DM}),
             new label_ui({}, 'AutoDM', [], {id: DM_USERNAME}),
         ], {title: 'change to direct message automatically after sending message'})
@@ -700,7 +713,7 @@ var AutoDMH = new Handler("AutoDM",
                     })
                 }
             }
-        } 
+        }
     }
 );
 
@@ -741,7 +754,7 @@ function validateTgToken(token, callback){
         type: "GET",
         url: `https://api.telegram.org/bot${token}/getUpdates`,
         dataType: 'json',
-        success: function(data){ 
+        success: function(data){
             if(data.ok){
                 function df(v){ return v ? v : ''; }
                 function descOf(type, chat){
@@ -935,17 +948,17 @@ function make_switch_panel($, panel_id){
     chrome.storage.sync.get((config) => {
         switches.ui = switches.map((h) => h.ui(config));
         $(panel_id).append(
-            switches_layout.map((set) => 
+            switches_layout.map((set) =>
                 set(switches.ui)).join(''));
         $(`.${class_map[SWITCH]}`).bootstrapSwitch('size', 'mini');
-        defaults = template_setting($); 
+        defaults = template_setting($);
         init_switches($, defaults, config);
         switches.map((h)=>h.bindEvents($));
     });
 }
 
 var popupURL = chrome.extension.getURL('popup/index.html');
-chrome.runtime.onMessage.addListener((req, sender, callback) => { 
+chrome.runtime.onMessage.addListener((req, sender, callback) => {
     if(sender.url === popupURL){
         console.log(req);
         if(callback) callback();

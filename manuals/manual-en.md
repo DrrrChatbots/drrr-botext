@@ -412,7 +412,7 @@ Function ["parameter", ...] Description:
   play music.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": There are currently "Thousand", "Yi" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `addm` `["Song Keywords"] `
   `addm` `["Song Keywords", "Number"] `
   `addm` `["Song Keyword", "Sound Source"] `
@@ -421,7 +421,7 @@ Function ["parameter", ...] Description:
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-    3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `

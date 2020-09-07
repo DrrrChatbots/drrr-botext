@@ -253,7 +253,7 @@ var min = 1000 * 60;
 function bindAlarms(){
     console.log(timefmt("%H:%m:%s - start alarm on this tab, unit: min"));
     chrome.storage.sync.get((config) => {
-        clearAlarms(); 
+        clearAlarms();
         rules = settings[TIMER].load(config[sid(TIMER)]);
         Object.keys(rules).map((idx)=>{
 

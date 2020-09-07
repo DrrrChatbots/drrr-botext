@@ -47,7 +47,7 @@ function generate_notification(req){
                 type: "basic",
                 iconUrl: '/icon.png',
                 title: req.notification.title,
-                message: req.notification.msg 
+                message: req.notification.msg
             }
         );
 
@@ -91,7 +91,7 @@ function generate_notification(req){
 }
 
 var error403 = 0;
-chrome.runtime.onMessage.addListener((req, sender, callback) => { 
+chrome.runtime.onMessage.addListener((req, sender, callback) => {
     console.log(sender);
     if(req && req.jumpto){
         if(sender.tab && sender.tab.id)
@@ -121,7 +121,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     else if(req && req.notification){
         generate_notification(req);
     }
-    else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){ 
+    else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
         console.log(req);
         console.log(JSON.stringify(sender))
         chrome.storage.sync.get((config) => {
@@ -136,9 +136,9 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
                 )
 
             if(callback) callback("done.");
-        });   
+        });
     }
-    else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){ 
+    else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
 
     }
 })

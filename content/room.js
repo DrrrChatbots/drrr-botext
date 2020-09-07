@@ -2,8 +2,9 @@
 var handle_talks = function(msg){
 
   var type = '', user = '',
-    text = '', url = '';
+    text = '', url = '', info = '';
   try{
+    console.log("msg is", msg);
     if(msg.classList.contains("system")){
       if(msg.classList.contains("me")){
         type = event_me;
@@ -59,12 +60,30 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
-  chrome.runtime.sendMessage({
-    type: type,
-    user: user,
-    text: text,
-    url: url
-  });
+  if([event_join, event_leave, event_newhost].includes(type)){
+    getRoom(
+      function(info){
+        chrome.runtime.sendMessage({
+          type: type,
+          user: user,
+          text: text,
+          info: info,
+          url: url
+        });
+      },
+      function(){
+        console.log("room error on info");
+      }
+    );
+  }
+  else{
+    chrome.runtime.sendMessage({
+      type: type,
+      user: user,
+      text: text,
+      url: url
+    });
+  }
 }
 
 var logout = false;
@@ -264,13 +283,8 @@ $(document).ready(function(){
       chrome.runtime.sendMessage({ clearNotes: true, pattern:'' });
       //'https://drrr.com/room/.*'
 
-
-
-      $.ajax({
-        type: "GET",
-        url: 'https://drrr.com//room?api=json',
-        dataType: 'json',
-        success: function(RoomData){
+      getRoom(
+        function(RoomData){
           rinfo = RoomData; //rinfo.profile
           console.log('rinfo', rinfo);
 
@@ -285,10 +299,10 @@ $(document).ready(function(){
           setTimeout(find, 5000);
           setInterval(find, 90000);
         },
-        error: function(data){
+        function(data){
           alert("error", data);
         }
-      });
+      )
     }
   );
 });

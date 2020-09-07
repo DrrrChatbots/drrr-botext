@@ -11,10 +11,10 @@ actions = {
     },
     [action_horm ] : function(user){
         setTimeout(
-            () => sendTab({ 
+            () => sendTab({
                 fn: handover_room,
                 args: { user: user }
-            }) 
+            })
             , 1000);
 
     },
@@ -23,9 +23,9 @@ actions = {
             setTimeout(
                 () => sendTab({
                     fn: publish_message,
-                    args: { 
+                    args: {
                         url: url,
-                        msg: msgs[Math.floor(Math.random() * msgs.length)] 
+                        msg: msgs[Math.floor(Math.random() * msgs.length)]
                     }
                 }), 1000);
         }
@@ -35,9 +35,9 @@ actions = {
             setTimeout(
                 () => sendTab({
                     fn: dm_member,
-                    args: { 
-                        user: user, 
-                        msg: msgs[Math.floor(Math.random() * msgs.length)] 
+                    args: {
+                        user: user,
+                        msg: msgs[Math.floor(Math.random() * msgs.length)]
                     }
                 }), 1000);
         }
@@ -82,10 +82,10 @@ actions = {
         if(p2){ if(p2 in api) source = p2; else idx = p2; }
         console.log(`play music[${source}][${idx}]: ${keyword}`);
         setTimeout(()=> play_search(
-            get_music.bind(null, keyword, source), 
-            (msg) => sendTab({ 
-                fn: publish_message, 
-                args: { msg: msg } 
+            get_music.bind(null, keyword, source),
+            (msg) => sendTab({
+                fn: publish_message,
+                args: { msg: msg }
             }), idx
         ), 1000);
     },

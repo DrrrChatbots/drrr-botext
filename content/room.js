@@ -318,9 +318,10 @@ function do_method(){
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   console.log(JSON.stringify(req), "comes the method from background");
-  methods[req.fn](req.args, callback);
   method_queue.push(
-    ((r, cbk) => ()=>methods[r.fn](r.args, cbk))(req.args, callback)
+    ((r, cbk) => {
+      return ()=>methods[r.fn](r.args, cbk);
+    })(req, callback)
   );
   do_method();
 });

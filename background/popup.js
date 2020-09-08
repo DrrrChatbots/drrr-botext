@@ -199,10 +199,11 @@ function assocTrip(key, res, name, trip){
   else{
     console.log('this... is list: ', JSON.stringify(set));
     for(exp of set){
-      console.log('matching...', exp)
       var [na, tr] = name_trip_split(exp);
-      if(key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr))))
+      console.log('matching...', key, na, tr)
+      if(key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr)))){
         return true;
+      }
     }
     return false;
   }
@@ -336,7 +337,7 @@ var BanListH = new Handler("banlist",
           }
         }
         if(config[BANLIST] === BLACKLIST){
-          if(assocTrip(req.user, config, BLACKLIST), trip){
+          if(assocTrip(req.user, config, BLACKLIST, trip)){
             console.log("kick");
             sendTab({
               fn: ban_way,
@@ -345,7 +346,7 @@ var BanListH = new Handler("banlist",
           }
         }
         else if(config[BANLIST] === WHITELIST){
-          if(!assocTrip(req.user, config, WHITELIST), trip){
+          if(!assocTrip(req.user, config, WHITELIST, trip)){
             sendTab({
               fn: ban_way,
               args: { user: req.user }

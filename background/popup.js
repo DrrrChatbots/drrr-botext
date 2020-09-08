@@ -191,7 +191,7 @@ function assocTrip(key, res, name, trip){
       var [expr, terms] = r;
       var [na, tr] = name_trip_split(expr);
       console.log('matching...', na);
-      if(key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr))))
+      if(na.length && key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr))))
         return terms;
     }
     return false;
@@ -201,7 +201,7 @@ function assocTrip(key, res, name, trip){
     for(exp of set){
       var [na, tr] = name_trip_split(exp);
       console.log('matching...', key, na, tr)
-      if(key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr)))){
+      if(na.length && key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr)))){
         return true;
       }
     }

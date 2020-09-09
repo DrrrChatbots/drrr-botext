@@ -159,18 +159,24 @@ function assoc(key, res, name){
     for(r of set){
       var [exp, terms] = r;
       console.log('matching...', exp)
-      if(key.match(new RegExp(exp)))
+      if(key.match(new RegExp(exp, 'i'))){
+        console.log(exp, ' matched!')
         return terms;
+      }
     }
+    console.log(key, 'not matched!')
     return false;
   }
   else{
     console.log('this... is list: ', JSON.stringify(set));
     for(exp of set){
       console.log('matching...', exp)
-      if(key.match(new RegExp(exp)))
+      if(key.match(new RegExp(exp, 'i'))){
+        console.log(exp, ' matched!')
         return true;
+      }
     }
+    console.log(key, 'not matched!')
     return false;
   }
 }
@@ -191,9 +197,12 @@ function assocTrip(key, res, name, trip){
       var [expr, terms] = r;
       var [na, tr] = name_trip_split(expr);
       console.log('matching...', na);
-      if(na.length && key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr))))
+      if(na.length && key.match(new RegExp(na, 'i')) || (trip && trip.match(new RegExp(tr, 'i')))){
+        console.log(key, ' matched!')
         return terms;
+      }
     }
+    console.log(key, 'not matched!')
     return false;
   }
   else{
@@ -201,10 +210,12 @@ function assocTrip(key, res, name, trip){
     for(exp of set){
       var [na, tr] = name_trip_split(exp);
       console.log('matching...', key, na, tr)
-      if(na.length && key.match(new RegExp(na)) || (trip && trip.match(new RegExp(tr)))){
+      if(na.length && key.match(new RegExp(na, 'i')) || (trip && trip.match(new RegExp(tr, 'i')))){
+        console.log(key, ' matched!')
         return true;
       }
     }
+    console.log(key, 'not matched!')
     return false;
   }
 }

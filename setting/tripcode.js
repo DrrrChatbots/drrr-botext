@@ -209,12 +209,12 @@ function searchAppend(regex, bz, genCode){
         if(match != null) {
             var result = `result-${count}`;
             count += 1;
-            var entry = $(`<a href="javascript:void(0);"
+            var entry = $(`<a href="#"
                 id="${result}" data=${JSON.stringify(pass)}
-                onclick='copyToClipboard(${JSON.stringify(pass)});'
                 class="list-group-item result">${colored(trip, regex)}<span style="font-weight:bolder;color:#00cc00">#</span>${pass}</a>`);
             entry.tooltip({title: "copied!", trigger: "click"});
             $('#result').append(entry);
+            entry.click(((ps)=>()=>copyToClipboard(ps))(pass));
         }
     }
     $('#count').text(`(${count}/${total})`);

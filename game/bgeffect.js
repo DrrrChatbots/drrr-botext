@@ -1,6 +1,6 @@
 
 export const ui = () => {
-    return `
+  return `
 <div class="input-group">
     <!--
     <div class="input-group-btn">
@@ -33,9 +33,9 @@ export const ui = () => {
 
 
 export const ui_event = () => {
-    $('.bgeffect').click(function(){
-        sendTab({fn: bg_effect, args:{name: this.id}});
-    });
+  $('.bgeffect').click(function(){
+    sendTab({fn: bg_effect, args:{name: this.id}});
+  });
 }
 
 //export const event_action = () => {

@@ -16,12 +16,18 @@
 
 請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/)。
 
+## Discord
+
+歡迎加入我們的伺服器參與討論。
+
+[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner2)](https://discord.com/invite/cveZZTt)
+
 ## 待辦
 
 ### 開發者手紀
 
-- 偵測 music.168 音源版權保護 
+- 偵測 music.168 音源版權保護
 - 於設置加入 tripcode 識別
 - 房間成員變數，包括自身和房主。
 - 突破網易海外限制
-- 口袋怪獸遊戲模組 
+- 口袋怪獸遊戲模組

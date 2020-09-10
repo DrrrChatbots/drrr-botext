@@ -1,6 +1,6 @@
 
 export const ui = () => {
-    return `
+  return `
 <div class="input-group">
     <div class="input-group-btn">
         <button class="btn btn-default" type="button">
@@ -21,10 +21,10 @@ export const ui = () => {
 };
 
 export const ui_event = () => {
-    $('#echo_trigger').click(()=>{
-        alert($("#echo_text").val());
-        $("#echo_text").val('');
-    });
+  $('#echo_trigger').click(()=>{
+    alert($("#echo_text").val());
+    $("#echo_text").val('');
+  });
 }
 
 

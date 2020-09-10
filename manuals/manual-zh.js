@@ -11,7 +11,7 @@ export const infopop = `
           <div class="modal-body">
             $ whoami <br><br>
             lambda.catノ#L/CaT//Hsk <br>a.k.a 浪打貓ノ，也有人叫我蘭達<br><br><br>
-            $ finger lambda.catノ <br><br> 
+            $ finger lambda.catノ <br><br>
             drrr.com 上的一般用戶，約於 2017 秋開始出沒於 drrr.com。<br>
             Email 為 lambdacat.tw@gmail.com <br>
           </div>
@@ -26,8 +26,8 @@ export const infopop = `
 
 
 export const manual = {
-    [TIMER]: {
-        desc: `<p>功能：定時執行定義的動作。<br>
+  [TIMER]: {
+    desc: `<p>功能：定時執行定義的動作。<br>
 格式：兩種格式，推播字串可以多個（隨機選擇並發出），URL 可加可不加</p><pre><code class="js hljs">分鐘數, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
 </code></pre><p>函數 [參數列] 說明：</p><ul>
 <li><code>msg</code> <code>["訊息", "訊息", ...]</code><br>
@@ -120,12 +120,12 @@ export const manual = {
 <li><code>%s</code> 秒，數字</li>
 <li><code>%%</code> 轉義字符 <code>%</code></li>
 </ul><p>範例：</p>`,
-        def_conf:
+    def_conf:
 `10, "msg", ["every 10 mins report once!"]
 2, "msg", ["It's a Report Message", "Now is %H:%m!"]`,
-    },
-    [WELCOME]: {
-        desc: `<p>功能：有人進入房間後，如果名稱匹配<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，則自動發出歡迎詞。<br>
+  },
+  [WELCOME]: {
+    desc: `<p>功能：有人進入房間後，如果名稱匹配<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，則自動發出歡迎詞。<br>
 格式： 兩種格式，歡迎詞可以多個（隨機選擇並發出）</p><pre><code class="js hljs"><span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"歡迎詞"</span>
 <span class="hljs-string">"用戶名(正則表達式)"</span>, [<span class="hljs-string">"歡迎詞"</span>, <span class="hljs-string">"歡迎詞"</span>, ...]
 </code></pre><p>注意：</p><ul>
@@ -136,43 +136,43 @@ export const manual = {
 <li><code>$user</code> 進入房間的成員名稱。</li>
 <li><code>$</code> 轉義字符 <code>$</code>。</li>
 </ul><p>範例：對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 <code>hello, kitty</code>，對其他人則說 <code>hello/HI!!</code> 加上 <code>使用者名稱</code>。</p>`,
-        def_conf:
+    def_conf:
 `"lambda.*cat", "hello, kitty"
 ".*", ["hello $user", "HI!! $user"]`,
-    },
-    [WHITELIST]: {
-        desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>不在名單內</strong>的特定使用者。<br>
+  },
+  [WHITELIST]: {
+    desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>不在名單內</strong>的特定使用者。<br>
 格式：</p><pre><code class="js hljs">用戶名(正則表達式)
 </code></pre><p>注意：</p><ul>
 <li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的 ID）。</li>
 </ul><p>範例：只允許以 <code>cat</code> <strong>結尾</strong>或是<code>神秘</code><strong>開頭</strong>為名稱的使用者。</p>`,
-        def_conf:
+    def_conf:
 `cat$
 ^神秘`,
-    },
-    [BLACKLIST]: {
-        desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>名單內</strong>的特定使用者。<br>
+  },
+  [BLACKLIST]: {
+    desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>名單內</strong>的特定使用者。<br>
 格式：</p><pre><code class="js hljs">用戶名(正則表達式)
 </code></pre><p>注意：</p><ul>
 <li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的 ID）。</li>
 </ul><p>範例：只允許以 <code>cat</code> <strong>結尾</strong>或是<code>神秘</code><strong>開頭</strong>為名稱的使用者。</p>`,
-        def_conf:
+    def_conf:
 `otoko
 机器人|機器人
 小冰|小氷|测试姬`,
-    },
-    [BANABUSE]: {
-        desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>過濾聊天內容，自動踢出<strong>說出禁用詞</strong>的使用者。<br>
+  },
+  [BANABUSE]: {
+    desc: `<p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>過濾聊天內容，自動踢出<strong>說出禁用詞</strong>的使用者。<br>
 格式：</p><pre><code class="js hljs">禁用詞(正則表達式)
 </code></pre><p>注意：</p><ul>
 <li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的禁用詞）。</li>
 </ul><p>範例：聊天內容含有說到 <code>狗</code> 或是 <code>真香</code> 的成員會被踢出。</p>`,
-        def_conf:
+    def_conf:
 `狗
 真香`,
-    },
-    [EVENTACT]: {
-        desc: `<p>功能：對於一些事件，這裡提供一些函數，可以訂一些相應的動作。<br>
+  },
+  [EVENTACT]: {
+    desc: `<p>功能：對於一些事件，這裡提供一些函數，可以訂一些相應的動作。<br>
 定義的動作只有在用戶<strong>名稱</strong>及用戶發送的<strong>內容</strong>符合<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>才會被觸發。<br>
 其實前面的功能：歡迎詞/白名單/黑名單/禁止詞，都可用此功能實作。</p><p>格式：</p><pre><code class="js hljs"><span class="hljs-string">"事件類型"</span>, <span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"內容匹配(正則表達式)"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
 [<span class="hljs-string">"事件類型"</span>, ...], <span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"內容匹配(正則表達式)"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
@@ -304,7 +304,7 @@ $0   $1 $2 $3               $4   $5    $6
      $args
 ---------  --------------------- ------------------
 $[-2]      $[3-4]                $[5-]
----------------------------------------------------                     
+---------------------------------------------------
 $[-]
 
 </code></pre><p>範例：接上點歌功能。</p><pre><code class="js hljs"><span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$args"</span>]
@@ -345,7 +345,7 @@ $[-]
 /sc 千 花心
 
 </code></pre><p>範例：對於上面的指令，可以參考以下配置。</p>`,
-        def_conf:
+    def_conf:
 `"msg", "", "^/play\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$args"]
 "msg", "", "^/play\\\\s+\\\\d\\\\s+\\\\S+", "plym", ["$[2-]", "$1"]
 "msg", "", "^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$[2-]"]
@@ -365,5 +365,5 @@ $[-]
 "msg", "", "^/sc\\\\s+([千易]\\\\S+|[^千易])", "schm", ["$args"]
 "msg", "", "^/sc\\\\s+[千易]\\\\s+\\\\S+", "schm", ["$[2-]", "$1"]
 `,
-    },
+  },
 }

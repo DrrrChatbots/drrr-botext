@@ -11,7 +11,7 @@ export const infopop = `
           <div class="modal-body">
             $ whoami <br><br>
             lambda.catノ#L/CaT//Hsk <br><br><br>
-            $ finger lambda.catノ <br><br> 
+            $ finger lambda.catノ <br><br>
             As a normal user on drrr.com, apper on drrr.com around fall, 2017.<br>
             Email: lambdacat.tw@gmail.com <br>
           </div>
@@ -26,8 +26,8 @@ export const infopop = `
 
 
 export const manual = {
-    [TIMER]: {
-        desc: `<p>Function: Perform the defined action regularly.</p><pre><code class="js hljs"><span class="hljs-symbol">Minutes</span>, <span class="hljs-string">"function"</span>, [<span class="hljs-string">"parameter"</span>, ...]
+  [TIMER]: {
+    desc: `<p>Function: Perform the defined action regularly.</p><pre><code class="js hljs"><span class="hljs-symbol">Minutes</span>, <span class="hljs-string">"function"</span>, [<span class="hljs-string">"parameter"</span>, ...]
 </code></pre><p>Function [“parameter”, …] Description:</p><ul>
 <li><code>msg</code> <code>["message", "message", ...] </code><br>
 Select a message to publish.</li>
@@ -119,12 +119,12 @@ Go to the room that matches the room name. If it fails, return to the origin roo
 <li><code>%s</code> seconds, numbers</li>
 <li><code>%%</code> escape character <code>%</code></li>
 </ul><p>example:</p>`,
-        def_conf:
+    def_conf:
 `10, "msg", ["every 10 mins report once!"]
 2, "msg", ["It's a Report Message", "Now is %H:%m!"]`,
-    },
-    [WELCOME]: {
-        desc: `<p>Function: After someone enters the room, if the name matches <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expression</a>, the greeting will be sent out automatically .<br>
+  },
+  [WELCOME]: {
+    desc: `<p>Function: After someone enters the room, if the name matches <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expression</a>, the greeting will be sent out automatically .<br>
 Format: Two formats, multiple welcome words (choose randomly and send out)</p><pre><code class="js hljs"><span class="hljs-string">"Username (regular expression)"</span>, <span class="hljs-string">"Welcome"</span>
 <span class="hljs-string">"Username (regular expression)"</span>, [<span class="hljs-string">"Hola"</span>, <span class="hljs-string">"Hello"</span>, ...]
 </code></pre><p>note:</p><ul>
@@ -134,36 +134,36 @@ Format: Two formats, multiple welcome words (choose randomly and send out)</p><p
 <li><code>$user</code> The name of the member who entered the room.</li>
 <li><code>$</code> escape character <code>$</code>.</li>
 </ul><p>Example: Say <code>hello, kitty</code> to users who have lambda in their name followed by cat (possibly with some words in between), and <code>hello/HI!! </code>to others.</p>`,
-        def_conf:
+    def_conf:
 `"lambda.*cat", "hello, kitty"
 ".*", ["hello $user", "HI!! $user"]`,
-    },
-    [WHITELIST]: {
-        desc: `<p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specifics ** not in the list ** user.<br>
+  },
+  [WHITELIST]: {
+    desc: `<p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specifics ** not in the list ** user.<br>
 format:</p><pre><code class="js hljs"><span class="hljs-attribute">Username</span> (regular expression)
 </code></pre><p>Example: Only users whose names end with <code>cat</code> or begin with <code>mysterious</code> are allowed.</p>`,
-        def_conf:
+    def_conf:
 `cat$
 ^mysterious`,
-    },
-    [BLACKLIST]: {
-        desc: `<p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specific uses in list.<br>
+  },
+  [BLACKLIST]: {
+    desc: `<p>Function: Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to automatically kick out specific uses in list.<br>
 format:</p><pre><code class="js hljs"><span class="hljs-attribute">Username</span> (regular expression)
 </code></pre><p>Example: kick out users who have <code>otoko</code> in their names and some qualified robots.</p>`,
-        def_conf:
+    def_conf:
 `otoko
 .*Robot`,
-    },
-    [BANABUSE]: {
-        desc: `<p>Function: use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to filter the chat content and automatically kick out <strong>speak prohibited words</strong> users.<br>
+  },
+  [BANABUSE]: {
+    desc: `<p>Function: use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expressions</a> to filter the chat content and automatically kick out <strong>speak prohibited words</strong> users.<br>
 format:</p><pre><code class="js hljs"><span class="hljs-keyword">Stop</span> word (regular expression)
 </code></pre><p>Example: Chats containing members who say <code>dog</code> or<code> foobar</code> will be kicked out.</p>`,
-        def_conf:
+    def_conf:
 `dog
 foobar`,
-    },
-    [EVENTACT]: {
-        desc: `<p>Function: For some events, here are some functions that can order some corresponding actions.<br>
+  },
+  [EVENTACT]: {
+    desc: `<p>Function: For some events, here are some functions that can order some corresponding actions.<br>
 The defined actions will be performed only when the <strong>username</strong> and the <strong>contents sent by the user</strong> match the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener">regular expression</a>.<br>
 In fact, the previous functions: welcome words / whitelist / blacklist / banned words can be implemented with this function.</p><p>format:</p><pre><code class="js hljs"><span class="hljs-string">"Event type"</span>, <span class="hljs-string">"User name (regular expression)"</span>, <span class="hljs-string">"Content matching (regular expression)"</span>, <span class="hljs-string">"Function"</span>, [<span class="hljs-string">"Arguments"</span>, ...]
 [<span class="hljs-string">"Event type"</span>, ...], <span class="hljs-string">"User name (regular expression)"</span>, <span class="hljs-string">"Content matching (regular expression)"</span>, <span class="hljs-string">"Function"</span>, [<span class="hljs-string">"Arguments"</span>, ...]
@@ -280,7 +280,7 @@ $0   $1 $2 $3               $4   $5    $6
      $args
 ---------  --------------------- ------------------
 $[-2]      $[3-4]                $[5-]
----------------------------------------------------                     
+---------------------------------------------------
 $[-]
 
 </code></pre><p>Example: Bind the song function.</p>
@@ -304,7 +304,7 @@ $[-]
 /sc 21Guns
 /sc 千 21Guns
 </code></pre><p>Example：For the commands above, you can consider the following configurations.</p>`,
-        def_conf:
+    def_conf:
 `"msg", "", "^/play\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$args"]
 "msg", "", "^/play\\\\s+\\\\d\\\\s+\\\\S+", "plym", ["$[2-]", "$1"]
 "msg", "", "^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$[2-]"]
@@ -324,5 +324,5 @@ $[-]
 "msg", "", "^/sc\\\\s+([千易]\\\\S+|[^千易])", "schm", ["$args"]
 "msg", "", "^/sc\\\\s+[千易]\\\\s+\\\\S+", "schm", ["$[2-]", "$1"]
 `,
-    },
+  },
 }

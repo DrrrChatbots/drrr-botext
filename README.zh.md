@@ -20,7 +20,7 @@
 
 歡迎加入我們的伺服器參與討論。
 
-[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner2)](https://discord.com/invite/cveZZTt)
+[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner3)](https://discord.com/invite/cveZZTt)
 
 ## 待辦
 

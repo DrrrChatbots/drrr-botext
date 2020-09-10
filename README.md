@@ -20,7 +20,7 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 
 Join our discord channel to have some discussion.
 
-[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner2)](https://discord.com/invite/cveZZTt)
+[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner3)](https://discord.com/invite/cveZZTt)
 
 ## TODO
 

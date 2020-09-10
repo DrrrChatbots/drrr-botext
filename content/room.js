@@ -1,3 +1,9 @@
+roomInfo = undefined;
+function findUser(name, callback){
+  for(u of roomInfo.room.users){
+    if(u.name == name) return callback(u);
+  }
+}
 
 var handle_talks = function(msg){
 
@@ -63,6 +69,7 @@ var handle_talks = function(msg){
   if([event_join, event_leave, event_newhost].includes(type)){
     getRoom(
       function(info){
+        roomInfo = info;
         chrome.runtime.sendMessage({
           type: type,
           user: user,

@@ -16,6 +16,14 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english version is in translation)
 
+## Discord
+
+Join our discord channel to have some discussion.
+
+[![DrrrChat](https://discordapp.com/api/guilds/700216589190037515/widget.png?style=banner2)](https://discord.com/invite/cveZZTt)
+
+<iframe src="https://discord.com/widget?id=700216589190037515&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 ## TODO
 
 ### dev
@@ -24,4 +32,4 @@ Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)(english ver
 - add tripcode identification to configuration
 - support room member variable (include self -> dm to self, roomOwner) in list
 - add neteaseWorld support
-- pokemon monster module 
+- pokemon monster module

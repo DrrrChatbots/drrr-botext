@@ -1,7 +1,7 @@
 roomInfo = undefined;
 function findUser(name, callback){
   for(u of roomInfo.room.users){
-    if(u.name == name) return callback(u);
+    if(u.name == name) return callback ? callback(u) : u;
   }
 }
 
@@ -66,13 +66,15 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
-  if([event_join, event_leave, event_newhost].includes(type)){
+  if(!roomInfo || [event_join, event_leave, event_newhost].includes(type)){
     getRoom(
       function(info){
         roomInfo = info;
+        u = findUser(user);
         chrome.runtime.sendMessage({
           type: type,
           user: user,
+          trip: u.tripcode,
           text: text,
           info: info,
           url: url
@@ -84,10 +86,13 @@ var handle_talks = function(msg){
     );
   }
   else{
+    u = findUser(user);
     chrome.runtime.sendMessage({
       type: type,
       user: user,
+      trip: u.tripcode,
       text: text,
+      info: roomInfo,
       url: url
     });
   }
@@ -226,7 +231,6 @@ function make_extinputs(){
   });
 }
 
-var rinfo = undefined;
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -292,22 +296,22 @@ $(document).ready(function(){
 
       getRoom(
         function(RoomData){
-          rinfo = RoomData; //rinfo.profile
-          console.log('rinfo', rinfo);
+          roomInfo = RoomData; //roomInfo.profile
+          console.log('roomInfo', roomInfo);
 
           // v if enter error, escape
-          if(rinfo.redirect){
+          if(roomInfo.redirect){
             //chrome.storage.sync.remove('jumpToRoom');
             // ^ retain?
             console.log("remove jumped ROOM");
           }
 
-          var find = ()=>monitRooms(true, rinfo.room.roomId);
+          var find = ()=>monitRooms(true, roomInfo.room.roomId);
           setTimeout(find, 5000);
           setInterval(find, 90000);
         },
         function(data){
-          alert("error", data);
+          alert("roomInfo error", data);
         }
       )
     }

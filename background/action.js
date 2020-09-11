@@ -140,9 +140,9 @@ actions = {
 
 function event_action(event, config, req){
   var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
-  rules.map(([type, user_regex, cont_regex, action, arglist])=> {
+  rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
     if(((Array.isArray(type) && type.includes(event)) || type == event)
-      && req.user.match(new RegExp(user_regex))
+      && match_user(req.user, req.trip, user_trip_regex)
       && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
       actions[action].apply(config, argfmt(arglist, req.user, req.text, req.url));
     }

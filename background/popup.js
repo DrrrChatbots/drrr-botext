@@ -151,9 +151,9 @@ var textarea_ui = ui_object(TEXTAREA,
     //style: "width:225px;"
   });
 
-function assoc(key, res, name){
-  if(!res[sid(name)]) return false;
-  var set = settings[name].load(res[sid(name)]);
+function assoc(key, res, comp_name){
+  if(!res[sid(comp_name)]) return false;
+  var set = settings[comp_name].load(res[sid(comp_name)]);
   if(set.length && Array.isArray(set[0])){
     console.log('this... is rule: ', JSON.stringify(set));
     for(r of set){
@@ -181,23 +181,14 @@ function assoc(key, res, name){
   }
 }
 
-function name_trip_split(expr){
-  var e = expr.split('#');
-  na = e[0]
-  tr = (e.length > 1 ? e[e.length - 1] : undefined);
-  return [na, tr]
-}
-
-function assocTrip(key, res, name, trip){
-  if(!res[sid(name)]) return false;
-  var set = settings[name].load(res[sid(name)]);
+function assocTrip(key, res, comp_name, trip){
+  if(!res[sid(comp_name)]) return false;
+  var set = settings[comp_name].load(res[sid(comp_name)]);
   if(set.length && Array.isArray(set[0])){
     console.log('this... is rule: ', JSON.stringify(set));
     for(r of set){
-      var [expr, terms] = r;
-      var [na, tr] = name_trip_split(expr);
-      console.log('matching...', na);
-      if(na.length && key.match(new RegExp(na, 'i')) || (trip && trip.match(new RegExp(tr, 'i')))){
+      var [name_trip, terms] = r;
+      if(match_user(key, trip, name_trip)){
         console.log(key, ' matched!')
         return terms;
       }
@@ -207,10 +198,8 @@ function assocTrip(key, res, name, trip){
   }
   else{
     console.log('this... is list: ', JSON.stringify(set));
-    for(exp of set){
-      var [na, tr] = name_trip_split(exp);
-      console.log('matching...', key, na, tr)
-      if(na.length && key.match(new RegExp(na, 'i')) || (trip && trip.match(new RegExp(tr, 'i')))){
+    for(name_trip of set){
+      if(match_user(key, trip, name_trip)){
         console.log(key, ' matched!')
         return true;
       }

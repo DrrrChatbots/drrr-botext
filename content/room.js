@@ -1,8 +1,15 @@
+prevRoomInfo = undefined;
 roomInfo = undefined;
-function findUser(name, callback){
-  for(u of roomInfo.room.users){
-    if(u.name == name) return callback ? callback(u) : u;
-  }
+function findUser(name, callback, info){
+  if(!info) info = roomInfo;
+  if(info)
+    for(u of info.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
+  if(prevRoomInfo)
+    for(u of prevRoomInfo.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
 }
 
 var handle_talks = function(msg){
@@ -33,6 +40,16 @@ var handle_talks = function(msg){
               user = $(msg).find('.name').text();
             }
           });
+        if(!type){
+          classList = msg.className.split(/\s+/);
+          classList.splice(classList.indexOf('talk'), 1);
+          classList.splice(classList.indexOf('system'), 1);
+          type = classList.length ? classList[0] : 'unknown'
+          names = $(msg).find('.name');
+          user = names[0].textContent;
+          if(names.length > 1)
+            text = names[1].textContent;
+        }
       }
     }
     else{
@@ -69,12 +86,13 @@ var handle_talks = function(msg){
   if(!roomInfo || [event_join, event_leave, event_newhost].includes(type)){
     getRoom(
       function(info){
+        prevRoomInfo = roomInfo;
         roomInfo = info;
         u = findUser(user);
         chrome.runtime.sendMessage({
           type: type,
           user: user,
-          trip: u.tripcode,
+          trip: u ? u.tripcode : '',
           text: text,
           info: info,
           url: url
@@ -90,7 +108,7 @@ var handle_talks = function(msg){
     chrome.runtime.sendMessage({
       type: type,
       user: user,
-      trip: u.tripcode,
+      trip: u ? u.tripcode : '',
       text: text,
       info: roomInfo,
       url: url
@@ -296,6 +314,7 @@ $(document).ready(function(){
 
       getRoom(
         function(RoomData){
+          prevRoomInfo = roomInfo;
           roomInfo = RoomData; //roomInfo.profile
           console.log('roomInfo', roomInfo);
 

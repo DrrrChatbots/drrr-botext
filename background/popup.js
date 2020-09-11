@@ -571,48 +571,13 @@ var EventActionH = new Handler("event action",
       new label_ui({}, 'EventAction')
     ], {title: 'custom your actions on specific events (⚙ setting)'})
   ],
-  {
-    [event_join]: {
+  event_events.reduce(function(obj, x) {
+    obj[x] = {
       precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_join, config, req)
-    },
-    [event_leave]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_leave, config, req)
-    },
-    [event_newhost]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_newhost, config, req)
-    },
-    [event_me]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_me, config, req)
-    },
-    [event_msg]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_msg, config, req)
-    },
-    [event_dm]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_dm, config, req)
-    },
-    [event_dmto]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_dmto, config, req)
-    },
-    [event_submit]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_submit, config, req)
-    },
-    [event_music]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_music, config, req)
-    },
-    [event_musicend]: {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(event_musicend, config, req)
-    }
-  }
+      onevent: (req, callback, config, uis, sender) => event_action(x, config, req)
+    };
+    return obj;
+  }, {})
 );
 
 function log2note(type, e){

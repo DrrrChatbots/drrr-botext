@@ -257,7 +257,7 @@ $(document).ready(function(){
   console.log($('#user_name').text());
 
   chrome.storage.sync.get(
-    [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile'],
+    [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile', '#bg-url-input', '#name-color-input', '#name-bg-color-input'],
     (config) => {
       console.log(JSON.stringify(config));
 
@@ -311,6 +311,22 @@ $(document).ready(function(){
 
       chrome.runtime.sendMessage({ clearNotes: true, pattern:'' });
       //'https://drrr.com/room/.*'
+
+      if(config['#bg-url-input']){
+        setTimeout(()=>changeBgImageURL({url: config['#bg-url-input']}), 100);
+      }
+
+      window.addEventListener("resize", ()=>{
+        document.body.style.backgroundPosition = `right ${$('.message_box').height()}px`;
+      });
+
+      if(config['#name-color-input']){
+        setTimeout(()=>changeNameClr({color: config['#name-color-input']}), 100);
+      }
+
+      if(config['#name-bg-color-input']){
+        setTimeout(()=>changeNameBgClr({color: config['#name-bg-color-input']}), 100);
+      }
 
       getRoom(
         function(RoomData){

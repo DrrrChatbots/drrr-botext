@@ -353,6 +353,21 @@ function bgEffect(args){
   );
 }
 
+function changeBgImageURL(args){
+  document.body.style.backgroundImage = `url('${args.url}')`;
+  document.body.style.backgroundSize = "100% auto";
+  document.body.style.backgroundPosition = `right ${$('.message_box').height()}px`;
+}
+
+function changeNameClr(args){
+  document.body.style.color = args.color;
+}
+
+function changeNameBgClr(args){
+  $('#cust-name-bg').remove();
+  $("<style/>", {id:'cust-name-bg', text: `.select-text { background-color: ${args.color}; }`}).appendTo('head');
+}
+
 var methods = {}
 methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
@@ -376,4 +391,6 @@ methods[keep_room] = keepRoom;
 methods[cache_profile] = cacheProfile;
 methods[update_profile] = updateProfile;
 methods[bg_effect] = bgEffect;
-
+methods[change_bg_img_url] = changeBgImageURL;
+methods[change_name_clr] = changeNameClr;
+methods[change_name_bg_clr] = changeNameBgClr;

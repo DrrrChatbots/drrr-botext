@@ -429,7 +429,9 @@ var TimerH = new Handler("timer",
     [event_timer]: {
       precond: (config, uis) => true,
       onevent: (req, callback, config, uis, sender) => {
-        actions[req.action].apply(config, argfmt(req.arglist, req.user, req.text, req.url).map(timefmt));
+        argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
+          return actions[req.action].apply(config, args.map(timefmt));
+        });
       }
     },
     [event_exitalarm]: {

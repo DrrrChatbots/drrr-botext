@@ -144,7 +144,9 @@ function event_action(event, config, req){
     if(((Array.isArray(type) && type.includes(event)) || type == event)
       && match_user(req.user, req.trip, user_trip_regex)
       && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
-      actions[action].apply(config, argfmt(arglist, req.user, req.text, req.url));
+      argfmt(arglist, req.user, req.text, req.url, (args)=>{
+        return actions[action].apply(config, args);
+      });
     }
   });
 }

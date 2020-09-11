@@ -868,6 +868,34 @@ function bio_setup(config){
       }
     })
   });
+
+  if(config['#bg-url-input']){
+    $('#bg-url-input').val(config['#bg-url-input']);
+  }
+
+  $('#bg-url-set').on('click', function(){
+    chrome.storage.sync.set({'#bg-url-input': $('#bg-url-input').val()});
+    sendTab({ fn: change_bg_img_url, args: { url: $('#bg-url-input').val() } });
+  });
+
+  if(config['#name-color-input']){
+    $('#name-color-input').val(config['#name-color-input']);
+  }
+
+  $('#name-color-set').on('click', function(){
+    chrome.storage.sync.set({'#name-color-input': $('#name-color-input').val()});
+    sendTab({ fn: change_name_clr, args: { color: $('#name-color-input').val() } });
+  });
+
+  if(config['#name-bg-color-input']){
+    $('#name-bg-color-input').val(config['#name-bg-color-input']);
+  }
+
+  $('#name-bg-color-set').on('click', function(){
+    chrome.storage.sync.set({'#name-bg-color-input': $('#name-bg-color-input').val()});
+    sendTab({ fn: change_name_bg_clr, args: { color: $('#name-bg-color-input').val() } });
+  });
+
 }
 
 // glyphicon-barcode glyphicon-qrcode

@@ -10,7 +10,7 @@
 
 手機端：
 
-手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), [iOS](https://apps.apple.com/tw/app/yandex-browser/id483693909))，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
+手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), iOS 的 Yandex 不支援插件)，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
 ## 使用說明
 

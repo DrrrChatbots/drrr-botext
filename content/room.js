@@ -316,26 +316,36 @@ $(document).ready(function(){
 
 var exec_method = false;
 var method_queue = [];
-var exec_time_gap = 5000;
+var exec_time_gap = 2500;
 
 function do_method(){
-  if(!exec_method){
-    exec_method = true;
-    var idx = 0;
+  function _do_method(){
     if(method_queue.length){
-      if(method_queue.length === 1){
-        setTimeout(()=>{
-          method_queue.shift()();
-          if(method_queue.length)
-            setTimeout(do_method, exec_time_gap);
-          else exec_method = false;
-        }, idx * exec_time_gap);
-      }
-      else setTimeout(method_queue.shift(), idx * exec_time_gap);
-      idx++;
+      method_queue.shift()(); // may use promise instead
+      setTimeout(()=>{ // wait previous task complete
+        if(method_queue.length)
+          _do_method();
+        else exec_method = false;
+      }, exec_time_gap);
     }
   }
+  if(!exec_method){ exec_method = true; _do_method(); }
 }
+
+/*
+function do_method(){
+  if(!exec_method && method_queue.length){
+    exec_method = true;
+    new Promise((res, rej)=>{
+      method_queue.shift()();
+      res();
+    }).then(()=>{
+      if(method_queue.length) do_method();
+      else exec_method = false;
+    });
+  }
+}
+*/
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   console.log(JSON.stringify(req), "comes the method from background");

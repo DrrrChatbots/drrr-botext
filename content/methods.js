@@ -92,9 +92,6 @@ var offDmMember = function(args){
 
 var dmMember = function(args, callback, passOn){
 
-  console.log("user dm", args);
-  console.log("user dm2", passOn);
-
   bot_ondm = true;
   if($('.to-whom').hasClass('on')){
     prevTo = $('#to-input').val();
@@ -149,60 +146,34 @@ var handOverRoom = function(args){
 }
 
 kickFlag = false;
-
-var kickMember = function(args){
-  if(kickFlag){
-    setTimeout(()=>kickMember(args), 3500);
-  }
-  else{
-    kickFlag = true;
-    findUser(args.user, (u)=>ctrlRoom({'kick': u.id}));
-    //openFuncList(args, () => {
-    //  if($('.dropdown-item-kick').length){
-    //    $('.dropdown-item-kick')[0].click()
-    //    setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
-    //  }
-    //  else alert("you are not room owner, can't kick anyone");
-    //});
-    setTimeout(()=>{ kickFlag = false; }, 3000);
+function removeMember(way){
+  return function(args){
+    if(kickFlag){
+      setTimeout(()=>kickMember(args), 2000);
+    }
+    else{
+      kickFlag = true;
+      new Promise((res, rej)=>{
+        findUser(args.user, (u)=>ctrlRoom({[way]: u.id}));
+        res();
+      }).then(()=>{
+        kickFlag = false;
+      })
+    }
   }
 }
 
-var banMember = function(args){
-  if(kickFlag){
-    setTimeout(()=>banMember(args), 3500);
-  }
-  else{
-    kickFlag = true;
-    findUser(args.user, (u)=>ctrlRoom({'ban': u.id}));
-    //openFuncList(args, () => {
-    //  if($('.dropdown-item-ban').length){
-    //    $('.dropdown-item-ban')[0].click()
-    //    setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
-    //  }
-    //  else alert("you are not room owner, can't kick anyone");
-    //});
-    setTimeout(()=>{ kickFlag = false; }, 3000);
-  }
-}
+var kickMember = removeMember('kick');
+var banMember = removeMember('ban');
+var banReportMember = removeMember('report_and_ban_user');
 
-var banReportMember = function(args){
-  if(kickFlag){
-    setTimeout(()=>banReportMember(args), 3500);
-  }
-  else{
-    kickFlag = true;
-    findUser(args.user, (u)=>ctrlRoom({'report_and_ban_user': u.id}));
-    //openFuncList(args, () => {
-    //  if($('.dropdown-item-report-user').length){
-    //    $('.dropdown-item-report-user')[0].click();
-    //    setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
-    //  }
-    //  else alert("you are not room owner, can't kick anyone");
-    //});
-    setTimeout(()=>{ kickFlag = false; }, 3000);
-  }
-}
+//openFuncList(args, () => {
+//  if($('.dropdown-item-kick').length){
+//    $('.dropdown-item-kick')[0].click()
+//    setTimeout(()=> (x=>x.length && x[0].click())($('.confirm')), 1000);
+//  }
+//  else alert("you are not room owner, can't kick anyone");
+//});
 
 var playMusic = function(args){
   console.log(`/share ${args.url} ${args.title}`);

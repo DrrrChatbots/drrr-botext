@@ -107,16 +107,17 @@
           </div>
           <div id="tab1-cont" class="tab-pane fade">
             <br>
-            <div class="input-group">
-              <input id="bg-url-input" type="text" class="form-control" placeholder="background URL here">
-              <div class="input-group-btn">
-                <button id="bg-url-set" class="btn btn-default" type="button" title="set the URL">
-                  <i class="glyphicon glyphicon glyphicon-picture"></i>
-                </button>
-              </div>
-            </div>
 
             <div class="input-group">
+
+              <select id="zh_conv" name="conv_mode" class="form-control" style="text-align:center;padding-left: 4px;padding-right: 0px;padding-top: 4px;width: 41px;" title="traditional simplified chinese converter">
+                  <option value="Ｘ">Ｘ</option>
+                  <option value="简">简</option>
+                  <option value="繁">繁</option>
+              </select>
+
+              <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
               <input id="name-color-input" type="text" class="form-control" placeholder="name color">
               <div class="input-group-btn">
                 <button id="name-color-set" class="btn btn-default" type="button" title="set the color code">
@@ -129,6 +130,16 @@
                   <i class="glyphicon glyphicon glyphicon-text-background"></i>
                 </button>
               </div>
+            </div>
+
+            <div class="input-group">
+              <input id="bg-url-input" type="text" class="form-control" placeholder="background URL here">
+              <div class="input-group-btn">
+                <button id="bg-url-set" class="btn btn-default" type="button" title="set the URL">
+                  <i class="glyphicon glyphicon glyphicon-picture"></i>
+                </button>
+              </div>
+
             </div>
 
             <div class="input-group">
@@ -158,6 +169,7 @@
                 <button id="tripgen" class="btn btn-default" title="tripcode generator">
                   <i class="glyphicon glyphicon-qrcode"></i>
                 </button>
+
               </div>
             </div>
 

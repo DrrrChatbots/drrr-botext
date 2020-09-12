@@ -869,6 +869,15 @@ function bio_setup(config){
     })
   });
 
+  if(config['zh_conv']){
+    $('#zh_conv').val(config['zh_conv']);
+  }
+
+  $('#zh_conv').change(function(){
+    chrome.storage.sync.set({ zh_conv: $(this).val() });
+  });
+
+
   if(config['#bg-url-input']){
     $('#bg-url-input').val(config['#bg-url-input']);
   }

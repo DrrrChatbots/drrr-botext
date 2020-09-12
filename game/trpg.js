@@ -94,47 +94,47 @@ function dice(text){
   else return "number of dice should between 1 to 100";
 }
 
-function new_note(){
-  $.ajax({
-    type: "GET",
-    url: 'https://hackmd.io',
-    dataType: 'html',
-    success: function(data){
-      var nodes = $(data);
-      $.ajax({
-        type: "POST",
-        url: 'https://hackmd.io/template/template-Try-it?redirect=true',
-        data: {'_csrf': nodes.find('input[name="_csrf"]').val()},
-        dataType: 'html',
-        headers: {
-          'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-          'accept-encoding': 'gzip, deflate, br',
-          'accept-language': 'zh-TW,zh;q=0.9,zh-CN;q=0.8,en;q=0.7',
-          'cache-control': 'max-age=0',
-          'content-length': '42',
-          'content-type': 'application/x-www-form-urlencoded',
-          'origin': 'https://hackmd.io',
-          'referer': 'https://hackmd.io/',
-          'sec-fetch-dest': 'document',
-          'sec-fetch-mode': 'navigate',
-          'sec-fetch-site': 'same-origin',
-          'sec-fetch-user': '?1',
-          'upgrade-insecure-requests': '1',
-          'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36',
-        },
-        success: function(data){
-          alert(data);
-        },
-        error: function(data){
-          console.log(data);
-        }
-      });
-    },
-    error: function(data){
-      console.log(data);
-    }
-  });
-}
+//function new_note(){
+//  $.ajax({
+//    type: "GET",
+//    url: 'https://hackmd.io',
+//    dataType: 'html',
+//    success: function(data){
+//      var nodes = $(data);
+//      $.ajax({
+//        type: "POST",
+//        url: 'https://hackmd.io/template/template-Try-it?redirect=true',
+//        data: {'_csrf': nodes.find('input[name="_csrf"]').val()},
+//        dataType: 'html',
+//        headers: {
+//          'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+//          'accept-encoding': 'gzip, deflate, br',
+//          'accept-language': 'zh-TW,zh;q=0.9,zh-CN;q=0.8,en;q=0.7',
+//          'cache-control': 'max-age=0',
+//          'content-length': '42',
+//          'content-type': 'application/x-www-form-urlencoded',
+//          'origin': 'https://hackmd.io',
+//          'referer': 'https://hackmd.io/',
+//          'sec-fetch-dest': 'document',
+//          'sec-fetch-mode': 'navigate',
+//          'sec-fetch-site': 'same-origin',
+//          'sec-fetch-user': '?1',
+//          'upgrade-insecure-requests': '1',
+//          'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36',
+//        },
+//        success: function(data){
+//          alert(data);
+//        },
+//        error: function(data){
+//          console.log(data);
+//        }
+//      });
+//    },
+//    error: function(data){
+//      console.log(data);
+//    }
+//  });
+//}
 
 /*
 ?BGM系統 - 輸入.mp3的網址可以直接撥放(GM用)

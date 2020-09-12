@@ -23,8 +23,10 @@ var getTextNodesIn = function(el) {
 
 var postMessage = function(args){
   if(args.url) $('#url-input').val(args.url);
-  $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
-  $('input[name="post"]').click();
+  zh_conv((cvt)=>{
+    $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+    $('input[name="post"]').click();
+  });
 }
 
 var publishMessage = function(args){
@@ -40,30 +42,33 @@ var publishMessage = function(args){
     $('#url-input').val('');
   }
   if(args.url) $('#url-input').val(args.url);
-  $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
 
-  $('input[name="post"]').click();
+  zh_conv((cvt)=>{
+    $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+    $('input[name="post"]').click();
 
-  setTimeout(()=>{
-    if(prevTo){
-      console.log("recover DM member:", prevTo);
-      $('#to-input').val(prevTo)
-      prevWhom.find('a').click(()=>{
-        $('#to-input').val('');
-        prevWhom.removeClass("on").empty();
-        $('textarea[name="message"]').removeClass("state-secret");
-        $('textarea[name="ext_message"]').removeClass("state-secret");
-      })
-      $($('.to-whom')[0]).replaceWith(prevWhom);
-      console.log("replace");
-    }
-    if(prevURLs.length){
-      [url, type] = prevURLs.pop();
-      $('#url-input').val(url);
-      $('#url-icon').attr('data-status', "filled").text(type);
-    }
-    bot_ondm = false;
-  }, 500);
+    setTimeout(()=>{
+      if(prevTo){
+        console.log("recover DM member:", prevTo);
+        $('#to-input').val(prevTo)
+        prevWhom.find('a').click(()=>{
+          $('#to-input').val('');
+          prevWhom.removeClass("on").empty();
+          $('textarea[name="message"]').removeClass("state-secret");
+          $('textarea[name="ext_message"]').removeClass("state-secret");
+        })
+        $($('.to-whom')[0]).replaceWith(prevWhom);
+        console.log("replace");
+      }
+      if(prevURLs.length){
+        [url, type] = prevURLs.pop();
+        $('#url-input').val(url);
+        $('#url-icon').attr('data-status', "filled").text(type);
+      }
+      bot_ondm = false;
+    }, 500);
+
+  });
 }
 
 var enableMe = true;
@@ -109,28 +114,31 @@ var dmMember = function(args, callback, passOn){
       $('#url-input').val('');
     }
     if(args.url) $('#url-input').val(args.url);
-    $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
-    $('input[name="post"]').click();
-    setTimeout(()=>{
-      if(prevTo){
-        console.log("recover DM member:", prevTo);
-        $('#to-input').val(prevTo)
-        prevWhom.find('a').click(()=>{
-          $('#to-input').val('');
-          prevWhom.removeClass("on").empty();
-          $('textarea[name="message"]').removeClass("state-secret");
-          $('textarea[name="ext_message"]').removeClass("state-secret");
-        })
-        $($('.to-whom')[0]).replaceWith(prevWhom);
-        console.log("replace");
-      }
-      if(prevURLs.length){
-        [url, type] = prevURLs.pop();
-        $('#url-input').val(url);
-        $('#url-icon').attr('data-status', "filled").text(type);
-      }
-      bot_ondm = false;
-    }, 1000);
+
+    zh_conv((cvt)=>{
+      $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+      $('input[name="post"]').click();
+      setTimeout(()=>{
+        if(prevTo){
+          console.log("recover DM member:", prevTo);
+          $('#to-input').val(prevTo)
+          prevWhom.find('a').click(()=>{
+            $('#to-input').val('');
+            prevWhom.removeClass("on").empty();
+            $('textarea[name="message"]').removeClass("state-secret");
+            $('textarea[name="ext_message"]').removeClass("state-secret");
+          })
+          $($('.to-whom')[0]).replaceWith(prevWhom);
+          console.log("replace");
+        }
+        if(prevURLs.length){
+          [url, type] = prevURLs.pop();
+          $('#url-input').val(url);
+          $('#url-icon').attr('data-status', "filled").text(type);
+        }
+        bot_ondm = false;
+      }, 1000);
+    });
   }, 1000);
 }
 

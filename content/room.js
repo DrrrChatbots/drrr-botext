@@ -199,7 +199,15 @@ function make_extinputs(){
       $('#url-icon').attr('data-status', "filled").text(type);
     }
 
-    $('textarea[name="message"]').val(cmd + extmsg.val()), extmsg.val('');
+    zh_conv((cvt)=>{
+
+      $('textarea[name="message"]').val(
+        cvt(cmd + extmsg.val())
+      );
+
+      extmsg.val('');
+
+    });
 
     $('input[name="post"]').click();
     setTimeout(function() {
@@ -208,6 +216,7 @@ function make_extinputs(){
       });
       console.log("submmited by click");
     }, 1000);
+
   });
 
   extmsg.on('keydown', function(e){
@@ -227,15 +236,24 @@ function make_extinputs(){
           $('#url-icon').attr('data-status', "filled").text(type);
         }
 
-        orgmsg.val(cmd + $(this).val());
-        $(this).val('');
+        zh_conv((cvt)=>{
+
+          orgmsg.val(
+            cvt(cmd + $(this).val())
+          );
+
+          $(this).val('');
+          orgpst.click();
+
+        });
+
         setTimeout(function() {
           chrome.runtime.sendMessage({
             type: event_submit,
           });
           console.log("submmited by enter");
         }, 1000);
-        orgpst.click();
+
       }
     }
   });

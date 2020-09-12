@@ -46,9 +46,11 @@ var handle_talks = function(msg){
           classList.splice(classList.indexOf('system'), 1);
           type = classList.length ? classList[0] : 'unknown'
           names = $(msg).find('.name');
-          user = names[0].textContent;
-          if(names.length > 1)
-            text = names[1].textContent;
+          if(names.length){
+            user = names[0].textContent;
+            if(names.length > 1)
+              text = names[1].textContent;
+          }
         }
       }
     }

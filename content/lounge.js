@@ -52,15 +52,20 @@ $(document).ready(function(){
   chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile'], (config) => {
     console.log('config', config);
 
-    if(!config['profile']) ajaxProfile(undefined, undefined, 'lounge');
-    else Profile = config['profile'];
+    function task(){
+      Profile.loc = 'lounge';
+      chrome.storage.sync.set({'profile': Profile});
 
-    Profile.loc = 'lounge';
-    chrome.storage.sync.set({'profile': Profile});
+      if(config['leaveRoom'])
+        chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));
+      else checkGoToRoom(config);
+    }
 
-    if(config['leaveRoom'])
-      chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));
-    else checkGoToRoom(config);
+    if(!config['profile']) ajaxProfile(task, undefined, 'lounge');
+    else{
+      Profile = config['profile'];
+      task();
+    }
   });
 })
 

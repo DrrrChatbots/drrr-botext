@@ -380,17 +380,19 @@ methods[ban_member] = banMember;
 methods[ban_report_member] = banReportMember;
 methods[handover_room] = handOverRoom;
 methods[play_music] = playMusic;
-methods[get_members] = getMembers;
 methods[alert_user] = alertUser;
 methods[bind_alarms] = bindAlarms;
 methods[rebind_alarms] = rebindAlarms;
 methods[clear_alarms] = clearAlarms;
-methods[is_playing] = isPlaying;
-methods[leave_room] = leaveRoom;
 methods[keep_room] = keepRoom;
-methods[cache_profile] = cacheProfile;
-methods[update_profile] = updateProfile;
 methods[bg_effect] = bgEffect;
 methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
 methods[change_name_bg_clr] = changeNameBgClr;
+
+
+methods[is_playing] = isPlaying;
+methods[get_members] = getMembers;
+methods[leave_room] = leaveRoom;
+methods[cache_profile] = cacheProfile;
+methods[update_profile] = updateProfile;

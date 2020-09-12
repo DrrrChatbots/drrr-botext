@@ -388,10 +388,17 @@ function do_method(){
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   console.log(JSON.stringify(req), "comes the method from background");
-  method_queue.push(
-    ((r, cbk) => {
-      return ()=>methods[r.fn](r.args, cbk);
-    })(req, callback)
-  );
-  do_method();
+  console.log(req.fn, cache_profile);
+  if(req.fn && [leave_room, cache_profile, update_profile, get_members, is_playing].includes(req.fn)){
+    methods[req.fn](req.args, callback);
+  }
+  else{
+    method_queue.push(
+      ((r) => {
+        return ()=>methods[r.fn](r.args);
+      })(req)
+    );
+    do_method();
+    if(callback) callback();
+  }
 });

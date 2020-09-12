@@ -124,7 +124,8 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     else if(req.fn == cache_profile){
       if(Profile) Profile.loc = 'lounge';
       console.log("lounge cache", Profile ? "succ": "failed");
-      callback(Profile)
+      callback(Profile);
+      return; // callback finished
     }
     else if(req.fn == update_profile){
       Profile = req.args.profile;
@@ -136,4 +137,5 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
 
     }
   }
+  if(callback) callback();
 });

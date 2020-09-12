@@ -56,12 +56,13 @@ export const ui_event = (config) => {
 
 }
 
-export const event_action = (type, req) => {
+export const event_action = (req, config) => {
+  var type = req.type;
   if(type == event_msg){
     if(req.text.match(/^\/start/))
       setTimeout(()=> sendTab({ fn: publish_message, args: { msg: gnset() } }), 1000);
     else if(req.text.match(/^\d\d\d\d$/))
-      gnjdg(req.text,
+      gnjdg(req.text, config,
         (msg) => setTimeout(()=>
           sendTab({ fn: publish_message, args: { msg: msg } }), 1000));
   }
@@ -103,17 +104,15 @@ function gnset(digits, callback){
   }
 }
 
-function gnjdg(guess, callback){
-  chrome.storage.sync.get((config) => {
-    if(valid(guess)){
-      if(config[GAME_GUESS_NUMBER]){
-        var d = config[GAME_GUESS_NUMBER].split('');
-        var g = guess.split('');
-        var c = g.map((v)=>d.includes(v)).reduce((a, b)=>a+b);
-        var a = g.map((v, idx)=>d[idx] === g[idx]).reduce((a, b)=>a+b);
-        var b  = c - a;
-        callback(a === 4 ? "Your Number is Correct" : `${guess}: ${a}A${b}B`);
-      } else callback("number not set yet, set number to start the game.");
-    } else callback(`guess number must be 4 non-repeat digits: ${guess}`);
-  });
+function gnjdg(guess, config, callback){
+  if(valid(guess)){
+    if(config[GAME_GUESS_NUMBER]){
+      var d = config[GAME_GUESS_NUMBER].split('');
+      var g = guess.split('');
+      var c = g.map((v)=>d.includes(v)).reduce((a, b)=>a+b);
+      var a = g.map((v, idx)=>d[idx] === g[idx]).reduce((a, b)=>a+b);
+      var b  = c - a;
+      callback(a === 4 ? "Your Number is Correct" : `${guess}: ${a}A${b}B`);
+    } else callback("number not set yet, set number to start the game.");
+  } else callback(`guess number must be 4 non-repeat digits: ${guess}`);
 }

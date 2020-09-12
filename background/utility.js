@@ -10,10 +10,10 @@ function Handler(hname, uis, events){
     console.log("making", k);
     /* use IIFE avoid fucking side effect !! */
     var lift = (function(event_name, event_func){
-      return function(req, callback, config, sender){
+      return function(req, config, sender){
         if(event_func.precond(config, uis)){
           console.log(`handling ${hname} ${event_name}`);
-          event_func.onevent(req, callback, config, uis, sender);
+          event_func.onevent(req, config, uis, sender);
         } else console.log(`pass ${hname}`);
       }
     })(k, e);

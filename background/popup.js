@@ -321,7 +321,7 @@ var BanListH = new Handler("banlist",
   {
     [event_join]: {
       precond: (config, uis) => config[SWITCH_BANLIST],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         var banm = {
           [action_kick]: kick_member,
           [action_ban]: ban_member,
@@ -398,7 +398,7 @@ var TimerH = new Handler("timer",
   {
     [event_newtab]: {
       precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, callback, config, uis, sender) => {
+      onevent: (req, config, uis, sender) => {
         //check the chrome.alarm.api
         roomTabs((tabs)=>{
           if(tabs.length == 1){
@@ -417,7 +417,7 @@ var TimerH = new Handler("timer",
     },
     [event_logout]: {
       precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, callback, config, uis, sender) => {
+      onevent: (req, config, uis, sender) => {
         chrome.notifications.create({
           type: "basic",
           iconUrl: '/icon.png',
@@ -428,7 +428,7 @@ var TimerH = new Handler("timer",
     },
     [event_timer]: {
       precond: (config, uis) => true,
-      onevent: (req, callback, config, uis, sender) => {
+      onevent: (req, config, uis, sender) => {
         argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
           return actions[req.action].apply(config, args.map(timefmt));
         });
@@ -436,7 +436,7 @@ var TimerH = new Handler("timer",
     },
     [event_exitalarm]: {
       precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, callback, config, uis, sender) => {
+      onevent: (req, config, uis, sender) => {
         roomTabs((tabs)=>{
           if(tabs.length < 2){
             chrome.notifications.create({
@@ -481,7 +481,7 @@ var BanAbuseH = new Handler("BanAbuse",
   {
     [event_msg]: {
       precond: (config, uis) => config[SWITCH_BANABUSE],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         if(assoc(req.text, config, BANABUSE)){
           console.log("abuse kick");
           sendTab({
@@ -494,7 +494,7 @@ var BanAbuseH = new Handler("BanAbuse",
 
     [event_dm]: {
       precond: (config, uis) => config[SWITCH_BANABUSE],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         if(assoc(req.text, config, BANABUSE)){
           console.log("abuse kick");
           sendTab({
@@ -521,7 +521,7 @@ var WelcomeH = new Handler("welcome",
   {
     [event_join]: {
       precond: (config, uis) => config[SWITCH_WELCOME],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         // avoid welcome banlist user
         trip = undefined;
         for(e of req.info.room.users){
@@ -576,7 +576,7 @@ var EventActionH = new Handler("event action",
   event_events.reduce(function(obj, x) {
     obj[x] = {
       precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, callback, config, uis, sender) => event_action(x, config, req)
+      onevent: (req, config, uis, sender) => event_action(x, config, req)
     };
     return obj;
   }, {})
@@ -632,7 +632,7 @@ function NotiEvents(){
   ts.forEach((t)=>{
     es[t] = {
       precond: (config, uis) => config[SWITCH_NOTIF],
-      onevent: (et => (req, callback, config, uis) => {
+      onevent: (et => (req, config, uis) => {
         chrome.tabs.query({active:true, url: 'https://drrr.com/room/*'}, (tabs) => {
           if(!tabs.length)
             return sendNoti(config, et, req);
@@ -708,7 +708,7 @@ var AutoDMH = new Handler("AutoDM",
   {
     [event_dmto]: {
       precond: (config, uis) => true,
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         console.log("save the dm username");
         chrome.storage.sync.set({
           [DM_USERNAME]: req.user
@@ -718,7 +718,7 @@ var AutoDMH = new Handler("AutoDM",
 
     [event_submit]: {
       precond: (config, uis) => config[SWITCH_DM],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         console.log("here you are");
         if(config[DM_USERNAME]){
           console.log("there");
@@ -751,7 +751,7 @@ var RoomKeeperH = new Handler("RoomKeeper",
   {
     [event_newtab]: {
       precond: (config, uis) => config[SWITCH_KEEPER],
-      onevent: (req, callback, config, uis) => {
+      onevent: (req, config, uis) => {
         roomTabs((tabs)=>{
           if(tabs.length == 1){
             sendTab({
@@ -874,7 +874,7 @@ function TgEvents(){
   ts.forEach((t)=>{
     es[t] = {
       precond: (config, uis) => config[SWITCH_TGBOT] && config[TGBOTTOKEN] && config[TGBOTCHATID],
-      onevent: (et => (req, callback, config, uis) => { sendTg(config, et, req); })(t)
+      onevent: (et => (req, config, uis) => { sendTg(config, et, req); })(t)
     }
   })
   return es;
@@ -914,7 +914,7 @@ var TgBotH = new Handler("TgBot",
 //    {
 //        [event_msg]: {
 //            precond: (config, uis) => config[SWITCH_TGBOT],
-//            onevent: (req, callback, config, uis) => {
+//            onevent: (req, config, uis) => {
 //            }
 //        }
 //    }
@@ -977,6 +977,6 @@ var popupURL = chrome.extension.getURL('popup/index.html');
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(sender.url === popupURL){
     console.log(req);
-    if(callback) callback();
   }
+  if(callback) callback();
 });

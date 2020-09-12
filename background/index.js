@@ -92,7 +92,6 @@ function generate_notification(req){
 
 var error403 = 0;
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
-  console.log(sender);
   if(req && req.jumpto){
     if(sender.tab && sender.tab.id)
       chrome.tabs.update(sender.tab.id, { url: req.jumpto });
@@ -114,9 +113,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
         'cookie':cookies
       }, ()=> callback && callback());
     });
+    return; // callback finished
   }
   else if(req && req.setCookies){
     setCookies(req.cookies, callback);
+    return; // callback finished
   }
   else if(req && req.notification){
     generate_notification(req);
@@ -127,18 +128,22 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     chrome.storage.sync.get((config) => {
       var reg_funcs = reg_table[req.type] || [];
       for(handle of reg_funcs)
-        handle(req, callback, config, sender)
+        handle(req, config, sender)
       if(config['select_game'])
         import(`/game/${game_mapping[config['select_game']]}`).then(
           (module)=>{
-            module.event_action && module.event_action(req.type, req);
+            module.event_action && module.event_action(req, config, sender);
           }
         )
 
-      if(callback) callback("done.");
     });
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
 
+  }
+  if(callback){
+    //alert(JSON.stringify(req));
+    //console.log(JSON.stringify(req))
+    callback();
   }
 })

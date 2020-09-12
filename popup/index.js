@@ -1313,8 +1313,6 @@ $(document).ready(function(){
     game_setup(config);
     var tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();
-    //$(`#${tab}`).addClass('active');
-    //$(`#${tab}-cont`).addClass('active').addClass('in');
     $('.pop-tab').on('click', function(){
       chrome.storage.sync.set({'pop-tab': this.id});
     })
@@ -1328,4 +1326,5 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     var optionSelected = $("option:selected", $stored);
     optionSelected.replaceWith(`<option value="">Not Logined</option>`);
   }
+  if(callback) callback();
 });

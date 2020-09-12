@@ -23,7 +23,7 @@ var getTextNodesIn = function(el) {
 
 var postMessage = function(args){
   if(args.url) $('#url-input').val(args.url);
-  $('textarea[name="message"]').val(args.msg);
+  $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
   $('input[name="post"]').click();
 }
 
@@ -40,7 +40,7 @@ var publishMessage = function(args){
     $('#url-input').val('');
   }
   if(args.url) $('#url-input').val(args.url);
-  $('textarea[name="message"]').val(args.msg);
+  $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
 
   $('input[name="post"]').click();
 
@@ -109,7 +109,7 @@ var dmMember = function(args, callback, passOn){
       $('#url-input').val('');
     }
     if(args.url) $('#url-input').val(args.url);
-    $('textarea[name="message"]').val(args.msg);
+    $('textarea[name="message"]').val(args.msg.trim().length ? args.msg : '⠀');
     $('input[name="post"]').click();
     setTimeout(()=>{
       if(prevTo){

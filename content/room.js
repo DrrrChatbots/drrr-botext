@@ -2,7 +2,7 @@ prevRoomInfo = undefined;
 roomInfo = undefined;
 function findUser(name, callback, info){
   if(!info) info = roomInfo;
-  if(info)
+  if(info && info.room)
     for(u of info.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }

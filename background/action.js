@@ -1,13 +1,12 @@
 
 actions = {
   [action_msg ] : function(...msgs){
-    if(msgs.length){
-      setTimeout(
-        () => sendTab({
-          fn: publish_message,
-          args: { msg: msgs[Math.floor(Math.random() * msgs.length)] }
-        }), 1000);
-    }
+    if(!msgs.length) msgs = [''];
+    setTimeout(
+      () => sendTab({
+        fn: publish_message,
+        args: { msg: msgs[Math.floor(Math.random() * msgs.length)] }
+      }), 1000);
   },
   [action_horm ] : function(user){
     setTimeout(
@@ -19,7 +18,8 @@ actions = {
 
   },
   [action_umsg ] : function(url, ...msgs){
-    if(url && msgs.length){
+    if(url){
+      if(!msgs.length) msgs = [''];
       setTimeout(
         () => sendTab({
           fn: publish_message,
@@ -31,19 +31,19 @@ actions = {
     }
   },
   [action_dm  ] : function(user, ...msgs){
-    if(msgs.length){
-      setTimeout(
-        () => sendTab({
-          fn: dm_member,
-          args: {
-            user: user,
-            msg: msgs[Math.floor(Math.random() * msgs.length)]
-          }
-        }), 1000);
-    }
+    if(!msgs.length) msgs = [''];
+    setTimeout(
+      () => sendTab({
+        fn: dm_member,
+        args: {
+          user: user,
+          msg: msgs[Math.floor(Math.random() * msgs.length)]
+        }
+      }), 1000);
   },
   [action_udm ] : function(user, url, ...msgs){
-    if(url && msgs.length){
+    if(url){
+      if(!msgs.length) msgs = [''];
       setTimeout(
         () => sendTab({
           fn: dm_member,

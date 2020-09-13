@@ -6,10 +6,11 @@ function findUser(name, callback, info){
     for(u of info.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
-  if(prevRoomInfo)
+  if(prevRoomInfo && prevRoomInfo.room){
     for(u of prevRoomInfo.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
+  }
 }
 
 var handle_talks = function(msg){
@@ -206,10 +207,10 @@ function make_extinputs(){
       );
 
       extmsg.val('');
+      $('input[name="post"]').click();
 
     });
 
-    $('input[name="post"]').click();
     setTimeout(function() {
       chrome.runtime.sendMessage({
         type: event_submit,

@@ -24,7 +24,7 @@ var getTextNodesIn = function(el) {
 var postMessage = function(args){
   if(args.url) $('#url-input').val(args.url);
   zh_conv((cvt)=>{
-    $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+    $('textarea[name="message"]').val(args.msg.trim().length ? cvt(args.msg) : '⠀');
     $('input[name="post"]').click();
   });
 }
@@ -44,7 +44,7 @@ var publishMessage = function(args){
   if(args.url) $('#url-input').val(args.url);
 
   zh_conv((cvt)=>{
-    $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+    $('textarea[name="message"]').val(args.msg.trim().length ? cvt(args.msg) : '⠀');
     $('input[name="post"]').click();
 
     setTimeout(()=>{
@@ -116,7 +116,7 @@ var dmMember = function(args, callback, passOn){
     if(args.url) $('#url-input').val(args.url);
 
     zh_conv((cvt)=>{
-      $('textarea[name="message"]').val(cvt(args.msg.trim().length ? args.msg : '⠀'));
+      $('textarea[name="message"]').val(args.msg.trim().length ? cvt(args.msg) : '⠀');
       $('input[name="post"]').click();
       setTimeout(()=>{
         if(prevTo){

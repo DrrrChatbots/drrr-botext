@@ -103,7 +103,7 @@ export const manual = {
 <li><code>ocdr</code> <code>[]</code><br>
 離開房間又進入房間。</li>
 <li><code>gofr</code> <code>["房間名稱(RegExp)"]</code><br>
-前往符合房間名稱的房間。若失敗則回到源房間。</li>
+前往符合房間名稱的房間。若失敗則回到原房間。</li>
 </ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。） ～</p><p>可以在參數裡面使用特殊時間變量：</p><ul>
 <li><code>%Y</code> 年份，四位數字西元年</li>
 <li><code>%年</code> 年份，中文數字</li>
@@ -258,7 +258,7 @@ export const manual = {
 <li><code>ocdr</code> <code>[]</code><br>
 離開房間又進入房間。</li>
 <li><code>gofr</code> <code>["房間名稱(RegExp)"]</code><br>
-前往符合房間名稱的房間。若失敗則回到源房間。</li>
+前往符合房間名稱的房間。若失敗則回到原房間。</li>
 </ul><p>特殊參數變量：</p><ul>
 <li><code>%Y</code> 年份，四位數字西元年</li>
 <li><code>%年</code> 年份，中文數字</li>

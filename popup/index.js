@@ -371,7 +371,7 @@ function show_stickergrid(url, callback){
 
     },
     error: function(data){
-      alert("Error: " + JSON.stringify(data));
+      alert("Error on get sticker images: " + JSON.stringify(data));
     }
   });
 }
@@ -1240,7 +1240,7 @@ function sticker_setup(config){
           $stored.change();
         },
         error: function(data){
-          alert("Error: " + JSON.stringify(data));
+          alert("Error on getting sticker URL: " + JSON.stringify(data));
         }
       });
     } else alert('URL should be something likes https://store.line.me/\\.*/(product|sticker)/\\w*');

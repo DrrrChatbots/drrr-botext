@@ -149,7 +149,6 @@ function handle_exit(){
   //window.onunload = confirmExit;
 }
 
-
 var bot_ondm = false;
 var ext_click = 0;
 var orgmsg, extmsg, orgpst, extpst;
@@ -223,6 +222,8 @@ function make_extinputs(){
   extmsg.on('keydown', function(e){
     setTimeout(()=>$(this).next().text($(this).attr('maxlength') - $(this).val().length), 50);
     if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13) {
+      if($('#textcomplete-dropdown-1').is(':visible')) return;
+
       var cmd = '';
       if(!$(this).hasClass('state-secret') &&
         $('#url-icon').attr('data-status') !== 'filled' && !prevURLs.length &&
@@ -268,6 +269,32 @@ function make_extinputs(){
       extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
     extmsg.focus();
   });
+
+  extmsg.textcomplete([{
+    match: /\B@(\w*)$/,
+    search: function(e, t) {
+      t($.map(roomInfo.room.users, function(t) {
+        return t.name === roomInfo.profile.name ? void 0 : 0 === t.name.toLowerCase().indexOf(e.toLowerCase()) ? t : null
+      }))
+    },
+    index: 1,
+    replace: function(e) {
+      return "@" + e.name + " "
+    },
+    template: function(e, t) {
+      return $("<div />", {
+        class: "name-wrap"
+      }).append($("<span />", {
+        class: "symbol symbol-" + e.icon
+      })).append($("<span />", {
+        class: "name",
+        text: e.name
+      })).prop("outerHTML")
+    }
+  }], {
+    maxCount: 30,
+    debounce: 100
+  })
 }
 
 var lounge = undefined;

@@ -13,6 +13,13 @@ function findUser(name, callback, info){
   }
 }
 
+function youtube_parser(url){
+  if(!url) return false;
+  var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  var match = url.match(regExp);
+  return (match&&match[7].length==11)? match[7] : false;
+}
+
 var handle_talks = function(msg){
 
   var type = '', user = '',
@@ -346,6 +353,11 @@ $(document).ready(function(){
         var e = event.target;
         if(e.parentElement.id == 'talks')
           handle_talks(e);
+        var ue = $(e).find($('.bubble p a'));
+        var ytid = youtube_parser(ue.attr('href'));
+        if(ytid){
+          ue.replaceWith(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+        }
       });
 
       make_extinputs();

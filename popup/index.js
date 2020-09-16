@@ -474,8 +474,13 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
   );
 }
 
-function show_configlist(container, conf_type, callback, buttons, empty_name, attrs){
-  chrome.storage.sync.get(conf_type, (config) => {
+function show_configlist(container, conf_type, callback, buttons, empty_name, attrs, default_config){
+  var load = default_config ?
+    (ct, cb) => cb(default_config) :
+    (ct, cb) => chrome.storage.sync.get(ct, cb);
+
+  //chrome.storage.sync.get(conf_type, (config) => {
+  load(conf_type, (config) => {
     function recursive(cfs, callback, ext){
       if(cfs.length){
         conf = cfs[0];
@@ -522,7 +527,7 @@ function show_playlist(callback){
     PLAYLIST, callback,
     [del_song_btn, imm_pldl_btn, fav_song_btn],
     'EMPTY PLAYLIST', {
-      title: (c, l) => `${l.name} - ${l.singer}`,
+      title: (c, l) => `${l} - ${c}`,
       content: (c, l) => ommited_name(l.name, l.singer),
       data: (c, l) => l.link,
       icon: 'glyphicon-list'

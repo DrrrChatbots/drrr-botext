@@ -162,6 +162,7 @@ function removeMember(way){
     else{
       kickFlag = true;
       new Promise((res, rej)=>{
+        findUser(args.user, (u)=>console.log(`remove user ${JSON.stringify(u)}`));
         findUser(args.user, (u)=>ctrlRoom({[way]: u.id}));
         res();
       }).then(()=>{

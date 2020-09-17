@@ -152,13 +152,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
 var login_mode; // a global variable
 chrome.storage.sync.get('#login-mode', function (data) {
     login_mode = data['#login-mode'];
-    alert(JSON.stringify(login_mode));
 });
 
 chrome.storage.onChanged.addListener(function(changes, area) {
     if (area == "sync" && '#login-mode' in changes) {
       login_mode = changes['#login-mode']["newValue"];
-      alert(JSON.stringify(login_mode));
     }
 });
 

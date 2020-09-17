@@ -4,12 +4,13 @@ var ENEMY = "ENEMY"
 
 var language = window.navigator.userLanguage || window.navigator.language;
 var intro = (language == 'zh-CN' || language == 'zh-TW') ?
-  `<p>歡迎使用房間守衛模組</p>`:`<p>Welcome to room guard module</p>`
+  `<p>歡迎使用房間守衛模組。<br>訪客如果進房後沒有任何動作，將在下次進房被 ban。</p>`:`<p>Welcome to room guard module.<br>Uesr will be banned next if he/she has no action between join and leave room.</p>`
 
 export const ui = (config) => {
   return `
+  ${intro}
+  <!--
   <div class="input-group">
-    <!--
     <div class="input-group-btn">
         <button id="trpg_host" class="btn btn-default" type="button" title="become host">
             <i id="is_host" class="glyphicon glyphicon-user"></i>
@@ -27,25 +28,17 @@ export const ui = (config) => {
             <i id="" class="glyphicon 	glyphicon-picture"></i>
         </button>
     </div>
+  </div>
     -->
-  </div>
+  <hr>
   <div class="row" style="height:100%">
     <div class="col-md-4">
       <div class="list-group" style="margin-bottom: 0px;">
-        <hr>
         <div id='observe_list_container'></div>
-      </div>
-    </div>
-  </div>
-  <div class="row" style="height:100%">
-    <div class="col-md-4">
-      <div class="list-group" style="margin-bottom: 0px;">
-        <hr>
         <div id='enemy_list_container'></div>
       </div>
     </div>
-  </div>
-  <br>${intro}`
+  </div>`
 }
 
 var del_enemy_btn = (args) =>

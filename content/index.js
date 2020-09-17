@@ -1,5 +1,9 @@
 $(document).ready(function(){
   chrome.storage.sync.get('#login-mode', (config)=>{
+    if(!config['#login-mode']){
+      config['#login-mode'] = 'Bot';
+      chrome.storage.sync.set({'#login-mode': 'Bot'});
+    }
     $(this).val(config['#login-mode'])
     $('.home-name').append(`
       <select id="login-mode" name="conv_mode" class="home-name-input" style="width:100px" title="select login mode">

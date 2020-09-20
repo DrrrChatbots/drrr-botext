@@ -93,7 +93,13 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
-  if(!roomInfo || [event_join, event_leave, event_newhost].includes(type)){
+  if(text.startsWith('/replay')){
+    console.log(roomInfo);
+    console.log(roomInfo.room.np);
+    playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
+  }
+
+  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
     getRoom(
       function(info){
         prevRoomInfo = roomInfo;
@@ -156,126 +162,53 @@ function handle_exit(){
   //window.onunload = confirmExit;
 }
 
-var bot_ondm = false;
 var ext_click = 0;
-var orgmsg, extmsg, orgpst, extpst;
-function make_extinputs(){
+var org_post, ext_post;
+function wrap_post_form(){
+  function wrapper(callback){
+    ext_click = 2;
+    var cmd = '';
+    if(!$('textarea[name="message"]').hasClass('state-secret') &&
+      $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
+      !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
 
-  orgmsg = $('textarea[name="message"]')
-  extmsg = orgmsg.clone().attr("name", "ext_message");
-  orgmsg.after(extmsg);
-  orgmsg.wrap('<div style="display:none"></div>');
-
-  console.log("whom length:", $('.to-whom'));
-
-  $('.to-whom').on('DOMSubtreeModified',function(e){
-    console.log($(this).hasClass('on'));
-    if(!bot_ondm){
-      if($(this).hasClass('on'))
-        extmsg.addClass('state-secret');
-      else extmsg.removeClass('state-secret');
+    if(!$('textarea[name="message"]').val().match(/^\s*$/)){
+      zh_conv((cvt)=>{
+        $('textarea[name="message"]').val(
+          cvt(cmd + $('textarea[name="message"]').val()));
+        callback();
+      });
     }
-  });
+  }
 
-  orgpst = $('input[name="post"]');
-  extpst = orgpst.clone().attr("name", "ext_post").attr('type', 'button');
-  orgpst.after(extpst);
-  orgpst.wrap('<div style="display:none"></div>');
+  org_post = $('input[name="post"]');
+  ext_post = org_post.clone().attr("name", "ext_post").attr('type', 'button');
+  org_post.after(ext_post);
+  org_post.wrap('<div style="display:none"></div>');
 
-  if(orgpst[0]){
+  if(org_post[0]){
     (new MutationObserver(function(mutations){
       mutations.forEach(function(mutation) {
         if(ext_click){
-          extpst.val(mutation.target.value);
+          ext_post.val(mutation.target.value);
           ext_click--;
         }
       });
-    })).observe(orgpst[0], { attributes: true });
+    })).observe(org_post[0], { attributes: true });
   }
 
-  function send_msg(text){
-    var cmd = '', req = {fn: '', args: {}};
-    if(!extmsg.hasClass('state-secret') &&
-      $('#url-icon').attr('data-status') !== 'filled' && !prevURLs.length &&
-      enableMe && !extmsg.val().match(/^\/\w/)) cmd = '/me ';
-
-    if(!extmsg.val().match(/^\s*$/)){
-      zh_conv((cvt)=>{
-        if(extmsg.hasClass('state-secret')){
-          req.fn = dmMember;
-          req.args.user = $('#to-input').val() || (prevTo.length && prevTo.pop());
-        }
-        else req.fn = publishMessage;
-
-        if(prevURLs.length){
-          [url, type] = prevURLs.pop();
-          if(url && url.length) req.args.url = url;
-          $('#url-input').val('');
-          $('#url-icon').attr('data-status', "").text('');
-        }
-        args.msg = cvt(cmd + extmsg.val());
-        extmsg.val('');
-        emit_method(req, undefined, (){
-          setTimeout(function() {
-            chrome.runtime.sendMessage({
-              type: event_submit,
-            });
-            console.log(text);
-          }, 1000);
-        });
-      });
-    }
-  }
-
-  extpst.click(function(){
-    ext_click = 2;
-    send_msg("submmited by click");
+  ext_post.on('click', function(e){
+    wrapper(()=> org_post.click());
   });
 
-  extmsg.on('keydown', function(e){
-    setTimeout(()=>$(this).next().text($(this).attr('maxlength') - $(this).val().length), 50);
-    if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13) {
-      if($('#textcomplete-dropdown-1').is(':visible')) return;
-      e.preventDefault();
-      send_msg("submmited by enter");
+  $('textarea[name="message"]').on('keydown', function(e){
+    if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13){
+      if(!e.originalEvent.mySecretVariableName) {
+        e.preventDefault();
+        wrapper(()=> org_post.click());
+      }
     }
   });
-
-  $(document).on('click', '.dropdown-item-reply', function(){
-    extmsg.val(extmsg.val() + $(this).text() + ' ');
-    extmsg.focus();
-  });
-  $(document).on('click', '.avatar', function(){
-    if(!$(this).parent().parent().hasClass('secret'))
-      extmsg.val(extmsg.val() + `@${$($(this).next(), '.select-text').text()} `);
-    extmsg.focus();
-  });
-
-  extmsg.textcomplete([{
-    match: /\B@(\w*)$/,
-    search: function(e, t) {
-      t($.map(roomInfo.room.users, function(t) {
-        return t.name === roomInfo.profile.name ? void 0 : 0 === t.name.toLowerCase().indexOf(e.toLowerCase()) ? t : null
-      }))
-    },
-    index: 1,
-    replace: function(e) {
-      return "@" + e.name + " "
-    },
-    template: function(e, t) {
-      return $("<div />", {
-        class: "name-wrap"
-      }).append($("<span />", {
-        class: "symbol symbol-" + e.icon
-      })).append($("<span />", {
-        class: "name",
-        text: e.name
-      })).prop("outerHTML")
-    }
-  }], {
-    maxCount: 30,
-    debounce: 100
-  })
 }
 
 var lounge = undefined;
@@ -334,7 +267,8 @@ $(document).ready(function(){
         }
       });
 
-      make_extinputs();
+      //make_extinputs();
+      wrap_post_form();
       monit_progressbar();
       /* invoke newtab event */
       chrome.runtime.sendMessage({

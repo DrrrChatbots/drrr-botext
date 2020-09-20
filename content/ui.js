@@ -131,26 +131,28 @@ function writeMe(e){
   return _formBasicNode(e, !0), _appendNodeContent(e, $("<span />").append(_formIconNode(e.from)).append(_formUserNode(e.from)), escapeHtml(e.content));
 }
 
-var me_message = {
-  type: "message",
-  from: profile,
-  is_fast: !0,
-  is_me: !0,
-  message: '/me test',
-  content: ' test'
-};
+function draw_message(msg, to){
+  var the_message = {
+    type: "message",
+    from: roomProfile(),
+    is_fast: !0,
+    is_me: !0,
+    message: msg,
+  };
+  if(to) the_message.secret = true, the_message.to = to;
+  the_message.element = writeMessage(the_message, roomProfile());
+  $('#talks').prepend(the_message.element)
+}
 
-var pub_message = {
-  type: "message",
-  from: {
-    id: profile.id
-  },
-  is_fast: !0,
-  is_me: !0,
-  message: 'test public message',
-};
-
-//me_message.element = writeMe(me_message, profile)
-//pub_message.element = writeMessage(pub_message, profile)
-//$('#talks').prepend(me_message.element)
-//$('#talks').prepend(pub_message.element)
+function draw_me(msg){
+  var me_message = {
+    type: "message",
+    from: roomProfile(),
+    is_fast: !0,
+    is_me: !0,
+    //message: '/me test',
+    content: msg.substring(3)
+  };
+  me_message.element = writeMe(me_message, profile)
+  $('#talks').prepend(me_message.element)
+}

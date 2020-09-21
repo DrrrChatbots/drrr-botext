@@ -203,6 +203,7 @@ function wrap_post_form(){
 
   $('textarea[name="message"]').on('keydown', function(e){
     if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13){
+      if($('#textcomplete-dropdown-1').is(':visible')) return;
       if(!e.originalEvent.mySecretVariableName) {
         e.preventDefault();
         wrapper(()=> org_post.click());

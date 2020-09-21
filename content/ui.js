@@ -42,7 +42,7 @@ fcc = function(e, t, n, i) {
       class: "dropdown-menu",
       role: "menu"
     }));
-  i.secret && profile.id == t.id && u.append($("<div />", {
+  i.secret && roomProfile().id == t.id && u.append($("<div />", {
     class: "secret-to-whom"
   }).addClass(!1 === i.to.alive ? "dead" : "").append($("<span />", {
     class: "to"
@@ -153,6 +153,6 @@ function draw_me(msg){
     //message: '/me test',
     content: msg.substring(3)
   };
-  me_message.element = writeMe(me_message, profile)
+  me_message.element = writeMe(me_message, roomProfile());
   $('#talks').prepend(me_message.element)
 }

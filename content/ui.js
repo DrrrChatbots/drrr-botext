@@ -1,3 +1,19 @@
+function escapeHtml(e) {
+    var t = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+        "/": "&#x2F;",
+        "`": "&#x60;",
+        "=": "&#x3D;"
+    };
+    return String(e).replace(/[&<>"'`=\/]/g, function(e) {
+        return t[e]
+    })
+}
+
 fcc = function(e, t, n, i) {
   var o = (n.message || "").toString().split("\n").filter(function(e) {
     return "" !== e.trim()
@@ -128,7 +144,7 @@ _formIconNode = function(e) {
 }
 
 function writeMe(e){
-  return _formBasicNode(e, !0), _appendNodeContent(e, $("<span />").append(_formIconNode(e.from)).append(_formUserNode(e.from)), escapeHtml(e.content));
+  //return _formBasicNode(e, !0), _appendNodeContent(e, $("<span />").append(_formIconNode(e.from)).append(_formUserNode(e.from)), escapeHtml(e.content));
 }
 
 function draw_message(msg, to){

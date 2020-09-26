@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
 
-    "name": "drrr chatbot extension",
+    "name": "drrr chatbot extension (background)",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
     "version": "1.718",
@@ -13,7 +13,7 @@
     },
     "background": {
         "page": "/background/index.html",
-        "persistent": false
+        "persistent": true
     },
     "content_scripts": [
         {
@@ -39,6 +39,8 @@
         "storage",
         "notifications",
         "cookies",
+        "webRequest",
+        "webRequestBlocking",
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",

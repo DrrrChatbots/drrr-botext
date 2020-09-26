@@ -13,7 +13,7 @@ function roomProfile(){
   return Profile;
 }
 
-var prevURLs =[], prevTo = '', prevWhom;
+var prevURLs = [], prevTo = [], prevWhom;
 
 var getTextNodesIn = function(el) {
   return $(el).find(":not(iframe)").addBack().contents().filter(function() {
@@ -30,10 +30,23 @@ var postMessage = function(args){
 }
 
 var publishMessage = function(args){
-
+  zh_conv((cvt)=>{
+    var message = args.msg.trim().length ? cvt(args.msg) : '⠀';
+    var cmd = {"message": message};
+    var redraw = (data, mes)=>{
+      if(message.startsWith('/roll')
+        || message.startsWith('/share')
+        || message.startsWith('/leave')) return;
+      if(message.startsWith('/me')) draw_me(message);
+      else draw_message(message);
+    }
+    if(args.url) cmd['url'] = args.url;
+    ctrlRoom(cmd, redraw, redraw);
+  });
+  /*
   bot_ondm = true;
   if($('.to-whom').hasClass('on')){
-    prevTo = $('#to-input').val();
+    prevTo.push($('#to-input').val());
     $('#to-input').val('');
     prevWhom = $($('.to-whom')[0]).clone()
   }
@@ -48,9 +61,9 @@ var publishMessage = function(args){
     $('input[name="post"]').click();
 
     setTimeout(()=>{
-      if(prevTo){
-        console.log("recover DM member:", prevTo);
-        $('#to-input').val(prevTo)
+      if(prevTo.length){
+        console.log("recover DM member:", prevTo[0]);
+        $('#to-input').val(prevTo.pop())
         prevWhom.find('a').click(()=>{
           $('#to-input').val('');
           prevWhom.removeClass("on").empty();
@@ -69,6 +82,8 @@ var publishMessage = function(args){
     }, 500);
 
   });
+
+*/
 }
 
 var enableMe = true;
@@ -96,10 +111,23 @@ var offDmMember = function(args){
 }
 
 var dmMember = function(args, callback, passOn){
-
+  zh_conv((cvt)=>{
+    var message = args.msg.trim().length ? cvt(args.msg) : '⠀';
+    var cmd = {"message": message};
+    findUser(args.user, (u)=>{
+      cmd['to'] = u.id;
+      if(args.url) cmd['url'] = args.url;
+      ctrlRoom(cmd);
+      //ctrlRoom(cmd, (data)=>{
+      //  draw_message(message, u.id);
+      //}, (data)=>{ alert("dm failed"); });
+      // needn't redraw on dm
+    });
+  });
+  /*
   bot_ondm = true;
   if($('.to-whom').hasClass('on')){
-    prevTo = $('#to-input').val();
+    prevTo.push($('#to-input').val());
     $('#to-input').val('');
     prevWhom = $($('.to-whom')[0]).clone()
   }
@@ -119,9 +147,10 @@ var dmMember = function(args, callback, passOn){
       $('textarea[name="message"]').val(args.msg.trim().length ? cvt(args.msg) : '⠀');
       $('input[name="post"]').click();
       setTimeout(()=>{
-        if(prevTo){
-          console.log("recover DM member:", prevTo);
-          $('#to-input').val(prevTo)
+        if(prevTo.length){
+          console.log("recover DM member:", prevTo[0]);
+          $('#to-input').val(prevTo.pop())
+
           prevWhom.find('a').click(()=>{
             $('#to-input').val('');
             prevWhom.removeClass("on").empty();
@@ -140,17 +169,21 @@ var dmMember = function(args, callback, passOn){
       }, 1000);
     });
   }, 1000);
+  */
 }
 
 var handOverRoom = function(args){
-  openFuncList(args, () => {
-    if($('.dropdown-item-handover').length){
-      $('.dropdown-item-handover')[0].click()
-      setTimeout(()=> $('.confirm')[0].click(), 500);
-      setTimeout(()=> $('.confirm')[0].click(), 1500);
-    }
-    else alert("you are not room owner, can't handover the room");
-  });
+  findUser((u)=>{
+    ctrlRoom({'new_host': u.id});
+  })
+  //openFuncList(args, () => {
+  //  if($('.dropdown-item-handover').length){
+  //    $('.dropdown-item-handover')[0].click()
+  //    setTimeout(()=> $('.confirm')[0].click(), 500);
+  //    setTimeout(()=> $('.confirm')[0].click(), 1500);
+  //  }
+  //  else alert("you are not room owner, can't handover the room");
+  //});
 }
 
 kickFlag = false;
@@ -185,8 +218,9 @@ var banReportMember = removeMember('report_and_ban_user');
 //});
 
 var playMusic = function(args){
-  console.log(`/share ${args.url} ${args.title}`);
-  publishMessage({msg: `/share ${args.url} ${args.title}`});
+  //console.log(`/share ${args.url} ${args.title}`);
+  //publishMessage({msg: `/share ${args.url} ${args.title}`});
+  ctrlRoom({music: 'music', url: args.url, name: args.title});
 }
 
 var getMembers = function(args, callback){
@@ -235,8 +269,8 @@ var keepH = undefined;
 var keepRoom = function(args){
   uid = roomProfile().id;
   var keep = function(){
-    $('#to-input').val(uid);
-    dmMember({msg:'keep'}, undefined, true);
+    //$('#to-input').val(uid);
+    dmMember({msg:'keep', user: roomProfile().name}, undefined, true);
   }
   if(args.state){
     keep();
@@ -244,8 +278,8 @@ var keepRoom = function(args){
   }
   else{
     clearInterval(keepH);
-    $('#to-input').val(uid);
-    dmMember({msg:'unkeep'}, undefined, true);
+    //$('#to-input').val(uid);
+    dmMember({msg:'unkeep', user: roomProfile().name}, undefined, true);
   }
 }
 
@@ -288,7 +322,6 @@ function bindAlarms(){
     });
   });
 }
-
 
 function rebindAlarms(){
   if(alarms.length) bindAlarms();

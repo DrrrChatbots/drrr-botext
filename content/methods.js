@@ -173,7 +173,7 @@ var dmMember = function(args, callback, passOn){
 }
 
 var handOverRoom = function(args){
-  findUser((u)=>{
+  findUser(args.user, (u)=>{
     ctrlRoom({'new_host': u.id});
   })
   //openFuncList(args, () => {

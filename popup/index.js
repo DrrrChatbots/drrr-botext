@@ -527,7 +527,7 @@ function show_playlist(callback){
     PLAYLIST, callback,
     [del_song_btn, imm_pldl_btn, fav_song_btn],
     'EMPTY PLAYLIST', {
-      title: (c, l) => `${l} - ${c}`,
+      title: (c, l) => `${l.name} - ${l.singer}`,
       content: (c, l) => ommited_name(l.name, l.singer),
       data: (c, l) => l.link,
       icon: 'glyphicon-list'

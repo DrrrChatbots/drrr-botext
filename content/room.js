@@ -25,7 +25,7 @@ var handle_talks = function(msg){
   var type = '', user = '',
     text = '', url = '', info = '';
   try{
-    console.log("msg is", msg);
+    //console.log("msg is", msg);
     if(msg.classList.contains("system")){
       if(msg.classList.contains("me")){
         type = event_me;
@@ -59,6 +59,9 @@ var handle_talks = function(msg){
             if(names.length > 1)
               text = names[1].textContent;
           }
+        }
+        if(type == event_roomprofile){
+          text = $('.room-title-name').text()
         }
       }
     }

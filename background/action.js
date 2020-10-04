@@ -143,7 +143,7 @@ function event_action(event, config, req){
   rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
     if(((Array.isArray(type) && type.includes(event)) || type == event)
       && match_user(req.user, req.trip, user_trip_regex)
-      && (req.text === 'unknown' || req.text.match(new RegExp(cont_regex)))){
+      && ((req.text === 'unknown' || req.text === undefined) || req.text.match(new RegExp(cont_regex)))){
       argfmt(arglist, req.user, req.text, req.url, (args)=>{
         return actions[action].apply(config, args);
       });

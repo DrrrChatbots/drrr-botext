@@ -31,3 +31,6 @@ Join our discord channel to have some discussion.
 - support room member variable (include self -> dm to self, roomOwner) in list
 - add neteaseWorld support
 - pokemon monster module
+- room desc event
+- netease playlist
+- hidden room on drrr.chat

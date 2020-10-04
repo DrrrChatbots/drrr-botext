@@ -27,10 +27,10 @@ Join our discord channel to have some discussion.
 ### dev
 
 - detect protected music.168 source
-- add tripcode identification to configuration
 - support room member variable (include self -> dm to self, roomOwner) in list
 - add neteaseWorld support
 - pokemon monster module
-- room desc event
+- import/export configuration (v)
+- room desc event (v)
 - netease playlist
 - hidden room on drrr.chat

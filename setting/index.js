@@ -9,7 +9,46 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 <li><a href="${url}" target="_blank" title="local doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
 <li><a data-toggle="modal" data-target="#info-modal" title="about developer"><i class="glyphicon glyphicon-info-sign"></i></a></li>
 <li><a id="reset" title="reset all setting"><i class="glyphicon glyphicon-refresh"></i></a></li>
+<li><a id="export" title="export setting"><i class="glyphicon glyphicon-export"></i></a></li>
+<li><a><input title="import setting" type="file" id="file-input" /></a></li>
 `
+
+  function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var contents = e.target.result;
+      displayContents(contents);
+    };
+    reader.readAsText(file);
+  }
+
+  function displayContents(contents) {
+    var element = document.getElementById('file-content');
+    try{
+      config = JSON.parse(contents)
+      chrome.storage.sync.set(config, function(){
+        alert("config updated");
+        location.reload();
+      });
+    }
+    catch(err){
+      alert(err);
+    }
+  }
 
   function make_pills(ps, index){
     console.log(ps);
@@ -123,6 +162,14 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     $('#nav_pills').append(make_pills(Object.keys(settings), index));
     $('#tab_conts').append(make_tabs(settings, index));
     $("#reset").click(refresh_settings);
+
+    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+
+    $("#export").click(function(){
+      chrome.storage.sync.get((res)=>{
+        download('config.json', JSON.stringify(res));
+      });
+    });
 
     /* enable tab */
     $(document).delegate('.setting-input', 'keydown', function(e) {

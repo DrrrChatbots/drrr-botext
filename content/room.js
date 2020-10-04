@@ -63,6 +63,9 @@ var handle_talks = function(msg){
         if(type == event_roomprofile){
           text = $('.room-title-name').text()
         }
+        else if(type == event_roomdesc){
+          text = $(msg)[0].childNodes[3].textContent
+        }
       }
     }
     else{

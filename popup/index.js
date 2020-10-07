@@ -12,6 +12,64 @@ function open_background(){
   chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')});
 }
 
+var nodes = undefined;
+var chats = undefined;
+function set_hidden_room(){
+  /* test login
+  $.ajax({
+    type: "GET",
+    url: `https://drrr.chat/api/notifications`,
+    dataType: 'json',
+    success: function(data){
+      var nodes = $(data);
+      console.log(data);
+    },
+    error: function(data){
+      if(data.status == 401){
+        alert("you need login drrr.chat first");
+        chrome.tabs.create({url: 'https://drrr.chat'});
+      }
+      else alert("fetch failed" + JSON.stringify(data));
+    }
+  });
+  */
+
+  // try to enter room
+  //$.ajax({
+  //  type: "GET",
+  //  url: `https://drrr.com/room/?id=wWAapCaLyI&api=json`,
+  //  dataType: 'json',
+  //  success: function(data){
+  //    console.log("success");
+  //    console.log(data);
+  //    if(data.message == "ok" && data.redirect == "room"){
+
+  //    }
+  //    else{
+  //      console.log(data.error);
+  //    }
+  //  },
+  //  error: function(data){
+  //    console.log(data);
+  //  }
+  //});
+
+  // delete room
+  //$.ajax({
+  //  url: 'https://drrr.chat/api/posts/8846',
+  //  type: "POST",
+  //  data: {"data":{"type":"posts","id":"8846","attributes":{"isHidden":true}}},
+  //  dataType: 'json',
+  //  success: function(data){
+  //    alert(data);
+  //  },
+  //  error: function(data){
+  //    alert("error");
+  //    alert(JSON.stringify(data));
+  //  }
+  //})
+}
+
 function open_tripgen(){
   chrome.tabs.create({url: chrome.extension.getURL('setting/tripcode.html')});
 }
@@ -1311,6 +1369,7 @@ function game_setup(config){
 $(document).ready(function(){
   $("#manual").click(open_manual);
   $("#cog").click(open_background);
+  //$("#tent").click(set_hidden_room);
   $("#tripgen").click(open_tripgen);
   $("#game-knight").click(function(){
     import('/game/echo.js');

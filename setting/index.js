@@ -167,7 +167,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 
     $("#export").click(function(){
       chrome.storage.sync.get((res)=>{
-        download('config.json', JSON.stringify(res));
+        download('config.json', JSON.stringify(res, undefined, 2));
       });
     });
 

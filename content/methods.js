@@ -346,13 +346,27 @@ function monit_progressbar(){
       mutations.forEach(function(mutation) {
         var status = mutation.target.classList.contains('active');
         if(status != prev_mstatus){
-          if(status) chrome.runtime.sendMessage({ type: event_musicbeg });
+          if(status) chrome.runtime.sendMessage({
+            type: event_musicbeg,
+            user: roomProfile().name,
+            trip: roomProfile().tripcode,
+            text: '',
+            info: '',
+            url: ''
+          });
           else{
             play_end = new Date();
             console.log('play_end = ', play_end);
             cache(undefined, (config)=>{
               setTimeout(
-                ()=>chrome.runtime.sendMessage({ type: event_musicend }),
+                ()=>chrome.runtime.sendMessage({
+                  type: event_musicend,
+                  user: roomProfile().name,
+                  trip: roomProfile().tripcode,
+                  text: '',
+                  info: '',
+                  url: ''
+                }),
                 (getDelay(config) + 3) * 1000);
             });
           }

@@ -381,6 +381,14 @@ function monit_progressbar(){
   }
 }
 
+function setTimeOut(args, callback){
+  setTimeout(args.duration, function(){
+    chrome.runtime.sendMessage({
+      type: args.event
+    })
+  });
+}
+
 function isPlaying(args, callback){
   if(callback){
     var target = $('div[role="progressbar"]');
@@ -446,6 +454,7 @@ methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
 methods[change_name_bg_clr] = changeNameBgClr;
 
+methods[set_timeout] = setTimeOut;
 
 methods[is_playing] = isPlaying;
 methods[get_members] = getMembers;

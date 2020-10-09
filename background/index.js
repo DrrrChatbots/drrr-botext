@@ -20,7 +20,7 @@ new Handler("music", [],
   {
     [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */
       precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
-      onevent: (req, callback, config, uis, sender) => {
+      onevent: (req, config, uis, sender) => {
         function wake_check(){
           sendTab({
             fn: is_playing,
@@ -28,15 +28,43 @@ new Handler("music", [],
             if(!active){
               if(after === undefined || after > getDelay(config) - 5)
                 play_next(config)
-              else
-                amazingTimeout(wake_check, (getDelay(config) - after + 5) * 1000);
+              else sendTab({
+                fn: set_timeout,
+                args: {
+                  event: event_timeout,
+                  duration: (getDelay(config) - after + 5) * 1000
+                }
+              });
             }
           });
         }
         console.log("wait for delay", getDelay(config), 's');
-        amazingTimeout(wake_check, 1000);
+        wake_check();
       }
     },
+    [event_timeout]: { /* handle config[MUSIC_MODE] be undefined slightly */
+      precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
+      onevent: (req, config, uis, sender) => {
+        function wake_check(){
+          sendTab({
+            fn: is_playing,
+          }, undefined, ([active, after]) => {
+            if(!active){
+              if(after === undefined || after > getDelay(config) - 5)
+                play_next(config)
+              else sendTab({
+                fn: delay_clock,
+                args: {
+                  event: "delay_clock",
+                  duration: (getDelay(config) - after + 5) * 1000
+                }
+              });
+            }
+          });
+        }
+        console.log("re-wait for delay", getDelay(config), 's');
+      }
+    }
   }
 );
 

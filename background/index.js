@@ -175,3 +175,28 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     callback();
   }
 })
+
+
+var login_mode; // a global variable
+chrome.storage.sync.get('#login-mode', function (data) {
+    login_mode = data['#login-mode'];
+});
+
+chrome.storage.onChanged.addListener(function(changes, area) {
+    if (area == "sync" && '#login-mode' in changes) {
+      login_mode = changes['#login-mode']["newValue"];
+    }
+});
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function(details) {
+    for (var i = 0; i < details.requestHeaders.length; ++i) {
+      if (details.requestHeaders[i].name === 'User-Agent') {
+        details.requestHeaders[i].value = login_mode;
+        break;
+      }
+    }
+    return {requestHeaders: details.requestHeaders};
+  },
+  {urls: ["*://drrr.com/*"]},
+  ["blocking", "requestHeaders"]);

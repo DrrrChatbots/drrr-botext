@@ -1,5 +1,6 @@
 prevRoomInfo = undefined;
 roomInfo = undefined;
+
 function findUser(name, callback, info){
   if(!info) info = roomInfo;
   if(info && info.room)
@@ -113,6 +114,7 @@ var handle_talks = function(msg){
         u = findUser(user);
         chrome.runtime.sendMessage({
           type: type,
+          host: isHost(),
           user: user,
           trip: u ? u.tripcode : '',
           text: text,
@@ -129,6 +131,7 @@ var handle_talks = function(msg){
     u = findUser(user);
     chrome.runtime.sendMessage({
       type: type,
+      host: isHost(),
       user: user,
       trip: u ? u.tripcode : '',
       text: text,
@@ -150,6 +153,7 @@ function handle_exit(){
       if(alarms.length) // for alarms only
         chrome.runtime.sendMessage({
           type: event_logout,
+          host: isHost(),
         });
       else console.log("logout without alarms");
     }
@@ -157,6 +161,7 @@ function handle_exit(){
       if(alarms.length){
         chrome.runtime.sendMessage({
           type: event_exitalarm,
+          host: isHost(),
         });
         // return "are you sure exit?";
       }
@@ -279,7 +284,8 @@ $(document).ready(function(){
       monit_progressbar();
       /* invoke newtab event */
       chrome.runtime.sendMessage({
-        type: event_newtab
+        type: event_newtab,
+        host: isHost(),
       });
       console.log("start background moniter new");
       handle_exit();
@@ -362,7 +368,7 @@ function do_method(){
 */
 
 function emit_method(req, sender, callback){
-  if(req.fn && [leave_room, cache_profile, update_profile, get_members, is_playing].includes(req.fn)){
+  if(req.fn && need_callback.includes(req.fn)){
     methods[req.fn](req.args, callback);
   }
   else{

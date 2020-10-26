@@ -13,6 +13,11 @@ function roomProfile(){
   return Profile;
 }
 
+function isHost(){
+  var host = $('.is-host')[1] && $('.is-host')[1].title || ($('.is-host')[0] && $('.is-host')[0].title)
+  return roomProfile().name == host.substring(0, host.length - ' (host)'.length);
+}
+
 var prevURLs = [], prevTo = [], prevWhom;
 
 var getTextNodesIn = function(el) {
@@ -262,7 +267,6 @@ var leaveRoom = function(args, callback, force){
       callback && callback();
     }
   );
-
 }
 
 var keepH = undefined;
@@ -310,6 +314,7 @@ function bindAlarms(){
         ((act, args) => () => {
           chrome.runtime.sendMessage({
             type: event_timer,
+            host: isHost(),
             action: act,
             arglist: args,
             user: $('#user_name').text(),
@@ -348,6 +353,7 @@ function monit_progressbar(){
         if(status != prev_mstatus){
           if(status) chrome.runtime.sendMessage({
             type: event_musicbeg,
+            host: isHost(),
             user: roomProfile().name,
             trip: roomProfile().tripcode,
             text: '',
@@ -361,6 +367,7 @@ function monit_progressbar(){
               setTimeout(
                 ()=>chrome.runtime.sendMessage({
                   type: event_musicend,
+                  host: isHost(),
                   user: roomProfile().name,
                   trip: roomProfile().tripcode,
                   text: '',
@@ -394,6 +401,19 @@ function isPlaying(args, callback){
   }
 }
 
+function showPrompt(args, callback){
+  if(callback){
+    callback(prompt(args.text));
+  }
+}
+
+function showConfirm(args, callback){
+  console.log("callback..", JSON.stringify(callback));
+  if(callback){
+    callback(confirm(args.text));
+  }
+}
+
 var effects = {
   'snow': 'snowStorm.start()',
   'firework': 'firework.start()',
@@ -424,6 +444,19 @@ function changeNameBgClr(args){
   $("<style/>", {id:'cust-name-bg', text: `.select-text { background-color: ${args.color}; }`}).appendTo('head');
 }
 
+var setClock = function(args, callback){
+  setTimeout(()=>{
+    chrome.runtime.sendMessage({
+      type: event_clock,
+      host: isHost(),
+      args: args,
+      user: 'extension',
+      text: '',
+      url: ''
+    });
+  }, args.ms);
+}
+
 var methods = {}
 methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
@@ -445,6 +478,7 @@ methods[bg_effect] = bgEffect;
 methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
 methods[change_name_bg_clr] = changeNameBgClr;
+methods[set_clock] = setClock;
 
 
 methods[is_playing] = isPlaying;
@@ -452,3 +486,7 @@ methods[get_members] = getMembers;
 methods[leave_room] = leaveRoom;
 methods[cache_profile] = cacheProfile;
 methods[update_profile] = updateProfile;
+methods[show_prompt] = showPrompt;
+methods[show_confirm] = showConfirm;
+
+need_callback = [leave_room, cache_profile, update_profile, get_members, is_playing, show_prompt, show_confirm]

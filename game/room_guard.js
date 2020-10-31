@@ -168,13 +168,9 @@ export const event_action = (req, config) => {
         });
       }
       else if(mode == 2){
-        if(req.args.secs === undefined){
-          sendTab({ fn: publish_message, args: { msg: `@${req.args.user} ${count_alert}` } });
-          setTimeout(()=>sendTab({fn: set_clock, args: {ms: 1000, from: ROOM_GUARD, user: req.args.user, secs: 5}}), 100);
-        }
-        else if(req.args.secs){
-          sendTab({ fn: publish_message, args: { msg: `${String(req.args.secs)}` } });
-          setTimeout(()=>sendTab({fn: set_clock, args: {ms: 1000, from: ROOM_GUARD, user: req.args.user, secs: req.args.secs - 1}}), 100);
+        if(req.args.action === undefined){
+          sendTab({ fn: dm_member, args: { msg: `@${req.args.user} ${count_alert}`, user: req.args.user} });
+          setTimeout(()=>sendTab({fn: set_clock, args: {ms: 5000, from: ROOM_GUARD, user: req.args.user, action: "del"}}), 100);
         }
         else setTimeout(()=> sendTab({ fn: kmodes[kmode], args: { user: req.args.user } }), 200);
       }

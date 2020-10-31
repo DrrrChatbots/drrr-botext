@@ -1,6 +1,27 @@
 prevRoomInfo = undefined;
 roomInfo = undefined;
 
+//var MacroModal = `
+//    <div style="color:#FFFFFF" id="myModal" class="modal fade" role="dialog">
+//        <div class="modal-dialog">
+//        <!-- Modal content-->
+//            <div class="modal-content">
+//              <div class="modal-header">
+//                <button type="button" class="close" data-dismiss="modal">&times;</button>
+//                <h4 class="modal-title">Macro Rule Setup</h4>
+//              </div>
+//              <div class="modal-body">
+//                <p>Write You Macro Rule Here</p>
+//                <textarea class="rounded-0" rows="12" style="width:100%;color:black;">Macro Rule Here!!</textarea>
+//              </div>
+//              <div class="modal-footer">
+//                <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+//                <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+//              </div>
+//            </div>
+//        </div>
+//    </div>`
+
 function findUser(name, callback, info){
   if(!info) info = roomInfo;
   if(info && info.room)
@@ -100,11 +121,11 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
-  if(text.startsWith('/replay')){
-    console.log(roomInfo);
-    console.log(roomInfo.room.np);
-    playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
-  }
+  //if(text.startsWith('/replay')){
+  //  console.log(roomInfo);
+  //  console.log(roomInfo.room.np);
+  //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
+  //}
 
   if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
     getRoom(
@@ -179,6 +200,15 @@ function wrap_post_form(){
   function wrapper(callback){
     ext_click = 2;
     var cmd = '';
+    //if($('textarea[name="message"]').val().match(/^\/mac/)){
+    //  $('textarea[name="message"]').val('');
+    //  $('#myModal').modal({
+    //    backdrop: 'static',
+    //    keyboard: false
+    //  });
+    //  $('#myModal').modal('show');
+    //  return;
+    //}
     if(!$('textarea[name="message"]').hasClass('state-secret') &&
       $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
       !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
@@ -223,10 +253,35 @@ function wrap_post_form(){
   });
 }
 
+function lambda_conservation(){
+
+  var conservation = function(){
+    var tc = $(this).parent().parent().find('.dropdown-item-tripcode').text();
+    if(tc === '#L/CaT//Hsk')
+      if(confirm("Are you sure? He is the extension developer.\n（你確定嗎？他是插件開發者喔）")){
+        alert("壞壞！ >:3");
+        var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
+        findUser(name, (u)=>{
+          ctrlRoom({'new_host': u.id});
+        });
+      }
+  }
+
+  $(document).on('mousedown', '.dropdown-item-kick', conservation);
+
+  $(document).on('mousedown', '.dropdown-item-ban', conservation);
+
+  $(document).on('mousedown', '.dropdown-item-report-user', conservation);
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
 $(document).ready(function(){
+
+  lambda_conservation();
+
+  //$('#body').prepend(MacroModal);
 
   console.log($('#user_name').text());
 

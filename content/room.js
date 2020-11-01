@@ -258,8 +258,8 @@ function lambda_conservation(){
   var conservation = function(){
     var tc = $(this).parent().parent().find('.dropdown-item-tripcode').text();
     if(tc === '#L/CaT//Hsk')
-      if(confirm("Are you sure? He is the extension developer.\n（你確定嗎？他是插件開發者喔）")){
-        alert("壞壞！ >:3");
+      if(confirm("This cat is sooooo cute, it's λ. Do you really want to kick it?\n（你確定要踢這隻可愛的 λ 嗎？）")){
+        alert("You Bad Bad >:3");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
         findUser(name, (u)=>{
           ctrlRoom({'new_host': u.id});

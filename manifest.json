@@ -53,7 +53,9 @@
         "http://api.giphy.com/*"
     ],
     "web_accessible_resources": [
-         "images/*.png"
+         "images/*.png",
+         "live2d-widget/*",
+         "fonts/*"
     ],
     "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'"
 }

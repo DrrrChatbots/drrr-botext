@@ -1,0 +1,101 @@
+{
+	"mouseover": [{
+		"selector": "#waifu #live2d",
+		"text": ["：３", "你要幹嘛呀？", "喵喵喵？", "怕怕(ノ≧∇≦)ノ", "=w=", "呼嚕嚕嚕！"]
+	}, {
+		"selector": ".blog-pager-older-link",
+		"text": ["你要繼續往下挖？", "黑歷史都被翻出來啦 Qwq"]
+	}, {
+		"selector": "#waifu-tool .fa-github",
+		"text": ["想去見見我的好朋友嗎？", "想去認識一下我的好友嗎？", "你想要找主人？那你要去問問小黑"]
+	}, {
+		"selector": "#waifu-tool .fa-arrow-up",
+		"text": ["跳到最上面！"]
+	}, {
+		"selector": "#waifu-tool .fa-arrow-down",
+		"text": ["跳到最下面！"]
+	}, {
+		"selector": "#waifu-tool .fa-comment",
+		"text": ["我來說句話！"]
+	}, {
+		"selector": "#waifu-tool .fa-camera-retro",
+		"text": ["我擺好 pose 啦"]
+	}, {
+		"selector": "#waifu-tool .fa-info-circle",
+		"text": ["來看看我是怎麼生出來的～"]
+	}, {
+		"selector": "#waifu-tool .fa-eye",
+		"text": ["你要和我玩躲貓貓嘛？"]
+	}, {
+		"selector": "#waifu-tool .fa-paper-plane",
+		"text": ["要不要來玩飛機大戰？", "這個按鈕上寫著「不要點擊」。", "怎麽，你想來和我玩個遊戲？"]
+	}, {
+        "selector": ".jump-link",
+        "text": ["欸，有興趣點開來看嗎？"]
+    }, {
+        "selector": ".profile-link",
+        "text": ["欸？想認識主人嘛？<br>GitHub 小黑那有更多東西喔～<br>點我旁邊的貓 icon！"]
+    }, {
+        "selector": ".search-expand",
+        "text": ["想找什麼呢？"]
+    }, {
+        "selector": ".num_comments",
+        "text": ["你想要留言？！ ==+"]
+    }, {
+        "selector": ".post-share-buttons",
+        "text": ["你要分享這篇文章嘛？！？！"]
+    }],
+	"click": [{
+		"selector": "#waifu-tool .fa-paper-plane",
+		"text": ["按下 ESC 離開<br>Space 發射子彈<br>方向鍵上前進，左右旋轉<br>B 顯示敵人"]
+	}, {
+		"selector": "#waifu-tool .fa-camera-retro",
+		"text": ["cheese~~"]
+	}, {
+		"selector": "#waifu-tool .fa-arrow-up",
+		"text": ["跳！"]
+	}, {
+		"selector": "#waifu-tool .fa-arrow-down",
+		"text": ["咻！"]
+	}, {
+		"selector": "#waifu #live2d",
+		"text": ["你看到我的主人了嗎？", "幹嘛摸我呀！小心我咬你！", "別摸我，有什麽好摸的！"]
+	}],
+	"seasons": [{
+		"date": "01/01",
+		"text": "<span>元旦</span>了呢，新的一年又開始了，今年是{year}年～"
+	}, {
+		"date": "01/22",
+		"text": "主人的生日 :3"
+	}, {
+		"date": "02/14",
+		"text": "又是一年<span>情人節</span>，{year}年找到對象了嘛～"
+	}, {
+		"date": "03/08",
+		"text": "今天是<span>國際婦女節</span>！"
+	}, {
+		"date": "03/12",
+		"text": "今天是<span>植樹節</span>，要保護環境呀！"
+	}, {
+		"date": "04/01",
+		"text": "悄悄告訴你一個秘密～<span>今天是愚人節，不要被騙了哦～</span>"
+	}, {
+		"date": "05/01",
+		"text": "今天是<span>五一勞動節</span>，計劃好假期去哪裏了嗎～"
+	}, {
+		"date": "06/01",
+		"text": "<span>兒童節</span>了呢，快活的時光總是短暫，要是永遠長不大該多好啊…"
+	}, {
+		"date": "09/10",
+		"text": "<span>教師節</span>，在學校要給老師問聲好呀～"
+	}, {
+		"date": "10/10",
+		"text": "<span>國慶日</span>到了，為祖國慶生！"
+	}, {
+		"date": "11/05-11/12",
+		"text": "今年的<span>雙十一</span>是和誰一起過的呢～"
+	}, {
+		"date": "12/20-12/31",
+		"text": "這幾天是<span>聖誕節</span>，主人肯定又去剁手買買買了～"
+	}]
+}

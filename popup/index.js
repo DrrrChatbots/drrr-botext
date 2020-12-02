@@ -1416,7 +1416,7 @@ $(document).ready(function(){
   $("#cog").click(open_background);
 
   $("#tripgen").click(open_tripgen);
-  $("#game-tent").click(function(){
+  $("#goto-dc").click(function(){
     chrome.tabs.create({url: 'https://discord.com/invite/BBCw3UY'});
   });
   $("#video-guide").click(function(){

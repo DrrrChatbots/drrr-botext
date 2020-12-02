@@ -1422,8 +1422,8 @@ $(document).ready(function(){
   $("#video-guide").click(function(){
     chrome.tabs.create({url: 'https://www.youtube.com/playlist?list=PLaNluYBUsQrKe_faeHaFsKo9SkQzkQFOk'});
   });
-  $("#video-guide").click(function(){
-    alert("not impl yet");
+  $("#wizard").click(function(){
+    sendTab({ fn: call_wizard, args: {} });
   });
 
   /* ensure activate the background page */

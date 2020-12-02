@@ -422,6 +422,7 @@ function showConfirm(args, callback){
   }
 }
 
+
 var effects = {
   'snow': 'snowStorm.start()',
   'firework': 'firework.start()',
@@ -465,6 +466,47 @@ var setClock = function(args, callback){
   }, args.ms);
 }
 
+function add_tag(url){
+  return new Promise((res, rej)=>{
+    var ft = url.split('.').pop();
+    var tag = undefined;
+    if(ft == 'css'){
+      tag = document.createElement('link');
+      tag.rel = "stylesheet";
+      tag.href = url;
+    }
+    else if(ft == 'js'){
+      tag = document.createElement('script');
+      tag.src = url;
+    }
+    //tag.onload = function() { this.remove(); };
+    if(tag){
+      tag.onload = () => res(url);
+      tag.onerror = () => rej(url);
+      (document.head || document.documentElement).appendChild(tag);
+    }
+  });
+}
+
+function plug_live2d(){
+  if (screen.width >= 768) {
+    Promise.all([
+      add_tag(chrome.runtime.getURL("live2d-widget/font-awesome.min.css")),
+      add_tag(chrome.runtime.getURL("live2d-widget/waifu.css")),
+      add_tag(chrome.runtime.getURL("live2d-widget/tw_cn.js")),
+      add_tag(chrome.runtime.getURL("live2d-widget/live2d.min.js")),
+      add_tag(chrome.runtime.getURL("live2d-widget/waifu-tips.js")),
+    ]).then(() => {
+      add_tag(chrome.runtime.getURL("live2d-widget/load.js"))
+    });
+  }
+}
+
+function callWizard(args, callback){
+  plug_live2d();
+}
+
+
 var methods = {}
 methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
@@ -487,6 +529,7 @@ methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
 methods[change_name_bg_clr] = changeNameBgClr;
 methods[set_clock] = setClock;
+methods[call_wizard] = callWizard;
 
 methods[set_timeout] = setTimeOut;
 

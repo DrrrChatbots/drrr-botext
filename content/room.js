@@ -292,43 +292,6 @@ function lambda_conservation(){
   $(document).on('mousedown', '.dropdown-item-report-user', conservation);
 }
 
-
-function add_tag(url){
-  return new Promise((res, rej)=>{
-    var ft = url.split('.').pop();
-    var tag = undefined;
-    if(ft == 'css'){
-      tag = document.createElement('link');
-      tag.rel = "stylesheet";
-      tag.href = url;
-    }
-    else if(ft == 'js'){
-      tag = document.createElement('script');
-      tag.src = url;
-    }
-    //tag.onload = function() { this.remove(); };
-    if(tag){
-      tag.onload = () => res(url);
-      tag.onerror = () => rej(url);
-      (document.head || document.documentElement).appendChild(tag);
-    }
-  });
-}
-
-function plug_live2d(){
-  if (screen.width >= 768) {
-    Promise.all([
-      add_tag(chrome.runtime.getURL("live2d-widget/font-awesome.min.css")),
-      add_tag(chrome.runtime.getURL("live2d-widget/waifu.css")),
-      add_tag(chrome.runtime.getURL("live2d-widget/tw_cn.js")),
-      add_tag(chrome.runtime.getURL("live2d-widget/live2d.min.js")),
-      add_tag(chrome.runtime.getURL("live2d-widget/waifu-tips.js")),
-    ]).then(() => {
-      add_tag(chrome.runtime.getURL("live2d-widget/load.js"))
-    });
-  }
-}
-
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -345,7 +308,6 @@ $(document).ready(function(){
     (config) => {
       console.log(JSON.stringify(config));
 
-      //plug_live2d();
       //if(!config['profile'] ||
       //    config['profile'].id !== roomProfile().id)
       //    ajaxProfile(undefined, true, $('.room-title-name').text());

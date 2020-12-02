@@ -848,7 +848,7 @@ function log2mkd(type, e){
 function sendTg(config, type, e){
   let data = {
     chat_id: config[TGBOTCHATID],
-    text: log2mkd(event_msg, e),
+    text: log2mkd(type, e),
     parse_mode: "Markdown",
     disable_web_page_preview: false,
   }

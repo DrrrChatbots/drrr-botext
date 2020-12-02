@@ -36,6 +36,7 @@ Join our discord channel to have some discussion.
 - hidden room on drrr.chat
 
 - hashtag
+- chatlog
 - trpg script
 - welcome back
 - peer.js

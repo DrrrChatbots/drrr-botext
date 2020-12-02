@@ -163,7 +163,19 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
             module.event_action && module.event_action(req, config, sender);
           }
         )
+    });
 
+    const switchs = Object.keys(local_functions).map((x)=>x + '-switch')
+    chrome.storage.local.get(switchs, (config) => {
+      Object.keys(local_functions).forEach((x)=>{
+        if(config[x + '-switch']){
+          import(`/setting/local/${local_functions[x].module_file}`).then(
+            (module)=>{
+              module.event_action && module.event_action(req, config, sender);
+            }
+          );
+        }
+      });
     });
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){

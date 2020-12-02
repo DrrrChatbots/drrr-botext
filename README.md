@@ -34,3 +34,8 @@ Join our discord channel to have some discussion.
 - room desc event (v)
 - netease playlist
 - hidden room on drrr.chat
+
+- hashtag
+- trpg script
+- welcome back
+- peer.js

@@ -9,7 +9,7 @@ function open_manual(){
 }
 
 function open_background(){
-  chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')});
+  chrome.tabs.create({url: chrome.extension.getURL('setting/sync/index.html')});
 }
 
 var nodes = undefined;
@@ -1366,13 +1366,64 @@ function game_setup(config){
   });
 }
 
+function local_setup(config){
+  Object.keys(local_functions).forEach((v)=>{
+    $('#local-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
+  })
+
+  var select_local = config['select_local'];
+  if(!select_local) select_local = Object.keys(local_functions)[0];
+
+  $('#local-select').val(select_local);
+  var local_switch = config[select_local + '-switch'];
+  $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
+
+  $('#local-switch-btn').click(function(){
+    var v = !$('#local-switch').hasClass(`fa-toggle-on`);
+    var sel = $('#local-select')[0];
+    var optionSelected = $("option:selected", sel);
+    var valueSelected = sel.value;
+    chrome.storage.local.set({
+      [valueSelected + '-switch']: v
+    });
+    $('#local-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
+  });
+
+  $("#local-setting-btn").click(function(){
+    var sel = $('#local-select')[0];
+    var optionSelected = $("option:selected", sel);
+    var valueSelected = sel.value;
+    chrome.tabs.create({url: chrome.extension.getURL(`setting/local/index.html#menu${Object.keys(local_functions).indexOf(valueSelected)}`)});
+  });
+
+  $('#local-select').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+
+    chrome.storage.local.set({
+      'select_local': valueSelected
+    }, function(){
+      chrome.storage.local.get((config)=>{
+        var local_switch = config[valueSelected + '-switch'];
+        $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
+      });
+    });
+  });
+}
+
 $(document).ready(function(){
   $("#manual").click(open_manual);
   $("#cog").click(open_background);
-  //$("#tent").click(set_hidden_room);
+
   $("#tripgen").click(open_tripgen);
-  $("#game-knight").click(function(){
-    import('/game/echo.js');
+  $("#game-tent").click(function(){
+    chrome.tabs.create({url: 'https://discord.com/invite/BBCw3UY'});
+  });
+  $("#video-guide").click(function(){
+    chrome.tabs.create({url: 'https://www.youtube.com/playlist?list=PLaNluYBUsQrKe_faeHaFsKo9SkQzkQFOk'});
+  });
+  $("#video-guide").click(function(){
+    alert("not impl yet");
   });
 
   /* ensure activate the background page */
@@ -1384,6 +1435,7 @@ $(document).ready(function(){
     sticker_setup(config);
     friend_bio_setup(config);
     game_setup(config);
+    chrome.storage.local.get((config)=> local_setup(config));
     var tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();
     $('.pop-tab').on('click', function(){

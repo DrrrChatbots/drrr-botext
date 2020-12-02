@@ -209,17 +209,35 @@ function wrap_post_form(){
     //  $('#myModal').modal('show');
     //  return;
     //}
-    if(!$('textarea[name="message"]').hasClass('state-secret') &&
-      $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
-      !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
 
-    if(!$('textarea[name="message"]').val().match(/^\s*$/)){
-      zh_conv((cvt)=>{
-        $('textarea[name="message"]').val(
-          cvt(cmd + $('textarea[name="message"]').val()));
-        callback();
-      });
+    function rest(){
+      if(!$('textarea[name="message"]').hasClass('state-secret') &&
+        $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
+        !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
+
+      if(!$('textarea[name="message"]').val().match(/^\s*$/)){
+        zh_conv((cvt)=>{
+          $('textarea[name="message"]').val(
+            cvt(cmd + $('textarea[name="message"]').val()));
+          callback();
+        });
+      }
     }
+
+    if($('textarea[name="message"]').val().match(/^#\w+/)){
+      chrome.storage.local.get(["Hashtag-switch", "Hashtag"], (config)=>{
+        if(config["Hashtag-switch"]){
+          var sub = $('textarea[name="message"]').val().trim();
+          if(config["Hashtag"] && config["Hashtag"][sub]){
+            var array = config["Hashtag"][sub];
+            var sel = array[Math.floor(Math.random() * array.length)];
+            $('textarea[name="message"]').val(sel);
+          }
+        }
+        rest();
+      });
+    } else rest();
+
   }
 
   org_post = $('input[name="post"]');
@@ -327,7 +345,7 @@ $(document).ready(function(){
     (config) => {
       console.log(JSON.stringify(config));
 
-      plug_live2d();
+      //plug_live2d();
       //if(!config['profile'] ||
       //    config['profile'].id !== roomProfile().id)
       //    ajaxProfile(undefined, true, $('.room-title-name').text());

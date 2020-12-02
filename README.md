@@ -30,13 +30,12 @@ Join our discord channel to have some discussion.
 - support room member variable (include self -> dm to self, roomOwner) in list
 - add neteaseWorld support
 - pokemon monster module
-- import/export configuration (v)
-- room desc event (v)
 - netease playlist
 - hidden room on drrr.chat
 
-- hashtag
-- chatlog
+- hashtag v
+- chatlog v
+- live2d  v
 - trpg script
 - welcome back
 - peer.js

@@ -190,7 +190,7 @@ function bind_sticker(args){
 function bind_imm_play(args){
   $(`.imm-play[data="${imm_play_data(args)}"]`).click(function(){
     playMusic(
-      $(this).parent().prev().text(),
+      $(this).parent().prev().attr('title').replace(/ *- *$/, ''),
       $(this).attr('data'),
       alert.bind(window)
     );
@@ -200,7 +200,7 @@ function bind_imm_play(args){
 function bind_imm_pldl(args){
   $(`.imm-pldl[data="${imm_pldl_data(args)}"]`).click(function(){
     playMusic(
-      $(this).parent().prev().text(),
+      $(this).parent().prev().attr('title').replace(/ *- *$/, ''),
       $(this).attr('data'),
       alert.bind(window)
     );
@@ -613,6 +613,34 @@ function emptyKeyword(){
   $('#play_search').attr('title', "play first song in playlist")
 }
 
+function add_scheme(url, scheme){
+  if (url.indexOf("//") > -1) {
+    return url;
+  }
+  return scheme + url;
+}
+
+function extractHostname(url) {
+  var hostname;
+  //find & remove protocol (http, ftp, etc.) and get hostname
+
+  if (url.indexOf("//") > -1) {
+    scheme = url.substring(0, url.indexOf("://") + 3)
+    hostname = url.split('/')[2];
+  }
+  else {
+    scheme = 'http://'
+    hostname = url.split('/')[0];
+  }
+
+  //find & remove port number
+  hostname = hostname.split(':')[0];
+  //find & remove "?"
+  hostname = hostname.split('?')[0];
+
+  return scheme + hostname;
+}
+
 function music_bar_setup(config){
   /* music mode change */
   function mode_switch(bool){
@@ -737,6 +765,87 @@ function music_bar_setup(config){
         tartype == 'playlist' ? show_playlist : undefined);
     }
   });
+
+
+  function bind_request(event) {
+    // Permissions must be requested from inside a user gesture, like a button's
+    // click handler.
+    var url = $('#custom_api').attr('data');
+    chrome.permissions.request({
+      //permissions: [extractHostname(url) + '/*'],
+      origins: [extractHostname(url) + '/*'],
+    }, function(granted) {
+      if (granted) {
+        var save = ()=>{
+          chrome.storage.sync.set({
+            "youtube-api-url": add_scheme(url, 'http://')
+          });
+          alert(`bind YouTube API URL to: ${add_scheme(url, 'http://')}`)
+        }
+        if(config["youtube-api-url"] && extractHostname(config["youtube-api-url"]) != extractHostname(url)){
+          chrome.permissions.remove({
+            //permissions: [extractHostname(url) + '/*'],
+            origins: [extractHostname(config["youtube-api-url"]) + '/*'],
+          }, function(removed) {
+            if (removed) {
+              // The permissions have been removed.
+              alert(`remove ${extractHostname(config["youtube-api-url"]) + '/*'} success`);
+              save();
+            } else {
+              alert("remove failed");
+              // The permissions have not been removed (e.g., you tried to remove
+              // required permissions).
+              save();
+            }
+          });
+        } else save();
+      } else {
+        alert("permissions denied!");
+      }
+      $('#custom_api').attr('data', '');
+    });
+
+    document.querySelector('#custom_api').removeEventListener('click', bind_request);
+    document.querySelector('#custom_api').addEventListener('click', bind_api_url);
+  }
+
+  function bind_api_url(){
+    chrome.storage.sync.get("youtube-api-url", (config)=>{
+      var url = prompt("Input Your YouTube API URL:", config["youtube-api-url"]);
+      if(url !== null){
+        if(!url.length && config["youtube-api-url"] && config["youtube-api-url"].length){
+          chrome.permissions.remove({
+            //permissions: [extractHostname(url) + '/*'],
+            origins: [extractHostname(config["youtube-api-url"]) + '/*'],
+          }, function(removed) {
+            if (removed) {
+              // The permissions have been removed.
+              alert(`remove ${extractHostname(config["youtube-api-url"]) + '/*'} success`);
+              chrome.storage.sync.remove("youtube-api-url");
+              alert("API URL removed!");
+            } else {
+              alert("remove permission failed");
+              // The permissions have not been removed (e.g., you tried to remove
+              // required permissions).
+              chrome.storage.sync.remove("youtube-api-url");
+              alert("API URL removed!");
+            }
+          });
+          return;
+        }
+        url = url.replace(/\/ *$/, '')
+        if(confirm("Do you want to test your api first?\n(you need input url and rebind again)")){
+          chrome.tabs.create({url: url + '/kw?term=Yellow'});
+          return;
+        }
+        alert(`please re-click the bind button to accept permission:\n${extractHostname(url) + '/*'}`);
+        $('#custom_api').attr('data', url);
+        document.querySelector('#custom_api').removeEventListener('click', bind_api_url);
+        document.querySelector('#custom_api').addEventListener('click', bind_request);
+      }
+    });
+  }
+  document.querySelector('#custom_api').addEventListener('click', bind_api_url);
 }
 
 //var content = document.querySelector('#content');

@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.724",
+    "version": "1.725",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {
@@ -52,6 +52,7 @@
         "https://api.tenor.com/*",
         "http://api.giphy.com/*"
     ],
+    "optional_permissions": [ "http://*/", "https://*/" ],
     "web_accessible_resources": [
          "images/*.png",
          "live2d-widget/*",

@@ -43,7 +43,7 @@ var publishMessage = function(args){
         || message.startsWith('/share')
         || message.startsWith('/leave')) return;
       if(message.startsWith('/me')) draw_me(message);
-      else draw_message(message);
+      else if(!args.url) draw_message(message);
     }
     if(args.url) cmd['url'] = args.url;
     ctrlRoom(cmd, redraw, redraw);

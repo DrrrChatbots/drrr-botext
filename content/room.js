@@ -224,7 +224,7 @@ function wrap_post_form(){
       }
     }
 
-    if($('textarea[name="message"]').val().match(/^#[\w\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}\u3131-\uD79D]+/)){
+    if($('textarea[name="message"]').val().match(/^#\S+/)){
       chrome.storage.local.get(["Hashtag-switch", "Hashtag"], (config)=>{
         if(config["Hashtag-switch"]){
           var sub = $('textarea[name="message"]').val().trim();

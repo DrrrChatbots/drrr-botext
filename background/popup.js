@@ -216,7 +216,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
       var setting_name = unsid(the_sid);
       event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
       chrome.notifications.create(
-        chrome.extension.getURL('setting/index.html')
+        chrome.extension.getURL('setting/sync/index.html')
         + `#menu${Object.keys(settings).indexOf(setting_name)}`,
         {
           type: "basic",
@@ -225,7 +225,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
           message: `To enable ${setting_name.toLowerCase()}, make some rules`
         });
 
-      chrome.tabs.create({url: chrome.extension.getURL('setting/index.html')
+      chrome.tabs.create({url: chrome.extension.getURL('setting/sync/index.html')
         + `#menu${Object.keys(settings).indexOf(setting_name)}`});
 
       chrome.notifications.onClicked.addListener(function(notificationId) {

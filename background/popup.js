@@ -556,7 +556,8 @@ var WelcomeH = new Handler("welcome",
               }
             });
           }
-        })(assoc(req.user, config, WELCOME));
+        })(assocTrip(req.user, config, WELCOME, trip));
+        //})(assoc(req.user, config, WELCOME));
       }
     }
   }

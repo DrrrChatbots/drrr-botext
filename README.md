@@ -36,6 +36,7 @@ Join our discord channel to have some discussion.
 - hashtag v
 - chatlog v
 - live2d  v
-- trpg script
+- trpg script (port from AvgLang)
+- tripcode storage
 - welcome back
 - peer.js

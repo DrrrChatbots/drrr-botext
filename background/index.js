@@ -187,3 +187,20 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     callback();
   }
 })
+
+// Check whether new version is installed
+chrome.runtime.onInstalled.addListener(function(details){
+  if(details.reason == "install"){
+    //if(confirm("Do you want to have some default settings? (要加入預設設定嗎？)"))
+    // think twice
+    if(0) chrome.storage.sync.set({
+      "EventAction-setting": [
+        [ "msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", [ "$args" ] ],
+        [ "msg", "", "^/gif", "umsg", [ "$giphy($1)", "$1" ]]]
+    });
+  }
+  else if(details.reason == "update"){
+    var thisVersion = chrome.runtime.getManifest().version;
+    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  }
+});

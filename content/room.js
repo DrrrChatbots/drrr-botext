@@ -1,5 +1,27 @@
 prevRoomInfo = undefined;
 roomInfo = undefined;
+
+//var MacroModal = `
+//    <div style="color:#FFFFFF" id="myModal" class="modal fade" role="dialog">
+//        <div class="modal-dialog">
+//        <!-- Modal content-->
+//            <div class="modal-content">
+//              <div class="modal-header">
+//                <button type="button" class="close" data-dismiss="modal">&times;</button>
+//                <h4 class="modal-title">Macro Rule Setup</h4>
+//              </div>
+//              <div class="modal-body">
+//                <p>Write You Macro Rule Here</p>
+//                <textarea class="rounded-0" rows="12" style="width:100%;color:black;">Macro Rule Here!!</textarea>
+//              </div>
+//              <div class="modal-footer">
+//                <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+//                <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+//              </div>
+//            </div>
+//        </div>
+//    </div>`
+
 function findUser(name, callback, info){
   if(!info) info = roomInfo;
   if(info && info.room)
@@ -99,11 +121,11 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
-  if(text.startsWith('/replay')){
-    console.log(roomInfo);
-    console.log(roomInfo.room.np);
-    playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
-  }
+  //if(text.startsWith('/replay')){
+  //  console.log(roomInfo);
+  //  console.log(roomInfo.room.np);
+  //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
+  //}
 
   if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
     getRoom(
@@ -113,6 +135,7 @@ var handle_talks = function(msg){
         u = findUser(user);
         chrome.runtime.sendMessage({
           type: type,
+          host: isHost(),
           user: user,
           trip: u ? u.tripcode : '',
           text: text,
@@ -129,6 +152,7 @@ var handle_talks = function(msg){
     u = findUser(user);
     chrome.runtime.sendMessage({
       type: type,
+      host: isHost(),
       user: user,
       trip: u ? u.tripcode : '',
       text: text,
@@ -150,6 +174,7 @@ function handle_exit(){
       if(alarms.length) // for alarms only
         chrome.runtime.sendMessage({
           type: event_logout,
+          host: isHost(),
         });
       else console.log("logout without alarms");
     }
@@ -157,6 +182,7 @@ function handle_exit(){
       if(alarms.length){
         chrome.runtime.sendMessage({
           type: event_exitalarm,
+          host: isHost(),
         });
         // return "are you sure exit?";
       }
@@ -174,17 +200,44 @@ function wrap_post_form(){
   function wrapper(callback){
     ext_click = 2;
     var cmd = '';
-    if(!$('textarea[name="message"]').hasClass('state-secret') &&
-      $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
-      !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
+    //if($('textarea[name="message"]').val().match(/^\/mac/)){
+    //  $('textarea[name="message"]').val('');
+    //  $('#myModal').modal({
+    //    backdrop: 'static',
+    //    keyboard: false
+    //  });
+    //  $('#myModal').modal('show');
+    //  return;
+    //}
 
-    if(!$('textarea[name="message"]').val().match(/^\s*$/)){
-      zh_conv((cvt)=>{
-        $('textarea[name="message"]').val(
-          cvt(cmd + $('textarea[name="message"]').val()));
-        callback();
-      });
+    function rest(){
+      if(!$('textarea[name="message"]').hasClass('state-secret') &&
+        $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
+        !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
+
+      if(!$('textarea[name="message"]').val().match(/^\s*$/)){
+        zh_conv((cvt)=>{
+          $('textarea[name="message"]').val(
+            cvt(cmd + $('textarea[name="message"]').val()));
+          callback();
+        });
+      }
     }
+
+    if($('textarea[name="message"]').val().match(/^#\S+/)){
+      chrome.storage.local.get(["Hashtag-switch", "Hashtag"], (config)=>{
+        if(config["Hashtag-switch"]){
+          var sub = $('textarea[name="message"]').val().trim();
+          if(config["Hashtag"] && config["Hashtag"][sub]){
+            var array = config["Hashtag"][sub];
+            var sel = array[Math.floor(Math.random() * array.length)];
+            $('textarea[name="message"]').val(sel);
+          }
+        }
+        rest();
+      });
+    } else rest();
+
   }
 
   org_post = $('input[name="post"]');
@@ -218,10 +271,35 @@ function wrap_post_form(){
   });
 }
 
+function lambda_conservation(){
+
+  var conservation = function(){
+    var tc = $(this).parent().parent().find('.dropdown-item-tripcode').text();
+    if(tc === '#L/CaT//Hsk')
+      if(confirm("This cat is sooooo cute, it's λ. Do you really want to kick it?\n（你確定要踢這隻可愛的 λ 嗎？）")){
+        alert("You Bad Bad >:3");
+        var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
+        findUser(name, (u)=>{
+          ctrlRoom({'new_host': u.id});
+        });
+      }
+  }
+
+  $(document).on('mousedown', '.dropdown-item-kick', conservation);
+
+  $(document).on('mousedown', '.dropdown-item-ban', conservation);
+
+  $(document).on('mousedown', '.dropdown-item-report-user', conservation);
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
 $(document).ready(function(){
+
+  lambda_conservation();
+
+  //$('#body').prepend(MacroModal);
 
   console.log($('#user_name').text());
 
@@ -279,7 +357,8 @@ $(document).ready(function(){
       monit_progressbar();
       /* invoke newtab event */
       chrome.runtime.sendMessage({
-        type: event_newtab
+        type: event_newtab,
+        host: isHost(),
       });
       console.log("start background moniter new");
       handle_exit();
@@ -362,7 +441,7 @@ function do_method(){
 */
 
 function emit_method(req, sender, callback){
-  if(req.fn && [leave_room, cache_profile, update_profile, get_members, is_playing].includes(req.fn)){
+  if(req.fn && need_callback.includes(req.fn)){
     methods[req.fn](req.args, callback);
   }
   else{

@@ -163,7 +163,19 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
             module.event_action && module.event_action(req, config, sender);
           }
         )
+    });
 
+    const switchs = Object.keys(local_functions).map((x)=>x + '-switch')
+    chrome.storage.local.get(switchs, (config) => {
+      Object.keys(local_functions).forEach((x)=>{
+        if(config[x + '-switch']){
+          import(`/setting/local/${local_functions[x].module_file}`).then(
+            (module)=>{
+              module.event_action && module.event_action(req, config, sender);
+            }
+          );
+        }
+      });
     });
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
@@ -175,7 +187,6 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     callback();
   }
 })
-
 
 var login_mode; // a global variable
 chrome.storage.sync.get('#login-mode', function (data) {
@@ -200,3 +211,20 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   },
   {urls: ["*://drrr.com/*"]},
   ["blocking", "requestHeaders"]);
+
+// Check whether new version is installed
+chrome.runtime.onInstalled.addListener(function(details){
+  if(details.reason == "install"){
+    //if(confirm("Do you want to have some default settings? (要加入預設設定嗎？)"))
+    // think twice
+    if(0) chrome.storage.sync.set({
+      "EventAction-setting": [
+        [ "msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", [ "$args" ] ],
+        [ "msg", "", "^/gif", "umsg", [ "$giphy($1)", "$1" ]]]
+    });
+  }
+  else if(details.reason == "update"){
+    var thisVersion = chrome.runtime.getManifest().version;
+    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  }
+});

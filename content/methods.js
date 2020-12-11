@@ -13,6 +13,11 @@ function roomProfile(){
   return Profile;
 }
 
+function isHost(){
+  var host = $('.is-host')[1] && $('.is-host')[1].title || ($('.is-host')[0] && $('.is-host')[0].title)
+  return roomProfile().name == host.substring(0, host.length - ' (host)'.length);
+}
+
 var prevURLs = [], prevTo = [], prevWhom;
 
 var getTextNodesIn = function(el) {
@@ -38,7 +43,7 @@ var publishMessage = function(args){
         || message.startsWith('/share')
         || message.startsWith('/leave')) return;
       if(message.startsWith('/me')) draw_me(message);
-      else draw_message(message);
+      else if(!args.url) draw_message(message);
     }
     if(args.url) cmd['url'] = args.url;
     ctrlRoom(cmd, redraw, redraw);
@@ -262,7 +267,6 @@ var leaveRoom = function(args, callback, force){
       callback && callback();
     }
   );
-
 }
 
 var keepH = undefined;
@@ -310,6 +314,7 @@ function bindAlarms(){
         ((act, args) => () => {
           chrome.runtime.sendMessage({
             type: event_timer,
+            host: isHost(),
             action: act,
             arglist: args,
             user: $('#user_name').text(),
@@ -348,6 +353,7 @@ function monit_progressbar(){
         if(status != prev_mstatus){
           if(status) chrome.runtime.sendMessage({
             type: event_musicbeg,
+            host: isHost(),
             user: roomProfile().name,
             trip: roomProfile().tripcode,
             text: '',
@@ -361,6 +367,7 @@ function monit_progressbar(){
               setTimeout(
                 ()=>chrome.runtime.sendMessage({
                   type: event_musicend,
+                  host: isHost(),
                   user: roomProfile().name,
                   trip: roomProfile().tripcode,
                   text: '',
@@ -402,6 +409,20 @@ function isPlaying(args, callback){
   }
 }
 
+function showPrompt(args, callback){
+  if(callback){
+    callback(prompt(args.text));
+  }
+}
+
+function showConfirm(args, callback){
+  console.log("callback..", JSON.stringify(callback));
+  if(callback){
+    callback(confirm(args.text));
+  }
+}
+
+
 var effects = {
   'snow': 'snowStorm.start()',
   'firework': 'firework.start()',
@@ -432,6 +453,60 @@ function changeNameBgClr(args){
   $("<style/>", {id:'cust-name-bg', text: `.select-text { background-color: ${args.color}; }`}).appendTo('head');
 }
 
+var setClock = function(args, callback){
+  setTimeout(()=>{
+    chrome.runtime.sendMessage({
+      type: event_clock,
+      host: isHost(),
+      args: args,
+      user: 'extension',
+      text: '',
+      url: ''
+    });
+  }, args.ms);
+}
+
+function add_tag(url){
+  return new Promise((res, rej)=>{
+    var ft = url.split('.').pop();
+    var tag = undefined;
+    if(ft == 'css'){
+      tag = document.createElement('link');
+      tag.rel = "stylesheet";
+      tag.href = url;
+    }
+    else if(ft == 'js'){
+      tag = document.createElement('script');
+      tag.src = url;
+    }
+    //tag.onload = function() { this.remove(); };
+    if(tag){
+      tag.onload = () => res(url);
+      tag.onerror = () => rej(url);
+      (document.head || document.documentElement).appendChild(tag);
+    }
+  });
+}
+
+function plug_live2d(){
+  if (screen.width >= 768) {
+    Promise.all([
+      add_tag(chrome.runtime.getURL("live2d-widget/font-awesome.min.css")),
+      add_tag(chrome.runtime.getURL("live2d-widget/waifu.css")),
+      add_tag(chrome.runtime.getURL("live2d-widget/tw_cn.js")),
+      add_tag(chrome.runtime.getURL("live2d-widget/live2d.min.js")),
+      add_tag(chrome.runtime.getURL("live2d-widget/waifu-tips.js")),
+    ]).then(() => {
+      add_tag(chrome.runtime.getURL("live2d-widget/load.js"))
+    });
+  }
+}
+
+function callWizard(args, callback){
+  plug_live2d();
+}
+
+
 var methods = {}
 methods[post_message] = postMessage;
 methods[publish_message] = publishMessage;
@@ -453,6 +528,8 @@ methods[bg_effect] = bgEffect;
 methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
 methods[change_name_bg_clr] = changeNameBgClr;
+methods[set_clock] = setClock;
+methods[call_wizard] = callWizard;
 
 methods[set_timeout] = setTimeOut;
 
@@ -461,3 +538,7 @@ methods[get_members] = getMembers;
 methods[leave_room] = leaveRoom;
 methods[cache_profile] = cacheProfile;
 methods[update_profile] = updateProfile;
+methods[show_prompt] = showPrompt;
+methods[show_confirm] = showConfirm;
+
+need_callback = [leave_room, cache_profile, update_profile, get_members, is_playing, show_prompt, show_confirm]

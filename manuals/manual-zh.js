@@ -9,10 +9,12 @@ export const infopop = `
             <h4 class="modal-title">關於開發者</h4>
           </div>
           <div class="modal-body">
-            $ whoami <br><br>
-            lambda.catノ#L/CaT//Hsk <br>a.k.a 浪打貓ノ，也有人叫我蘭達<br><br><br>
-            $ finger lambda.catノ <br><br>
-            drrr.com 上的一般用戶，約於 2017 秋開始出沒於 drrr.com。<br>
+<pre>
+$ whoami
+lambda.catノ#L/CaT//Hsk <br>a.k.a 浪打貓ノ，也有人叫我蘭達</pre><br>
+<pre>
+$ finger lambda.catノ
+drrr.com 上的一般用戶，約於 2017 秋開始出沒於 drrr.com。</pre><br>
             Email 為 lambdacat.tw@gmail.com <br>
           </div>
           <div class="modal-footer">

@@ -9,10 +9,12 @@ export const infopop = `
             <h4 class="modal-title">about developer</h4>
           </div>
           <div class="modal-body">
-            $ whoami <br><br>
-            lambda.catノ#L/CaT//Hsk <br><br><br>
-            $ finger lambda.catノ <br><br>
-            As a normal user on drrr.com, apper on drrr.com around fall, 2017.<br>
+<pre>
+$ whoami
+lambda.catノ#L/CaT//Hsk</pre><br>
+<pre>
+$ finger lambda.catノ
+As a normal user on drrr.com, apper on drrr.com around fall, 2017.</pre><br>
             Email: lambdacat.tw@gmail.com <br>
           </div>
           <div class="modal-footer">

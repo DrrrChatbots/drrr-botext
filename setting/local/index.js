@@ -40,7 +40,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     var element = document.getElementById('file-content');
     try{
       config = JSON.parse(contents)
-      chrome.storage.sync.set(config, function(){
+      chrome.storage.local.set(config, function(){
         alert("config updated");
         location.reload();
       });
@@ -74,13 +74,16 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
                   `<div id="menu${idx}"
                       class="tab-pane fade ${`menu${idx}` === index ? `in active` : ''}">
 
-                    <h3>${keys[idx]} Setting
+                    <h3>${keys[idx]} Data
 
                         <small>
                             <span class="btn-group" role="group">
+                                <button type="button" class="btn btn-info btn-sm">
+                                <!--
                                 <button type="button" class="btn btn-info btn-sm"
                                     data-toggle="modal" data-target="#${keys[idx]}-modal">
-                                         HELP
+                                    -->
+                                         DATA
                                 </button>
                                 <button type="button" id="reset-${keys[idx]}"
                                 class="btn btn-success btn-sm reset-button"
@@ -106,9 +109,8 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
                                 <h4 class="modal-title">${keys[idx]} Configuration</h4>
                               </div>
                               <div class="modal-body">
-                                ${manual[keys[idx]].desc}
-                                <!-- <textarea disabled rows="${manual[keys[idx]].def_conf.split('\n').length}" style="width:100%; height:100%">${manual[keys[idx]].def_conf}</textarea>-->
-                                <pre><code>${manual[keys[idx]].def_conf}</pre></code>
+                                <!-- <textarea disabled rows="50" style="width:100%; height:100%"></textarea>-->
+                                <pre><code></pre></code>
                               </div>
                               <div class="modal-footer">
                                 <button type="button"
@@ -129,7 +131,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 
   var save_callback = {
     [TIMER]: function(){
-      chrome.storage.sync.get((config) => {
+      chrome.storage.local.get((config) => {
         if(config[SWITCH_TIMER]){
           roomTabs((tabs) => {
             if(tabs.length &&
@@ -148,8 +150,8 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     }
   }
 
-  function refresh_settings(){
-    chrome.storage.sync.clear();
+  function refresh_local_functions(){
+    chrome.storage.local.clear();
     location.reload();
   }
 
@@ -159,22 +161,22 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 
     var index = window.location.toString().split('#')[1]
     if(!index) index = 'menu0';
-    $('#nav_pills').append(make_pills(Object.keys(settings), index));
-    $('#tab_conts').append(make_tabs(settings, index));
-    $("#reset").click(refresh_settings);
+    $('#nav_pills').append(make_pills(Object.keys(local_functions), index));
+    $('#tab_conts').append(make_tabs(local_functions, index));
+    $("#reset").click(refresh_local_functions);
 
     document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 
     $("#export").click(function(){
-      chrome.storage.sync.get((res)=>{
-        download('config.json', JSON.stringify(res, undefined, 2));
+      chrome.storage.local.get((res)=>{
+        download('local-config.json', JSON.stringify(res, undefined, 2));
       });
     });
 
     /* enable tab */
     $(document).delegate('.setting-input', 'keydown', function(e) {
       setTimeout(()=>{
-        if(setting_cache[$(this).attr('id')] === $(this).val()){
+        if(setting_cache[$(this).attr('id')] == $(this).val()){
           $(`#save-${$(this).attr('data')}`).hide();
           $(`#reset-${$(this).attr('data')}`).hide();
         }
@@ -218,13 +220,13 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       }, false);
     }
     /* load or default for every field */
-    chrome.storage.sync.get((res) => {
-      for(e of Object.keys(settings)){
+    chrome.storage.local.get((res) => {
+      for(e of Object.keys(local_functions)){
         $(`#${sid(e)}`).attr(
           'placeholder',
-          manual[e].def_conf);
-        if(res[`${sid(e)}`]){
-          var val = settings[e].plain(res[`${sid(e)}`]);
+          '');
+        if(res[`${e}`]){
+          var val = local_functions[e].plain(res[`${e}`]);
           setting_cache[`${sid(e)}`] = val;
           $(`#${sid(e)}`).val(val);
           //$(`#save-${$(this).attr('data')}`).hide();
@@ -240,26 +242,26 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       if(val.match(/^\s*$/)){
         $(this).hide();
         $(`#reset-${$(this).attr('data')}`).hide();
-        chrome.storage.sync.remove(`${sid($(this).attr('data'))}`);
+        chrome.storage.local.remove(`${$(this).attr('data')}`);
         setting_cache[`${sid($(this).attr('data'))}`] = '';
         $(`#${sid($(this).attr('data'))}`).val('')
         /* close switch */
-        settings[$(this).attr('data')].empty_cbk();
+        local_functions[$(this).attr('data')].empty_cbk();
       }
       else try{
-        settings[$(this).attr('data')].validate(val);
+        local_functions[$(this).attr('data')].validate(val);
         $(this).hide();
         $(`#reset-${$(this).attr('data')}`).hide();
-        chrome.storage.sync.set({
-          [`${sid($(this).attr('data'))}`]:
-          settings[$(this).attr('data')].store(val)
+        chrome.storage.local.set({
+          [`${$(this).attr('data')}`]:
+          local_functions[$(this).attr('data')].store(val)
         });
         setting_cache[`${sid($(this).attr('data'))}`] = val;
         //console.log($(this).attr('data'), save_callback);
         //if($(this).attr('data') in save_callback)
         //    save_callback[$(this).attr('data')]();
         /* open switch */
-        settings[$(this).attr('data')].save_cbk();
+        local_functions[$(this).attr('data')].save_cbk();
       }
       catch(e){
         alert(e);
@@ -273,63 +275,5 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       $(`#${sid($(this).attr('data'))}`).val(setting_cache[`${sid($(this).attr('data'))}`]);
     });
 
-    /* quick regex test */
-    function setIcon(s, icon){
-      return $(s).removeClass('glyphicon-ok')
-        .removeClass('glyphicon-warning-sign')
-        .removeClass('glyphicon-remove')
-        .addClass(icon);
-    }
-
-    function setStatus(s, status, title = ''){
-      return $(s).removeClass('has-success')
-        .removeClass('has-warning')
-        .removeClass('has-error')
-        .addClass(status)
-        .attr('title', title);
-    }
-
-    $('.test-input').on('input focus',function(e){
-      var valid = true,
-        regex = $('#test-regex').val(),
-        string = $('#test-string').val();
-      try{
-        regex = new RegExp(JSON.parse(`"${regex}"`));
-      }
-      catch(e){
-        valid = false;
-        setStatus('#test-string-status', 'has-warning', 'Please correct your RegExp');
-        setIcon('#test-string-icon', 'glyphicon-warning-sign');
-        setStatus('#test-regex-status', 'has-warning', e);
-        setIcon('#test-regex-icon', 'glyphicon-warning-sign');
-      }
-      if(valid){
-        setStatus('#test-regex-status', 'has-sucess');
-        setIcon('#test-regex-icon', 'glyphicon-ok');
-        if($('#test-string').val().match(regex)){
-          setStatus('#test-string-status', 'has-sucess');
-          setIcon('#test-string-icon', 'glyphicon-ok');
-        }
-        else{
-          setStatus('#test-string-status', 'has-error', 'String not match the RegExp');
-          setIcon('#test-string-icon', 'glyphicon-remove');
-        }
-      }
-    });
-
-    chrome.storage.sync.get((config)=>{
-      $('#music_delay').val(config[MUSIC_DELAY] ? config[MUSIC_DELAY] : DEFAULT_DELAY);
-    });
-
-    $('#music_delay').on('input focus',function(e){
-      if(!isNaN(Number($(this).val()))){
-        chrome.storage.sync.set({
-          [MUSIC_DELAY]: $(this).val()
-        })
-      } else {
-        alert('Please input number');
-        $(this).val('');
-      }
-    });
   });
 });

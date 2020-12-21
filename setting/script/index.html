@@ -8,6 +8,7 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
+    <script src="./botscript.js" charset="utf-8"></script>
     <script src="./index.js" charset="utf-8"></script>
   </head>
   <body>
@@ -26,9 +27,38 @@
 
     <div class="container" style="margin-top:50px">
 
-      <h3></h3>
+      <h3>DrrrBotScript
+        <small>
+          <span class="btn-group" role="group">
+            <button id='execute' type="button" class="btn btn-info btn-sm">
+              Execute
+            </button>
+            <!--
+            <button type="button" id="reset-${keys[idx]}"
+                                  class="btn btn-success btn-sm reset-button"
+                                  data="${keys[idx]}"
+                                  style="display:none;">
+              RESET
+            </button>
+            <button type="button" id="save-${keys[idx]}"
+                                  class="btn btn-danger btn-sm save-button"
+                                  data="${keys[idx]}"
+                                  style="display:none;">
+              SAVE!
+            </button>
+            -->
+          </span>
+        </small>
+
+      </h3>
       <div id="nav_pills"></div>
       <div id="tab_conts"></div>
+      <form>
+        <div class="form-group">
+          <textarea class="setting-input rounded-0" rows="12" style="width:100%;"
+                                                              id="script" data=""></textarea>
+        </div>
+      </form>
 
     </div>
   </body>

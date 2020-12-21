@@ -1,7 +1,9 @@
 /* setting.html */
 
 $(document).ready(()=>{
-
+  $('#execute').click(function(){
+    PS.Main.execute($('#script').val())();
+  });
 });
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {

@@ -24643,22 +24643,24 @@ var PS = {};
           };
           if (v.as.value0.value0 instanceof BotScript.Renew) {
               var val$prime = evalExpr(v)(v.e)(v.as.value0.value0.value1);
-              return Control_Bind.discard(Control_Bind.discardUnit)(Effect_Aff.bindAff)((function () {
-                  if (v.as.value0.value0.value0 instanceof BotScript.Var) {
-                      var v1 = BotScriptEnv.insert(v.e)(v.as.value0.value0.value0.value0)(val$prime);
-                      return Effect_Class.liftEffect(Effect_Aff.monadEffectAff)(Effect_Console.logShow(BotScript.showAction)(v.as.value0.value0));
-                  };
-                  if (v.as.value0.value0.value0 instanceof BotScript.Dot) {
-                      var obj$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value0);
-                      return Effect_Class.liftEffect(Effect_Aff.monadEffectAff)($foreign.updMem(obj$prime)(v.as.value0.value0.value0.value1)(val$prime));
-                  };
-                  if (v.as.value0.value0.value0 instanceof BotScript.Sub) {
-                      var sub$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value1);
-                      var obj$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value0);
-                      return Effect_Class.liftEffect(Effect_Aff.monadEffectAff)($foreign.updMem(obj$prime)(v.as.value0.value0.value0.value1)(val$prime));
-                  };
-                  return Effect_Class.liftEffect(Effect_Aff.monadEffectAff)(Effect_Console.logShow(Data_Show.showString)("invalid renew"));
-              })())(function () {
+              if (v.as.value0.value0.value0 instanceof BotScript.Var) {
+                  var v1 = BotScriptEnv.insert(v.e)(v.as.value0.value0.value0.value0)(val$prime);
+                  return Control_Applicative.pure(Effect_Aff.applicativeAff)(next$primeloop);
+              };
+              if (v.as.value0.value0.value0 instanceof BotScript.Dot) {
+                  var obj$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value0);
+                  return Control_Bind.discard(Control_Bind.discardUnit)(Effect_Aff.bindAff)(Effect_Class.liftEffect(Effect_Aff.monadEffectAff)($foreign.updMem(obj$prime)(v.as.value0.value0.value0.value1)(val$prime)))(function () {
+                      return Control_Applicative.pure(Effect_Aff.applicativeAff)(next$primeloop);
+                  });
+              };
+              if (v.as.value0.value0.value0 instanceof BotScript.Sub) {
+                  var sub$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value1);
+                  var obj$prime = evalExpr(v)(v.e)(v.as.value0.value0.value0.value0);
+                  return Control_Bind.discard(Control_Bind.discardUnit)(Effect_Aff.bindAff)(Effect_Class.liftEffect(Effect_Aff.monadEffectAff)($foreign.updMem(obj$prime)(v.as.value0.value0.value0.value1)(val$prime)))(function () {
+                      return Control_Applicative.pure(Effect_Aff.applicativeAff)(next$primeloop);
+                  });
+              };
+              return Control_Bind.discard(Control_Bind.discardUnit)(Effect_Aff.bindAff)(Effect_Class.liftEffect(Effect_Aff.monadEffectAff)(Effect_Console.logShow(Data_Show.showString)("invalid renew")))(function () {
                   return Control_Applicative.pure(Effect_Aff.applicativeAff)(next$primeloop);
               });
           };
@@ -24819,7 +24821,7 @@ var PS = {};
                       var v2 = BotScriptEnv.insert(env)(v.value0)(none$prime);
                       return none$prime;
                   };
-                  throw new Error("Failed pattern match at BotScriptVM (line 270, column 5 - line 275, column 22): " + [ v1.constructor.name ]);
+                  throw new Error("Failed pattern match at BotScriptVM (line 273, column 5 - line 278, column 22): " + [ v1.constructor.name ]);
               };
               if (v instanceof BotScript.Seq) {
                   return BotScript.toTerm("")(acts2effunit(v.value0)(ms.sn)(ms.s)(env));
@@ -24827,7 +24829,7 @@ var PS = {};
               if (v instanceof BotScript.Trm) {
                   return v.value0;
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 220, column 1 - line 220, column 52): " + [ ms.constructor.name, env.constructor.name, v.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 223, column 1 - line 223, column 52): " + [ ms.constructor.name, env.constructor.name, v.constructor.name ]);
           };
       };
   };

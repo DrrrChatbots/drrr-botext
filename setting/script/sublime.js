@@ -32,6 +32,7 @@ function show_bindings(){
   console.log(value);
 }
 
+notify_web = false;
 function execute(){
   code = globalThis.editor.getValue();
   if(code.trim().length === 0) code =';'
@@ -45,6 +46,23 @@ function execute(){
     else val = str;
   }
   console.log(`=> ${val}`);
+  if(!notify_web){
+    chrome.tabs.query({
+      url: 'https://drrr.com/*'
+    }, (tabs) => {
+      if(!tabs.length){
+        console.log("no drrr.com tab exist, if you want to listen event, create one.")
+        chrome.runtime.sendMessage({
+          notification: {
+            title: 'CLICK TO OPEN DRRR.COM',
+            msg: 'open drrr.com to listen event',
+            url: 'drrr_webpage'
+          }
+        });
+      }
+      notify_web = true;
+    });
+  }
 }
 
 function save_script(){

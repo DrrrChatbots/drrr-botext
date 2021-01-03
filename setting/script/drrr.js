@@ -1,11 +1,30 @@
 /* setting.html */
 
+doing = false;
+queue = []
 function renew_chatroom(){
-  pre = $('#drrr');
-  $('#iframe-container').after('<iframe id="drrr" src="https://drrr.com/"></iframe>');
-  setTimeout(function(){
-    pre.remove();
-  }, 3000);
+  if(doing){
+    queue.push(1)
+  }
+  else{
+    doing = true;
+    wait_again = function(){
+      $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
+      setTimeout(remove_until, 5000);
+    }
+    remove_until = function(){
+      if($('.drrr').length > 1){
+        $('.drrr')[0].remove();
+        setTimeout(remove_until, 5000);
+      }
+      else if(queue.length){
+        queue.pop();
+        wait_again();
+      }
+      else doing = false;
+    }
+    wait_again();
+  }
 }
 
 function findUser(name, callback){
@@ -49,7 +68,7 @@ function drrr_send(msg, url, to){
   else{
     sendTab({ fn: publish_message, args: chatcmd },
       ()=>{ ctrlRoom(cmd, callback, callback) },
-      undefined, callback);
+      callback);
   };
 }
 

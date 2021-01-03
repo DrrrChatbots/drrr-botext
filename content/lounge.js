@@ -139,7 +139,6 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       var sel = req.args.sel;
       console.log(sel);
       blinkElt(sel);
-
     }
   }
   if(callback) callback();

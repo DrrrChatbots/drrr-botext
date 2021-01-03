@@ -1,26 +1,84 @@
 /* setting.html */
 
+function renew_chatroom(){
+  pre = $('#drrr');
+  $('#iframe-container').after('<iframe id="drrr" src="https://drrr.com/"></iframe>');
+  setTimeout(function(){
+    pre.remove();
+  }, 3000);
+}
+
+function findUser(name, callback, info){
+  if(!info) info = roomInfo;
+  if(info && info.room)
+    for(u of info.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
+  if(prevRoomInfo && prevRoomInfo.room){
+    for(u of prevRoomInfo.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
+  }
+}
+
+function renew_callback(msg, to){
+  if(to || message.startsWith('/roll')
+        || message.startsWith('/share')
+        || message.startsWith('/leave'))
+    return undefined;
+  return renew_chatroom;
+}
+
+function drrr_send(msg, url, to){
+
+  callback = renew_callback(msg, to);
+
+  cmd = {"message": String(msg)}
+  chatcmd = { msg: String(msg)} }
+
+  if(url){
+    cmd['url'] = url;
+    chatcmd['url'] = url;
+  }
+
+  if(to){
+    findUser(to, (u)=>{
+      cmd['to'] = u.id;
+      ctrlRoom(cmd, callback, callback);
+    });
+  }
+  else{
+    sendTab({ fn: publish_message, chatcmd,
+      ()=>{
+        ctrlRoom(cmd, callback, callback)
+      }, undefined, callback);
+  }
+}
+
 drrr_builtins = {
   'title': function(msg){
-    sendTab({ fn: publish_message, args: { msg: String(msg)} });
+    ctrlRoom({'room_name': String(msg)});
   },
   'descr': function(msg){
-    sendTab({ fn: publish_message, args: { msg: String(msg)} });
+    ctrlRoom({'room_description': String(msg)});
   },
-  'print': function(msg){
-    sendTab({ fn: publish_message, args: { msg: String(msg)} });
+  'print': function(msg, url){
+    drrr_send(msg, url);
   },
-  'order': function(keyword, p1, p2){
+  'dm': function(user, msg, url){
+    drrr_send(msg, url, user);
+  },
+  'leave': function(user, msg, url){
+    drrr_send("/leave");
+  },
+  'play': function(keyword, p1, p2){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     console.log(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
       get_music.bind(null, keyword, source),
-      (msg) => sendTab({
-        fn: publish_message,
-        args: { msg: msg }
-      }), idx
+      (msg) => drrr_send(msg), idx
     ), 1000);
   }
 }

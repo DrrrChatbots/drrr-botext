@@ -22,6 +22,7 @@ function show_bindings(){
   map['Ctrl-Enter'] = 'Execute Script'
   map['Ctrl-L'] = 'Clear Window'
   map['Ctrl-P'] = 'Pause Script'
+  map['Ctrl-S'] = 'Save Script'
   for (var key in map) {
     var val = map[key];
     if (key != "fallthrough" && val != "..." && (!/find/.test(val) || /findUnder/.test(val)))
@@ -46,19 +47,38 @@ function execute(){
   console.log(`=> ${val}`);
 }
 
+function save_script(){
+  chrome.storage.local.set({'botscript': globalThis.editor.getValue()},
+    function(){
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: '/icon.png',
+        title: 'SCRIPT SAVED',
+        message: 'Your botscript are saved to local storage'
+      });
+    });
+}
+
+function pause_script(){
+  PS.Main.execute(';')();
+  chrome.notifications.create({
+    type: "basic",
+    iconUrl: '/icon.png',
+    title: 'SCRIPT PAUSED',
+    message: 'Your botscript are terminated'
+  });
+}
+
+function clear_console(){
+  var logger = document.getElementById('log');
+  logger.innerHTML = "";
+}
+
 $(document).ready(function(event) {
 
-  var value = "// The bindings defined specifically in the Sublime Text mode\nvar bindings = {\n";
-  var map = CodeMirror.keyMap.sublime;
-  for (var key in map) {
-    var val = map[key];
-    if (key != "fallthrough" && val != "..." && (!/find/.test(val) || /findUnder/.test(val)))
-      value += "  \"" + key + "\": \"" + val + "\",\n";
-  }
-  value += "}\n\n// The implementation of joinLines\n";
-  value += CodeMirror.commands.joinLines.toString().replace(/^function\s*\(/, "function joinLines(").replace(/\n  /g, "\n") + "\n";
+  chrome.storage.local.get('botscript', (config) => {
     globalThis.editor = CodeMirror(document.body.getElementsByTagName("article")[0], {
-      value: 'print("hello world")',
+      value: config['botscript'] ? config['botscript'] : 'print("hello world")',
       lineNumbers: true,
       mode: "javascript",
       keyMap: "sublime",
@@ -72,39 +92,29 @@ $(document).ready(function(event) {
           execute();
         },
         "Ctrl-L": function(instance) {
-          var logger = document.getElementById('log');
-          logger.innerHTML = "";
+          clear_console();
         },
         "Ctrl-P": function(instance) {
-          PS.Main.execute(';')();
+          pause_script();
+        },
+        "Ctrl-S": function(instance) {
+          save_script();
         }
       }
     });
-
     $('#execute').click(function(){
       execute();
     });
-  $('#clear').click(function(){
-    var logger = document.getElementById('log');
-    logger.innerHTML = "";
-  });
-  $('#stop').click(function(){
-    PS.Main.execute(';')();
-  });
+    $('#clear').click(function(){
+      clear_console();
+    });
+    $('#stop').click(pause_script);
+    $('#save').click(save_script);
 
-  document.getElementById("show-bindings").addEventListener("click",function(e){
-    show_bindings();
-  },false);
-
-  orig_print = drrr.print;
-  drrr.print = function(){
-    orig_print.apply(null, arguments);
-    pre = $('#drrr');
-    $('#iframe-container').after('<iframe id="drrr" src="https://drrr.com/"></iframe>');
-    setTimeout(function(){
-      pre.remove();
-    }, 3000);
-  }
-  $('#script').append('<pre id="log"></pre>');
-  redef_log();
+    document.getElementById("show-bindings").addEventListener("click",function(e){
+      show_bindings();
+    },false);
+    $('#script').append('<pre id="log"></pre>');
+    redef_log();
+  });
 });

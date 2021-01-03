@@ -24000,7 +24000,7 @@ var PS = {};
       return function (expr) {
           return function (v) {
               return $foreign.toVaArgFunction(function (args) {
-                  var env$prime = bind$primeevent$primevars(Data_Array.cons("args")(syms))(args)(v.env);
+                  var env$prime = bind$primeevent$primevars(Data_Array.cons("args")(syms))(args)(BotScriptEnv.pushEnv(v.env));
                   var machine$prime = {
                       exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(expr, Data_List_Types.Nil.value), Data_List_Types.Nil.value),
                       env: env$prime,

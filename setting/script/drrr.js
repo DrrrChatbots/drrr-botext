@@ -155,7 +155,7 @@ function updateProfile(callback){
   })
 }
 
-function updateLoc(){
+function updateLoc(callback){
   getRoom((info)=>{
     if(info){
       globalThis.prevInfo = globalThis.info;
@@ -170,6 +170,7 @@ function updateLoc(){
       }
     }
     if(info && info.redirect) globalThis.loc = info.redirect;
+    if(callback) callback();
   })
 }
 

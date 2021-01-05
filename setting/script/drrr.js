@@ -42,7 +42,8 @@ function findUser(name, callback){
 function renew_callback(msg, to){
   if(to || msg.startsWith('/roll')
     || msg.startsWith('/share')
-    || msg.startsWith('/leave'))
+    || msg.startsWith('/leave')
+    || msg.startsWith('/me'))
     return undefined;
   return renew_chatroom;
 }

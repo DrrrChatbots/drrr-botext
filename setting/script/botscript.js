@@ -7,15 +7,17 @@ var PS = {};
       if(constructorName == "")
         return literal;
       else if(constructorName == "Array"){
-        return Object(literal);
+        return (literal);
       }
-      return Object(globalThis[constructorName](literal));
+      return (globalThis[constructorName](literal));
     }
 
   exports.stringify_ = obj => {
     str = JSON.stringify(obj)
-    if(typeof obj == 'function')
-      str = 'function'
+    if(obj === undefined)
+      str = "undefined";
+    else if(typeof obj == 'function')
+      str = 'function';
     else if(str === undefined && obj.toString)
       str = obj.toString();
     return str;
@@ -23037,52 +23039,56 @@ var PS = {};
     lval = lval.valueOf();
     rval = rval.valueOf();
     if(op == "%")
-      return Object(lval % rval);
+      return (lval % rval);
     else if(op == "/")
-      return Object(lval / rval);
+      return (lval / rval);
     else if(op == '*')
-      return Object(lval * rval);
+      return (lval * rval);
     else if(op == '+')
-      return Object(lval + rval);
+      return (lval + rval);
     else if(op == '-')
-      return Object(lval - rval);
+      return (lval - rval);
     else if(op == '>')
-      return Object(lval > rval);
+      return (lval > rval);
     else if(op == '>=')
-      return Object(lval >= rval);
+      return (lval >= rval);
     else if(op == '<')
-      return Object(lval < rval);
+      return (lval < rval);
     else if(op == '<=')
-      return Object(lval <= rval);
+      return (lval <= rval);
     else if(op == '==')
-      return Object(lval == rval);
+      return (lval == rval);
     else if(op == '!=')
-      return Object(lval != rval);
+      return (lval != rval);
     else if(op == '===')
-      return Object(lval === rval);
+      return (lval === rval);
     else if(op == '!==')
-      return Object(lval !== rval);
+      return (lval !== rval);
     else if(op == '&&')
-      return Object(lval && rval);
+      return (lval && rval);
     else if(op == '||')
-      return Object(lval || rval);
+      return (lval || rval);
+    else if(op == 'in')
+      return (lval in rval);
   }
 
   exports.evalUna = op => val => {
     val = val.valueOf();
     if(op == "!")
-      return Object(!val);
+      return (!val);
     else if(op == '-')
-      return Object(-val);
+      return (-val);
     else if(op == '_++' || op == '++_')
-      return Object(val + 1);
+      return (val + 1);
     else if(op == '_--' || op == '--_')
-      return Object(val - 1);
+      return (val - 1);
   }
 
   exports.evalApp = objm => obj => name => args => {
 
     //console.log("call => ", obj, name, args);
+    args = args.map((x)=> x && x.valueOf ? x.valueOf() : x);
+    console.log(obj, name, args)
 
     val = undefined;
     try{

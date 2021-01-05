@@ -23462,7 +23462,7 @@ var PS = {};
       types, user_regex, cont_regex, next
     ])
 
-    console.log(`Event ${types} ${JSON.stringify(args)}`);
+    //console.log(`Event ${types} ${JSON.stringify(args)}`);
   }
 })(PS["DrrrBot"] = PS["DrrrBot"] || {});
 (function($PS) {

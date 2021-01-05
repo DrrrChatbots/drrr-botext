@@ -76,7 +76,6 @@ function drrr_send(msg, url, to){
 function reload_chatroom(){
     setTimeout(()=>{
       roomTabs((tabs)=>{
-        console.log("reload");
         if(tabs.length)
           chrome.tabs.reload(tabs[0].id);
       }, "https://drrr.com/*");
@@ -202,6 +201,7 @@ function updateLoc(callback){
       }
     }
     if(info && info.redirect) globalThis.loc = info.redirect;
+    else globalThis.loc = "room";
     if(callback) callback();
   })
 }

@@ -1116,6 +1116,15 @@ var PS = {};
       };
       return Visit;
   })();
+  var Reset = (function () {
+      function Reset(value0) {
+          this.value0 = value0;
+      };
+      Reset.create = function (value0) {
+          return new Reset(value0);
+      };
+      return Reset;
+  })();
   var Renew = (function () {
       function Renew(value0, value1) {
           this.value0 = value0;
@@ -1252,6 +1261,9 @@ var PS = {};
       if (v instanceof Visit) {
           return "(Visit " + (Data_Show.show(Data_Show.showString)(v.value0) + ")");
       };
+      if (v instanceof Reset) {
+          return "(Reset " + (Data_Show.show(Data_Show.showString)(v.value0) + ")");
+      };
       if (v instanceof Renew) {
           return "(Renew " + (Data_Show.show(showExpr)(v.value0) + (" " + (Data_Show.show(showExpr)(v.value1) + ")")));
       };
@@ -1291,6 +1303,7 @@ var PS = {};
   exports["Later"] = Later;
   exports["Going"] = Going;
   exports["Visit"] = Visit;
+  exports["Reset"] = Reset;
   exports["Renew"] = Renew;
   exports["Timer"] = Timer;
   exports["Group"] = Group;
@@ -23448,9 +23461,9 @@ var PS = {};
     exports.events = {};
   }
 
-  exports.unlisten = state => () => {
+  exports.setcur = state => () => {
+    exports.events[exports.cur] = [];
     exports.cur = state;
-    exports.events[state] = [];
   }
 
   exports.listen = state => types => args => next => () => {
@@ -23472,7 +23485,7 @@ var PS = {};
   var exports = $PS["DrrrBot"];
   var $foreign = $PS["DrrrBot"];
   exports["listen"] = $foreign.listen;
-  exports["unlisten"] = $foreign.unlisten;
+  exports["setcur"] = $foreign.setcur;
   exports["clearAllEvent"] = $foreign.clearAllEvent;
 })(PS);
 (function($PS) {
@@ -23807,7 +23820,7 @@ var PS = {};
               if (v1 instanceof Data_Maybe.Just) {
                   var top$primeenv = BotScriptEnv.topEnv(v.env);
                   return function __do() {
-                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.unlisten(v.cur))();
+                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
                           cur: v.exprs.value0.value0.value0,
@@ -23833,12 +23846,12 @@ var PS = {};
               if (v1 instanceof Data_Maybe.Just) {
                   var top$primeenv = BotScriptEnv.topEnv(v.env);
                   return function __do() {
-                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.unlisten(v.cur))();
+                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return new Control_Monad_Rec_Class.Loop({
                           cur: v.exprs.value0.value0.value0,
                           env: top$primeenv,
-                          exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, v.exprs.value0.value1), v.exprs.value1),
+                          exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
                           states: v.states,
                           val: v.val
                       });
@@ -23851,6 +23864,12 @@ var PS = {};
                   };
               };
               throw new Error("Failed pattern match at BotScriptVM (line 238, column 13 - line 251, column 38): " + [ v1.constructor.name ]);
+          };
+          if (v.exprs.value0.value0 instanceof BotScript.Reset) {
+              return function __do() {
+                  Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
+                  return new Control_Monad_Rec_Class.Loop(machine$prime);
+              };
           };
           if (v.exprs.value0.value0 instanceof BotScript.Group) {
               var new$primeenv = BotScriptEnv.pushEnv(v.env);

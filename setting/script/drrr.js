@@ -201,6 +201,7 @@ function updateLoc(callback){
       }
     }
     if(info && info.redirect) globalThis.loc = info.redirect;
+    else globalThis.loc = "room";
     if(callback) callback();
   })
 }

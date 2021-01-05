@@ -1534,6 +1534,9 @@ $(document).ready(function(){
   $("#wizard").click(function(){
     sendTab({ fn: call_wizard, args: {} });
   });
+  $("#program").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
+  });
 
   /* ensure activate the background page */
   chrome.runtime.sendMessage({ type: 'popup' },

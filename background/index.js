@@ -97,7 +97,15 @@ function generate_notification(req){
           if(toURL !== url) return;
           if(exit){
             sendTab({ fn: leave_room, args: {jump: toURL} });
-          } else chrome.tabs.update({
+          }
+          else if(toURL.includes('drrr_webpage')){
+            chrome.tabs.create({
+              active: false,
+              pinned: false, // ture is interesting
+              url: 'https://drrr.com/'
+            });
+          }
+          else chrome.tabs.update({
             url: toURL
           });
           chrome.notifications.getAll((notes)=>{

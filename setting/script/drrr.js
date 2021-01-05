@@ -73,6 +73,16 @@ function drrr_send(msg, url, to){
   };
 }
 
+function reload_chatroom(){
+    setTimeout(()=>{
+      roomTabs((tabs)=>{
+        console.log("reload");
+        if(tabs.length)
+          chrome.tabs.reload(tabs[0].id);
+      }, "https://drrr.com/*");
+    }, 2000);
+}
+
 drrr_builtins = {
   'title': function(msg){
     ctrlRoom({'room_name': String(msg)});
@@ -112,6 +122,7 @@ drrr_builtins = {
       success: function(data){
         console.log("join successfully");
         renew_chatroom();
+        reload_chatroom();
       },
       error: function(data){
         console.log("join failed");
@@ -137,6 +148,7 @@ drrr_builtins = {
       success: function(data){
         console.log("create successfully");
         renew_chatroom();
+        reload_chatroom();
       },
       error: function(data){
         console.log("create failed");

@@ -23111,7 +23111,7 @@ var PS = {};
       else val = undefined;
     }
     catch(err){
-      console.log(err);
+      console.log(String(err));
       return {};
     }
 

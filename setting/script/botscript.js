@@ -24017,11 +24017,11 @@ var PS = {};
                   var prd$prime = evalExpr(v)(v.exprs.value0.value0.value0)();
                   var nxt$prime = $foreign.bool(prd$prime)(new Data_List_Types.Cons(v.exprs.value0.value0.value1, new Data_List_Types.Cons(v.exprs.value0.value0, v.exprs.value0.value1)))(v.exprs.value0.value1);
                   return Control_Monad_Rec_Class.Loop.create({
+                      val: prd$prime,
                       exprs: new Data_List_Types.Cons(nxt$prime, v.exprs.value1),
                       cur: v.cur,
                       env: v.env,
-                      states: v.states,
-                      val: v.val
+                      states: v.states
                   });
               };
           };

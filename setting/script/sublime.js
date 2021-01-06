@@ -48,11 +48,20 @@ stringify = obj => {
   return str;
 }
 
+function interact(){
+  if(!globalThis.machine){
+    globalThis.machine = PS.Main.newMachine();
+  }
+  code = $('#step').text();
+  globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
+  val = machine.val;
+  console.log(`=> ${stringify(val)}`);
+}
+
 function execute(){
   code = globalThis.editor.getValue();
-  if(code.trim().length === 0) code =';'
-  result = PS.Main.execute(code)();
-  val = result.val;
+  globalThis.machine = PS.Main.execute(code)();
+  val = machine.val;
   console.log(`=> ${stringify(val)}`);
   if(!notify_web){
     chrome.tabs.query({
@@ -140,7 +149,26 @@ $(document).ready(function(event) {
     document.getElementById("show-bindings").addEventListener("click",function(e){
       show_bindings();
     },false);
-    $('#script').append('<pre id="log"></pre>');
+    $('#script').append('<span id="step" style="padding: 1px 1px 1px 1px;" class="textarea log" role="textbox" contenteditable></span>');
+    $("#step").on("keydown", function(e){
+      if(e.which == 13 && e.ctrlKey){
+        interact();
+        $('#step').text('');
+        return false;
+      }
+      else if(e.which == 76 && e.ctrlKey){
+        clear_console();
+        return false;
+      }
+      else if(e.which == 83 && e.ctrlKey){
+        save_script();
+      }
+      else if(e.which == 80 && e.ctrlKey){
+        pause_script();
+        return false;
+      }
+    });
+    $('#script').append('<pre id="log" class="log"></pre>');
     redef_log();
   });
 });

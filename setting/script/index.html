@@ -67,11 +67,30 @@
 </div>
 
 <article id='script' style="margin: 0 0 0 10%;">
-
 </article>
 
+
 <style>
-#log{
+.textarea {
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 6px;
+}
+.textarea {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  resize: both;
+  line-height: 20px;
+}
+
+.textarea[contenteditable]:empty::before {
+  content: "interpret with current environment";
+  color: gray;
+}
+
+.log{
     font-size: 16px;
     top: 0px;
     padding-top: 15px;

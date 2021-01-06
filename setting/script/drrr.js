@@ -107,7 +107,7 @@ drrr_builtins = {
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    console.log(`play music[${source}][${idx}]: ${keyword}`);
+    log(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
       get_music.bind(null, keyword, source),
       (msg) => drrr_send(msg), idx

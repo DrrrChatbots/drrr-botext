@@ -22720,13 +22720,6 @@ var PS = {};
   var parens = function (p) {
       return Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(whiteSpace)(tokParser.parens(p));
   };
-  var parseApp = function (exprP) {
-      return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parens(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(exprP)(Text_Parsing_Parser_String.string(Text_Parsing_Parser_String.stringLikeString)(Data_Identity.monadIdentity)(","))))(function (args) {
-          return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(function (expr) {
-              return new BotScript.App(expr, Data_Array.fromFoldable(Data_List_Types.foldableList)(args));
-          });
-      });
-  };
   var parseIdentifier = Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(whiteSpace)(tokParser.identifier);
   var parseNumber = Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(whiteSpace)(Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(tokParser["float"])))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(Data_Int.toNumber)(tokParser.integer));
   var parseStringLiteral = Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(whiteSpace)(tokParser.stringLiteral);
@@ -22753,6 +22746,15 @@ var PS = {};
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parseArgs)(function (args) {
           return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(args);
+          });
+      });
+  };
+  var parseApp = function (exprP) {
+      return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parens(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(exprP)(Text_Parsing_Parser_String.string(Text_Parsing_Parser_String.stringLikeString)(Data_Identity.monadIdentity)(","))))(function (args) {
+          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
+              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(function (expr) {
+                  return new BotScript.App(expr, Data_Array.fromFoldable(Data_List_Types.foldableList)(args));
+              });
           });
       });
   };
@@ -22882,7 +22884,7 @@ var PS = {};
                       if (maybe instanceof Data_Maybe.Nothing) {
                           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                       };
-                      throw new Error("Failed pattern match at BotScriptParser (line 293, column 11 - line 297, column 59): " + [ maybe.constructor.name ]);
+                      throw new Error("Failed pattern match at BotScriptParser (line 294, column 11 - line 298, column 59): " + [ maybe.constructor.name ]);
                   });
               });
           });

@@ -33,19 +33,27 @@ function show_bindings(){
 }
 
 notify_web = false;
+
+stringify = obj => {
+  str = JSON.stringify(obj)
+  if(obj === undefined)
+    str = "undefined";
+  else if(typeof obj == 'function')
+    str = 'function' + (obj.name ? ' ' + obj.name : '');
+  else if(str === undefined && obj.toString)
+    str = obj.toString();
+  else if(str === '{}' && obj.constructor
+    && obj.constructor.name != 'Object')
+    str = "[Object " + obj.constructor.name + "]"
+  return str;
+}
+
 function execute(){
   code = globalThis.editor.getValue();
   if(code.trim().length === 0) code =';'
   result = PS.Main.execute(code)();
   val = result.val;
-  if(val !== undefined && val !== null){
-    str = JSON.stringify(val);
-    if(str === undefined){
-      val = val.constructor.name;
-    }
-    else val = str;
-  }
-  console.log(`=> ${val}`);
+  console.log(`=> ${stringify(val)}`);
   if(!notify_web){
     chrome.tabs.query({
       url: 'https://drrr.com/*'

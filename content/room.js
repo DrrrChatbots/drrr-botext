@@ -297,6 +297,8 @@ var jumpToRoom = undefined;
 
 $(document).ready(function(){
 
+  chrome.runtime.sendMessage({ start: 'room' });
+
   lambda_conservation();
 
   //$('#body').prepend(MacroModal);

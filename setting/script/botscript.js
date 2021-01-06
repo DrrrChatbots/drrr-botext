@@ -23088,7 +23088,6 @@ var PS = {};
 
     //console.log("call => ", obj, name, args);
     args = args.map((x)=> x && x.valueOf ? x.valueOf() : x);
-    console.log(obj, name, args)
 
     val = undefined;
     try{

@@ -43,6 +43,8 @@ function checkGoToRoom(config){
 }
 
 $(document).ready(function(){
+
+  chrome.runtime.sendMessage({ start: 'lounge' });
   chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
   //'https://drrr.com/room/.*'
   $('form[action="//drrr.com/logout/"] > input').click(function(){

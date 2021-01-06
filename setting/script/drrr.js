@@ -161,16 +161,6 @@ for(key in drrr_builtins){
   globalThis.drrr[key] = drrr_builtins[key];
 }
 
-globalThis.pprint = function(){
-  for (var i = 0; i < arguments.length; i++) {
-    if (typeof arguments[i] == 'object') {
-      print(JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]);
-    } else {
-      print(arguments[i]);
-    }
-  }
-}
-
 function updateInfo(info){
   if(info){
     globalThis.prevInfo = globalThis.info;

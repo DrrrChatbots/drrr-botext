@@ -74,12 +74,12 @@ function drrr_send(msg, url, to){
 }
 
 function reload_chatroom(){
-    setTimeout(()=>{
-      roomTabs((tabs)=>{
-        if(tabs.length)
-          chrome.tabs.reload(tabs[0].id);
-      }, "https://drrr.com/*");
-    }, 2000);
+  setTimeout(()=>{
+    roomTabs((tabs)=>{
+      if(tabs.length)
+        chrome.tabs.reload(tabs[0].id);
+    }, "https://drrr.com/*");
+  }, 2000);
 }
 
 drrr_builtins = {
@@ -171,6 +171,23 @@ globalThis.pprint = function(){
   }
 }
 
+function updateInfo(info){
+  if(info){
+    globalThis.prevInfo = globalThis.info;
+    globalThis.info = info;
+    if(info.prfile)
+      globalThis.profile = info.profile;
+    if(info.user)
+      globalThis.user = info.user;
+    if(info.room){
+      globalThis.room = info.room;
+      globalThis.users = info.room.users;
+    }
+  }
+  if(info && info.redirect) globalThis.loc = info.redirect;
+  else globalThis.loc = "room";
+}
+
 function updateLounge(callback){
   ajaxRooms((data)=>{
     globalThis.lounge = data.lounge;
@@ -188,20 +205,7 @@ function updateProfile(callback){
 
 function updateLoc(callback){
   getRoom((info)=>{
-    if(info){
-      globalThis.prevInfo = globalThis.info;
-      globalThis.info = info;
-      if(info.prfile)
-        globalThis.profile = info.profile;
-      if(info.user)
-        globalThis.user = info.user;
-      if(info.room){
-        globalThis.room = info.room;
-        globalThis.users = info.room.users;
-      }
-    }
-    if(info && info.redirect) globalThis.loc = info.redirect;
-    else globalThis.loc = "room";
+    updateInfo(info);
     if(callback) callback();
   })
 }
@@ -238,13 +242,26 @@ function event_action(event, config, req){
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
-    globalThis.lastReq = req;
-    event_action(req.type, {}, req);
+    if(req && req.info)
+      updateInfo(req.info);
+    if(req.start){
+      updateProfile();
+      updateLoc();
+      updateLounge();
+    }
+    else{
+      globalThis.lastReq = req;
+      event_action(req.type, {}, req);
+    }
     //console.log(req);
     //console.log(JSON.stringify(sender))
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
-    updateLounge();
+    if(req.start){
+      updateProfile();
+      updateLoc();
+      updateLounge();
+    }
     //console.log(req);
     //console.log(JSON.stringify(sender))
   }

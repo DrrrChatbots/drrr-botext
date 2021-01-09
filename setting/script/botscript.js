@@ -22713,7 +22713,7 @@ var PS = {};
           if (lval instanceof BotScript.Dot) {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(dictMonad))(lval);
           };
-          return Text_Parsing_Parser.fail(dictMonad)("Expected left value");
+          return Text_Parsing_Parser.fail(dictMonad)("Expected left value, Get " + Data_Show.show(BotScript.showExpr)(lval));
       };
   };
   var expect = function (dictMonad) {
@@ -22784,7 +22784,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 330, column 3 - line 334, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 333, column 3 - line 337, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -23016,13 +23016,18 @@ var PS = {};
           });
       }))(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(new BotScript.Group(Data_List_Types.Nil.value))(reservedOp(";"))))("Statement Expression");
   };
+  var binary$prime = function (name) {
+      return function (assoc) {
+          return new Text_Parsing_Parser_Expr.Infix(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Bin.create(name))(reserved(name)), assoc);
+      };
+  };
   var binary = function (name) {
       return function (assoc) {
           return new Text_Parsing_Parser_Expr.Infix(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Bin.create(name))(reservedOp(name)), assoc);
       };
   };
   var op$primetab = function (exprP) {
-      return [ [ postfix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ parseApp(exprP), dot, sub(exprP), inc$primes, dec$primes ])) ], [ prefix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ neg, not, $$new, inc$primep, dec$primep ])) ], [ binary("<")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("<=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("in")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("===")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("/")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("%")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("*")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("-")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("+")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("&&")(Text_Parsing_Parser_Expr.AssocRight.value) ], [ binary("||")(Text_Parsing_Parser_Expr.AssocRight.value) ] ];
+      return [ [ postfix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ parseApp(exprP), dot, sub(exprP), inc$primes, dec$primes ])) ], [ prefix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ neg, not, $$new, inc$primep, dec$primep ])) ], [ binary("<")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("<=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary$prime("in")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("===")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("/")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("%")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("*")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("-")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("+")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("&&")(Text_Parsing_Parser_Expr.AssocRight.value) ], [ binary("||")(Text_Parsing_Parser_Expr.AssocRight.value) ] ];
   };
   var parseSimpleExpr = function (exprP) {
       return Text_Parsing_Parser_Expr.buildExprParser(Data_Identity.monadIdentity)(op$primetab(exprP))(parseTerm(exprP));

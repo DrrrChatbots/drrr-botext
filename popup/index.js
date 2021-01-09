@@ -1534,6 +1534,13 @@ $(document).ready(function(){
   $("#wizard").click(function(){
     sendTab({ fn: call_wizard, args: {} });
   });
+  $("#live2d").click(function(){
+    chrome.storage.sync.get("live2d", (config)=>{
+      val = config['live2d'] || `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`;
+      val = prompt("Live2D unpkg json URL (Google or drrr.wiki):", val);
+      chrome.storage.sync.set({"live2d": val});
+    })
+  });
   $("#program").click(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
   });

@@ -466,7 +466,7 @@ var setClock = function(args, callback){
   }, args.ms);
 }
 
-function add_tag(url){
+function add_tag(url, data){
   return new Promise((res, rej)=>{
     var ft = url.split('.').pop();
     var tag = undefined;
@@ -474,10 +474,12 @@ function add_tag(url){
       tag = document.createElement('link');
       tag.rel = "stylesheet";
       tag.href = url;
+      if(data) tag.data = data
     }
     else if(ft == 'js'){
       tag = document.createElement('script');
       tag.src = url;
+      if(data) tag.text = `//${data}`
     }
     //tag.onload = function() { this.remove(); };
     if(tag){
@@ -497,7 +499,12 @@ function plug_live2d(){
       add_tag(chrome.runtime.getURL("live2d-widget/live2d.min.js")),
       add_tag(chrome.runtime.getURL("live2d-widget/waifu-tips.js")),
     ]).then(() => {
-      add_tag(chrome.runtime.getURL("live2d-widget/load.js"))
+      live2d = `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`
+      //live2d = `https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json`
+      //live2d = `https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json`
+      chrome.storage.sync.get("live2d", (config)=>{
+        add_tag(chrome.runtime.getURL("live2d-widget/load.js"), config['live2d'] || live2d)
+      })
     });
   }
 }

@@ -24098,9 +24098,9 @@ var PS = {};
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
-                          cur: v.exprs.value0.value0.value0,
-                          env: v.env,
                           exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
+                          cur: v.cur,
+                          env: v.env,
                           states: v.states,
                           val: v.val
                       });
@@ -24112,7 +24112,7 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 282, column 13 - line 294, column 38): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 282, column 13 - line 292, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Reset) {
               return function __do() {

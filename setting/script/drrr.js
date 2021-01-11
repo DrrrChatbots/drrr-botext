@@ -227,7 +227,7 @@ $(document).ready(()=>{
   updateLounge();
 });
 
-function event_action(event, config, req){
+function botscript_event_action(event, config, req){
   var rules = PS.DrrrBot.events[""] || []
 
   if(PS.DrrrBot.cur.length)
@@ -262,7 +262,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     }
     else{
       globalThis.lastReq = req;
-      event_action(req.type, {}, req);
+      botscript_event_action(req.type, {}, req);
     }
     //console.log(req);
     //console.log(JSON.stringify(sender))

@@ -100,8 +100,28 @@ drrr_builtins = {
       ctrlRoom({'new_host': u.id});
     })
   },
+  'kick': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'kick': u.id});
+    })
+  },
+  'ban': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'ban': u.id});
+    })
+  },
+  'report': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'report_and_ban_user': u.id});
+    })
+  },
+  'unban': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'unban': u.id});
+    })
+  },
   'leave': function(user, msg, url){
-    drrr_send("/leave");
+    ctrlRoom({'leave': 'leave'});
   },
   'play': function(keyword, p1, p2){
     var idx = undefined, source = undefined;
@@ -128,6 +148,7 @@ drrr_builtins = {
       }
     });
   },
+  'ctrl': ctrlRoom,
   'create': function(name, desc, limit, lang){
     if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
     if(!desc) desc = ''

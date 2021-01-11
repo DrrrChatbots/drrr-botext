@@ -68,6 +68,7 @@ var handle_talks = function(msg){
             if(msg.classList.contains(w)){
               type = e;
               user = $(msg).find('.name').text();
+              text = $(msg).text();
             }
           });
         if(!type){

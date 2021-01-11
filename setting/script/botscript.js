@@ -22737,8 +22737,8 @@ var PS = {};
           identLetter: Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(CustomToken.alphaNum(Data_Identity.monadIdentity))(Text_Parsing_Parser_String.oneOf(Text_Parsing_Parser_String.stringLikeString)(Data_Identity.monadIdentity)([ "_", "$" ])),
           opStart: v.opStart,
           opLetter: v.opLetter,
-          reservedNames: [ "state", "true", "false", "event", "later", "going", "if", "else", "for", "while", "visit", "timer", "in", "of" ],
-          reservedOpNames: [ ":", ",", "new", "delete" ],
+          reservedNames: [ "state", "true", "false", "event", "later", "going", "if", "else", "for", "while", "visit", "timer", "in", "of", "new", "delete" ],
+          reservedOpNames: [ ":", "," ],
           caseSensitive: false
       };
   })();
@@ -22753,6 +22753,8 @@ var PS = {};
   var reserved = function (xs) {
       return tokParser.reserved(xs);
   };
+  var $$delete = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("delete"))(reserved("delete"));
+  var $$new = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("new"))(reserved("new"));
   var parseBoolean = Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("true"))(Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(true)))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("false"))(Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(false)));
   var parseFLoop = function (exprP) {
       var desc = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("For Init Expr")))(function (init) {
@@ -22823,7 +22825,6 @@ var PS = {};
   };
   var dec$primep = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("--_"))(reservedOp("--"));
   var dec$primes = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("_--"))(reservedOp("--"));
-  var $$delete = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("delete"))(reservedOp("delete"));
   var dot = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reservedOp("."))(parseIdentifier))(function (attr) {
       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(function (expr) {
           return new BotScript.Dot(expr, attr);
@@ -22832,7 +22833,6 @@ var PS = {};
   var inc$primep = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("++_"))(reservedOp("++"));
   var inc$primes = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("_++"))(reservedOp("++"));
   var neg = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("-"))(reservedOp("-"));
-  var $$new = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("new"))(reservedOp("new"));
   var not = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("!"))(reservedOp("!"));
   var parseApp = function (exprP) {
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parens(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(exprP)(reservedOp(","))))(function (args) {
@@ -23844,8 +23844,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "||") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $100 = $foreign.toBoolean(lv$prime);
-                  if ($100) {
+                  var $98 = $foreign.toBoolean(lv$prime);
+                  if ($98) {
                       return Control_Monad_Rec_Class.Loop.create({
                           val: lv$prime,
                           cur: machine$prime.cur,
@@ -23867,8 +23867,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "&&") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $104 = $foreign.toBoolean(lv$prime);
-                  if ($104) {
+                  var $102 = $foreign.toBoolean(lv$prime);
+                  if ($102) {
                       var rv$prime = evalExpr(v)(v.exprs.value0.value0.value2)();
                       return Control_Monad_Rec_Class.Loop.create({
                           val: rv$prime,
@@ -24039,26 +24039,20 @@ var PS = {};
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
                           cur: v.exprs.value0.value0.value0,
-                          val: $foreign.none(Undefined["undefined"]),
                           env: top$primeenv,
                           exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, Data_List_Types.Nil.value), Data_List_Types.Nil.value),
-                          states: v.states
+                          states: v.states,
+                          val: v.val
                       });
                   };
               };
               if (v1 instanceof Data_Maybe.Nothing) {
                   return function __do() {
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(Effect_Console.log("state <" + (v.exprs.value0.value0.value0 + "> not found")))();
-                      return new Control_Monad_Rec_Class.Done({
-                          val: $foreign.none(Undefined["undefined"]),
-                          cur: v.cur,
-                          env: v.env,
-                          exprs: v.exprs,
-                          states: v.states
-                      });
+                      return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 267, column 13 - line 280, column 63): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 267, column 13 - line 279, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Visit) {
               var v1 = Data_Foldable.find(Data_Foldable.foldableArray)(function (v2) {
@@ -24069,27 +24063,21 @@ var PS = {};
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
-                          val: $foreign.none(Undefined["undefined"]),
                           exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
                           cur: v.cur,
                           env: v.env,
-                          states: v.states
+                          states: v.states,
+                          val: v.val
                       });
                   };
               };
               if (v1 instanceof Data_Maybe.Nothing) {
                   return function __do() {
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(Effect_Console.log("state <" + (v.exprs.value0.value0.value0 + "> not found")))();
-                      return new Control_Monad_Rec_Class.Done({
-                          val: $foreign.none(Undefined["undefined"]),
-                          cur: v.cur,
-                          env: v.env,
-                          exprs: v.exprs,
-                          states: v.states
-                      });
+                      return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 283, column 13 - line 294, column 64): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 282, column 13 - line 292, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Reset) {
               return function __do() {

@@ -15,7 +15,9 @@ function roomProfile(){
 
 function isHost(){
   var host = $('.is-host')[1] && $('.is-host')[1].title || ($('.is-host')[0] && $('.is-host')[0].title)
-  return roomProfile().name == host.substring(0, host.length - ' (host)'.length);
+  if(host)
+    return roomProfile().name == host.substring(0, host.length - ' (host)'.length);
+  else false;
 }
 
 var prevURLs = [], prevTo = [], prevWhom;

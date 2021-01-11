@@ -22738,7 +22738,7 @@ var PS = {};
           opStart: v.opStart,
           opLetter: v.opLetter,
           reservedNames: [ "state", "true", "false", "event", "later", "going", "if", "else", "for", "while", "visit", "timer", "in", "of" ],
-          reservedOpNames: [ ":", ",", "new" ],
+          reservedOpNames: [ ":", ",", "new", "delete" ],
           caseSensitive: false
       };
   })();
@@ -22784,7 +22784,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 333, column 3 - line 337, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 337, column 3 - line 341, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -22823,6 +22823,7 @@ var PS = {};
   };
   var dec$primep = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("--_"))(reservedOp("--"));
   var dec$primes = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("_--"))(reservedOp("--"));
+  var $$delete = Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Una.create("delete"))(reservedOp("delete"));
   var dot = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reservedOp("."))(parseIdentifier))(function (attr) {
       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(function (expr) {
           return new BotScript.Dot(expr, attr);
@@ -22946,45 +22947,6 @@ var PS = {};
           });
       }));
   };
-  var parseLval = function (exprP) {
-      return Text_Parsing_Parser_Expr.buildExprParser(Data_Identity.monadIdentity)([ [ postfix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ dot, sub(exprP) ])) ] ])(parseTerm(exprP));
-  };
-  var parseForIn = function (exprP) {
-      var desc = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(parseLval(exprP))("For Var"))(function ($$var) {
-          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(mustLval(Data_Identity.monadIdentity)($$var))(function (var$prime) {
-              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("in"))(function () {
-                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("For Iter")))(function (iter) {
-                      return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(var$prime, iter));
-                  });
-              });
-          });
-      });
-      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("for"))(function () {
-          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parens(desc))(desc))(function (v) {
-              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("For Body Expr")))(function (body) {
-                  return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Group(Data_List.fromFoldable(Data_Foldable.foldableArray)([ new BotScript.Renew(new BotScript.Var("@iter"), new BotScript.App(new BotScript.Dot(new BotScript.App(new BotScript.Dot(new BotScript.Var("Object"), "keys"), [ v.value1 ]), "values"), [  ])), new BotScript.Renew(new BotScript.Var("@it"), new BotScript.App(new BotScript.Dot(new BotScript.Var("@iter"), "next"), [  ])), new BotScript.While(new BotScript.Una("!", new BotScript.Dot(new BotScript.Var("@it"), "done")), new BotScript.Group(Data_List.fromFoldable(Data_Foldable.foldableArray)([ new BotScript.Renew(v.value0, new BotScript.Dot(new BotScript.Var("@it"), "value")), body, new BotScript.Renew(new BotScript.Var("@it"), new BotScript.App(new BotScript.Dot(new BotScript.Var("@iter"), "next"), [  ])) ]))) ])));
-              });
-          });
-      });
-  };
-  var parseForOf = function (exprP) {
-      var desc = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(parseLval(exprP))("For Var"))(function ($$var) {
-          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(mustLval(Data_Identity.monadIdentity)($$var))(function (var$prime) {
-              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("of"))(function () {
-                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("For Iter")))(function (iter) {
-                      return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(var$prime, iter));
-                  });
-              });
-          });
-      });
-      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("for"))(function () {
-          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parens(desc))(desc))(function (v) {
-              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("For Body Expr")))(function (body) {
-                  return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Group(Data_List.fromFoldable(Data_Foldable.foldableArray)([ new BotScript.Renew(new BotScript.Var("@iter"), new BotScript.App(new BotScript.Dot(new BotScript.App(new BotScript.Dot(new BotScript.Var("Object"), "values"), [ v.value1 ]), "values"), [  ])), new BotScript.Renew(new BotScript.Var("@it"), new BotScript.App(new BotScript.Dot(new BotScript.Var("@iter"), "next"), [  ])), new BotScript.While(new BotScript.Una("!", new BotScript.Dot(new BotScript.Var("@it"), "done")), new BotScript.Group(Data_List.fromFoldable(Data_Foldable.foldableArray)([ new BotScript.Renew(v.value0, new BotScript.Dot(new BotScript.Var("@it"), "value")), body, new BotScript.Renew(new BotScript.Var("@it"), new BotScript.App(new BotScript.Dot(new BotScript.Var("@iter"), "next"), [  ])) ]))) ])));
-              });
-          });
-      });
-  };
   var braces = function (p) {
       return tokParser.braces(p);
   };
@@ -23002,7 +22964,7 @@ var PS = {};
       });
   };
   var parseStmt = function (exprP) {
-      return Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseIfels(exprP))(parseTimer(exprP)))(parseWhile(exprP)))(parseLater(exprP)))(parseEvent(exprP)))(parseForIn(exprP)))(parseForOf(exprP)))(parseFLoop(exprP)))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("going"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Going.create)(expect(Data_Identity.monadIdentity)(parseIdentifier)))))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("visit"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Visit.create)(parseIdentifier))))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(braces(Data_List.many(Text_Parsing_Parser.alternativeParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.lazyParserT)(exprP)))(function (exprs) {
+      return Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseIfels(exprP))(parseTimer(exprP)))(parseWhile(exprP)))(parseLater(exprP)))(parseEvent(exprP)))(parseFLoop(exprP)))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("going"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Going.create)(expect(Data_Identity.monadIdentity)(parseIdentifier)))))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("visit"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Visit.create)(parseIdentifier))))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(braces(Data_List.many(Text_Parsing_Parser.alternativeParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.lazyParserT)(exprP)))(function (exprs) {
           if (exprs instanceof Data_List_Types.Nil) {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Obj([  ]));
           };
@@ -23027,7 +22989,7 @@ var PS = {};
       };
   };
   var op$primetab = function (exprP) {
-      return [ [ postfix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ parseApp(exprP), dot, sub(exprP), inc$primes, dec$primes ])) ], [ prefix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ neg, not, $$new, inc$primep, dec$primep ])) ], [ binary("<")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("<=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary$prime("in")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("===")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("/")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("%")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("*")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("-")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("+")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("&&")(Text_Parsing_Parser_Expr.AssocRight.value) ], [ binary("||")(Text_Parsing_Parser_Expr.AssocRight.value) ] ];
+      return [ [ postfix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ parseApp(exprP), dot, sub(exprP), inc$primes, dec$primes ])) ], [ prefix(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ neg, not, $$new, $$delete, inc$primep, dec$primep ])) ], [ binary("<")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("<=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary(">=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary$prime("in")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("===")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!==")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("!=")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("/")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("%")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("*")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("-")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("+")(Text_Parsing_Parser_Expr.AssocLeft.value) ], [ binary("&&")(Text_Parsing_Parser_Expr.AssocRight.value) ], [ binary("||")(Text_Parsing_Parser_Expr.AssocRight.value) ] ];
   };
   var parseSimpleExpr = function (exprP) {
       return Text_Parsing_Parser_Expr.buildExprParser(Data_Identity.monadIdentity)(op$primetab(exprP))(parseTerm(exprP));
@@ -23045,7 +23007,11 @@ var PS = {};
   });
   var parseExpr = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseAbs(self))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parseSimpleExpr(self))(function (expr) {
-          return Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseBinding(self)(expr))(Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr));
+          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseBinding(self)(expr))(Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr)))(function (expr$prime) {
+              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
+                  return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr$prime);
+              });
+          });
       })))(parseStmtExpr(self)))(parseObject(self)))("Expression"))(function (expr) {
           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr);
       });
@@ -23142,6 +23108,10 @@ var PS = {};
   exports["parse"] = parse;
 })(PS);
 (function(exports) {
+  
+  unit = () => false
+  //unit = () => Object()
+
   exports.evalBin = op => lval => rval => {
     lval = lval.valueOf();
     rval = rval.valueOf();
@@ -23215,10 +23185,10 @@ var PS = {};
     }
     catch(err){
       console.log(String(err));
-      return {};
+      return unit();
     }
 
-    return val === undefined || val == null ? {} : val;
+    return val === undefined || val == null ? unit() : val;
   }
 
   invokFunction = namespace => syms => {
@@ -23235,14 +23205,14 @@ var PS = {};
 
   exports.memberOf = obj => name => {
     val = obj[name];
-    return val === undefined || val == null ? {} : val;
+    return val === undefined || val == null ? unit() : val;
   }
 
   exports.updMem = obj => name => val => () => {
     obj[name] = val;
   }
 
-  exports.none = () => Object()
+  exports.none = unit
 
   exports.bool = pred => thn => els => {
     return pred.valueOf() ? thn : els;
@@ -23279,6 +23249,11 @@ var PS = {};
 
   exports["new"] = cons => args => {
     return new (cons.bind.apply(cons, [null].concat(args)))()
+  }
+
+  exports["delete"] = cons => attr => {
+    if(attr) delete cons[attr];
+    else delete cons;
   }
 })(PS["BotScriptVM"] = PS["BotScriptVM"] || {});
 (function(exports) {
@@ -23791,6 +23766,44 @@ var PS = {};
                   });
               };
           };
+          if (v.exprs.value0.value0 instanceof BotScript.Una && v.exprs.value0.value0.value0 === "delete") {
+              if (v.exprs.value0.value0.value1 instanceof BotScript.Dot) {
+                  return function __do() {
+                      var obj$prime = evalExpr(v)(v.exprs.value0.value0.value1.value0)();
+                      var mem$prime = BotScript.toTerm("String")(v.exprs.value0.value0.value1.value1);
+                      return Control_Monad_Rec_Class.Loop.create({
+                          val: $foreign["delete"](obj$prime)(mem$prime),
+                          cur: machine$prime.cur,
+                          env: machine$prime.env,
+                          exprs: machine$prime.exprs,
+                          states: machine$prime.states
+                      });
+                  };
+              };
+              if (v.exprs.value0.value0.value1 instanceof BotScript.Sub) {
+                  return function __do() {
+                      var obj$prime = evalExpr(v)(v.exprs.value0.value0.value1.value0)();
+                      var sub$prime = evalExpr(v)(v.exprs.value0.value0.value1.value1)();
+                      return Control_Monad_Rec_Class.Loop.create({
+                          val: $foreign["delete"](obj$prime)(sub$prime),
+                          cur: machine$prime.cur,
+                          env: machine$prime.env,
+                          exprs: machine$prime.exprs,
+                          states: machine$prime.states
+                      });
+                  };
+              };
+              return function __do() {
+                  var expr$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
+                  return Control_Monad_Rec_Class.Loop.create({
+                      val: $foreign["delete"](expr$prime)(Undefined["undefined"]),
+                      cur: machine$prime.cur,
+                      env: machine$prime.env,
+                      exprs: machine$prime.exprs,
+                      states: machine$prime.states
+                  });
+              };
+          };
           if (v.exprs.value0.value0 instanceof BotScript.Una) {
               return function __do() {
                   var val$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
@@ -23831,8 +23844,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "||") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $88 = $foreign.toBoolean(lv$prime);
-                  if ($88) {
+                  var $98 = $foreign.toBoolean(lv$prime);
+                  if ($98) {
                       return Control_Monad_Rec_Class.Loop.create({
                           val: lv$prime,
                           cur: machine$prime.cur,
@@ -23854,8 +23867,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "&&") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $92 = $foreign.toBoolean(lv$prime);
-                  if ($92) {
+                  var $102 = $foreign.toBoolean(lv$prime);
+                  if ($102) {
                       var rv$prime = evalExpr(v)(v.exprs.value0.value0.value2)();
                       return Control_Monad_Rec_Class.Loop.create({
                           val: rv$prime,
@@ -23994,7 +24007,7 @@ var PS = {};
                       states: machine$prime.states
                   }));
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 231, column 13 - line 236, column 65): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 246, column 13 - line 251, column 65): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Obj) {
               var v1 = Data_Array.unzip(v.exprs.value0.value0.value0);
@@ -24039,21 +24052,20 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 252, column 13 - line 264, column 38): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 267, column 13 - line 279, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Visit) {
               var v1 = Data_Foldable.find(Data_Foldable.foldableArray)(function (v2) {
                   return v2.value0 === v.exprs.value0.value0.value0;
               })(v.states);
               if (v1 instanceof Data_Maybe.Just) {
-                  var top$primeenv = BotScriptEnv.topEnv(v.env);
                   return function __do() {
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
-                          cur: v.exprs.value0.value0.value0,
-                          env: top$primeenv,
                           exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
+                          cur: v.cur,
+                          env: v.env,
                           states: v.states,
                           val: v.val
                       });
@@ -24065,7 +24077,7 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 267, column 13 - line 280, column 38): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 282, column 13 - line 292, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Reset) {
               return function __do() {
@@ -24213,7 +24225,7 @@ var PS = {};
               });
           };
       };
-      throw new Error("Failed pattern match at BotScriptVM (line 117, column 1 - line 117, column 63): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at BotScriptVM (line 118, column 1 - line 118, column 63): " + [ v.constructor.name ]);
   };
   var make$primeevent$primeaction = function (syms) {
       return function (expr) {

@@ -504,8 +504,10 @@ function plug_live2d(){
       live2d = `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`
       //live2d = `https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json`
       //live2d = `https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json`
-      chrome.storage.sync.get("live2d", (config)=>{
-        add_tag(chrome.runtime.getURL("live2d-widget/load.js"), config['live2d'] || live2d)
+      chrome.storage.sync.get(["live2d", "live2d-size"], (config)=>{
+        add_tag(chrome.runtime.getURL("live2d-widget/load.js"),
+          (config['live2d'] || live2d) + ' ' + (config['live2d-size'] || '300x300')
+        )
       })
     });
   }

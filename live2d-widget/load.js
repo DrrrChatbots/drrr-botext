@@ -1,6 +1,7 @@
 var me = document.currentScript;
 
-live2d_model = me.text.substring(2);
+[live2d_model, live2d_size] = me.text.substring(2).split(' ');
+[live2d_height, live2d_width] = live2d_size.split('x')
 
 //const live2d_path = "https://cdn.jsdelivr.net/gh/nobodyzxc/live2d-widget@743457d/";
 const live2d_path = me.src.substring(0, me.src.lastIndexOf('/') + 1);

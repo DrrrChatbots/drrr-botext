@@ -50,9 +50,11 @@
         "http://mobilecdn.kugou.com/*",
         "http://search.kuwo.cn/*",
         "https://api.tenor.com/*",
-        "http://api.giphy.com/*"
+        "http://api.giphy.com/*",
+        "https://github.com/*",
+        "https://gitee.com/*"
     ],
-    "optional_permissions": [ "http://*/", "https://*/" ],
+    "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [
          "images/*.png",
          "live2d-widget/*",

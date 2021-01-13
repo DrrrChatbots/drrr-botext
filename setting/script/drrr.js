@@ -9,8 +9,10 @@ function renew_chatroom(){
   else{
     doing = true;
     wait_again = function(){
-      $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
-      setTimeout(remove_until, 5000);
+      if(show_chatroom){
+        $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
+        setTimeout(remove_until, 5000);
+      }
     }
     remove_until = function(){
       if($('.drrr').length > 1){

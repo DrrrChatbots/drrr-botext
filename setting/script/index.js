@@ -134,12 +134,10 @@ local_modules = undefined;
 show_chatroom = undefined;
 
 function load_mirrors(mirror, mirrors){
-  for(m in mirrors){
+  $('#mirror').empty();
+  for(m in mirrors)
     $('#mirror').append(`<option value="${m}">${m}</option>`);
-  }
-  if(!mirrors[mirror].index)
-    update_index(mirror, mirrors);
-  else load_index(mirrors[mirror].index)
+  load_index(mirrors[mirror].index)
 }
 
 function load_modules(modules){
@@ -151,7 +149,7 @@ function load_modules(modules){
 
 function load_index(index){
   $('#category').empty();
-  for(cat in index)
+  if(index) for(cat in index)
     $('#category').append(`<option value="${cat}">${cat}</option>`);
   load_modules(index ? index[$('#category').val()] : index);
 }
@@ -208,7 +206,6 @@ function install_module(){
       })
       .then(code => {
         local_modules[`${c}/${m}`] = {load: false, code: code};
-
         cat = mirrors['Local'].index[c] || [];
         if(!cat.includes(m)) cat.push(m);
         mirrors['Local'].index[c] = cat;
@@ -274,7 +271,7 @@ function load_local_modules(installed, index){
   $('#local-modules').empty();
   for(name in installed){
     $('#local-modules').append(
-    `<div>
+      `<div>
        <label for="${name}"><input class="local-modules" type="checkbox" id="${name}" name="${name}" ${name in installed && installed[name].load ? "checked" : ""}>${name}</label>
      </div>`)
   }
@@ -307,8 +304,45 @@ function remove_module(){
   }, () => {
     if($('#mirror').val() == 'Local')
       load_index(mirrors['Local'].index);
-    load_local_modules(local_modules)
+    load_local_modules(local_modules);
   });
+}
+
+function save_module(){
+  c = $('#category').val();
+  m = $('#module').val();
+  code = editor.getValue();
+  local_modules[`${c}/${m}`].code = code;
+  chrome.storage.local.set({
+    'bs-installed': local_modules
+  });
+}
+
+function new_module(){
+  name = prompt("input category/module (ex: game/guess_number)")
+  if(name && name.trim()){
+    name = name.trim();
+    [c, m] = name.split('/')
+    if(c) c = c.trim();
+    if(m) m = m.trim();
+    if(!m){ m = c; c = "misc" }
+    m += '.js'
+    local_modules[`${c}/${m}`] = {
+      code: editor.getValue(),
+      load: false
+    };
+    cat = mirrors['Local'].index[c] || [];
+    if(!cat.includes(m)) cat.push(m);
+    mirrors['Local'].index[c] = cat;
+
+    chrome.storage.local.set({
+      'bs-mirrors': mirrors,
+      'bs-installed': local_modules
+    });
+    load_index(mirrors[mirror].index);
+    load_local_modules(local_modules);
+  }
+  else alert("empty input");
 }
 
 function preloaded_code(code){
@@ -326,6 +360,59 @@ function save_preload_module(){
   chrome.storage.local.set({
     'bs-installed': local_modules
   });
+}
+
+function module_button_display(){
+  if(mirror == 'Local'){
+    $('#module-install').hide();
+    $('#mirror-update').hide();
+    $('#module-save').show();
+    $('#module-new').show();
+  }
+  else{
+    $('#module-install').show();
+    $('#mirror-update').show();
+    $('#module-save').hide();
+    $('#module-new').hide();
+  }
+}
+
+function add_mirror(alias, repo){
+  // 'GitHub': { loc: 'github.com/DrrrChatbots' }
+  if(!alias || !repo){
+    input = prompt("ex: GitHub:github.com/DrrrChatbots");
+    if(!input) return;
+    [alias, repo] = input.split(":");
+    alias = alias.trim();
+    repo = repo.trim();
+  }
+  if(alias && repo){
+    mirrors[alias] = {loc: repo};
+    chrome.storage.local.set({
+      'bs-mirrors': mirrors
+    });
+    load_mirrors(mirror, mirrors);
+  }
+  else alert("invalid format");
+}
+
+function del_mirror(alias){
+  if(!alias) alias = prompt("input mirror name");
+  if(alias === "Local"){
+    alert("cannot delete local");
+    return;
+  }
+  if(alias in mirrors){
+    if(mirror == alias)
+      mirror = "Local";
+    delete mirrors[alias]
+    chrome.storage.local.set({
+      'bs-mirror': mirror,
+      'bs-mirrors': mirrors
+    });
+    load_mirrors(mirror, mirrors);
+  }
+  else alert("mirror not existed");
 }
 
 function set_modules(config){
@@ -374,6 +461,7 @@ function set_modules(config){
   }
 
   load_mirrors(mirror, mirrors);
+  module_button_display();
 
   //$('#mirror-link').attr('href', `https://${mirrors[mirror]}/bs-pkgs`)
 
@@ -383,10 +471,7 @@ function set_modules(config){
 
   $('#mirror').change(function(){
     mirror = this.value;
-    if(mirror == 'Local')
-      $('#module-install').hide();
-    else
-      $('#module-install').show();
+    module_button_display();
     load_index(mirrors[mirror].index);
     chrome.storage.local.set({
       'bs-mirror': mirror
@@ -407,6 +492,14 @@ function set_modules(config){
 
   $('#module-remove').click(function(){
     remove_module();
+  })
+
+  $('#module-save').click(function(){
+    save_module();
+  })
+
+  $('#module-new').click(function(){
+    new_module();
   })
 
   $('#module-preload').click(function(){

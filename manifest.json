@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension (background)",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.741",
+    "version": "1.742",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {
@@ -52,9 +52,11 @@
         "http://mobilecdn.kugou.com/*",
         "http://search.kuwo.cn/*",
         "https://api.tenor.com/*",
-        "http://api.giphy.com/*"
+        "http://api.giphy.com/*",
+        "https://github.com/*",
+        "https://gitee.com/*"
     ],
-    "optional_permissions": [ "http://*/", "https://*/" ],
+    "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [
          "images/*.png",
          "live2d-widget/*",

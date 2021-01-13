@@ -22786,7 +22786,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 337, column 3 - line 341, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 336, column 3 - line 340, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -22807,15 +22807,6 @@ var PS = {};
           return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("Timer Period")))(function (prd) {
               return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("Timer Expr")))(function (act) {
                   return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Timer(prd, act));
-              });
-          });
-      });
-  };
-  var parseWhile = function (exprP) {
-      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("while"))(function () {
-          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("While Pred")))(function (prd) {
-              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("While Expr")))(function (act) {
-                  return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.While(prd, act));
               });
           });
       });
@@ -22963,21 +22954,6 @@ var PS = {};
           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Obj(pairs));
       });
   };
-  var parseStmt = function (exprP) {
-      return Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseIfels(exprP))(parseTimer(exprP)))(parseWhile(exprP)))(parseLater(exprP)))(parseEvent(exprP)))(parseFLoop(exprP)))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("going"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Going.create)(expect(Data_Identity.monadIdentity)(parseIdentifier)))))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("visit"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Visit.create)(parseIdentifier))))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(braces(Data_List.many(Text_Parsing_Parser.alternativeParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.lazyParserT)(exprP)))(function (exprs) {
-          if (exprs instanceof Data_List_Types.Nil) {
-              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Obj([  ]));
-          };
-          return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Group(exprs));
-      }));
-  };
-  var parseStmtExpr = function (exprP) {
-      return Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parseStmt(exprP))(function (stmtExpr) {
-          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
-              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(stmtExpr);
-          });
-      }))(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(new BotScript.Group(Data_List_Types.Nil.value))(reservedOp(";"))))("Statement Expression");
-  };
   var binary$prime = function (name) {
       return function (assoc) {
           return new Text_Parsing_Parser_Expr.Infix(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Bin.create(name))(reserved(name)), assoc);
@@ -22994,6 +22970,30 @@ var PS = {};
   var parseSimpleExpr = function (exprP) {
       return Text_Parsing_Parser_Expr.buildExprParser(Data_Identity.monadIdentity)(op$primetab(exprP))(parseTerm(exprP));
   };
+  var parseWhile = function (exprP) {
+      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reserved("while"))(function () {
+          return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(parseSimpleExpr(exprP))("While Pred")))(function (prd) {
+              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(expect(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("While Expr")))(function (act) {
+                  return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.While(prd, act));
+              });
+          });
+      });
+  };
+  var parseStmt = function (exprP) {
+      return Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseIfels(exprP))(parseTimer(exprP)))(parseWhile(exprP)))(parseLater(exprP)))(parseEvent(exprP)))(parseFLoop(exprP)))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("going"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Going.create)(expect(Data_Identity.monadIdentity)(parseIdentifier)))))(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reserved("visit"))(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Visit.create)(parseIdentifier))))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(braces(Data_List.many(Text_Parsing_Parser.alternativeParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.lazyParserT)(exprP)))(function (exprs) {
+          if (exprs instanceof Data_List_Types.Nil) {
+              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Obj([  ]));
+          };
+          return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Group(exprs));
+      }));
+  };
+  var parseStmtExpr = function (exprP) {
+      return Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parseStmt(exprP))(function (stmtExpr) {
+          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
+              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(stmtExpr);
+          });
+      }))(Data_Functor.voidRight(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(new BotScript.Group(Data_List_Types.Nil.value))(reservedOp(";"))))("Statement Expression");
+  };
   var parsePmatch = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(parseIdentifier))(function ($$var) {
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optionMaybe(Data_Identity.monadIdentity)(Control_Apply.applySecond(Text_Parsing_Parser.applyParserT(Data_Identity.monadIdentity))(reservedOp(":"))(parseExpr)))(function (maybe) {
           if (maybe instanceof Data_Maybe.Just) {
@@ -23002,7 +23002,7 @@ var PS = {};
           if (maybe instanceof Data_Maybe.Nothing) {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(false, new Data_Tuple.Tuple($$var, BotScript.Trm.create(BotScript.toTerm("String")("")))));
           };
-          throw new Error("Failed pattern match at BotScriptParser (line 135, column 5 - line 137, column 72): " + [ maybe.constructor.name ]);
+          throw new Error("Failed pattern match at BotScriptParser (line 134, column 5 - line 136, column 72): " + [ maybe.constructor.name ]);
       });
   });
   var parseExpr = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {

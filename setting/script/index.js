@@ -77,6 +77,7 @@ function interact(){
 
 function execute(){
   code = globalThis.editor.getValue();
+  code = preloaded_code(code);
   globalThis.machine = PS.Main.execute(code)();
   val = machine.val;
   console.log(`=> ${stringify(val)}`);
@@ -112,7 +113,8 @@ function save_script(){
 }
 
 function pause_script(){
-  PS.Main.execute(';')();
+  globalThis.machine = PS.Main.execute(';')();
+  val = machine.val;
   chrome.notifications.create({
     type: "basic",
     iconUrl: '/icon.png',
@@ -128,6 +130,7 @@ function clear_console(){
 
 mirror = undefined;
 mirrors = undefined;
+local_modules = undefined;
 show_chatroom = undefined;
 
 function load_mirrors(mirror, mirrors){
@@ -143,6 +146,7 @@ function load_modules(modules){
   $('#module').empty();
   if(modules) for(s of modules)
     $('#module').append(`<option value="${s}">${s.substring(0, s.length - 3)}</option>`);
+  $('#mirror').val(mirror)
 }
 
 function load_index(index){
@@ -191,20 +195,51 @@ function update_index(mirror, mirrors){
   else load_index(mirrors[mirror].index);
 }
 
-function load_module(){
+function install_module(){
   M = $('#mirror').val();
   c = $('#category').val();
   m = $('#module').val();
   if(M && c && m){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
-    .then(response => response.text())
-    .catch(error => {
-      alert("cannot fetch module");
-      console.log(String(error));
-    })
-    .then(code => {
-      globalThis.editor.setValue(code);
-    })
+      .then(response => response.text())
+      .catch(error => {
+        alert("cannot fetch module");
+        console.log(String(error));
+      })
+      .then(code => {
+        local_modules[`${c}/${m}`] = {load: false, code: code};
+
+        cat = mirrors['Local'].index[c] || [];
+        if(!cat.includes(m)) cat.push(m);
+        mirrors['Local'].index[c] = cat;
+
+        chrome.storage.local.set({
+          'bs-mirrors': mirrors,
+          'bs-installed': local_modules
+        });
+        load_local_modules(local_modules);
+      })
+  }
+  else alert("invalid module path");
+}
+
+function load_module(){
+  M = $('#mirror').val();
+  c = $('#category').val();
+  m = $('#module').val();
+  if(M == 'Local'){
+    globalThis.editor.setValue(local_modules[`${c}/${m}`].code)
+  }
+  else if(M && c && m){
+    fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
+      .then(response => response.text())
+      .catch(error => {
+        alert("cannot fetch module");
+        console.log(String(error));
+      })
+      .then(code => {
+        globalThis.editor.setValue(code);
+      })
   }
 }
 
@@ -217,6 +252,7 @@ function bind_modal(){
 
   // When the user clicks the button, open the modal
   $('#mirror-link').click(function(e){
+    load_local_modules(local_modules);
     modal.style.display = "block";
     e.preventDefault();
   })
@@ -234,80 +270,160 @@ function bind_modal(){
   }
 }
 
+function load_local_modules(installed, index){
+  $('#local-modules').empty();
+  for(name in installed){
+    $('#local-modules').append(
+    `<div>
+       <label for="${name}"><input class="local-modules" type="checkbox" id="${name}" name="${name}" ${name in installed && installed[name].load ? "checked" : ""}>${name}</label>
+     </div>`)
+  }
+}
+
+function removeItemAll(arr, value) {
+  var i = 0;
+  while (i < arr.length) {
+    if (arr[i] === value)
+      arr.splice(i, 1);
+    else
+      ++i;
+  }
+  return arr;
+}
+
+function remove_module(){
+  for(mod of $('.local-modules')){
+    if(mod.checked){
+      [c, m] = mod.name.split('/')
+      delete local_modules[mod.name];
+      removeItemAll(mirrors['Local'].index[c], m)
+      if(!mirrors['Local'].index[c].length)
+        delete mirrors['Local'].index[c]
+    }
+  }
+  chrome.storage.local.set({
+    'bs-mirrors': mirrors,
+    'bs-installed': local_modules
+  }, () => {
+    if($('#mirror').val() == 'Local')
+      load_index(mirrors['Local'].index);
+    load_local_modules(local_modules)
+  });
+}
+
+function preloaded_code(code){
+  pre = '';
+  for(n in local_modules)
+    if(local_modules[n].load) pre += "\n" + local_modules[n].code;
+  return pre + code;
+}
+
+
+function save_preload_module(){
+  for(mod of $('.local-modules')){
+    local_modules[mod.name].load = mod.checked;
+  }
+  chrome.storage.local.set({
+    'bs-installed': local_modules
+  });
+}
+
+function set_modules(config){
+  show_chatroom = config['show-chatroom'] === undefined ? true : config['show-chatroom'];
+
+  if(show_chatroom)
+    $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
+
+  $('#show-room').click(function(e){
+    e.preventDefault();
+    if(show_chatroom)
+      $('#iframe-container').empty();
+    else
+      $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
+    show_chatroom = !show_chatroom;
+    chrome.storage.local.set({ 'show-chatroom': show_chatroom })
+  })
+
+  mirrors = config['bs-mirrors'];
+
+  if(!mirrors){
+    mirrors = {
+      'Local': {
+        loc: 'none',
+        index: {}
+      },
+      'GitHub': {
+        loc: 'github.com/DrrrChatbots'
+      },
+      'Gitee': {
+        loc: 'gitee.com/DrrrChatbots'
+      }
+    }
+    chrome.storage.local.set({
+      'bs-mirrors': mirrors
+    });
+  }
+
+  mirror = config['bs-mirror'];
+
+  if(!mirror){
+    mirror = 'Local'
+    chrome.storage.local.set({
+      'bs-mirror': mirror
+    });
+  }
+
+  load_mirrors(mirror, mirrors);
+
+  //$('#mirror-link').attr('href', `https://${mirrors[mirror]}/bs-pkgs`)
+
+  $('#category').change(function(){
+    load_modules(mirrors[mirror].index[[this.value]]);
+  });
+
+  $('#mirror').change(function(){
+    mirror = this.value;
+    if(mirror == 'Local')
+      $('#module-install').hide();
+    else
+      $('#module-install').show();
+    load_index(mirrors[mirror].index);
+    chrome.storage.local.set({
+      'bs-mirror': mirror
+    });
+  });
+
+  $('#mirror-update').click(function(){
+    update_index($('#mirror').val(), mirrors)
+  })
+
+  $('#module-install').click(function(){
+    install_module();
+  })
+
+  $('#module-load').click(function(){
+    load_module();
+  })
+
+  $('#module-remove').click(function(){
+    remove_module();
+  })
+
+  $('#module-preload').click(function(){
+    save_preload_module();
+  })
+
+  local_modules = config['bs-installed'] || {};
+  load_local_modules(local_modules);
+}
+
 $(document).ready(function(event) {
 
   bind_modal();
 
-  chrome.storage.local.get(['botscript', 'bs-mirror', 'bs-mirrors', 'show-chatroom'], (config) => {
+  chrome.storage.local.get(['botscript', 'bs-mirror', 'bs-mirrors', 'show-chatroom', 'bs-installed'], (config) => {
 
-    show_chatroom = config['show-chatroom'] === undefined ? true : config['show-chatroom'];
-
-    if(show_chatroom)
-      $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
-
-    $('#show-room').click(function(e){
-      e.preventDefault();
-      if(show_chatroom)
-        $('#iframe-container').empty();
-      else
-        $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
-      show_chatroom = !show_chatroom;
-      chrome.storage.local.set({ 'show-chatroom': show_chatroom })
-    })
-
-    mirrors = config['bs-mirrors'];
-
-    if(!mirrors){
-      mirrors = {
-        'Local': {
-          loc: 'none',
-          index: {}
-        },
-        'GitHub': {
-          loc: 'github.com/DrrrChatbots'
-        },
-        'Gitee': {
-          loc: 'gitee.com/DrrrChatbots'
-        }
-      }
-      chrome.storage.local.set({
-        'bs-mirrors': mirrors
-      });
-    }
-
-    mirror = config['bs-mirror'];
-
-    if(!mirror){
-      mirror = 'Local'
-      chrome.storage.local.set({
-        'bs-mirror': mirror
-      });
-    }
-
-    load_mirrors(mirror, mirrors);
-    $('#mirror-link').attr('href', `https://${mirrors[mirror]}/bs-pkgs`)
-
-    $('#category').change(function(){
-      load_modules(mirrors[mirror].index[[this.value]]);
-    });
-
-    $('#mirror').change(function(){
-      load_index(mirrors[this.value].index);
-    });
-
-    $('#mirror-update').click(function(){
-      update_index($('#mirror').val(), mirrors)
-    })
-
-    $('#module-install').click(function(){
-      //update_index($('#mirror').val(), mirrors)
-    })
-
-    $('#module-load').click(function(){
-      //update_index($('#mirror').val(), mirrors)
-      //globalThis.editor.setValue()
-      load_module();
-    })
+    set_modules(config);
 
     globalThis.editor = CodeMirror(document.body.getElementsByTagName("article")[0], {
       value: config['botscript'] ? config['botscript'] : 'print("hello world")',

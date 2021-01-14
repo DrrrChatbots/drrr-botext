@@ -151,11 +151,14 @@ drrr_builtins = {
     });
   },
   'ctrl': ctrlRoom,
-  'create': function(name, desc, limit, lang){
+  'create': function(name, desc, limit, lang, music, adult, hidden, succ, fail){
     if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
     if(!desc) desc = ''
     if(!limit) limit = 5;
     if(!lang) lang = profile.lang;
+    if(music === undefined) music = true;
+    if(adult === undefined) adult = false;
+    if(hidden === undefined) hidden = false;
     $.ajax({
       type: "POST",
       url: `https://drrr.com/create_room/?`,
@@ -165,15 +168,20 @@ drrr_builtins = {
         description: desc,
         limit: limit,
         language: lang,
+        music: music,
+        adult: adult,
+        conceal: hidden,
         submit: "Create+Room"
       },
       success: function(data){
         console.log("create successfully");
         renew_chatroom();
         reload_chatroom();
+        if(succ) succ();
       },
       error: function(data){
         console.log("create failed");
+        if(fail) fail();
       }
     });
   }

@@ -224,7 +224,7 @@ function load_module(){
   M = $('#mirror').val();
   c = $('#category').val();
   m = $('#module').val();
-  if(M == 'Local'){
+  if(M == 'Local' && c && m){
     globalThis.editor.setValue(local_modules[`${c}/${m}`].code)
   }
   else if(M && c && m){
@@ -311,15 +311,18 @@ function remove_module(){
 function save_module(){
   c = $('#category').val();
   m = $('#module').val();
-  code = editor.getValue();
-  local_modules[`${c}/${m}`].code = code;
-  chrome.storage.local.set({
-    'bs-installed': local_modules
-  });
+  if(c && m){
+    code = editor.getValue();
+    local_modules[`${c}/${m}`].code = code;
+    chrome.storage.local.set({
+      'bs-installed': local_modules
+    });
+  }
 }
 
 function new_module(){
   name = prompt("input category/module (ex: game/guess_number)")
+  if(!name || name == "null") return;
   if(name && name.trim()){
     name = name.trim();
     [c, m] = name.split('/')

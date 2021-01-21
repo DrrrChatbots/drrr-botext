@@ -398,7 +398,10 @@ $(document).ready(function(){
             console.log("remove jumped ROOM");
           }
 
-          var find = ()=>monitRooms(true, roomInfo.room.roomId);
+          var find = () => {
+            if(roomInfo && roomInfo.room)
+              monitRooms(true, roomInfo.room.roomId);
+          }
           setTimeout(find, 5000);
           setInterval(find, 90000);
         },

@@ -23171,7 +23171,7 @@ var PS = {};
       if(!name){
         if(typeof(obj) == 'function')
           val = obj.apply(null, args);
-        else console.log(objm, "is not a function")
+        else console.log(`${objm} is not a function`)
       }
       else if(obj){
         if(obj[name]){

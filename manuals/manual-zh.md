@@ -3,14 +3,14 @@
 ## 安裝
 
 
-### 電腦版：
+### 電腦版
 :::success
 由於是 Chrome 插件，所以請使用 Chrome 瀏覽器，並至 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
 另外如果是用 Opera 的話，可以嘗試 Opera 這款 [Install Chrome Extensions](https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/) 裝裝看。
 :::
 
-### 手機端：
+### 手機端
 :::success
 手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器 ([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US))，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
@@ -802,6 +802,42 @@ Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會�
 
 :::warning
 ##### 套件管理器
+![](https://i.imgur.com/wPOJvM4.png)
+
+選擇 mirror 後，點選 update 更新套件索引。
+之後可以選擇分類和套件，可以把他載入到編輯器或是儲存到本地。
+
+
+![](https://i.imgur.com/PpMOgh3.png)
+
+本地的套件句選後，可以選擇預載入，或是刪除。
+重新開啟視窗，如果是有句選，就代表為預載入套件。
+
+![](https://i.imgur.com/2BJoP6w.png)
+
+確定預載入後，在編輯器以套件名作為函數調用。
+（套件通常會提供這個函數，但具體還是要看套件內容定義）
+
+![](https://i.imgur.com/qsuuL1q.png)
+
+運行成功！
+
+![](https://i.imgur.com/XbC57JG.png)
+
+你也可以 fork 一份 [bs-pkgs](https://gitee.com/DrrrChatbots/bs-pkgs) 維護一個 mirror，
+然後透過 `add_mirror(alias, repo)` 來添加你的 mirror。
+
+![](https://i.imgur.com/XpQ4dcG.png)
+
+或者直接呼叫也行
+![](https://i.imgur.com/l7oYdK5.png)
+
+要刪除的話就呼叫 `del_mirror(alias)`。
+
+![](https://i.imgur.com/NV1iXRn.png)
+
+
+
 :::
 
 

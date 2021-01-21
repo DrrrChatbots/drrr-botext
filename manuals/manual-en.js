@@ -113,7 +113,7 @@ Go to the room that matches the room name. If it fails, return to the origin roo
 <li><code>%D</code> date, one or two digits</li>
 <li><code>%日</code> date, Chinese numerals</li>
 <li><code>%d</code> weekday, full English</li>
-<li><code>%拜</code> week, Chinese</li>
+<li><code>%星</code> week, Chinese</li>
 <li>Number at <code>%H</code> (24 hour clock)</li>
 <li>number at <code>%h</code> (12 hours)</li>
 <li><code>%c</code> In the afternoon, English<code> a.m.</code> <code>p.m.</code></li>

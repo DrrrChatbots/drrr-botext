@@ -2,29 +2,39 @@
 
 ## 安裝
 
-電腦版：
 
+### 電腦版：
+:::success
 由於是 Chrome 插件，所以請使用 Chrome 瀏覽器，並至 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
 另外如果是用 Opera 的話，可以嘗試 Opera 這款 [Install Chrome Extensions](https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/) 裝裝看。
+:::
 
-手機端：
+### 手機端：
+:::success
+手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器 ([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US))，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
-手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), [iOS](https://apps.apple.com/tw/app/yandex-browser/id483693909))，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
-
+註：iOS 的 Yandex 並不支援插件功能。
+:::
 
 ## 使用界面
 
+![](https://i.imgur.com/yAF0vug.png)
+:::success
+**功能鍵**
+<i class="glyphicon glyphicon-question-sign"></i> 前往本說明頁面
+<i class="fa fa-youtube-play"></i> YouTube 教學
+<i class="glyphicon glyphicon-console"></i> 浪語開發界面
+<i class="glyphicon glyphicon-cog"></i> 前往後台設定
+:::
 
-<i class="glyphicon glyphicon-question-sign"></i> 前往本說明頁面 <i class="glyphicon glyphicon-cog"></i> 前往後台設定
-
-![](https://i.imgur.com/Z1JZkdd.png)
 
 ### 功能開關（<i class="glyphicon glyphicon-cog"></i> 表示須先設定才能開啟）
 
 ![](https://i.imgur.com/jctHIHN.png)
 
-
+:::success
+**開關**
 - AutoDM
   發訊後自動鎖定上次私訊對象
 - Timer <i class="glyphicon glyphicon-cog"></i>
@@ -45,23 +55,63 @@
   將聊天訊息透過 Telegram Bot 紀錄下來
 - RoomNotification
   當瀏覽器頁面不在聊天室時，送出聊天內容通知
+:::
 
 ### 功能頁籤
 
 #### Bio
 
-![](https://i.imgur.com/hW9d7oS.png)
+:::success
+![](https://i.imgur.com/6nhuHtc.png)
 
-🔖 當前登入帳號
-💾 已儲存的帳號
+##### 聊天訊息簡繁互轉
+- Ｘ 不轉換
+- 簡 轉成簡體
+- 繁 轉成繁體
+
+##### 功能鍵
+
+<i class="glyphicon glyphicon glyphicon-text-color"></i> 改變聊天室人名顏色
+<i class="glyphicon glyphicon glyphicon-text-background"></i> 改變聊天室人名背景顏色
+（顏色採用[網頁顏色](https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2)，e.g. `black`, `#000000`）
+<i class="glyphicon glyphicon glyphicon-picture"></i> 使用圖片鏈結當作背景
 <i class="glyphicon glyphicon-transfer"></i> 切換選中的帳號
 <i class="glyphicon glyphicon-floppy-save"></i> 儲存當前帳號
 <i class="glyphicon glyphicon-floppy-remove"></i> 刪除選中的帳號
-<i class="glyphicon glyphicon-qrcode"></i> tripcode 探索器
+
+##### 帳號圖示
+- 🔖 當前登入帳號
+- 💾 已儲存的帳號
+
+:::
+
+#### Local
+
+:::success
+![](https://i.imgur.com/QytKsjo.png)
+
+##### 功能鍵
+<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> 前往本地設定
+<i id="local-switch" class="fa fa-toggle-off"></i> 本地模組開關
+
+##### 本地端訊息模組
+- Hashtag ~~小周讚美功能~~ inspired by [@塵塵](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
+  紀錄有 `#` 的訊息，在訊息欄以 `#` + tag 將會隨機選取紀錄過的訊息送出。
+  ![](https://i.imgur.com/ayuUGAL.png)
+
+- CahtLog
+  紀錄聊天室訊息
+:::
 
 #### Friends
 
-![](https://i.imgur.com/myrXucu.png)
+:::success
+
+![](https://i.imgur.com/PKID7Ay.png)
+:::
+
+:::warning
+![](https://i.imgur.com/CDRuB6I.png)
 
 ##### 等房功能
 
@@ -75,8 +125,13 @@
 
 <i class="glyphicon glyphicon-tag"></i> 儲存規則
 
+跳轉模式：
 - <i class="glyphicon glyphicon-send"></i> 直接跳轉
 - <i class="glyphicon glyphicon-comment"></i> 跳轉前詢問
+:::
+
+:::warning
+![](https://i.imgur.com/Tffsixa.png)
 
 ##### 搜尋使用者/房間
 
@@ -87,8 +142,13 @@
 
 <i class="glyphicon glyphicon-search"></i> 搜尋
 <i class="glyphicon glyphicon-plus"></i> 加入至收藏
+:::
+
+:::warning
+![](https://i.imgur.com/l5p3yoj.png)
 
 ##### 收藏通知/列表
+
 
 <i class="glyphicon glyphicon-volume-up"></i> 開啟收藏通知（有人上線或房間創立）
 <i class="glyphicon glyphicon-list"></i> 顯示所有收藏規則
@@ -96,11 +156,12 @@
 <i class="glyphicon glyphicon-user"></i> 顯示線上所有符合規則的使用者
 <i class="glyphicon glyphicon-home"></i> 顯示線上所有符合規則的房間
 <i class="glyphicon glyphicon-globe"></i> 顯示線上所有房間
+:::
 
 #### Music
 
-
-![](https://i.imgur.com/w60X55P.png)
+:::success
+![](https://i.imgur.com/ZvV9Sun.png)
 
 
 ##### 播放模式（點擊切換）
@@ -122,152 +183,231 @@
 - Shift + Enter 可以按下中功能鍵。
 - Ctrl + Enter 可以按下右功能鍵。
 
-### 功能鍵（無關鍵字）：
+##### 其他功能鍵
 
-![](https://i.imgur.com/lUoXg90.png)
+<i class="glyphicon glyphicon-list"></i> 展開待播清單 <i class="glyphicon glyphicon-play"></i> 播放待播曲目 <i class="glyphicon glyphicon-heart"></i> 展開收藏清單 <i class="glyphicon glyphicon-link"></i> 設定其他 YouTube API server
 
-<i class="glyphicon glyphicon-list"></i> 展開待播清單 <i class="glyphicon glyphicon-play"></i> 播放待播曲目 <i class="glyphicon glyphicon-heart"></i> 展開收藏清單
+你可以使用在本地架設 YouTube API server，請參考[此鏈結](https://github.com/DrrrChatbots/youtube-api)。
+使用 python 運行後，會提示 `http://127.0.0.1:5000/`，
+點選此按鍵，然後填入 `http://127.0.0.1:5000/`，之後照著提示操作即可。
 
----
+:::
 
-![](https://i.imgur.com/BaeZgDK.png)
+:::warning
+<i class="glyphicon glyphicon-list"></i> 展開待播清單
+
+![](https://i.imgur.com/yEwUeJX.png)
+
+##### 功能鍵
 
 <i class="glyphicon glyphicon-remove"></i> 從待播刪除 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-heart"></i> 收藏樂曲
+:::
 
----
+:::warning
+<i class="glyphicon glyphicon-heart"></i> 展開收藏清單
 
-![](https://i.imgur.com/G2MhLFm.png)
+![](https://i.imgur.com/CNAMolJ.png)
+
+##### 功能鍵
 
 <i class="glyphicon glyphicon-plus"></i> 加入待播 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-remove"></i> 從收藏刪除
+:::
 
----
+:::warning
+當搜尋欄有關鍵字時
 
+![](https://i.imgur.com/gJeqaLs.png)
 
-
-### 功能鍵（有關鍵字）
-
-![](https://i.imgur.com/zqXoPW8.png)
+##### 功能鍵
 
 <i class="glyphicon glyphicon-search"></i> 展開搜尋結果 <i class="glyphicon glyphicon-play"></i> 播放最關聯搜尋結果 <i class="glyphicon glyphicon-plus"></i> 加入最關聯結果至待播清單
+:::
 
----
+:::warning
+搜尋結果：剛好遇見你
 
-![](https://i.imgur.com/dp0X0a8.png)
+![](https://i.imgur.com/W7iJG5s.png)
 
+##### 功能鍵
 <i class="glyphicon glyphicon-plus"></i> 加入待播 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-heart"></i> 收藏樂曲
 
----
+:::
+
+
+#### Module
+
+:::success
+![](https://i.imgur.com/G5Vt5oC.png)
+
+##### 功能鍵
+
+<i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA 群
+<i class="glyphicon glyphicon-qrcode"></i> tripcode 探索器
+
+<i class="fa fa-paw" aria-hidden="true"></i> 召喚寵物（預設白貓）
+<i class="glyphicon glyphicon-resize-full"></i> 調整寵物邊框大小
+<i class="glyphicon glyphicon-link"></i> 更換寵物（輸入[鏈接](https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6)）
+
+目前已知的 Live2D 鏈結：
+
+- 白貓
+https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json
+- 黑貓
+https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json
+- 寶石研物語
+https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json
+- 初音
+https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json
+- 碧海航線 z16
+https://unpkg.com/live2d-widget-model-z16@1.0.5/assets/z16.model.json
+- Nito 二頭身 >特徵：張大嘴等表情、無關節手腳<
+https://unpkg.com/live2d-widget-model-nico@1.0.5/assets/nico.model.json
+https://unpkg.com/live2d-widget-model-nipsilon@1.0.5/assets/nipsilon.model.json
+https://unpkg.com/live2d-widget-model-nito@1.0.5/assets/nito.model.json
+https://unpkg.com/live2d-widget-model-ni-j@1.0.5/assets/ni-j.model.json
+- 千歲
+https://unpkg.com/live2d-widget-model-chitose@1.0.5/assets/chitose.model.json
+- 小可愛(男) 春翔
+https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json
+小春效果
+- 小可愛(女) 小春
+https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json
+- 春傘 TSUMIKI （綠毛小妹妹）
+https://unpkg.com/live2d-widget-model-tsumiki@1.0.5/assets/tsumiki.model.json
+- unity 醬
+https://unpkg.com/live2d-widget-model-unitychan@1.0.5/assets/unitychan.model.json
+- 碗中小年糕~
+https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json
+- 嚮
+https://unpkg.com/live2d-widget-model-hibiki@1.0.5/assets/hibiki.model.json
+:::
+
+:::warning
+###### TRPG inspired by [@少女](https://drrr.wiki/@%E5%B0%91%E5%A5%B3)
+![](https://i.imgur.com/oChwMqs.png)
+
+更換角色：
+- <i class="glyphicon glyphicon-bullhorn"></i> 主持人
+- <i class="glyphicon glyphicon-user"></i> 一般玩家
+
+主持人可以透過圖片 URL 更換所有玩家的背景圖
+
+其他人可以使用 `1D20` 之類的 TRPG 骰子指令請求主持人擲骰
+
+
+:::
+
+:::warning
+###### Room guard 門神
+![](https://i.imgur.com/m8WiICd.png)
+
+模式：
+- mode 0: 訪客如果進房後沒有任何動作，將在下次進房被 kick/ban。
+- mode 1: 時間內內沒說話，詢問是否 kick/ban。
+- mode 2: 時間內沒說話，倒數然後 kick/ban
+- mode 3: 時間內沒說話，直接 kick/ban
+:::
+
+:::warning
+###### Background Effect 背景特效
+
+刷新聊天室即可終止特效
+
+模式：
+- <i class="glyphicon glyphicon-cloud"></i>下雪
+- <i class="glyphicon glyphicon-fire"></i>煙花
+- <i class="glyphicon glyphicon-sort"></i>電梯
 
 
 
-#### GamePanel
+:::
 
-![](https://i.imgur.com/nMHidhk.png)
+:::warning
+###### Guess the number 猜數字遊戲
 
-選擇遊戲，只有被選中時，才會開啟該遊戲。
+![](https://i.imgur.com/p3aaoEu.png)
 
-#### LineSticker
+設定題目：
+- 方法1：直接用 `/start` 觸發，數字會隨機生成
+- 方法2：輸入四位數字並按下 <i id="list_type" class="glyphicon glyphicon glyphicon-pencil"></i> 完成設置，按下 <i class="glyphicon glyphicon-volume-up"></i> 宣佈遊戲開始
 
+簡易規則：每次系統提示內容為 - NANB
+A：數字正確且位置正確
+B：數字正確但位置錯誤
+例子：隨機數為 1658 ，聊天室輸入 2680 ，系統會顯示 2680：1A1B
+:::
+
+
+#### Sticker
+
+:::success
 ![](https://i.imgur.com/fcQCFBW.png)
 
+##### 功能鍵
 <i class="glyphicon glyphicon-refresh"></i> 還原最初預設的十個貼圖
 <i class="glyphicon glyphicon-plus"></i> 新增貼圖
 <i class="glyphicon glyphicon-minus"></i> 刪除選中的貼圖
 <i class="glyphicon glyphicon-shopping-cart"></i> 前往貼圖網站
+:::
 
 ## 後台設定
 
-<i class="glyphicon glyphicon-question-sign"></i> 前往說明頁面 <i class="glyphicon glyphicon-info-sign"></i> 關於作者 <i class="glyphicon glyphicon-refresh"></i> 重製所有設定
-點擊 HELP 可以開啟該設定的介紹頁面。
+根據設定儲存的位置，分作同步和本地。
 
-![](https://i.imgur.com/JllLXvZ.png)
+同步設定的空間上限：8,192 bytes
+（所以小心 event action 不要塞爆了）
 
+本地設定的空間上限：5,242,880 bytes
 
-### Quick Regex Tester （快速正則表達式測試）
+同步的設定（包括你的 cookie）可以用不同 Google 帳號登入不同電腦，
+這些設定會同步，所以可以在不同電腦之間共享。
+
+### Sync 同步設定
+
+:::success
+![](https://i.imgur.com/qMorC1g.png)
+
+##### 功能鍵
+
+<i class="glyphicon glyphicon-question-sign"></i> 前往說明頁面
+<i class="glyphicon glyphicon-info-sign"></i> 關於作者
+<i class="glyphicon glyphicon-refresh"></i> 重製所有設定
+<i class="glyphicon glyphicon-export"></i> 匯出設定
+選擇檔案：匯入設定
+
+點擊 `HELP` 可以開啟該設定的介紹頁面。
+
+#### Quick Regex Tester （快速正則表達式測試）
 
 快速測試，便於設定規則
 
-### Music Delay （樂曲延遲）
+#### Music Delay （樂曲延遲）
 
 在連續播放模式中，歌曲和歌曲間隔。
 （房間成員間有同步問題，有時歌曲會蓋到，所以設定延遲）
+:::
 
-### Timer Configuration (定時器配置)
+:::warning
+#### Timer Configuration (定時器配置)
 
-功能：定時執行定義的動作。
-格式：兩種格式，推播字串可以多個（隨機選擇並發出），URL 可加可不加
+##### 功能
 
+定時執行定義的動作。
+
+##### 格式
+
+兩種格式，推播字串可以多個（隨機選擇並發出），URL 可加可不加
 
 ```js
 分鐘數, "函數", ["參數", ...]
 ```
 
-函數 [參數列] 說明：
+##### 函數
 
-- `msg` `["訊息", "訊息", ...]`
-  從訊息中選擇一個推送。
-- `umsg` `["URL", "訊息", ...]`
-  夾帶 URL 並隨機選擇一個訊息推送。
-- `dm` `["使用者名稱", "訊息", "訊息", ...]`
-  私訊使用者，選擇一個訊息私訊。
-- `udm` `["使用者名稱", "URL", "訊息", ...]`
-  私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
-- `kick` `["使用者名稱"]`
-  踢出使用者。
-- `ban` `["使用者名稱"]`
-  踢出並屏蔽使用者。
-- `banrpt` `["使用者名稱"]`
-  踢出並屏蔽舉報使用者。
-- `plym` `["歌曲關鍵字"]`
-  `plym` `["歌曲關鍵字", "數字"]`
-  `plym` `["歌曲關鍵字", "音源"]`
-  `plym` `["歌曲關鍵字", "數字", "音源"]`
-  `plym` `["歌曲關鍵字", "音源", "數字"]`
-  播放音樂。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `addm` `["歌曲關鍵字"]`
-  `addm` `["歌曲關鍵字", "數字"]`
-  `addm` `["歌曲關鍵字", "音源"]`
-  `addm` `["歌曲關鍵字", "數字", "音源"]`
-  `addm` `["歌曲關鍵字", "音源", "數字"]`
-  加入音樂至待播清單。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `delm` `["數字"]`
-  從清單刪除音樂（依索引數字）。
-- `lstm` `[]`
-  列出待播清單。
-- `nxtm` `[]`
-  播放下一首曲子。
-- `pndm` `[]`
-  `pndm` `["歌曲關鍵字"]`
-  `pndm` `["歌曲關鍵字", "數字"]`
-  `pndm` `["歌曲關鍵字", "音源"]`
-  `pndm` `["歌曲關鍵字", "數字", "音源"]`
-  `pndm` `["歌曲關鍵字", "音源", "數字"]`
-  無參數則列出待播清單。
-  如當前沒音樂，播放音樂。
-  如有音樂，將音樂加入清單
-  如關鍵字為空字串，列出待播清單。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `schm` `["歌曲關鍵字"]`
-  `schm` `["歌曲關鍵字", "音源"]`
-  列出搜尋結果。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `horm` `["使用者名稱"]`
-  轉移房主權限給該使用者。
-- `ocdr` `[]`
-  離開房間又進入房間。
-- `gofr` `["房間名稱(RegExp)"]`
-  前往符合房間名稱的房間。若失敗則回到原房間。
+提供的函數可以參考[函數說明](#函數說明)
 
-（`me` 可以用 `/me + 推送訊息` 以 msg 達成。） ～
+
+##### 特殊變量
 
 可以在參數裡面使用特殊時間變量：
 
@@ -277,8 +417,8 @@
 - `%月` 月份，中文數字（一至十二）
 - `%D` 日期，一至二位數字
 - `%日` 日期，中文數字
-- `%d` 禮拜幾，英文全寫
-- `%拜` 禮拜幾，中文
+- `%d` 星期幾，英文全寫
+- `%星` 星期幾，中文
 - `%H` 時，數字（24 時制）
 - `%h` 時，數字（12 時制）
 - `%c` 上下午，英文 `a.m.` `p.m.`
@@ -286,184 +426,177 @@
 - `%s` 秒，數字
 - `%%` 轉義字符 `%`
 
-
-
-範例：
+##### 範例
 ```js
 10, "msg", ["every 10 mins report once!"]
 2, "msg", ["It's a Report Message", "Now is %H:%m!"]
 ```
-### Welcome Configuration (歡迎詞配置)
+:::
 
-功能：有人進入房間後，如果名稱匹配[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，則自動發出歡迎詞。
-格式： 兩種格式，歡迎詞可以多個（隨機選擇並發出）
+:::warning
+#### Welcome Configuration (歡迎詞配置)
+
+##### 功能
+
+有人進入房間後，如果名稱匹配[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，則自動發出歡迎詞。
+##### 格式
+
+兩種格式，歡迎詞可以多個（隨機選擇並發出）
 ```js
 "用戶名(正則表達式)", "歡迎詞"
 "用戶名(正則表達式)", ["歡迎詞", "歡迎詞", ...]
 ```
 
-注意：
+##### 注意
 - 記得要**加雙引號** `"`。
 - 由上往下匹配，匹配成功則不繼續往下匹配規則。
 - 空字串 `""` 或正則字串 `".*"` 可以**匹配全部**。
 
 
-特殊變量：
+##### 特殊變量
 - `$user` 進入房間的成員名稱。
 - `$$` 轉義字符 `$`。
 
-範例：對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 `hello, kitty`，對其他人則說 `hello/HI!!` 加上 `使用者名稱`。
+##### 範例
+
+對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 `hello, kitty`，對其他人則說 `hello/HI!!` 加上 `使用者名稱`。
 
 ```js
 "lambda.*cat", "hello, kitty"
 ".*", ["hello $user", "HI!! $user"]
 ```
+:::
 
-### WhiteList Configuration (白名單配置)
+:::warning
+#### WhiteList Configuration (白名單配置)
 
-功能：使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，自動踢出**不在名單內**的特定使用者。
-格式：
+##### 功能
+
+使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，自動踢出**不在名單內**的特定使用者。
+
+##### 格式
 ```js
 用戶名(正則表達式)
 ```
 
-注意：
+##### 注意
 - 記得要**不加雙引號**（除非想匹配有雙引號的 ID）。
 
 
-範例：只允許以 `cat` **結尾**或是`神秘`**開頭**為名稱的使用者。
+##### 範例
 
-```js
+只允許以 `cat` **結尾**或是`神秘`**開頭**為名稱的使用者。
+
+```
 cat$
 ^神秘
 ```
+:::
 
-### BlackList Configuration (黑名單配置)
+:::warning
+#### BlackList Configuration (黑名單配置)
 
-功能：使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，自動踢出**名單內**的特定使用者。
-格式：
+##### 功能
+
+使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)，自動踢出**名單內**的特定使用者。
+
+##### 格式
 ```js
 用戶名(正則表達式)
 ```
 
-注意：
+##### 注意
 - 記得要**不加雙引號**（除非想匹配有雙引號的 ID）。
 
 
-範例：踢出名字含有 `otoko` 的使用者及一些符合條件的機器人。
+##### 範例
+踢出名字含有 `otoko` 的使用者及一些符合條件的機器人。
 
 ```js
 otoko
 机器人|機器人
 小冰|小氷|测试姬
 ```
+:::
 
-### BanAbuse Configuration (禁止詞配置)
+:::warning
+#### BanAbuse Configuration (禁止詞配置)
 
-功能：使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)過濾聊天內容，自動踢出**說出禁用詞**的使用者。
-格式：
+##### 功能
+
+使用[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)過濾聊天內容，自動踢出**說出禁用詞**的使用者。
+
+##### 格式
 ```js
 禁用詞(正則表達式)
 ```
 
-注意：
+##### 注意
 - 記得要**不加雙引號**（除非想匹配有雙引號的禁用詞）。
 
 
-範例：聊天內容含有說到 `狗` 或是 `真香` 的成員會被踢出。
+##### 範例
+聊天內容含有說到 `狗` 或是 `阿姆斯特朗炮` 的成員會被踢出。
 ```js
 狗
-真香
+阿姆斯特朗炮
 ```
+:::
 
-### EventAction Configuration (事件動作配置)
+:::warning
+#### EventAction Configuration (事件動作配置)
 
-功能：對於一些事件，這裡提供一些函數，可以訂一些相應的動作。
-定義的動作只有在用戶**名稱**及用戶發送的**內容**符合[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions)才會被觸發。
+##### 功能
+
+對於一些事件，這裡提供一些函數，可以訂一些相應的動作。
+定義的動作只有在用戶**名稱**及用戶發送的**內容**符合[正則表達式](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions) (RegExp) 才會被觸發。
 其實前面的功能：歡迎詞/白名單/黑名單/禁止詞，都可用此功能實作。
 
-格式：
+##### 格式
 ```js
-"事件類型", "用戶名(正則表達式)", "內容匹配(正則表達式)", "函數", ["參數", ...]
-["事件類型", ...], "用戶名(正則表達式)", "內容匹配(正則表達式)", "函數", ["參數", ...]
+"事件類型", "用戶匹配", "內容匹配", "函數", ["參數", ...]
+["事件類型", ...], "用戶匹配", "內容匹配", "函數", ["參數", ...]
 ```
 
-事件類型：
+##### 事件類型
 
-- `me` 以 `/me` 發出的訊息
-- `music` 播放音樂
-- `leave` 成員離開
+當...
+- `new-host` 房主易位
+- `room-profile` 房名改變
+- `new-description` 房間敘述改變
 - `join` 成員加入
-- `msg` 普通訊息
+- `leave` 成員離開
+- `kick` 有人被踢出
+- `ban` 有人被禁止進入
+- `unban` 有人被解除禁止進入
 - `dm` 私訊
-- `musicend` 音樂結束
+- `msg` 普通訊息
+- `me` 以 `/me` 發出的訊息（小字）
+- `dmto` 自己私訊給別人
+- `submit` 自己送出訊息
+- `roll` 有人搖了一個人
+- `music` 播放音樂（某人播放了音樂）
+- `musicbeg` 音樂開始（進度條開始）
+- `musicend` 音樂結束（進度條結束）
 
-函數 [參數列] 說明：
+##### 用戶匹配
+其中用戶匹配可以是一個人名的 RegExp 或是 Tripcode 的 RegExp，
+如果兩個規則都有的話則都需要滿足。
+```js
+"浪打" <- 名字有 "浪打" 的人
+"#.*cat" <- tc 有 cat 的人（忽略大小寫）
+"浪打#.*cat" <- 名字有 "浪打" 且 tc 有 cat 的人
+```
 
-- `msg` `["訊息", "訊息", ...]`
-  從訊息中選擇一個推送。
-- `umsg` `["URL", "訊息", ...]`
-  夾帶 URL 並隨機選擇一個訊息推送。
-- `dm` `["使用者名稱", "訊息", "訊息", ...]`
-  私訊使用者，選擇一個訊息私訊。
-- `udm` `["使用者名稱", "URL", "訊息", ...]`
-  私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
-- `kick` `["使用者名稱"]`
-  踢出使用者。
-- `ban` `["使用者名稱"]`
-  踢出並屏蔽使用者。
-- `banrpt` `["使用者名稱"]`
-  踢出並屏蔽舉報使用者。
-- `plym` `["歌曲關鍵字"]`
-  `plym` `["歌曲關鍵字", "數字"]`
-  `plym` `["歌曲關鍵字", "音源"]`
-  `plym` `["歌曲關鍵字", "數字", "音源"]`
-  `plym` `["歌曲關鍵字", "音源", "數字"]`
-  播放音樂。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `addm` `["歌曲關鍵字"]`
-  `addm` `["歌曲關鍵字", "數字"]`
-  `addm` `["歌曲關鍵字", "音源"]`
-  `addm` `["歌曲關鍵字", "數字", "音源"]`
-  `addm` `["歌曲關鍵字", "音源", "數字"]`
-  加入音樂至待播清單。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `delm` `["數字"]`
-  從清單刪除音樂（依索引數字）。
-- `lstm` `[]`
-  列出待播清單。
-- `nxtm` `[]`
-  播放下一首曲子。
-- `pndm` `[]`
-  `pndm` `["歌曲關鍵字"]`
-  `pndm` `["歌曲關鍵字", "數字"]`
-  `pndm` `["歌曲關鍵字", "音源"]`
-  `pndm` `["歌曲關鍵字", "數字", "音源"]`
-  `pndm` `["歌曲關鍵字", "音源", "數字"]`
-  無參數則列出待播清單。
-  如當前沒音樂，播放音樂。
-  如有音樂，將音樂加入清單
-  如關鍵字為空字串，列出待播清單。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "數字"：第 "數字" 個搜尋結果。
-  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `schm` `["歌曲關鍵字"]`
-  `schm` `["歌曲關鍵字", "音源"]`
-  列出搜尋結果。
-  1. "關鍵字"：歌曲關鍵字。
-  2. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
-- `horm` `["使用者名稱"]`
-  轉移房主權限給該使用者。
-- `ocdr` `[]`
-  離開房間又進入房間。
-- `gofr` `["房間名稱(RegExp)"]`
-  前往符合房間名稱的房間。若失敗則回到原房間。
+##### 內容匹配
 
-特殊參數變量：
+內容匹配則是單純的一串 RegExp。
+
+##### 函數
+
+提供的函數可以參考[函數說明](#函數說明)
+
+##### 特殊參數變量
 
 - `%Y` 年份，四位數字西元年
 - `%年` 年份，中文數字
@@ -471,8 +604,8 @@ otoko
 - `%月` 月份，中文數字（一至十二）
 - `%D` 日期，一至二位數字
 - `%日` 日期，中文數字
-- `%d` 禮拜幾，英文全寫
-- `%拜` 禮拜幾，中文
+- `%d` 星期幾，英文全寫
+- `%星` 星期幾，中文
 - `%H` 時，數字（24 時制）
 - `%h` 時，數字（12 時制）
 - `%c` 上下午，英文 `a.m.` `p.m.`
@@ -488,12 +621,21 @@ otoko
 * `$url` 使用者夾上的 URL
 * `$$` 轉義字符 `$`
 
+##### 特殊參數用法
+
 這裡還有一些特殊用法。
 對於收到的訊息，會以空格分開成參數列，而用引號可以避免分開。
 而對分開的內容，可以用以下方法作為參數。
 
 - `$N` N 為數字，以數字取第 N 個參數，從零開始。
 - `$[N-M]` 取從 N 到 M 的參數。N 不給則從零開始，M 不給取到最後。
+
+##### 特殊函數
+
+- `$tenor(keyword)` 回傳 tenor 搜尋的 gif URL
+- `$giphy(keyword)` 回傳 giphy 搜尋的 gif URL
+
+##### 圖示
 
 ```
 this is  a  message send from user
@@ -515,52 +657,209 @@ $0   $1 $2 $3               $4   $5    $6
 $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------
 $[-]
-
 ```
 
-
-範例：接上點歌功能。
-
-```js
-"msg", "", "^/play\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$args"]
-"msg", "", "^/play\\\\s+\\\\d\\\\s+\\\\S+", "plym", ["$[2-]", "$1"]
-"msg", "", "^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)", "plym", ["$[2-]"]
-"msg", "", "^/playsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+", "plym", ["$[3-]", "$1", "$2"]
-"msg", "", "^/add\\\\s+(\\\\D|\\\\d\\\\S)", "addm", ["$args"]
-"msg", "", "^/add\\\\s+\\\\d\\\\s+\\\\S+", "addm", ["$[2-]", "$1"]
-"msg", "", "^/addsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)", "addm", ["$[2-]", "$1"]
-"msg", "", "^/addsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+", "addm", ["$[3-]", "$1", "$2"]
-"msg", "", "^/list", "lstm", []
-"msg", "", "^/next", "nxtm", []
-"msg", "", "^/del\\\\s+\\\\d+", "delm", ["$1"]
-"msg", "", "^/pending\\\\s*$", "pndm", []
-"msg", "", "^/pending\\\\s+(\\\\D|\\\\d\\\\S)", "pndm", ["$args"]
-"msg", "", "^/pending\\\\s+\\\\d\\\\s+\\\\S+", "pndm", ["$[2-]", "$1"]
-"msg", "", "^/pendsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)", "pndm", ["$[2-]", "$1"]
-"msg", "", "^/pendsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+", "pndm", ["$[3-]", "$1", "$2"]
-"msg", "", "^/sc\\\\s+([千易]\\\\S+|[^千易])", "schm", ["$args"]
-"msg", "", "^/sc\\\\s+[千易]\\\\s+\\\\S+", "schm", ["$[2-]", "$1"]
-```
-
-使用者發送以下字串可以觸發設定好的功能：
+##### 範例
 
 ```
-/play 剛好遇見你
-/play 2 剛好遇見你
-/playsrc 千 剛好遇見你
-/play 易 2 剛好遇見你
-/add  山丘
-/add  2 山丘
-/addsrc 千 山丘
-/addsrc 易 2 山丘
-/pending
-/pending 平凡之路
-/pending 2 平凡之路
-/pendsrc 千 平凡之路
-/pendsrc 易 2 平凡之路
-/del  1
-/list
-/next
-/sc 花心
-/sc 千 花心
+"msg", "", "^/tenor", "umsg", ["$tenor($args)", "$args"]
+"msg", "", "^/giphy", "umsg", ["$giphy($args)", "$args"]
+"msg", "", "^/play", "plym", ["$args"]
+"leave", "", "", "msg", ["$user bye!"]
 ```
+
+##### 調用
+
+```
+/tenor 貓
+/giphy iron man
+/play yellow
+```
+:::
+
+#### 函數說明
+
+:::warning
+
+函數 [參數列] 說明：
+
+- `msg` `["訊息", "訊息", ...]`
+  從訊息中選擇一個推送。
+- `umsg` `["URL", "訊息", ...]`
+  夾帶 URL 並隨機選擇一個訊息推送。
+- `dm` `["使用者名稱", "訊息", "訊息", ...]`
+  私訊使用者，選擇一個訊息私訊。
+- `udm` `["使用者名稱", "URL", "訊息", ...]`
+  私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
+- `kick` `["使用者名稱"]`
+  踢出使用者。
+- `ban` `["使用者名稱"]`
+  踢出並屏蔽使用者。
+- `banrpt` `["使用者名稱"]`
+  踢出並屏蔽舉報使用者。
+- `plym` `["歌曲關鍵字"]`
+  `plym` `["歌曲關鍵字", "數字"]`
+  `plym` `["歌曲關鍵字", "音源"]`
+  `plym` `["歌曲關鍵字", "數字", "音源"]`
+  `plym` `["歌曲關鍵字", "音源", "數字"]`
+  播放音樂。
+  1. "關鍵字"：歌曲關鍵字。
+  2. "數字"：第 "數字" 個搜尋結果。
+  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
+- `addm` `["歌曲關鍵字"]`
+  `addm` `["歌曲關鍵字", "數字"]`
+  `addm` `["歌曲關鍵字", "音源"]`
+  `addm` `["歌曲關鍵字", "數字", "音源"]`
+  `addm` `["歌曲關鍵字", "音源", "數字"]`
+  加入音樂至待播清單。
+  1. "關鍵字"：歌曲關鍵字。
+  2. "數字"：第 "數字" 個搜尋結果。
+  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
+- `delm` `["數字"]`
+  從清單刪除音樂（依索引數字）。
+- `lstm` `[]`
+  列出待播清單。
+- `nxtm` `[]`
+  播放下一首曲子。
+- `pndm` `[]`
+  `pndm` `["歌曲關鍵字"]`
+  `pndm` `["歌曲關鍵字", "數字"]`
+  `pndm` `["歌曲關鍵字", "音源"]`
+  `pndm` `["歌曲關鍵字", "數字", "音源"]`
+  `pndm` `["歌曲關鍵字", "音源", "數字"]`
+  無參數則列出待播清單。
+  如當前沒音樂，播放音樂。
+  如有音樂，將音樂加入清單
+  如關鍵字為空字串，列出待播清單。
+  1. "關鍵字"：歌曲關鍵字。
+  2. "數字"：第 "數字" 個搜尋結果。
+  3. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
+- `schm` `["歌曲關鍵字"]`
+  `schm` `["歌曲關鍵字", "音源"]`
+  列出搜尋結果。
+  1. "關鍵字"：歌曲關鍵字。
+  2. "音源"：音源，目前有 "千" 和 "易", "狗", "我" 及 "Ｙ" 可以使用。
+- `horm` `["使用者名稱"]`
+  轉移房主權限給該使用者。
+- `ocdr` `[]`
+  離開房間又進入房間。
+- `gofr` `["房間名稱(RegExp)"]`
+  前往符合房間名稱的房間。若失敗則回到原房間。
+
+（`me` 可以用 `/me + 推送訊息` 以 msg 達成。）
+:::
+
+### Local 本地設定
+
+:::success
+![](https://i.imgur.com/NMY9ZAx.png)
+
+##### 功能鍵
+
+<i class="glyphicon glyphicon-question-sign"></i> 前往說明頁面
+<i class="glyphicon glyphicon-info-sign"></i> 關於作者
+<i class="glyphicon glyphicon-refresh"></i> 重製所有設定
+<i class="glyphicon glyphicon-export"></i> 匯出設定
+選擇檔案：匯入設定
+
+##### 模組資料
+
+你可以照著格式編輯他。
+:::
+
+### Script 浪語終端
+
+:::success
+
+對，你沒看錯，這插件內建了一個小小的程式語言。 :)
+
+![](https://i.imgur.com/bmRYjbn.png)
+
+##### 側欄按鍵
+
+- Package 套件管理器
+- ToggleRoom 隱藏/顯示右側聊天室
+- Sublime bindings 顯示編輯器快捷鍵
+- 腳本運行相關按鍵
+    - Introduction 浪語介紹
+    - Save 儲存編輯器腳本
+    - Clear 清除腳本運行結果
+    - Pause 清除正在運行的腳本
+    - Execute 運行編輯器的腳本
+
+##### 編輯器和直譯終端
+
+Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會生效。
+運行一段腳本後，你可以用在直譯終端做測試，他會以運行後的環境執行。
+`ctrl` + `enter` 執行直譯終端的腳本（游標要在終端裡面）。
+:::
+
+:::warning
+##### 浪語
+
+細節請參考 [wiki](https://drrr.wiki/%E6%B5%AA%E8%AA%9E)。
+:::
+
+:::warning
+##### 套件管理器
+:::
+
+
+## 特別誌謝
+
+### 個人
+
+@LanCeLoT 幫忙編修此文檔及錯誤反饋
+@faye
+@少女
+
+
+### 部屋
+
+:::success
+**上帝酒屋**
+
+酒屋客人們（Lang, 大庭叶藏, 千秋 ... 等人) 幫忙測試狼人殺腳本
+
+以及在編寫此文檔時偶遇的上帝酒屋客人兼使用者 @課長
+:::
+
+
+:::success
+**湖神一家**
+:::
+
+:::success
+**窗邊**
+:::
+
+:::success
+**萬人的死角**
+:::
+
+:::success
+**掛**
+:::
+
+:::success
+**九十九的畫室**
+:::
+
+:::success
+**[摘星塔](https://drrr.wiki/zh-hans/@%E6%91%98%E6%98%9F%E5%A1%94)**
+:::
+
+### Bot
+
+
+[@A_Bot](https://drrr.wiki/@A_Bot)
+[@机器人小绿](https://drrr.wiki/@%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%B0%8F%E7%BB%BF)
+
+## 相關鏈結
+
+[浪打](https://drrr.wiki/@%E6%B5%AA%E6%89%93%E8%B2%93)
+[DrrrWiKi](https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6)
+[QQ 討論群](https://jq.qq.com/?_wv=1027&k=7JjKVhV0)
+[Discord QA 群](https://discord.com/invite/BBCw3UY)
+[Gitee Organization](https://gitee.com/DrrrChatbots)
+[GitHub Organization](https://github.com/DrrrChatbots)

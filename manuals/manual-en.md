@@ -278,7 +278,7 @@ You can use special time variables in parameters:
 - `%D` date, one or two digits
 - `%日` date, Chinese numerals
 - `%d` weekday, full English
-- `%拜` week, Chinese
+- `%星` week, Chinese
 - Number at `%H` (24 hour clock)
 - number at `%h` (12 hours)
 - `%c` In the afternoon, English` a.m.` `p.m.`

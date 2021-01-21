@@ -113,8 +113,8 @@ export const manual = {
 <li><code>%月</code> 月份，中文數字（一至十二）</li>
 <li><code>%D</code> 日期，一至二位數字</li>
 <li><code>%日</code> 日期，中文數字</li>
-<li><code>%d</code> 禮拜幾，英文全寫</li>
-<li><code>%拜</code> 禮拜幾，中文</li>
+<li><code>%d</code> 星期幾，英文全寫</li>
+<li><code>%星</code> 星期幾，中文</li>
 <li><code>%H</code> 時，數字（24 時制）</li>
 <li><code>%h</code> 時，數字（12 時制）</li>
 <li><code>%c</code> 上下午，英文 <code>a.m.</code> <code>p.m.</code></li>
@@ -268,8 +268,8 @@ export const manual = {
 <li><code>%月</code> 月份，中文數字（一至十二）</li>
 <li><code>%D</code> 日期，一至二位數字</li>
 <li><code>%日</code> 日期，中文數字</li>
-<li><code>%d</code> 禮拜幾，英文全寫</li>
-<li><code>%拜</code> 禮拜幾，中文</li>
+<li><code>%d</code> 星期幾，英文全寫</li>
+<li><code>%星</code> 星期幾，中文</li>
 <li><code>%H</code> 時，數字（24 時制）</li>
 <li><code>%h</code> 時，數字（12 時制）</li>
 <li><code>%c</code> 上下午，英文 <code>a.m.</code> <code>p.m.</code></li>

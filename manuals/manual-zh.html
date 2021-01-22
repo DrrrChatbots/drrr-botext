@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>
         DRRR 機器人插件設定手冊 - HackMD
-
+    
     </title>
     <link rel="icon" type="image/png" href="/icon.png">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -21,324 +21,480 @@
     <link rel="stylesheet" href="/css/octicons.min.css" integrity="sha256-QiWfLIsCT02Sdwkogf6YMiQlj4NE84MKkzEMkZnMGdg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="/css/prism.min.css" integrity="sha256-vtR0hSWRc3Tb26iuN2oZHt3KRUomwTufNIf5/4oeCyg=" crossorigin="anonymous" />
     <link rel="stylesheet" href="/css/emojify.min.css" integrity="sha256-UOrvMOsSDSrW6szVLe8ZDZezBxh5IoIfgTwdNDgTjiU=" crossorigin="anonymous" />
-
+        
                             <style>
-        @charset "UTF-8";@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i|Source+Code+Pro:300,400,500|Source+Sans+Pro:300,300i,400,400i,600,600i|Source+Serif+Pro&subset=latin-ext);.hljs{display:block;background:#fff;padding:.5em;color:#333;overflow-x:auto}.hljs-comment,.hljs-meta{color:#969896}.hljs-emphasis,.hljs-quote,.hljs-string,.hljs-strong,.hljs-template-variable,.hljs-variable{color:#df5000}.hljs-keyword,.hljs-selector-tag,.hljs-type{color:#a71d5d}.hljs-attribute,.hljs-bullet,.hljs-literal,.hljs-number,.hljs-symbol{color:#0086b3}.hljs-built_in,.hljs-builtin-name{color:#005cc5}.hljs-name,.hljs-section{color:#63a35c}.hljs-tag{color:#333}.hljs-attr,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-selector-pseudo,.hljs-title{color:#795da3}.hljs-addition{color:#55a532;background-color:#eaffea}.hljs-deletion{color:#bd2c00;background-color:#ffecec}.hljs-link{text-decoration:underline}.markdown-body{font-size:16px;line-height:1.5;word-wrap:break-word}.markdown-body:after,.markdown-body:before{display:table;content:""}.markdown-body:after{clear:both}.markdown-body>:first-child{margin-top:0!important}.markdown-body>:last-child{margin-bottom:0!important}.markdown-body a:not([href]){color:inherit;text-decoration:none}.markdown-body .absent{color:#c00}.markdown-body .anchor{float:left;padding-right:4px;margin-left:-20px;line-height:1}.markdown-body .anchor:focus{outline:none}.markdown-body blockquote,.markdown-body dl,.markdown-body ol,.markdown-body p,.markdown-body pre,.markdown-body table,.markdown-body ul{margin-top:0;margin-bottom:16px}.markdown-body hr{height:.25em;padding:0;margin:24px 0;background-color:#e7e7e7;border:0}.markdown-body blockquote{font-size:16px;padding:0 1em;color:#777;border-left:.25em solid #ddd}.markdown-body blockquote>:first-child{margin-top:0}.markdown-body blockquote>:last-child{margin-bottom:0}.markdown-body kbd,.popover kbd{display:inline-block;padding:3px 5px;font-size:11px;line-height:10px;color:#555;vertical-align:middle;background-color:#fcfcfc;border:1px solid #ccc;border-bottom-color:#bbb;border-radius:3px;box-shadow:inset 0 -1px 0 #bbb}.markdown-body .loweralpha{list-style-type:lower-alpha}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{margin-top:24px;margin-bottom:16px;font-weight:600;line-height:1.25}.markdown-body h1 .octicon-link,.markdown-body h2 .octicon-link,.markdown-body h3 .octicon-link,.markdown-body h4 .octicon-link,.markdown-body h5 .octicon-link,.markdown-body h6 .octicon-link{color:#000;vertical-align:middle;visibility:hidden}.markdown-body h1:hover .anchor,.markdown-body h2:hover .anchor,.markdown-body h3:hover .anchor,.markdown-body h4:hover .anchor,.markdown-body h5:hover .anchor,.markdown-body h6:hover .anchor{text-decoration:none}.markdown-body h1:hover .anchor .octicon-link,.markdown-body h2:hover .anchor .octicon-link,.markdown-body h3:hover .anchor .octicon-link,.markdown-body h4:hover .anchor .octicon-link,.markdown-body h5:hover .anchor .octicon-link,.markdown-body h6:hover .anchor .octicon-link{visibility:visible}.markdown-body h1 code,.markdown-body h1 tt,.markdown-body h2 code,.markdown-body h2 tt,.markdown-body h3 code,.markdown-body h3 tt,.markdown-body h4 code,.markdown-body h4 tt,.markdown-body h5 code,.markdown-body h5 tt,.markdown-body h6 code,.markdown-body h6 tt{font-size:inherit}.markdown-body h1{font-size:2em}.markdown-body h1,.markdown-body h2{padding-bottom:.3em;border-bottom:1px solid #eee}.markdown-body h2{font-size:1.5em}.markdown-body h3{font-size:1.25em}.markdown-body h4{font-size:1em}.markdown-body h5{font-size:.875em}.markdown-body h6{font-size:.85em;color:#777}.markdown-body ol,.markdown-body ul{padding-left:2em}.markdown-body ol.no-list,.markdown-body ul.no-list{padding:0;list-style-type:none}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:0;margin-bottom:0}.markdown-body li>p{margin-top:16px}.markdown-body li+li{padding-top:.25em}.markdown-body dl{padding:0}.markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}.markdown-body dl dd{padding:0 16px;margin-bottom:16px}.markdown-body table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}.markdown-body table th{font-weight:700}.markdown-body table td,.markdown-body table th{padding:6px 13px;border:1px solid #ddd}.markdown-body table tr{background-color:#fff;border-top:1px solid #ccc}.markdown-body table tr:nth-child(2n){background-color:#f8f8f8}.markdown-body img{max-width:100%;box-sizing:content-box;background-color:#fff}.markdown-body img[align=right]{padding-left:20px}.markdown-body img[align=left]{padding-right:20px}.markdown-body .emoji{max-width:none;vertical-align:text-top;background-color:transparent}.markdown-body span.frame{display:block;overflow:hidden}.markdown-body span.frame>span{display:block;float:left;width:auto;padding:7px;margin:13px 0 0;overflow:hidden;border:1px solid #ddd}.markdown-body span.frame span img{display:block;float:left}.markdown-body span.frame span span{display:block;padding:5px 0 0;clear:both;color:#333}.markdown-body span.align-center{display:block;overflow:hidden;clear:both}.markdown-body span.align-center>span{display:block;margin:13px auto 0;overflow:hidden;text-align:center}.markdown-body span.align-center span img{margin:0 auto;text-align:center}.markdown-body span.align-right{display:block;overflow:hidden;clear:both}.markdown-body span.align-right>span{display:block;margin:13px 0 0;overflow:hidden;text-align:right}.markdown-body span.align-right span img{margin:0;text-align:right}.markdown-body span.float-left{display:block;float:left;margin-right:13px;overflow:hidden}.markdown-body span.float-left span{margin:13px 0 0}.markdown-body span.float-right{display:block;float:right;margin-left:13px;overflow:hidden}.markdown-body span.float-right>span{display:block;margin:13px auto 0;overflow:hidden;text-align:right}.markdown-body code,.markdown-body tt{padding:0;padding-top:.2em;padding-bottom:.2em;margin:0;font-size:85%;background-color:rgba(0,0,0,.04);border-radius:3px}.markdown-body code:after,.markdown-body code:before,.markdown-body tt:after,.markdown-body tt:before{letter-spacing:-.2em;content:"\00a0"}.markdown-body code br,.markdown-body tt br{display:none}.markdown-body del code{text-decoration:inherit}.markdown-body pre{word-wrap:normal}.markdown-body pre>code{padding:0;margin:0;font-size:100%;word-break:normal;white-space:pre;background:transparent;border:0}.markdown-body .highlight{margin-bottom:16px}.markdown-body .highlight pre{margin-bottom:0;word-break:normal}.markdown-body .highlight pre,.markdown-body pre{padding:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px}.markdown-body pre code,.markdown-body pre tt{display:inline;max-width:auto;padding:0;margin:0;overflow:visible;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}.markdown-body pre code:after,.markdown-body pre code:before,.markdown-body pre tt:after,.markdown-body pre tt:before{content:normal}.markdown-body .csv-data td,.markdown-body .csv-data th{padding:5px;overflow:hidden;font-size:12px;line-height:1;text-align:left;white-space:nowrap}.markdown-body .csv-data .blob-line-num{padding:10px 8px 9px;text-align:right;background:#fff;border:0}.markdown-body .csv-data tr{border-top:0}.markdown-body .csv-data th{font-weight:700;background:#f8f8f8;border-top:0}.news .alert .markdown-body blockquote{padding:0 0 0 40px;border:0 none}.activity-tab .news .alert .commits,.activity-tab .news .markdown-body blockquote{padding-left:0}.task-list-item{list-style-type:none}.task-list-item label{font-weight:400}.task-list-item.enabled label{cursor:pointer}.task-list-item+.task-list-item{margin-top:3px}.task-list-item-checkbox{float:left;margin:.31em 0 .2em -1.3em!important;vertical-align:middle;cursor:default!important}.markdown-body{padding-top:40px;padding-bottom:40px;max-width:758px;overflow:visible!important}.markdown-body .emoji{vertical-align:top}.markdown-body pre{border:inherit!important}.markdown-body code{color:inherit!important}.markdown-body pre code .wrapper{display:-moz-inline-flex;display:-ms-inline-flex;display:-o-inline-flex;display:inline-flex}.markdown-body pre code .gutter{float:left;overflow:hidden;-webkit-user-select:none;user-select:none}.markdown-body pre code .gutter.linenumber{text-align:right;position:relative;display:inline-block;cursor:default;z-index:4;padding:0 8px 0 0;min-width:20px;box-sizing:content-box;color:#afafaf!important;border-right:3px solid #6ce26c!important}.markdown-body pre code .gutter.linenumber>span:before{content:attr(data-linenumber)}.markdown-body pre code .code{float:left;margin:0 0 0 16px}.markdown-body .gist .line-numbers{border-left:none;border-top:none;border-bottom:none}.markdown-body .gist .line-data{border:none}.markdown-body .gist table{border-spacing:0;border-collapse:inherit!important}.markdown-body code[data-gist-id]{background:none;padding:0}.markdown-body code[data-gist-id]:after,.markdown-body code[data-gist-id]:before{content:""}.markdown-body code[data-gist-id] .blob-num{border:unset}.markdown-body code[data-gist-id] table{overflow:unset;margin-bottom:unset}.markdown-body code[data-gist-id] table tr{background:unset}.markdown-body[dir=rtl] pre{direction:ltr}.markdown-body[dir=rtl] code{direction:ltr;unicode-bidi:embed}.markdown-body .alert>p{margin-bottom:0}.markdown-body pre.abc,.markdown-body pre.flow-chart,.markdown-body pre.graphviz,.markdown-body pre.mermaid,.markdown-body pre.sequence-diagram,.markdown-body pre.vega{text-align:center;background-color:inherit;border-radius:0;white-space:inherit}.markdown-body pre.abc>code,.markdown-body pre.flow-chart>code,.markdown-body pre.graphviz>code,.markdown-body pre.mermaid>code,.markdown-body pre.sequence-diagram>code,.markdown-body pre.vega>code{text-align:left}.markdown-body pre.abc>svg,.markdown-body pre.flow-chart>svg,.markdown-body pre.graphviz>svg,.markdown-body pre.mermaid>svg,.markdown-body pre.sequence-diagram>svg,.markdown-body pre.vega>svg{max-width:100%;height:100%}.markdown-body pre>code.wrap{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word}.markdown-body .alert>p,.markdown-body .alert>ul{margin-bottom:0}.markdown-body summary{display:list-item}.markdown-body summary:focus{outline:none}.markdown-body details summary{cursor:pointer}.markdown-body details:not([open])>:not(summary){display:none}.markdown-body figure{margin:1em 40px}.markdown-body .mark,.markdown-body mark{background-color:#fff1a7}.vimeo,.youtube{cursor:pointer;display:table;text-align:center;background-position:50%;background-repeat:no-repeat;background-size:contain;background-color:#000;overflow:hidden}.vimeo,.youtube{position:relative;width:100%}.youtube{padding-bottom:56.25%}.vimeo img{width:100%;object-fit:contain;z-index:0}.youtube img{object-fit:cover;z-index:0}.vimeo iframe,.youtube iframe,.youtube img{width:100%;height:100%;position:absolute;top:0;left:0}.vimeo iframe,.youtube iframe{vertical-align:middle;z-index:1}.vimeo .icon,.youtube .icon{position:absolute;height:auto;width:auto;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;opacity:.3;transition:opacity .2s;z-index:0}.vimeo:hover .icon,.youtube:hover .icon{opacity:.6;transition:opacity .2s}.slideshare .inner,.speakerdeck .inner{position:relative;width:100%}.slideshare .inner iframe,.speakerdeck .inner iframe{position:absolute;top:0;bottom:0;left:0;right:0;width:100%;height:100%}.MJX_Assistive_MathML{display:none}.ui-infobar{position:relative;z-index:2;max-width:760px;margin:25px auto -25px;padding:0 15px;color:#777}.toc .invisable-node{list-style-type:none}.ui-toc{position:fixed;bottom:20px;z-index:998}.ui-toc-label{opacity:.3;background-color:#ccc;border:none;transition:opacity .2s}.ui-toc .open .ui-toc-label{opacity:1;color:#fff;transition:opacity .2s}.ui-toc-label:focus{opacity:.3;background-color:#ccc;color:#000}.ui-toc-label:hover{opacity:1;background-color:#ccc;transition:opacity .2s}.ui-toc-dropdown{margin-top:23px;margin-bottom:20px;padding-left:10px;padding-right:10px;max-width:45vw;width:25vw;max-height:70vh;overflow:auto;text-align:inherit}.ui-toc-dropdown>.toc{max-height:calc(70vh - 100px);overflow:auto}.ui-toc-dropdown[dir=rtl] .nav{padding-right:0;letter-spacing:.0029em}.ui-toc-dropdown a{overflow:hidden;text-overflow:ellipsis;white-space:pre}.ui-toc-dropdown .nav>li>a{display:block;padding:4px 20px;font-size:13px;font-weight:500;color:#767676}.ui-toc-dropdown .nav>li:first-child:last-child > ul,.ui-toc-dropdown .toc.expand ul{display:block}.ui-toc-dropdown .nav>li>a:focus,.ui-toc-dropdown .nav>li>a:hover{padding-left:19px;color:#000;text-decoration:none;background-color:transparent;border-left:1px solid #000}.ui-toc-dropdown[dir=rtl] .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav>li>a:hover{padding-right:19px;border-left:none;border-right:1px solid #000}.ui-toc-dropdown .nav>.active:focus>a,.ui-toc-dropdown .nav>.active:hover>a,.ui-toc-dropdown .nav>.active>a{padding-left:18px;font-weight:700;color:#000;background-color:transparent;border-left:2px solid #000}.ui-toc-dropdown[dir=rtl] .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav>.active>a{padding-right:18px;border-left:none;border-right:2px solid #000}.ui-toc-dropdown .nav .nav{display:none;padding-bottom:10px}.ui-toc-dropdown .nav>.active>ul{display:block}.ui-toc-dropdown .nav .nav>li>a{padding-top:1px;padding-bottom:1px;padding-left:30px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a{padding-right:30px}.ui-toc-dropdown .nav .nav>li>ul>li>a{padding-top:1px;padding-bottom:1px;padding-left:40px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a{padding-right:40px}.ui-toc-dropdown .nav .nav>li>a:focus,.ui-toc-dropdown .nav .nav>li>a:hover{padding-left:29px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:hover{padding-right:29px}.ui-toc-dropdown .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown .nav .nav>li>ul>li>a:hover{padding-left:39px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:hover{padding-right:39px}.ui-toc-dropdown .nav .nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>a{padding-left:28px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>a{padding-right:28px}.ui-toc-dropdown .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active>a{padding-left:38px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active>a{padding-right:38px}.markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,sans-serif}html[lang^=ja] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html .markdown-body[lang^=ja]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html .markdown-body[lang=zh-tw]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html .markdown-body[lang=zh-cn]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html[lang^=ja] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html[lang=zh-tw] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html[lang=zh-cn] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}html .ui-toc-dropdown[lang^=ja]{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html .ui-toc-dropdown[lang=zh-tw]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html .ui-toc-dropdown[lang=zh-cn]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}.ui-affix-toc{position:fixed;top:0;max-width:15vw;max-height:70vh;overflow:auto}.back-to-top,.expand-toggle,.go-to-bottom{display:block;padding:4px 10px;margin-top:10px;margin-left:10px;font-size:12px;font-weight:500;color:#999}.back-to-top:focus,.back-to-top:hover,.expand-toggle:focus,.expand-toggle:hover,.go-to-bottom:focus,.go-to-bottom:hover{color:#563d7c;text-decoration:none}.back-to-top,.go-to-bottom{margin-top:0}.ui-user-icon{width:20px;height:20px;display:block;border-radius:3px;margin-top:2px;margin-bottom:2px;margin-right:5px;background-position:50%;background-repeat:no-repeat;background-size:cover}.ui-user-icon.small{width:18px;height:18px;display:inline-block;vertical-align:middle;margin:0 0 .2em}.ui-infobar>small>span{line-height:22px}.ui-infobar>small .dropdown{display:inline-block}.ui-infobar>small .dropdown a:focus,.ui-infobar>small .dropdown a:hover{text-decoration:none}.ui-published-note{color:#337ab7}.ui-published-note .fa{font-size:20px;vertical-align:top}.unselectable{-webkit-user-select:none;-o-user-select:none;user-select:none}@media print{blockquote,div,img,pre,table{page-break-inside:avoid!important}a[href]:after{font-size:12px!important}}.markdown-body.slides{position:relative;z-index:1;color:#222}.markdown-body.slides:before{content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background-color:currentColor;box-shadow:0 0 0 50vw}.markdown-body.slides section[data-markdown]{position:relative;margin-bottom:1.5em;background-color:#fff;text-align:center}.markdown-body.slides section[data-markdown] code{text-align:left}.markdown-body.slides section[data-markdown]:before{content:"";display:block;padding-bottom:56.23%}.markdown-body.slides section[data-markdown]>div:first-child{position:absolute;top:50%;left:1em;right:1em;transform:translateY(-50%);max-height:100%;overflow:hidden}.markdown-body.slides section[data-markdown]>ul{display:inline-block}.markdown-body.slides>section>section+section:after{content:"";position:absolute;top:-1.5em;right:1em;height:1.5em;border:3px solid #777}body{font-smoothing:subpixel-antialiased!important;-webkit-font-smoothing:subpixel-antialiased!important;-moz-osx-font-smoothing:auto!important;text-shadow:0 0 1em transparent,1px 1px 1.2px rgba(0,0,0,.004);-webkit-overflow-scrolling:touch;letter-spacing:.025em}.focus,:focus{outline:none!important}::-moz-focus-inner{border:0!important}body{font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] body{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}abbr[data-original-title],abbr[title]{cursor:help}body.modal-open{overflow-y:auto;padding-right:0!important}
+        @charset "UTF-8";@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i|Source+Code+Pro:300,400,500|Source+Sans+Pro:300,300i,400,400i,600,600i|Source+Serif+Pro&subset=latin-ext);.hljs{display:block;background:#fff;padding:.5em;color:#333;overflow-x:auto}.hljs-comment,.hljs-meta{color:#969896}.hljs-emphasis,.hljs-quote,.hljs-string,.hljs-strong,.hljs-template-variable,.hljs-variable{color:#df5000}.hljs-keyword,.hljs-selector-tag,.hljs-type{color:#a71d5d}.hljs-attribute,.hljs-bullet,.hljs-literal,.hljs-number,.hljs-symbol{color:#0086b3}.hljs-built_in,.hljs-builtin-name{color:#005cc5}.hljs-name,.hljs-section{color:#63a35c}.hljs-tag{color:#333}.hljs-attr,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-selector-pseudo,.hljs-title{color:#795da3}.hljs-addition{color:#55a532;background-color:#eaffea}.hljs-deletion{color:#bd2c00;background-color:#ffecec}.hljs-link{text-decoration:underline}.markdown-body{font-size:16px;line-height:1.5;word-wrap:break-word}.markdown-body:after,.markdown-body:before{display:table;content:""}.markdown-body:after{clear:both}.markdown-body>:first-child{margin-top:0!important}.markdown-body>:last-child{margin-bottom:0!important}.markdown-body a:not([href]){color:inherit;text-decoration:none}.markdown-body .absent{color:#c00}.markdown-body .anchor{float:left;padding-right:4px;margin-left:-20px;line-height:1}.markdown-body .anchor:focus{outline:none}.markdown-body blockquote,.markdown-body dl,.markdown-body ol,.markdown-body p,.markdown-body pre,.markdown-body table,.markdown-body ul{margin-top:0;margin-bottom:16px}.markdown-body hr{height:.25em;padding:0;margin:24px 0;background-color:#e7e7e7;border:0}.markdown-body blockquote{font-size:16px;padding:0 1em;color:#777;border-left:.25em solid #ddd}.markdown-body blockquote>:first-child{margin-top:0}.markdown-body blockquote>:last-child{margin-bottom:0}.markdown-body kbd,.popover kbd{display:inline-block;padding:3px 5px;font-size:11px;line-height:10px;color:#555;vertical-align:middle;background-color:#fcfcfc;border:1px solid #ccc;border-bottom-color:#bbb;border-radius:3px;box-shadow:inset 0 -1px 0 #bbb}.markdown-body .loweralpha{list-style-type:lower-alpha}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{margin-top:24px;margin-bottom:16px;font-weight:600;line-height:1.25}.markdown-body h1 .octicon-link,.markdown-body h2 .octicon-link,.markdown-body h3 .octicon-link,.markdown-body h4 .octicon-link,.markdown-body h5 .octicon-link,.markdown-body h6 .octicon-link{color:#000;vertical-align:middle;visibility:hidden}.markdown-body h1:hover .anchor,.markdown-body h2:hover .anchor,.markdown-body h3:hover .anchor,.markdown-body h4:hover .anchor,.markdown-body h5:hover .anchor,.markdown-body h6:hover .anchor{text-decoration:none}.markdown-body h1:hover .anchor .octicon-link,.markdown-body h2:hover .anchor .octicon-link,.markdown-body h3:hover .anchor .octicon-link,.markdown-body h4:hover .anchor .octicon-link,.markdown-body h5:hover .anchor .octicon-link,.markdown-body h6:hover .anchor .octicon-link{visibility:visible}.markdown-body h1 code,.markdown-body h1 tt,.markdown-body h2 code,.markdown-body h2 tt,.markdown-body h3 code,.markdown-body h3 tt,.markdown-body h4 code,.markdown-body h4 tt,.markdown-body h5 code,.markdown-body h5 tt,.markdown-body h6 code,.markdown-body h6 tt{font-size:inherit}.markdown-body h1{font-size:2em}.markdown-body h1,.markdown-body h2{padding-bottom:.3em;border-bottom:1px solid #eee}.markdown-body h2{font-size:1.5em}.markdown-body h3{font-size:1.25em}.markdown-body h4{font-size:1em}.markdown-body h5{font-size:.875em}.markdown-body h6{font-size:.85em;color:#777}.markdown-body ol,.markdown-body ul{padding-left:2em}.markdown-body ol.no-list,.markdown-body ul.no-list{padding:0;list-style-type:none}.markdown-body ol ol,.markdown-body ol ul,.markdown-body ul ol,.markdown-body ul ul{margin-top:0;margin-bottom:0}.markdown-body li>p{margin-top:16px}.markdown-body li+li{padding-top:.25em}.markdown-body dl{padding:0}.markdown-body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}.markdown-body dl dd{padding:0 16px;margin-bottom:16px}.markdown-body table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}.markdown-body table th{font-weight:700}.markdown-body table td,.markdown-body table th{padding:6px 13px;border:1px solid #ddd}.markdown-body table tr{background-color:#fff;border-top:1px solid #ccc}.markdown-body table tr:nth-child(2n){background-color:#f8f8f8}.markdown-body img{max-width:100%;box-sizing:content-box;background-color:#fff}.markdown-body img[align=right]{padding-left:20px}.markdown-body img[align=left]{padding-right:20px}.markdown-body .emoji{max-width:none;vertical-align:text-top;background-color:transparent}.markdown-body span.frame{display:block;overflow:hidden}.markdown-body span.frame>span{display:block;float:left;width:auto;padding:7px;margin:13px 0 0;overflow:hidden;border:1px solid #ddd}.markdown-body span.frame span img{display:block;float:left}.markdown-body span.frame span span{display:block;padding:5px 0 0;clear:both;color:#333}.markdown-body span.align-center{display:block;overflow:hidden;clear:both}.markdown-body span.align-center>span{display:block;margin:13px auto 0;overflow:hidden;text-align:center}.markdown-body span.align-center span img{margin:0 auto;text-align:center}.markdown-body span.align-right{display:block;overflow:hidden;clear:both}.markdown-body span.align-right>span{display:block;margin:13px 0 0;overflow:hidden;text-align:right}.markdown-body span.align-right span img{margin:0;text-align:right}.markdown-body span.float-left{display:block;float:left;margin-right:13px;overflow:hidden}.markdown-body span.float-left span{margin:13px 0 0}.markdown-body span.float-right{display:block;float:right;margin-left:13px;overflow:hidden}.markdown-body span.float-right>span{display:block;margin:13px auto 0;overflow:hidden;text-align:right}.markdown-body code,.markdown-body tt{padding:0;padding-top:.2em;padding-bottom:.2em;margin:0;font-size:85%;background-color:rgba(0,0,0,.04);border-radius:3px}.markdown-body code:after,.markdown-body code:before,.markdown-body tt:after,.markdown-body tt:before{letter-spacing:-.2em;content:"\00a0"}.markdown-body code br,.markdown-body tt br{display:none}.markdown-body del code{text-decoration:inherit}.markdown-body pre{word-wrap:normal}.markdown-body pre>code{padding:0;margin:0;font-size:100%;word-break:normal;white-space:pre;background:transparent;border:0}.markdown-body .highlight{margin-bottom:16px}.markdown-body .highlight pre{margin-bottom:0;word-break:normal}.markdown-body .highlight pre,.markdown-body pre{padding:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f7f7f7;border-radius:3px}.markdown-body pre code,.markdown-body pre tt{display:inline;max-width:auto;padding:0;margin:0;overflow:visible;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}.markdown-body pre code:after,.markdown-body pre code:before,.markdown-body pre tt:after,.markdown-body pre tt:before{content:normal}.markdown-body .csv-data td,.markdown-body .csv-data th{padding:5px;overflow:hidden;font-size:12px;line-height:1;text-align:left;white-space:nowrap}.markdown-body .csv-data .blob-line-num{padding:10px 8px 9px;text-align:right;background:#fff;border:0}.markdown-body .csv-data tr{border-top:0}.markdown-body .csv-data th{font-weight:700;background:#f8f8f8;border-top:0}.news .alert .markdown-body blockquote{padding:0 0 0 40px;border:0 none}.activity-tab .news .alert .commits,.activity-tab .news .markdown-body blockquote{padding-left:0}.task-list-item{list-style-type:none}.task-list-item label{font-weight:400}.task-list-item.enabled label{cursor:pointer}.task-list-item+.task-list-item{margin-top:3px}.task-list-item-checkbox{float:left;margin:.31em 0 .2em -1.3em!important;vertical-align:middle;cursor:default!important}.markdown-body{padding-top:40px;padding-bottom:40px;max-width:758px;overflow:visible!important;position:relative}.markdown-body .emoji{vertical-align:top}.markdown-body pre{border:inherit!important}.markdown-body code{color:inherit!important}.markdown-body pre code .wrapper{display:-moz-inline-flex;display:-ms-inline-flex;display:-o-inline-flex;display:inline-flex}.markdown-body pre code .gutter{float:left;overflow:hidden;-webkit-user-select:none;user-select:none}.markdown-body pre code .gutter.linenumber{text-align:right;position:relative;display:inline-block;cursor:default;z-index:4;padding:0 8px 0 0;min-width:20px;box-sizing:content-box;color:#afafaf!important;border-right:3px solid #6ce26c!important}.markdown-body pre code .gutter.linenumber>span:before{content:attr(data-linenumber)}.markdown-body pre code .code{float:left;margin:0 0 0 16px}.markdown-body .gist .line-numbers{border-left:none;border-top:none;border-bottom:none}.markdown-body .gist .line-data{border:none}.markdown-body .gist table{border-spacing:0;border-collapse:inherit!important}.markdown-body code[data-gist-id]{background:none;padding:0}.markdown-body code[data-gist-id]:after,.markdown-body code[data-gist-id]:before{content:""}.markdown-body code[data-gist-id] .blob-num{border:unset}.markdown-body code[data-gist-id] table{overflow:unset;margin-bottom:unset}.markdown-body code[data-gist-id] table tr{background:unset}.markdown-body[dir=rtl] pre{direction:ltr}.markdown-body[dir=rtl] code{direction:ltr;unicode-bidi:embed}.markdown-body .alert>p{margin-bottom:0}.markdown-body pre.abc,.markdown-body pre.flow-chart,.markdown-body pre.graphviz,.markdown-body pre.mermaid,.markdown-body pre.sequence-diagram,.markdown-body pre.vega{text-align:center;background-color:inherit;border-radius:0;white-space:inherit;overflow:visible}.markdown-body pre.abc>code,.markdown-body pre.flow-chart>code,.markdown-body pre.graphviz>code,.markdown-body pre.mermaid>code,.markdown-body pre.sequence-diagram>code,.markdown-body pre.vega>code{text-align:left}.markdown-body pre.abc>svg,.markdown-body pre.flow-chart>svg,.markdown-body pre.graphviz>svg,.markdown-body pre.mermaid>svg,.markdown-body pre.sequence-diagram>svg,.markdown-body pre.vega>svg{max-width:100%;height:100%}.markdown-body pre>code.wrap{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word}.markdown-body .alert>p,.markdown-body .alert>ul{margin-bottom:0}.markdown-body summary{display:list-item}.markdown-body summary:focus{outline:none}.markdown-body details summary{cursor:pointer}.markdown-body details:not([open])>:not(summary){display:none}.markdown-body figure{margin:1em 40px}.markdown-body .mark,.markdown-body mark{background-color:#fff1a7}.vimeo,.youtube{cursor:pointer;display:table;text-align:center;background-position:50%;background-repeat:no-repeat;background-size:contain;background-color:#000;overflow:hidden}.vimeo,.youtube{position:relative;width:100%}.youtube{padding-bottom:56.25%}.vimeo img{width:100%;object-fit:contain;z-index:0}.youtube img{object-fit:cover;z-index:0}.vimeo iframe,.youtube iframe,.youtube img{width:100%;height:100%;position:absolute;top:0;left:0}.vimeo iframe,.youtube iframe{vertical-align:middle;z-index:1}.vimeo .icon,.youtube .icon{position:absolute;height:auto;width:auto;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;opacity:.3;transition:opacity .2s;z-index:0}.vimeo:hover .icon,.youtube:hover .icon{opacity:.6;transition:opacity .2s}.slideshare .inner,.speakerdeck .inner{position:relative;width:100%}.slideshare .inner iframe,.speakerdeck .inner iframe{position:absolute;top:0;bottom:0;left:0;right:0;width:100%;height:100%}.MJX_Assistive_MathML{display:none}#MathJax_Message{z-index:1000!important}.ui-infobar{position:relative;z-index:2;max-width:760px;margin:25px auto -25px;color:#777}.toc .invisable-node{list-style-type:none}.ui-toc{position:fixed;bottom:20px;z-index:998}.ui-toc.both-mode{margin-left:8px}.ui-toc.both-mode .ui-toc-label{height:40px;padding:10px 4px;border-top-left-radius:0;border-bottom-left-radius:0}.ui-toc-label{background-color:#e6e6e6;border:none;color:#868686;transition:opacity .2s}.ui-toc .open .ui-toc-label{opacity:1;color:#fff;transition:opacity .2s}.ui-toc-label:focus{opacity:.3;background-color:#ccc;color:#000}.ui-toc-label:hover{opacity:1;background-color:#ccc;transition:opacity .2s}.ui-toc-dropdown{margin-top:20px;margin-bottom:20px;padding-left:10px;padding-right:10px;max-width:45vw;width:25vw;max-height:70vh;overflow:auto;text-align:inherit}.ui-toc-dropdown>.toc{max-height:calc(70vh - 100px);overflow:auto}.ui-toc-dropdown[dir=rtl] .nav{padding-right:0;letter-spacing:.0029em}.ui-toc-dropdown a{overflow:hidden;text-overflow:ellipsis;white-space:pre}.ui-toc-dropdown .nav>li>a{display:block;padding:4px 20px;font-size:13px;font-weight:500;color:#767676}.ui-toc-dropdown .nav>li:first-child:last-child > ul,.ui-toc-dropdown .toc.expand ul{display:block}.ui-toc-dropdown .nav>li>a:focus,.ui-toc-dropdown .nav>li>a:hover{padding-left:19px;color:#000;text-decoration:none;background-color:transparent;border-left:1px solid #000}.ui-toc-dropdown[dir=rtl] .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav>li>a:hover{padding-right:19px;border-left:none;border-right:1px solid #000}.ui-toc-dropdown .nav>.active:focus>a,.ui-toc-dropdown .nav>.active:hover>a,.ui-toc-dropdown .nav>.active>a{padding-left:18px;font-weight:700;color:#000;background-color:transparent;border-left:2px solid #000}.ui-toc-dropdown[dir=rtl] .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav>.active>a{padding-right:18px;border-left:none;border-right:2px solid #000}.ui-toc-dropdown .nav .nav{display:none;padding-bottom:10px}.ui-toc-dropdown .nav>.active>ul{display:block}.ui-toc-dropdown .nav .nav>li>a{padding-top:1px;padding-bottom:1px;padding-left:30px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a{padding-right:30px}.ui-toc-dropdown .nav .nav>li>ul>li>a{padding-top:1px;padding-bottom:1px;padding-left:40px;font-size:12px;font-weight:400}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a{padding-right:40px}.ui-toc-dropdown .nav .nav>li>a:focus,.ui-toc-dropdown .nav .nav>li>a:hover{padding-left:29px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>a:hover{padding-right:29px}.ui-toc-dropdown .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown .nav .nav>li>ul>li>a:hover{padding-left:39px}.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:focus,.ui-toc-dropdown[dir=rtl] .nav .nav>li>ul>li>a:hover{padding-right:39px}.ui-toc-dropdown .nav .nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>a{padding-left:28px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>a{padding-right:28px}.ui-toc-dropdown .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown .nav .nav>.active>.nav>.active>a{padding-left:38px;font-weight:500}.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:focus>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active:hover>a,.ui-toc-dropdown[dir=rtl] .nav .nav>.active>.nav>.active>a{padding-right:38px}.markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,sans-serif}html[lang^=ja] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .markdown-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html .markdown-body[lang^=ja]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html .markdown-body[lang=zh-tw]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html .markdown-body[lang=zh-cn]{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Helvetica,Roboto,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}html[lang^=ja] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html[lang=zh-tw] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html[lang=zh-cn] .ui-toc-dropdown{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}html .ui-toc-dropdown[lang^=ja]{font-family:Source Sans Pro,Helvetica,Arial,Meiryo UI,MS PGothic,ＭＳ\ Ｐゴシック,sans-serif}html .ui-toc-dropdown[lang=zh-tw]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft JhengHei UI,微軟正黑UI,sans-serif}html .ui-toc-dropdown[lang=zh-cn]{font-family:Source Sans Pro,Helvetica,Arial,Microsoft YaHei UI,微软雅黑UI,sans-serif}.ui-affix-toc{position:fixed;top:0;max-width:15vw;max-height:70vh;overflow:auto}.back-to-top,.expand-toggle,.go-to-bottom{display:block;padding:4px 10px;margin-top:10px;margin-left:10px;font-size:12px;font-weight:500;color:#999}.back-to-top:focus,.back-to-top:hover,.expand-toggle:focus,.expand-toggle:hover,.go-to-bottom:focus,.go-to-bottom:hover{color:#563d7c;text-decoration:none}.back-to-top,.go-to-bottom{margin-top:0}.ui-user-icon{width:20px;height:20px;display:block;border-radius:50%;margin-top:2px;margin-bottom:2px;margin-right:5px;background-position:50%;background-repeat:no-repeat;background-size:cover}.ui-user-icon.small{width:18px;height:18px;display:inline-block;vertical-align:middle;margin:0 0 .2em}.ui-infobar>small>span{line-height:22px}.ui-infobar>small .dropdown{display:inline-block}.ui-infobar>small .dropdown a:focus,.ui-infobar>small .dropdown a:hover{text-decoration:none}.ui-more-info{color:#888;cursor:pointer;vertical-align:middle}.ui-more-info .fa{font-size:16px}.ui-connectedGithub,.ui-published-note{color:#888}.ui-connectedGithub{line-height:23px;white-space:nowrap}.ui-connectedGithub a.file-path{color:#888;text-decoration:none;padding-left:22px}.ui-connectedGithub a.file-path:active,.ui-connectedGithub a.file-path:hover{color:#888;text-decoration:underline}.ui-connectedGithub .fa{font-size:20px}.ui-published-note .fa{font-size:20px;vertical-align:top}.unselectable{-webkit-user-select:none;-o-user-select:none;user-select:none}.selectable{-webkit-user-select:text;-o-user-select:text;user-select:text}@media print{blockquote,div,img,pre,table{page-break-inside:avoid!important}a[href]:after{font-size:12px!important}}.markdown-body.slides{position:relative;z-index:1;color:#222}.markdown-body.slides:before{content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background-color:currentColor;box-shadow:0 0 0 50vw}.markdown-body.slides section[data-markdown]{position:relative;margin-bottom:1.5em;background-color:#fff;text-align:center}.markdown-body.slides section[data-markdown] code{text-align:left}.markdown-body.slides section[data-markdown]:before{content:"";display:block;padding-bottom:56.23%}.markdown-body.slides section[data-markdown]>div:first-child{position:absolute;top:50%;left:1em;right:1em;transform:translateY(-50%);max-height:100%;overflow:hidden}.markdown-body.slides section[data-markdown]>ul{display:inline-block}.markdown-body.slides>section>section+section:after{content:"";position:absolute;top:-1.5em;right:1em;height:1.5em;border:3px solid #777}.site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] .site-ui-font{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}body{font-smoothing:subpixel-antialiased!important;-webkit-font-smoothing:subpixel-antialiased!important;-moz-osx-font-smoothing:auto!important;text-shadow:0 0 1em transparent,1px 1px 1.2px rgba(0,0,0,.004);-webkit-overflow-scrolling:touch;letter-spacing:.025em;font-family:Source Sans Pro,Helvetica,Arial,sans-serif}html[lang^=ja] body{font-family:Source Sans Pro,Helvetica,Arial,Hiragino Kaku Gothic Pro,ヒラギノ角ゴ Pro W3,Osaka,Meiryo,メイリオ,MS Gothic,ＭＳ\ ゴシック,sans-serif}html[lang=zh-tw] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang TC,Microsoft JhengHei,微軟正黑,sans-serif}html[lang=zh-cn] body{font-family:Source Sans Pro,Helvetica,Arial,PingFang SC,Microsoft YaHei,微软雅黑,sans-serif}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}abbr[data-original-title],abbr[title]{cursor:help}body.modal-open{overflow-y:auto;padding-right:0!important}
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-
-
-
+    	
+    	
+		
     <![endif]-->
 </head>
 
 <body>
-    <div id="doc" class="markdown-body container-fluid comment-enabled" data-hard-breaks="true" style="position: relative;"><h1 id="DRRR-機器人插件設定手冊"><a class="anchor hidden-xs" href="#DRRR-機器人插件設定手冊" title="DRRR-機器人插件設定手冊"><span class="octicon octicon-link"></span></a>DRRR 機器人插件設定手冊</h1><h2 id="安裝"><a class="anchor hidden-xs" href="#安裝" title="安裝"><span class="octicon octicon-link"></span></a>安裝</h2><p>電腦版：</p><p>由於是 Chrome 插件，所以請使用 Chrome 瀏覽器，並至 <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google 線上應用程式商店</a> 安裝。</p><p>另外如果是用 Opera 的話，可以嘗試 Opera 這款 <a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener">Install Chrome Extensions</a> 裝裝看。</p><p>手機端：</p><p>手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器(<a href="https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&amp;hl=en_US" target="_blank" rel="noopener">Android</a>, <a href="https://apps.apple.com/tw/app/yandex-browser/id483693909" target="_blank" rel="noopener">iOS</a>)，他用的是 Chrome 內核，所以一樣可以到 <a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener">Google 線上應用程式商店</a> 安裝。</p><h2 id="使用界面"><a class="anchor hidden-xs" href="#使用界面" title="使用界面"><span class="octicon octicon-link"></span></a>使用界面</h2><p><i class="glyphicon glyphicon-question-sign"></i> 前往本說明頁面 <i class="glyphicon glyphicon-cog"></i> 前往後台設定</p><p><img src="https://i.imgur.com/Z1JZkdd.png" alt=""></p><h3 id="功能開關（-表示須先設定才能開啟）"><a class="anchor hidden-xs" href="#功能開關（-表示須先設定才能開啟）" title="功能開關（-表示須先設定才能開啟）"><span class="octicon octicon-link"></span></a>功能開關（<i class="glyphicon glyphicon-cog"></i> 表示須先設定才能開啟）</h3><p><img src="https://i.imgur.com/jctHIHN.png" alt=""></p><ul>
-<li>AutoDM<br>
-發訊後自動鎖定上次私訊對象</li>
-<li>Timer <i class="glyphicon glyphicon-cog"></i><br>
-定時執行設定的動作</li>
-<li>Black/Whitelist <i class="glyphicon glyphicon-cog"></i><br>
-房間黑/白名單（自動踢出訪客）</li>
-<li>Welcome <i class="glyphicon glyphicon-cog"></i><br>
-訪客進房，自動送出歡迎詞</li>
-<li>BanAbuse <i class="glyphicon glyphicon-cog"></i><br>
-禁止用語名單，當用戶用語匹配到禁用詞，會被自動踢出/屏蔽/舉報</li>
-<li>Always/me<br>
-自動加上 /me 指令</li>
-<li>EventAction<br>
-當事件發生，執行設定的動作</li>
-<li>RoomKeeper<br>
-自動發訊息給自己，防止房間消失</li>
-<li>TgBotLogger<br>
-將聊天訊息透過 Telegram Bot 紀錄下來</li>
-<li>RoomNotification<br>
-當瀏覽器頁面不在聊天室時，送出聊天內容通知</li>
-</ul><h3 id="功能頁籤"><a class="anchor hidden-xs" href="#功能頁籤" title="功能頁籤"><span class="octicon octicon-link"></span></a>功能頁籤</h3><h4 id="Bio"><a class="anchor hidden-xs" href="#Bio" title="Bio"><span class="octicon octicon-link"></span></a>Bio</h4><p><img src="https://i.imgur.com/hW9d7oS.png" alt=""></p><p>🔖 當前登入帳號<br>
-💾 已儲存的帳號<br>
-<i class="glyphicon glyphicon-transfer"></i> 切換選中的帳號<br>
-<i class="glyphicon glyphicon-floppy-save"></i> 儲存當前帳號<br>
-<i class="glyphicon glyphicon-floppy-remove"></i> 刪除選中的帳號<br>
-<i class="glyphicon glyphicon-qrcode"></i> tripcode 探索器</p><h4 id="Friends"><a class="anchor hidden-xs" href="#Friends" title="Friends"><span class="octicon octicon-link"></span></a>Friends</h4><p><img src="https://i.imgur.com/myrXucu.png" alt=""></p><h5 id="等房功能"><a class="anchor hidden-xs" href="#等房功能" title="等房功能"><span class="octicon octicon-link"></span></a>等房功能</h5><p>定時查看房間是否有空位，如果有則跳轉該房。</p><p>匹配規則模式：</p><ul>
-<li><i class="glyphicon glyphicon-barcode"></i> 以房間 ID</li>
-<li><i class="glyphicon glyphicon-lock"></i> 以 tripcode</li>
-<li><i class="glyphicon glyphicon-user"></i> 以使用者名稱</li>
-<li><i class="glyphicon glyphicon-home"></i> 以房間名稱</li>
-</ul><p><i class="glyphicon glyphicon-tag"></i> 儲存規則</p><ul>
-<li><i class="glyphicon glyphicon-send"></i> 直接跳轉</li>
-<li><i class="glyphicon glyphicon-comment"></i> 跳轉前詢問</li>
-</ul><h5 id="搜尋使用者房間"><a class="anchor hidden-xs" href="#搜尋使用者房間" title="搜尋使用者房間"><span class="octicon octicon-link"></span></a>搜尋使用者/房間</h5><p>搜尋模式：</p><ul>
-<li><i class="glyphicon glyphicon-lock"></i> 以 tripcode 搜尋</li>
-<li><i class="glyphicon glyphicon-user"></i> 以使用者名稱搜尋</li>
-<li><i class="glyphicon glyphicon-home"></i> 以房間名稱搜尋</li>
-</ul><p><i class="glyphicon glyphicon-search"></i> 搜尋<br>
-<i class="glyphicon glyphicon-plus"></i> 加入至收藏</p><h5 id="收藏通知列表"><a class="anchor hidden-xs" href="#收藏通知列表" title="收藏通知列表"><span class="octicon octicon-link"></span></a>收藏通知/列表</h5><p><i class="glyphicon glyphicon-volume-up"></i> 開啟收藏通知（有人上線或房間創立）<br>
-<i class="glyphicon glyphicon-list"></i> 顯示所有收藏規則<br>
-<i class="glyphicon glyphicon-lock"></i> 顯示線上所有符合的 tripcode 使用者<br>
-<i class="glyphicon glyphicon-user"></i> 顯示線上所有符合規則的使用者<br>
-<i class="glyphicon glyphicon-home"></i> 顯示線上所有符合規則的房間<br>
-<i class="glyphicon glyphicon-globe"></i> 顯示線上所有房間</p><h4 id="Music"><a class="anchor hidden-xs" href="#Music" title="Music"><span class="octicon octicon-link"></span></a>Music</h4><p><img src="https://i.imgur.com/w60X55P.png" alt=""></p><h5 id="播放模式（點擊切換）"><a class="anchor hidden-xs" href="#播放模式（點擊切換）" title="播放模式（點擊切換）"><span class="octicon octicon-link"></span></a>播放模式（點擊切換）</h5><ul>
-<li><i class="glyphicon glyphicon-cd"></i>清單模式-歌曲結束後自動播放待播清單下一首</li>
-<li><i class="glyphicon glyphicon-music"></i>單曲模式-播完即停</li>
-</ul><h5 id="音源"><a class="anchor hidden-xs" href="#音源" title="音源"><span class="octicon octicon-link"></span></a>音源</h5><ul>
-<li><strong>易</strong> 網易音樂</li>
-<li><strong>千</strong> 千千音樂盒</li>
-<li><strong>Ｙ</strong> YouTube</li>
-<li><strong>狗</strong> 酷狗音樂</li>
-<li><strong>我</strong> 酷我音樂</li>
-</ul><h5 id="Search-Keyword-and-Play（搜尋列）"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play（搜尋列）" title="Search-Keyword-and-Play（搜尋列）"><span class="octicon octicon-link"></span></a>Search Keyword and Play（搜尋列）</h5><p>輸入關鍵字配合功能鍵查詢。<br>
-輸入後直接：</p><ul>
-<li>Enter 可以按下左功能鍵。</li>
-<li>Shift + Enter 可以按下中功能鍵。</li>
-<li>Ctrl + Enter 可以按下右功能鍵。</li>
-</ul><h3 id="功能鍵（無關鍵字）："><a class="anchor hidden-xs" href="#功能鍵（無關鍵字）：" title="功能鍵（無關鍵字）："><span class="octicon octicon-link"></span></a>功能鍵（無關鍵字）：</h3><p><img src="https://i.imgur.com/lUoXg90.png" alt=""></p><p><i class="glyphicon glyphicon-list"></i> 展開待播清單 <i class="glyphicon glyphicon-play"></i> 播放待播曲目 <i class="glyphicon glyphicon-heart"></i> 展開收藏清單</p><hr><p><img src="https://i.imgur.com/BaeZgDK.png" alt=""></p><p><i class="glyphicon glyphicon-remove"></i> 從待播刪除 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-heart"></i> 收藏樂曲</p><hr><p><img src="https://i.imgur.com/G2MhLFm.png" alt=""></p><p><i class="glyphicon glyphicon-plus"></i> 加入待播 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-remove"></i> 從收藏刪除</p><hr><h3 id="功能鍵（有關鍵字）"><a class="anchor hidden-xs" href="#功能鍵（有關鍵字）" title="功能鍵（有關鍵字）"><span class="octicon octicon-link"></span></a>功能鍵（有關鍵字）</h3><p><img src="https://i.imgur.com/zqXoPW8.png" alt=""></p><p><i class="glyphicon glyphicon-search"></i> 展開搜尋結果 <i class="glyphicon glyphicon-play"></i> 播放最關聯搜尋結果 <i class="glyphicon glyphicon-plus"></i> 加入最關聯結果至待播清單</p><hr><p><img src="https://i.imgur.com/dp0X0a8.png" alt=""></p><p><i class="glyphicon glyphicon-plus"></i> 加入待播 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-heart"></i> 收藏樂曲</p><hr><h4 id="GamePanel"><a class="anchor hidden-xs" href="#GamePanel" title="GamePanel"><span class="octicon octicon-link"></span></a>GamePanel</h4><p><img src="https://i.imgur.com/nMHidhk.png" alt=""></p><p>選擇遊戲，只有被選中時，才會開啟該遊戲。</p><h4 id="LineSticker"><a class="anchor hidden-xs" href="#LineSticker" title="LineSticker"><span class="octicon octicon-link"></span></a>LineSticker</h4><p><img src="https://i.imgur.com/fcQCFBW.png" alt=""></p><p><i class="glyphicon glyphicon-refresh"></i> 還原最初預設的十個貼圖<br>
-<i class="glyphicon glyphicon-plus"></i> 新增貼圖<br>
-<i class="glyphicon glyphicon-minus"></i> 刪除選中的貼圖<br>
-<i class="glyphicon glyphicon-shopping-cart"></i> 前往貼圖網站</p><h2 id="後台設定"><a class="anchor hidden-xs" href="#後台設定" title="後台設定"><span class="octicon octicon-link"></span></a>後台設定</h2><p><i class="glyphicon glyphicon-question-sign"></i> 前往說明頁面 <i class="glyphicon glyphicon-info-sign"></i> 關於作者 <i class="glyphicon glyphicon-refresh"></i> 重製所有設定<br>
-點擊 HELP 可以開啟該設定的介紹頁面。</p><p><img src="https://i.imgur.com/JllLXvZ.png" alt=""></p><h3 id="Quick-Regex-Tester-（快速正則表達式測試）"><a class="anchor hidden-xs" href="#Quick-Regex-Tester-（快速正則表達式測試）" title="Quick-Regex-Tester-（快速正則表達式測試）"><span class="octicon octicon-link"></span></a>Quick Regex Tester （快速正則表達式測試）</h3><p>快速測試，便於設定規則</p><h3 id="Music-Delay-（樂曲延遲）"><a class="anchor hidden-xs" href="#Music-Delay-（樂曲延遲）" title="Music-Delay-（樂曲延遲）"><span class="octicon octicon-link"></span></a>Music Delay （樂曲延遲）</h3><p>在連續播放模式中，歌曲和歌曲間隔。<br>
-（房間成員間有同步問題，有時歌曲會蓋到，所以設定延遲）</p><h3 id="Timer-Configuration-定時器配置"><a class="anchor hidden-xs" href="#Timer-Configuration-定時器配置" title="Timer-Configuration-定時器配置"><span class="octicon octicon-link"></span></a>Timer Configuration (定時器配置)</h3><p>功能：定時執行定義的動作。<br>
-格式：兩種格式，推播字串可以多個（隨機選擇並發出），URL 可加可不加</p><pre><code class="js hljs">分鐘數, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
-</code></pre><p>函數 [參數列] 說明：</p><ul>
-<li><code>msg</code> <code>["訊息", "訊息", ...]</code><br>
-從訊息中選擇一個推送。</li>
-<li><code>umsg</code> <code>["URL", "訊息", ...]</code><br>
-夾帶 URL 並隨機選擇一個訊息推送。</li>
-<li><code>dm</code> <code>["使用者名稱", "訊息", "訊息", ...]</code><br>
-私訊使用者，選擇一個訊息私訊。</li>
-<li><code>udm</code> <code>["使用者名稱", "URL", "訊息", ...]</code><br>
-私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
-<li><code>kick</code> <code>["使用者名稱"]</code><br>
-踢出使用者。</li>
-<li><code>ban</code> <code>["使用者名稱"]</code><br>
-踢出並屏蔽使用者。</li>
-<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
-踢出並屏蔽舉報使用者。</li>
-<li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-播放音樂。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
+    <div id="doc" class="markdown-body container-fluid comment-enabled" data-hard-breaks="true"><h1 id="DRRR-機器人插件設定手冊" data-id="DRRR-機器人插件設定手冊"><a class="anchor hidden-xs" href="#DRRR-機器人插件設定手冊" title="DRRR-機器人插件設定手冊"><span class="octicon octicon-link"></span></a><span>DRRR 機器人插件設定手冊</span></h1><h2 id="安裝" data-id="安裝"><a class="anchor hidden-xs" href="#安裝" title="安裝"><span class="octicon octicon-link"></span></a><span>安裝</span></h2><h3 id="電腦版" data-id="電腦版"><a class="anchor hidden-xs" href="#電腦版" title="電腦版"><span class="octicon octicon-link"></span></a><span>電腦版</span></h3><div class="alert alert-success">
+<p><span>由於是 Chrome 插件，所以請使用 Chrome 瀏覽器，並至 </span><a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener"><span>Google 線上應用程式商店</span></a><span> 安裝。</span></p>
+<p><span>另外如果是用 Opera 的話，可以嘗試 Opera 這款 </span><a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener"><span>Install Chrome Extensions</span></a><span> 裝裝看。</span></p>
+</div><h3 id="手機端" data-id="手機端"><a class="anchor hidden-xs" href="#手機端" title="手機端"><span class="octicon octicon-link"></span></a><span>手機端</span></h3><div class="alert alert-success">
+<p><span>手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器 (</span><a href="https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&amp;hl=en_US" target="_blank" rel="noopener"><span>Android</span></a><span>)，他用的是 Chrome 內核，所以一樣可以到 </span><a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener"><span>Google 線上應用程式商店</span></a><span> 安裝。</span></p>
+<p><span>註：iOS 的 Yandex 並不支援插件功能。</span></p>
+</div><h2 id="前端控制" data-id="前端控制"><a class="anchor hidden-xs" href="#前端控制" title="前端控制"><span class="octicon octicon-link"></span></a><span>前端控制</span></h2><blockquote>
+<p><span>點選插件圖示，開啟彈出式視窗。</span></p>
+</blockquote><p><img src="https://i.imgur.com/wGUTTot.png" alt=""></p><div class="alert alert-success">
+<p><strong><span>功能鍵</span></strong><br>
+<i class="glyphicon glyphicon-question-sign"></i><span> 前往本說明頁面</span><br>
+<i class="fa fa-youtube-play"></i><span> YouTube 教學</span><br>
+<i class="glyphicon glyphicon-console"></i><span> 浪語開發界面</span><br>
+<i class="glyphicon glyphicon-cog"></i><span> 前往後台設定</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>開關 （</span><i class="glyphicon glyphicon-cog"></i><span> 表示須先設定才能開啟）</span></strong></p>
+<ul>
+<li><span>AutoDM</span><br>
+<span>發訊後自動鎖定上次私訊對象</span></li>
+<li><span>Timer </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>定時執行設定的動作</span></li>
+<li><span>Black/Whitelist </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>房間黑/白名單（自動踢出訪客）</span></li>
+<li><span>Welcome </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>訪客進房，自動送出歡迎詞</span></li>
+<li><span>BanAbuse </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>禁止用語名單，當用戶用語匹配到禁用詞，會被自動踢出/屏蔽/舉報</span></li>
+<li><span>Always/me</span><br>
+<span>自動加上 /me 指令</span></li>
+<li><span>EventAction </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>當事件發生，執行設定的動作</span></li>
+<li><span>RoomKeeper</span><br>
+<span>自動發訊息給自己，防止房間消失</span></li>
+<li><span>TgBotLogger </span><i class="glyphicon glyphicon-cog"></i><br>
+<span>將聊天訊息透過 Telegram Bot 紀錄下來</span></li>
+<li><span>RoomNotification</span><br>
+<span>當瀏覽器頁面不在聊天室時，送出聊天內容通知</span></li>
+</ul>
+</div><h3 id="Bio" data-id="Bio"><a class="anchor hidden-xs" href="#Bio" title="Bio"><span class="octicon octicon-link"></span></a><span>Bio</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/6nhuHtc.png" alt=""></p>
+<h4 id="聊天訊息簡繁互轉" data-id="聊天訊息簡繁互轉"><a class="anchor hidden-xs" href="#聊天訊息簡繁互轉" title="聊天訊息簡繁互轉"><span class="octicon octicon-link"></span></a><span>聊天訊息簡繁互轉</span></h4>
+<ul>
+<li><span>Ｘ 不轉換</span></li>
+<li><span>簡 轉成簡體</span></li>
+<li><span>繁 轉成繁體</span></li>
+</ul>
+<h4 id="功能鍵" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵" title="功能鍵"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon glyphicon-text-color"></i><span> 改變聊天室人名顏色</span><br>
+<i class="glyphicon glyphicon glyphicon-text-background"></i><span> 改變聊天室人名背景顏色</span><br>
+<span>（顏色採用</span><a href="https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2" target="_blank" rel="noopener"><span>網頁顏色</span></a><span>，e.g. </span><code>black</code><span>, </span><code>#000000</code><span>）</span><br>
+<i class="glyphicon glyphicon glyphicon-picture"></i><span> 使用圖片鏈結當作背景</span><br>
+<i class="glyphicon glyphicon-transfer"></i><span> 切換選中的帳號</span><br>
+<i class="glyphicon glyphicon-floppy-save"></i><span> 儲存當前帳號</span><br>
+<i class="glyphicon glyphicon-floppy-remove"></i><span> 刪除選中的帳號</span></p>
+<h4 id="帳號圖示" data-id="帳號圖示"><a class="anchor hidden-xs" href="#帳號圖示" title="帳號圖示"><span class="octicon octicon-link"></span></a><span>帳號圖示</span></h4>
+<ul>
+<li><span>🔖 當前登入帳號</span></li>
+<li><span>💾 已儲存的帳號</span></li>
+</ul>
+</div><h3 id="Local" data-id="Local"><a class="anchor hidden-xs" href="#Local" title="Local"><span class="octicon octicon-link"></span></a><span>Local</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/QytKsjo.png" alt=""></p>
+<h4 id="功能鍵1" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵1" title="功能鍵1"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i id="local-setting" class="glyphicon glyphicon-bookmark"></i><span> 前往本地設定</span><br>
+<i id="local-switch" class="fa fa-toggle-off"></i><span> 本地模組開關</span></p>
+<h4 id="本地端訊息模組" data-id="本地端訊息模組"><a class="anchor hidden-xs" href="#本地端訊息模組" title="本地端訊息模組"><span class="octicon octicon-link"></span></a><span>本地端訊息模組</span></h4>
+<ul>
+<li>
+<p><span>Hashtag </span><s><span>小周讚美功能</span></s><span> inspired by </span><a href="https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&amp;redirect=no" target="_blank" rel="noopener"><span>@塵塵</span></a><br>
+<span>紀錄有 </span><code>#</code><span> 的訊息，在訊息欄以 </span><code>#</code><span> + tag 將會隨機選取紀錄過的訊息送出。</span><br>
+<img src="https://i.imgur.com/ayuUGAL.png" alt=""></p>
 </li>
-<li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-加入音樂至待播清單。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
+<li>
+<p><span>CahtLog</span><br>
+<span>紀錄聊天室訊息</span></p>
 </li>
-<li><code>delm</code> <code>["數字"]</code><br>
-從清單刪除音樂（依索引數字）。</li>
-<li><code>lstm</code> <code>[]</code><br>
-列出待播清單。</li>
-<li><code>nxtm</code> <code>[]</code><br>
-播放下一首曲子。</li>
-<li><code>pndm</code> <code>[]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-無參數則列出待播清單。<br>
-如當前沒音樂，播放音樂。<br>
-如有音樂，將音樂加入清單<br>
-如關鍵字為空字串，列出待播清單。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
-<code>schm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-列出搜尋結果。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>horm</code> <code>["使用者名稱"]</code><br>
-轉移房主權限給該使用者。</li>
-<li><code>ocdr</code> <code>[]</code><br>
-離開房間又進入房間。</li>
-<li><code>gofr</code> <code>["房間名稱(RegExp)"]</code><br>
-前往符合房間名稱的房間。若失敗則回到原房間。</li>
-</ul><p>（<code>me</code> 可以用 <code>/me + 推送訊息</code> 以 msg 達成。） ～</p><p>可以在參數裡面使用特殊時間變量：</p><ul>
-<li><code>%Y</code> 年份，四位數字西元年</li>
-<li><code>%年</code> 年份，中文數字</li>
-<li><code>%M</code> 月份，一至二位數字</li>
-<li><code>%月</code> 月份，中文數字（一至十二）</li>
-<li><code>%D</code> 日期，一至二位數字</li>
-<li><code>%日</code> 日期，中文數字</li>
-<li><code>%d</code> 星期幾，英文全寫</li>
-<li><code>%星</code> 星期幾，中文</li>
-<li><code>%H</code> 時，數字（24 時制）</li>
-<li><code>%h</code> 時，數字（12 時制）</li>
-<li><code>%c</code> 上下午，英文 <code>a.m.</code> <code>p.m.</code></li>
-<li><code>%m</code> 分，數字</li>
-<li><code>%s</code> 秒，數字</li>
-<li><code>%%</code> 轉義字符 <code>%</code></li>
-</ul><p>範例：</p><pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
+</ul>
+</div><h3 id="Friends" data-id="Friends"><a class="anchor hidden-xs" href="#Friends" title="Friends"><span class="octicon octicon-link"></span></a><span>Friends</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/PKID7Ay.png" alt=""></p>
+</div><div class="alert alert-warning">
+<p><img src="https://i.imgur.com/CDRuB6I.png" alt=""></p>
+<h4 id="等房功能" data-id="等房功能"><a class="anchor hidden-xs" href="#等房功能" title="等房功能"><span class="octicon octicon-link"></span></a><span>等房功能</span></h4>
+<p><span>定時查看房間是否有空位，如果有則跳轉該房。</span></p>
+<p><span>匹配規則模式：</span></p>
+<ul>
+<li><i class="glyphicon glyphicon-barcode"></i><span> 以房間 ID</span></li>
+<li><i class="glyphicon glyphicon-lock"></i><span> 以 tripcode</span></li>
+<li><i class="glyphicon glyphicon-user"></i><span> 以使用者名稱</span></li>
+<li><i class="glyphicon glyphicon-home"></i><span> 以房間名稱</span></li>
+</ul>
+<p><i class="glyphicon glyphicon-tag"></i><span> 儲存規則</span></p>
+<p><span>跳轉模式：</span></p>
+<ul>
+<li><i class="glyphicon glyphicon-send"></i><span> 直接跳轉</span></li>
+<li><i class="glyphicon glyphicon-comment"></i><span> 跳轉前詢問</span></li>
+</ul>
+</div><div class="alert alert-warning">
+<p><img src="https://i.imgur.com/Tffsixa.png" alt=""></p>
+<h4 id="搜尋使用者房間" data-id="搜尋使用者房間"><a class="anchor hidden-xs" href="#搜尋使用者房間" title="搜尋使用者房間"><span class="octicon octicon-link"></span></a><span>搜尋使用者/房間</span></h4>
+<p><span>搜尋模式：</span></p>
+<ul>
+<li><i class="glyphicon glyphicon-lock"></i><span> 以 tripcode 搜尋</span></li>
+<li><i class="glyphicon glyphicon-user"></i><span> 以使用者名稱搜尋</span></li>
+<li><i class="glyphicon glyphicon-home"></i><span> 以房間名稱搜尋</span></li>
+</ul>
+<p><i class="glyphicon glyphicon-search"></i><span> 搜尋</span><br>
+<i class="glyphicon glyphicon-plus"></i><span> 加入至收藏</span></p>
+</div><div class="alert alert-warning">
+<p><img src="https://i.imgur.com/l5p3yoj.png" alt=""></p>
+<h4 id="收藏通知列表" data-id="收藏通知列表"><a class="anchor hidden-xs" href="#收藏通知列表" title="收藏通知列表"><span class="octicon octicon-link"></span></a><span>收藏通知/列表</span></h4>
+<p><i class="glyphicon glyphicon-volume-up"></i><span> 開啟收藏通知（有人上線或房間創立）</span><br>
+<i class="glyphicon glyphicon-list"></i><span> 顯示所有收藏規則</span><br>
+<i class="glyphicon glyphicon-lock"></i><span> 顯示線上所有符合的 tripcode 使用者</span><br>
+<i class="glyphicon glyphicon-user"></i><span> 顯示線上所有符合規則的使用者</span><br>
+<i class="glyphicon glyphicon-home"></i><span> 顯示線上所有符合規則的房間</span><br>
+<i class="glyphicon glyphicon-globe"></i><span> 顯示線上所有房間</span></p>
+</div><h3 id="Music" data-id="Music"><a class="anchor hidden-xs" href="#Music" title="Music"><span class="octicon octicon-link"></span></a><span>Music</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/ZvV9Sun.png" alt=""></p>
+<h4 id="播放模式（點擊切換）" data-id="播放模式（點擊切換）"><a class="anchor hidden-xs" href="#播放模式（點擊切換）" title="播放模式（點擊切換）"><span class="octicon octicon-link"></span></a><span>播放模式（點擊切換）</span></h4>
+<ul>
+<li><i class="glyphicon glyphicon-cd"></i><span>清單模式-歌曲結束後自動播放待播清單下一首</span></li>
+<li><i class="glyphicon glyphicon-music"></i><span>單曲模式-播完即停</span></li>
+</ul>
+<h4 id="音源" data-id="音源"><a class="anchor hidden-xs" href="#音源" title="音源"><span class="octicon octicon-link"></span></a><span>音源</span></h4>
+<ul>
+<li><strong><span>易</span></strong><span> 網易音樂</span></li>
+<li><strong><span>千</span></strong><span> 千千音樂盒</span></li>
+<li><strong><span>Ｙ</span></strong><span> YouTube</span></li>
+<li><strong><span>狗</span></strong><span> 酷狗音樂</span></li>
+<li><strong><span>我</span></strong><span> 酷我音樂</span></li>
+</ul>
+<h4 id="Search-Keyword-and-Play（搜尋列）" data-id="Search-Keyword-and-Play（搜尋列）"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play（搜尋列）" title="Search-Keyword-and-Play（搜尋列）"><span class="octicon octicon-link"></span></a><span>Search Keyword and Play（搜尋列）</span></h4>
+<p><span>輸入關鍵字配合功能鍵查詢。</span><br>
+<span>輸入後直接：</span></p>
+<ul>
+<li><span>Enter 可以按下左功能鍵。</span></li>
+<li><span>Shift + Enter 可以按下中功能鍵。</span></li>
+<li><span>Ctrl + Enter 可以按下右功能鍵。</span></li>
+</ul>
+<h4 id="其他功能鍵" data-id="其他功能鍵"><a class="anchor hidden-xs" href="#其他功能鍵" title="其他功能鍵"><span class="octicon octicon-link"></span></a><span>其他功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-list"></i><span> 展開待播清單</span><br>
+<i class="glyphicon glyphicon-play"></i><span> 播放待播曲目</span><br>
+<i class="glyphicon glyphicon-heart"></i><span> 展開收藏清單</span><br>
+<i class="glyphicon glyphicon-link"></i><span> 設定其他 YouTube API server</span></p>
+<p><span>你可以使用在本地架設 YouTube API server，請參考</span><a href="https://github.com/DrrrChatbots/youtube-api" target="_blank" rel="noopener"><span>此鏈結</span></a><span>。</span><br>
+<span>使用 python 運行後，會提示 </span><code>http://127.0.0.1:5000/</code><span>，</span><br>
+<span>點選此按鍵，然後填入 </span><code>http://127.0.0.1:5000/</code><span>，之後照著提示操作即可。</span></p>
+</div><div class="alert alert-warning">
+<p><i class="glyphicon glyphicon-list"></i><span> 展開待播清單</span></p>
+<p><img src="https://i.imgur.com/yEwUeJX.png" alt=""></p>
+<h4 id="功能鍵2" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵2" title="功能鍵2"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-remove"></i><span> 從待播刪除 </span><i class="glyphicon glyphicon-play"></i><span> 立即播放 </span><i class="glyphicon glyphicon-heart"></i><span> 收藏樂曲</span></p>
+</div><div class="alert alert-warning">
+<p><i class="glyphicon glyphicon-heart"></i><span> 展開收藏清單</span></p>
+<p><img src="https://i.imgur.com/CNAMolJ.png" alt=""></p>
+<h4 id="功能鍵3" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵3" title="功能鍵3"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-plus"></i><span> 加入待播 </span><i class="glyphicon glyphicon-play"></i><span> 立即播放 </span><i class="glyphicon glyphicon-remove"></i><span> 從收藏刪除</span></p>
+</div><div class="alert alert-warning">
+<p><span>當搜尋欄有關鍵字時</span></p>
+<p><img src="https://i.imgur.com/gJeqaLs.png" alt=""></p>
+<h4 id="功能鍵4" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵4" title="功能鍵4"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-search"></i><span> 展開搜尋結果 </span><i class="glyphicon glyphicon-play"></i><span> 播放最關聯搜尋結果 </span><i class="glyphicon glyphicon-plus"></i><span> 加入最關聯結果至待播清單</span></p>
+</div><div class="alert alert-warning">
+<p><span>搜尋結果：剛好遇見你</span></p>
+<p><img src="https://i.imgur.com/W7iJG5s.png" alt=""></p>
+<h4 id="功能鍵5" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵5" title="功能鍵5"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-plus"></i><span> 加入待播 </span><i class="glyphicon glyphicon-play"></i><span> 立即播放 </span><i class="glyphicon glyphicon-heart"></i><span> 收藏樂曲</span></p>
+</div><h3 id="Module" data-id="Module"><a class="anchor hidden-xs" href="#Module" title="Module"><span class="octicon octicon-link"></span></a><span>Module</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/G5Vt5oC.png" alt=""></p>
+<h4 id="功能鍵6" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵6" title="功能鍵6"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i id="game-tent" class="glyphicon glyphicon-tent"></i><span> Discord QA 群</span><br>
+<i class="glyphicon glyphicon-qrcode"></i><span> tripcode 探索器</span></p>
+<p><i class="fa fa-paw"></i><span> 召喚寵物（預設白貓）</span><br>
+<i class="glyphicon glyphicon-resize-full"></i><span> 調整寵物邊框大小</span><br>
+<i class="glyphicon glyphicon-link"></i><span> 更換寵物（輸入</span><a href="https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6" target="_blank" rel="noopener"><span>鏈結</span></a><span>）</span></p>
+<h4 id="目前已知的-Live2D-鏈結" data-id="目前已知的-Live2D-鏈結"><a class="anchor hidden-xs" href="#目前已知的-Live2D-鏈結" title="目前已知的-Live2D-鏈結"><span class="octicon octicon-link"></span></a><span>目前已知的 Live2D 鏈結</span></h4>
+<details><summary>展開列表</summary>
+<ul>
+<li><span>白貓</span><br>
+<code>https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json</code></li>
+<li><span>黑貓</span><br>
+<code>https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json</code></li>
+<li><span>寶石研物語</span><br>
+<code>https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json</code></li>
+<li><span>初音</span><br>
+<code>https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json</code></li>
+<li><span>碧海航線 z16</span><br>
+<code>https://unpkg.com/live2d-widget-model-z16@1.0.5/assets/z16.model.json</code></li>
+<li><span>Nito 二頭身</span><br>
+<code>https://unpkg.com/live2d-widget-model-nico@1.0.5/assets/nico.model.json</code><br>
+<code>https://unpkg.com/live2d-widget-model-nipsilon@1.0.5/assets/nipsilon.model.json</code><br>
+<code>https://unpkg.com/live2d-widget-model-nito@1.0.5/assets/nito.model.json</code><br>
+<code>https://unpkg.com/live2d-widget-model-ni-j@1.0.5/assets/ni-j.model.json</code></li>
+<li><span>千歲</span><br>
+<code>https://unpkg.com/live2d-widget-model-chitose@1.0.5/assets/chitose.model.json</code></li>
+<li><span>小可愛(男) 春翔</span><br>
+<code>https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json</code></li>
+<li><span>小可愛(女) 小春</span><br>
+<code>https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json</code></li>
+<li><span>春傘 TSUMIKI</span><br>
+<code>https://unpkg.com/live2d-widget-model-tsumiki@1.0.5/assets/tsumiki.model.json</code></li>
+<li><span>unity 醬</span><br>
+<code>https://unpkg.com/live2d-widget-model-unitychan@1.0.5/assets/unitychan.model.json</code></li>
+<li><span>碗中小年糕</span><br>
+<code>https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json</code></li>
+<li><span>嚮</span><br>
+<code>https://unpkg.com/live2d-widget-model-hibiki@1.0.5/assets/hibiki.model.json</code></li>
+</ul>
+</details>
+</div><div class="alert alert-warning">
+<h5 id="TRPG-inspired-by-少女" data-id="TRPG-inspired-by-少女"><a class="anchor hidden-xs" href="#TRPG-inspired-by-少女" title="TRPG-inspired-by-少女"><span class="octicon octicon-link"></span></a><span>TRPG inspired by </span><a href="https://drrr.wiki/@%E5%B0%91%E5%A5%B3" target="_blank" rel="noopener"><span>@少女</span></a></h5>
+<p><img src="https://i.imgur.com/oChwMqs.png" alt=""></p>
+<p><span>更換角色：</span></p>
+<ul>
+<li><i class="glyphicon glyphicon-bullhorn"></i><span> 主持人</span></li>
+<li><i class="glyphicon glyphicon-user"></i><span> 一般玩家</span></li>
+</ul>
+<p><span>主持人可以透過圖片 URL 更換所有玩家的背景圖</span></p>
+<p><span>其他人可以使用 </span><code>1D20</code><span> 之類的 TRPG 骰子指令請求主持人擲骰</span></p>
+</div><div class="alert alert-warning">
+<h5 id="Room-guard-門神" data-id="Room-guard-門神"><a class="anchor hidden-xs" href="#Room-guard-門神" title="Room-guard-門神"><span class="octicon octicon-link"></span></a><span>Room guard 門神</span></h5>
+<p><img src="https://i.imgur.com/m8WiICd.png" alt=""></p>
+<p><span>模式：</span></p>
+<ul>
+<li><span>mode 0: 訪客如果進房後沒有任何動作，將在下次進房被 kick/ban。</span></li>
+<li><span>mode 1: 時間內內沒說話，詢問是否 kick/ban。</span></li>
+<li><span>mode 2: 時間內沒說話，倒數然後 kick/ban</span></li>
+<li><span>mode 3: 時間內沒說話，直接 kick/ban</span></li>
+</ul>
+</div><div class="alert alert-warning">
+<h5 id="Background-Effect-背景特效" data-id="Background-Effect-背景特效"><a class="anchor hidden-xs" href="#Background-Effect-背景特效" title="Background-Effect-背景特效"><span class="octicon octicon-link"></span></a><span>Background Effect 背景特效</span></h5>
+<p><span>刷新聊天室即可終止特效</span></p>
+<p><span>模式：</span></p>
+<ul>
+<li><i class="glyphicon glyphicon-cloud"></i><span>下雪</span></li>
+<li><i class="glyphicon glyphicon-fire"></i><span>煙花</span></li>
+<li><i class="glyphicon glyphicon-sort"></i><span>電梯</span></li>
+</ul>
+</div><div class="alert alert-warning">
+<h5 id="Guess-the-number-猜數字遊戲" data-id="Guess-the-number-猜數字遊戲"><a class="anchor hidden-xs" href="#Guess-the-number-猜數字遊戲" title="Guess-the-number-猜數字遊戲"><span class="octicon octicon-link"></span></a><span>Guess the number 猜數字遊戲</span></h5>
+<p><img src="https://i.imgur.com/p3aaoEu.png" alt=""></p>
+<p><span>設定題目：</span></p>
+<ul>
+<li><span>方法 1：直接用 </span><code>/start</code><span> 觸發，數字會隨機生成</span></li>
+<li><span>方法 2：輸入四位數字並按下 </span><i id="list_type" class="glyphicon glyphicon glyphicon-pencil"></i><span> 完成設置，按下 </span><i class="glyphicon glyphicon-volume-up"></i><span> 宣佈遊戲開始</span></li>
+</ul>
+<p><span>簡易規則：每次系統提示內容為 - NANB</span><br>
+<span>A：數字正確且位置正確</span><br>
+<span>B：數字正確但位置錯誤</span><br>
+<span>例子：隨機數為 1658 ，聊天室輸入 2680，系統會顯示 2680：1A1B</span></p>
+</div><h3 id="Sticker" data-id="Sticker"><a class="anchor hidden-xs" href="#Sticker" title="Sticker"><span class="octicon octicon-link"></span></a><span>Sticker</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/jbrZK9G.png" alt=""></p>
+<h4 id="功能鍵7" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵7" title="功能鍵7"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-refresh"></i><span> 還原最初預設的十個貼圖</span><br>
+<i class="glyphicon glyphicon-plus"></i><span> 新增貼圖</span><br>
+<i class="glyphicon glyphicon-minus"></i><span> 刪除選中的貼圖</span><br>
+<i class="glyphicon glyphicon-shopping-cart"></i><span> 前往貼圖網站</span></p>
+</div><h2 id="後台設定" data-id="後台設定"><a class="anchor hidden-xs" href="#後台設定" title="後台設定"><span class="octicon octicon-link"></span></a><span>後台設定</span></h2><p><span>根據設定儲存的位置，分作同步和本地。</span></p><p><span>同步設定的空間上限：8,192 bytes</span><br>
+<span>（所以小心 event action 不要塞爆了）</span></p><p><span>本地設定的空間上限：5,242,880 bytes</span></p><p><span>同步的設定（包括你的 cookie）會同步，</span><br>
+<span>所以可以同一個 Google 帳號在不同電腦之間共享同步設定。</span></p><h3 id="Sync-同步設定" data-id="Sync-同步設定"><a class="anchor hidden-xs" href="#Sync-同步設定" title="Sync-同步設定"><span class="octicon octicon-link"></span></a><span>Sync 同步設定</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/qMorC1g.png" alt=""></p>
+<h4 id="功能鍵8" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵8" title="功能鍵8"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-question-sign"></i><span> 前往說明頁面</span><br>
+<i class="glyphicon glyphicon-info-sign"></i><span> 關於作者</span><br>
+<i class="glyphicon glyphicon-refresh"></i><span> 重製所有設定</span><br>
+<i class="glyphicon glyphicon-export"></i><span> 匯出設定</span><br>
+<span>選擇檔案：匯入設定</span></p>
+<p><span>點擊 </span><code>HELP</code><span> 可以開啟該設定的介紹頁面。</span></p>
+<h3 id="Quick-Regex-Tester-（快速正則表達式測試）" data-id="Quick-Regex-Tester-（快速正則表達式測試）"><a class="anchor hidden-xs" href="#Quick-Regex-Tester-（快速正則表達式測試）" title="Quick-Regex-Tester-（快速正則表達式測試）"><span class="octicon octicon-link"></span></a><span>Quick Regex Tester （快速正則表達式測試）</span></h3>
+<p><span>快速測試，便於設定規則</span></p>
+<h3 id="Music-Delay-（樂曲延遲）" data-id="Music-Delay-（樂曲延遲）"><a class="anchor hidden-xs" href="#Music-Delay-（樂曲延遲）" title="Music-Delay-（樂曲延遲）"><span class="octicon octicon-link"></span></a><span>Music Delay （樂曲延遲）</span></h3>
+<p><span>在連續播放模式中，歌曲和歌曲間隔。</span><br>
+<span>（房間成員間有同步問題，有時歌曲會蓋到，所以設定延遲）</span></p>
+</div><div class="alert alert-warning">
+<h3 id="Timer-Configuration-定時器配置" data-id="Timer-Configuration-定時器配置"><a class="anchor hidden-xs" href="#Timer-Configuration-定時器配置" title="Timer-Configuration-定時器配置"><span class="octicon octicon-link"></span></a><span>Timer Configuration (定時器配置)</span></h3>
+<h4 id="功能" data-id="功能"><a class="anchor hidden-xs" href="#功能" title="功能"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>定時執行定義的動作。</span></p>
+<h4 id="格式" data-id="格式"><a class="anchor hidden-xs" href="#格式" title="格式"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<pre><code class="js hljs">分鐘數, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
+</code></pre>
+<h4 id="函數" data-id="函數"><a class="anchor hidden-xs" href="#函數" title="函數"><span class="octicon octicon-link"></span></a><span>函數</span></h4>
+<p><span>提供的函數可以參考</span><a href="#%E5%87%BD%E6%95%B8%E8%AA%AA%E6%98%8E"><span>函數說明</span></a></p>
+<h4 id="特殊變量" data-id="特殊變量"><a class="anchor hidden-xs" href="#特殊變量" title="特殊變量"><span class="octicon octicon-link"></span></a><span>特殊變量</span></h4>
+<p><span>可以在參數裡面使用特殊時間變量：</span></p>
+<ul>
+<li><code>%年</code><span> 年份，中文數字</span></li>
+<li><code>%月</code><span> 月份，中文數字（一至十二）</span></li>
+<li><code>%日</code><span> 日期，中文數字</span></li>
+<li><code>%星</code><span> 星期幾，中文</span></li>
+<li><code>%Y</code><span> 年份，四位數字西元年</span></li>
+<li><code>%M</code><span> 月份，一至二位數字</span></li>
+<li><code>%D</code><span> 日期，一至二位數字</span></li>
+<li><code>%d</code><span> 星期幾，英文全寫</span></li>
+<li><code>%H</code><span> 時，數字（24 時制）</span></li>
+<li><code>%h</code><span> 時，數字（12 時制）</span></li>
+<li><code>%c</code><span> 上下午，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%m</code><span> 分，數字</span></li>
+<li><code>%s</code><span> 秒，數字</span></li>
+<li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
+</ul>
+<h4 id="範例" data-id="範例"><a class="anchor hidden-xs" href="#範例" title="範例"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
 <span class="hljs-number">2</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"It's a Report Message"</span>, <span class="hljs-string">"Now is %H:%m!"</span>]
-</code></pre><h3 id="Welcome-Configuration-歡迎詞配置"><a class="anchor hidden-xs" href="#Welcome-Configuration-歡迎詞配置" title="Welcome-Configuration-歡迎詞配置"><span class="octicon octicon-link"></span></a>Welcome Configuration (歡迎詞配置)</h3><p>功能：有人進入房間後，如果名稱匹配<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，則自動發出歡迎詞。<br>
-格式： 兩種格式，歡迎詞可以多個（隨機選擇並發出）</p><pre><code class="js hljs"><span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"歡迎詞"</span>
+</code></pre>
+</div><div class="alert alert-warning">
+<h3 id="Welcome-Configuration-歡迎詞配置" data-id="Welcome-Configuration-歡迎詞配置"><a class="anchor hidden-xs" href="#Welcome-Configuration-歡迎詞配置" title="Welcome-Configuration-歡迎詞配置"><span class="octicon octicon-link"></span></a><span>Welcome Configuration (歡迎詞配置)</span></h3>
+<h4 id="功能1" data-id="功能"><a class="anchor hidden-xs" href="#功能1" title="功能1"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>有人進入房間後，如果名稱匹配</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener"><span>正則表達式</span></a><span>，則自動發出歡迎詞。</span></p>
+<h4 id="格式1" data-id="格式"><a class="anchor hidden-xs" href="#格式1" title="格式1"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<p><span>兩種格式，歡迎詞可以多個（隨機選擇並發出）</span></p>
+<pre><code class="js hljs"><span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"歡迎詞"</span>
 <span class="hljs-string">"用戶名(正則表達式)"</span>, [<span class="hljs-string">"歡迎詞"</span>, <span class="hljs-string">"歡迎詞"</span>, ...]
-</code></pre><p>注意：</p><ul>
-<li>記得要<strong>加雙引號</strong> <code>"</code>。</li>
-<li>由上往下匹配，匹配成功則不繼續往下匹配規則。</li>
-<li>空字串 <code>""</code> 或正則字串 <code>".*"</code> 可以<strong>匹配全部</strong>。</li>
-</ul><p>特殊變量：</p><ul>
-<li><code>$user</code> 進入房間的成員名稱。</li>
-<li><code>$</code> 轉義字符 <code>$</code>。</li>
-</ul><p>範例：對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 <code>hello, kitty</code>，對其他人則說 <code>hello/HI!!</code> 加上 <code>使用者名稱</code>。</p><pre><code class="js hljs"><span class="hljs-string">"lambda.*cat"</span>, <span class="hljs-string">"hello, kitty"</span>
+</code></pre>
+<h4 id="注意" data-id="注意"><a class="anchor hidden-xs" href="#注意" title="注意"><span class="octicon octicon-link"></span></a><span>注意</span></h4>
+<ul>
+<li><span>記得要</span><strong><span>加雙引號</span></strong><span> </span><code>"</code><span>。</span></li>
+<li><span>由上往下匹配，匹配成功則不繼續往下匹配規則。</span></li>
+<li><span>空字串 </span><code>""</code><span> 或正則字串 </span><code>".*"</code><span> 可以</span><strong><span>匹配全部</span></strong><span>。</span></li>
+</ul>
+<h4 id="特殊變量1" data-id="特殊變量"><a class="anchor hidden-xs" href="#特殊變量1" title="特殊變量1"><span class="octicon octicon-link"></span></a><span>特殊變量</span></h4>
+<ul>
+<li><code>$user</code><span> 進入房間的成員名稱。</span></li>
+<li><code>$</code><span> 轉義字符 </span><code>$</code><span>。</span></li>
+</ul>
+<h4 id="範例1" data-id="範例"><a class="anchor hidden-xs" href="#範例1" title="範例1"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<p><span>對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 </span><code>hello, kitty</code><span>，對其他人則說 </span><code>hello/HI!!</code><span> 加上 </span><code>使用者名稱</code><span>。</span></p>
+<pre><code class="js hljs"><span class="hljs-string">"lambda.*cat"</span>, <span class="hljs-string">"hello, kitty"</span>
 <span class="hljs-string">".*"</span>, [<span class="hljs-string">"hello <span class="hljs-variable">$user</span>"</span>, <span class="hljs-string">"HI!! <span class="hljs-variable">$user</span>"</span>]
-</code></pre><h3 id="WhiteList-Configuration-白名單配置"><a class="anchor hidden-xs" href="#WhiteList-Configuration-白名單配置" title="WhiteList-Configuration-白名單配置"><span class="octicon octicon-link"></span></a>WhiteList Configuration (白名單配置)</h3><p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>不在名單內</strong>的特定使用者。<br>
-格式：</p><pre><code class="js hljs">用戶名(正則表達式)
-</code></pre><p>注意：</p><ul>
-<li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的 ID）。</li>
-</ul><p>範例：只允許以 <code>cat</code> <strong>結尾</strong>或是<code>神秘</code><strong>開頭</strong>為名稱的使用者。</p><pre><code class="js hljs"><span class="hljs-meta">cat$</span><span class="bash"></span>
+</code></pre>
+</div><div class="alert alert-warning">
+<h3 id="WhiteList-Configuration-白名單配置" data-id="WhiteList-Configuration-白名單配置"><a class="anchor hidden-xs" href="#WhiteList-Configuration-白名單配置" title="WhiteList-Configuration-白名單配置"><span class="octicon octicon-link"></span></a><span>WhiteList Configuration (白名單配置)</span></h3>
+<h4 id="功能2" data-id="功能"><a class="anchor hidden-xs" href="#功能2" title="功能2"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>使用</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener"><span>正則表達式</span></a><span>，自動踢出</span><strong><span>不在名單內</span></strong><span>的特定使用者。</span></p>
+<h4 id="格式2" data-id="格式"><a class="anchor hidden-xs" href="#格式2" title="格式2"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<pre><code class="js hljs">用戶名(正則表達式)
+</code></pre>
+<h4 id="注意1" data-id="注意"><a class="anchor hidden-xs" href="#注意1" title="注意1"><span class="octicon octicon-link"></span></a><span>注意</span></h4>
+<ul>
+<li><span>記得要</span><strong><span>不加雙引號</span></strong><span>（除非想匹配有雙引號的 ID）。</span></li>
+</ul>
+<h4 id="範例2" data-id="範例"><a class="anchor hidden-xs" href="#範例2" title="範例2"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<p><span>只允許以 </span><code>cat</code><span> </span><strong><span>結尾</span></strong><span>或是</span><code>神秘</code><strong><span>開頭</span></strong><span>為名稱的使用者。</span></p>
+<pre><code>cat$
 ^神秘
-</code></pre><h3 id="BlackList-Configuration-黑名單配置"><a class="anchor hidden-xs" href="#BlackList-Configuration-黑名單配置" title="BlackList-Configuration-黑名單配置"><span class="octicon octicon-link"></span></a>BlackList Configuration (黑名單配置)</h3><p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>，自動踢出<strong>名單內</strong>的特定使用者。<br>
-格式：</p><pre><code class="js hljs">用戶名(正則表達式)
-</code></pre><p>注意：</p><ul>
-<li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的 ID）。</li>
-</ul><p>範例：踢出名字含有 <code>otoko</code> 的使用者及一些符合條件的機器人。</p><pre><code class="js hljs">otoko
+</code></pre>
+</div><div class="alert alert-warning">
+<h3 id="BlackList-Configuration-黑名單配置" data-id="BlackList-Configuration-黑名單配置"><a class="anchor hidden-xs" href="#BlackList-Configuration-黑名單配置" title="BlackList-Configuration-黑名單配置"><span class="octicon octicon-link"></span></a><span>BlackList Configuration (黑名單配置)</span></h3>
+<h4 id="功能3" data-id="功能"><a class="anchor hidden-xs" href="#功能3" title="功能3"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>使用</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener"><span>正則表達式</span></a><span>，自動踢出</span><strong><span>名單內</span></strong><span>的特定使用者。</span></p>
+<h4 id="格式3" data-id="格式"><a class="anchor hidden-xs" href="#格式3" title="格式3"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<pre><code class="js hljs">用戶名(正則表達式)
+</code></pre>
+<h4 id="注意2" data-id="注意"><a class="anchor hidden-xs" href="#注意2" title="注意2"><span class="octicon octicon-link"></span></a><span>注意</span></h4>
+<ul>
+<li><span>記得要</span><strong><span>不加雙引號</span></strong><span>（除非想匹配有雙引號的 ID）。</span></li>
+</ul>
+<h4 id="範例3" data-id="範例"><a class="anchor hidden-xs" href="#範例3" title="範例3"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<p><span>踢出名字含有 </span><code>otoko</code><span> 的使用者及一些符合條件的機器人。</span></p>
+<pre><code class="js hljs">otoko
 机器人<span class="hljs-params">|機器人
 小冰|</span>小氷<span class="hljs-params">|测试姬
-</span></code></pre><h3 id="BanAbuse-Configuration-禁止詞配置"><a class="anchor hidden-xs" href="#BanAbuse-Configuration-禁止詞配置" title="BanAbuse-Configuration-禁止詞配置"><span class="octicon octicon-link"></span></a>BanAbuse Configuration (禁止詞配置)</h3><p>功能：使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>過濾聊天內容，自動踢出<strong>說出禁用詞</strong>的使用者。<br>
-格式：</p><pre><code class="js hljs">禁用詞(正則表達式)
-</code></pre><p>注意：</p><ul>
-<li>記得要<strong>不加雙引號</strong>（除非想匹配有雙引號的禁用詞）。</li>
-</ul><p>範例：聊天內容含有說到 <code>狗</code> 或是 <code>真香</code> 的成員會被踢出。</p><pre><code class="js hljs">狗
-真香
-</code></pre><h3 id="EventAction-Configuration-事件動作配置"><a class="anchor hidden-xs" href="#EventAction-Configuration-事件動作配置" title="EventAction-Configuration-事件動作配置"><span class="octicon octicon-link"></span></a>EventAction Configuration (事件動作配置)</h3><p>功能：對於一些事件，這裡提供一些函數，可以訂一些相應的動作。<br>
-定義的動作只有在用戶<strong>名稱</strong>及用戶發送的<strong>內容</strong>符合<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener">正則表達式</a>才會被觸發。<br>
-其實前面的功能：歡迎詞/白名單/黑名單/禁止詞，都可用此功能實作。</p><p>格式：</p><pre><code class="js hljs"><span class="hljs-string">"事件類型"</span>, <span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"內容匹配(正則表達式)"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
-[<span class="hljs-string">"事件類型"</span>, ...], <span class="hljs-string">"用戶名(正則表達式)"</span>, <span class="hljs-string">"內容匹配(正則表達式)"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
-</code></pre><p>事件類型：</p><ul>
-<li><code>me</code> 以 <code>/me</code> 發出的訊息</li>
-<li><code>music</code> 播放音樂</li>
-<li><code>leave</code> 成員離開</li>
-<li><code>join</code> 成員加入</li>
-<li><code>msg</code> 普通訊息</li>
-<li><code>dm</code> 私訊</li>
-<li><code>musicend</code> 音樂結束</li>
-</ul><p>函數 [參數列] 說明：</p><ul>
-<li><code>msg</code> <code>["訊息", "訊息", ...]</code><br>
-從訊息中選擇一個推送。</li>
-<li><code>umsg</code> <code>["URL", "訊息", ...]</code><br>
-夾帶 URL 並隨機選擇一個訊息推送。</li>
-<li><code>dm</code> <code>["使用者名稱", "訊息", "訊息", ...]</code><br>
-私訊使用者，選擇一個訊息私訊。</li>
-<li><code>udm</code> <code>["使用者名稱", "URL", "訊息", ...]</code><br>
-私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</li>
-<li><code>kick</code> <code>["使用者名稱"]</code><br>
-踢出使用者。</li>
-<li><code>ban</code> <code>["使用者名稱"]</code><br>
-踢出並屏蔽使用者。</li>
-<li><code>banrpt</code> <code>["使用者名稱"]</code><br>
-踢出並屏蔽舉報使用者。</li>
-<li><code>plym</code> <code>["歌曲關鍵字"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>plym</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-播放音樂。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>addm</code> <code>["歌曲關鍵字"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>addm</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-加入音樂至待播清單。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>delm</code> <code>["數字"]</code><br>
-從清單刪除音樂（依索引數字）。</li>
-<li><code>lstm</code> <code>[]</code><br>
-列出待播清單。</li>
-<li><code>nxtm</code> <code>[]</code><br>
-播放下一首曲子。</li>
-<li><code>pndm</code> <code>[]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "數字"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "數字", "音源"]</code><br>
-<code>pndm</code> <code>["歌曲關鍵字", "音源", "數字"]</code><br>
-無參數則列出待播清單。<br>
-如當前沒音樂，播放音樂。<br>
-如有音樂，將音樂加入清單<br>
-如關鍵字為空字串，列出待播清單。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“數字”：第 “數字” 個搜尋結果。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>schm</code> <code>["歌曲關鍵字"]</code><br>
-<code>schm</code> <code>["歌曲關鍵字", "音源"]</code><br>
-列出搜尋結果。
-<ol>
-<li>“關鍵字”：歌曲關鍵字。</li>
-<li>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</li>
-</ol>
-</li>
-<li><code>horm</code> <code>["使用者名稱"]</code><br>
-轉移房主權限給該使用者。</li>
-<li><code>ocdr</code> <code>[]</code><br>
-離開房間又進入房間。</li>
-<li><code>gofr</code> <code>["房間名稱(RegExp)"]</code><br>
-前往符合房間名稱的房間。若失敗則回到原房間。</li>
-</ul><p>特殊參數變量：</p><ul>
-<li><code>%Y</code> 年份，四位數字西元年</li>
-<li><code>%年</code> 年份，中文數字</li>
-<li><code>%M</code> 月份，一至二位數字</li>
-<li><code>%月</code> 月份，中文數字（一至十二）</li>
-<li><code>%D</code> 日期，一至二位數字</li>
-<li><code>%日</code> 日期，中文數字</li>
-<li><code>%d</code> 星期幾，英文全寫</li>
-<li><code>%星</code> 星期幾，中文</li>
-<li><code>%H</code> 時，數字（24 時制）</li>
-<li><code>%h</code> 時，數字（12 時制）</li>
-<li><code>%c</code> 上下午，英文 <code>a.m.</code> <code>p.m.</code></li>
-<li><code>%m</code> 分，數字</li>
-<li><code>%s</code> 秒，數字</li>
-<li><code>%%</code> 轉義字符 <code>%</code></li>
-</ul><ul>
-<li><code>$user</code> 發送訊息的使用者名稱</li>
-<li><code>$cont</code> 使用者發送的內容</li>
-<li><code>$args</code> 使用者發送內容第一個空格後的所有內容<br>
-使用者發送：<code>play BUMP OF CHICKEN「Hello,world!」</code><br>
-<code>$args</code>：<code>BUMP OF CHICKEN「Hello,world!」</code></li>
-<li><code>$url</code> 使用者夾上的 URL</li>
-<li><code>$</code> 轉義字符 <code>$</code></li>
-</ul><p>這裡還有一些特殊用法。<br>
-對於收到的訊息，會以空格分開成參數列，而用引號可以避免分開。<br>
-而對分開的內容，可以用以下方法作為參數。</p><ul>
-<li><code>$N</code> N 為數字，以數字取第 N 個參數，從零開始。</li>
-<li><code>$[N-M]</code> 取從 N 到 M 的參數。N 不給則從零開始，M 不給取到最後。</li>
-</ul><pre><code>this is  a  message send from user
+</span></code></pre>
+</div><div class="alert alert-warning">
+<h3 id="BanAbuse-Configuration-禁止詞配置" data-id="BanAbuse-Configuration-禁止詞配置"><a class="anchor hidden-xs" href="#BanAbuse-Configuration-禁止詞配置" title="BanAbuse-Configuration-禁止詞配置"><span class="octicon octicon-link"></span></a><span>BanAbuse Configuration (禁止詞配置)</span></h3>
+<h4 id="功能4" data-id="功能"><a class="anchor hidden-xs" href="#功能4" title="功能4"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>使用</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener"><span>正則表達式</span></a><span>過濾聊天內容，自動踢出</span><strong><span>說出禁用詞</span></strong><span>的使用者。</span></p>
+<h4 id="格式4" data-id="格式"><a class="anchor hidden-xs" href="#格式4" title="格式4"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<pre><code class="js hljs">禁用詞(正則表達式)
+</code></pre>
+<h4 id="注意3" data-id="注意"><a class="anchor hidden-xs" href="#注意3" title="注意3"><span class="octicon octicon-link"></span></a><span>注意</span></h4>
+<ul>
+<li><span>記得要</span><strong><span>不加雙引號</span></strong><span>（除非想匹配有雙引號的禁用詞）。</span></li>
+</ul>
+<h4 id="範例4" data-id="範例"><a class="anchor hidden-xs" href="#範例4" title="範例4"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<p><span>聊天內容含有說到 </span><code>狗</code><span> 或是 </span><code>阿姆斯特朗炮</code><span> 的成員會被踢出。</span></p>
+<pre><code class="js hljs">狗
+阿姆斯特朗炮
+</code></pre>
+</div><div class="alert alert-warning">
+<h3 id="EventAction-Configuration-事件動作配置" data-id="EventAction-Configuration-事件動作配置"><a class="anchor hidden-xs" href="#EventAction-Configuration-事件動作配置" title="EventAction-Configuration-事件動作配置"><span class="octicon octicon-link"></span></a><span>EventAction Configuration (事件動作配置)</span></h3>
+<h4 id="功能5" data-id="功能"><a class="anchor hidden-xs" href="#功能5" title="功能5"><span class="octicon octicon-link"></span></a><span>功能</span></h4>
+<p><span>對於一些事件，這裡提供一些函數，可以訂一些相應的動作。</span><br>
+<span>定義的動作只有在用戶</span><strong><span>名稱</span></strong><span>及用戶發送的</span><strong><span>內容</span></strong><span>符合</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Special_characters_in_regular_expressions" target="_blank" rel="noopener"><span>正則表達式</span></a><span> (RegExp) 才會被觸發。</span><br>
+<span>其實前面的功能：歡迎詞/白名單/黑名單/禁止詞，都可用此功能實作。</span></p>
+<h4 id="格式5" data-id="格式"><a class="anchor hidden-xs" href="#格式5" title="格式5"><span class="octicon octicon-link"></span></a><span>格式</span></h4>
+<pre><code class="js hljs"><span class="hljs-string">"事件類型"</span>, <span class="hljs-string">"用戶匹配"</span>, <span class="hljs-string">"內容匹配"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
+[<span class="hljs-string">"事件類型"</span>, ...], <span class="hljs-string">"用戶匹配"</span>, <span class="hljs-string">"內容匹配"</span>, <span class="hljs-string">"函數"</span>, [<span class="hljs-string">"參數"</span>, ...]
+</code></pre>
+<h4 id="事件類型" data-id="事件類型"><a class="anchor hidden-xs" href="#事件類型" title="事件類型"><span class="octicon octicon-link"></span></a><span>事件類型</span></h4>
+<p><span>當…</span></p>
+<ul>
+<li><code>new-host</code><span> 房主易位</span></li>
+<li><code>room-profile</code><span> 房名改變</span></li>
+<li><code>new-description</code><span> 房間敘述改變</span></li>
+<li><code>join</code><span> 成員加入</span></li>
+<li><code>leave</code><span> 成員離開</span></li>
+<li><code>kick</code><span> 有人被踢出</span></li>
+<li><code>ban</code><span> 有人被禁止進入</span></li>
+<li><code>unban</code><span> 有人被解除禁止進入</span></li>
+<li><code>dm</code><span> 私訊</span></li>
+<li><code>msg</code><span> 普通訊息</span></li>
+<li><code>me</code><span> 以 </span><code>/me</code><span> 發出的訊息（小字）</span></li>
+<li><code>dmto</code><span> 自己私訊給別人</span></li>
+<li><code>submit</code><span> 自己送出訊息</span></li>
+<li><code>roll</code><span> 有人搖了一個人</span></li>
+<li><code>music</code><span> 播放音樂（某人播放了音樂）</span></li>
+<li><code>musicbeg</code><span> 音樂開始（進度條開始）</span></li>
+<li><code>musicend</code><span> 音樂結束（進度條結束）</span></li>
+</ul>
+<h4 id="用戶匹配" data-id="用戶匹配"><a class="anchor hidden-xs" href="#用戶匹配" title="用戶匹配"><span class="octicon octicon-link"></span></a><span>用戶匹配</span></h4>
+<p><span>用戶匹配可以是一個人名的 RegExp 或是 Tripcode 的 RegExp，</span><br>
+<span>如果兩個規則都有的話則都需要滿足。</span></p>
+<pre><code class="js hljs"><span class="hljs-string">"浪打"</span> &lt;- 名字有 <span class="hljs-string">"浪打"</span> 的人
+<span class="hljs-string">"#.*cat"</span> &lt;- tc 有 cat 的人（忽略大小寫）
+<span class="hljs-string">"浪打#.*cat"</span> &lt;- 名字有 <span class="hljs-string">"浪打"</span> 且 tc 有 cat 的人
+</code></pre>
+<h4 id="內容匹配" data-id="內容匹配"><a class="anchor hidden-xs" href="#內容匹配" title="內容匹配"><span class="octicon octicon-link"></span></a><span>內容匹配</span></h4>
+<p><span>內容匹配則是單純的一串 RegExp。</span></p>
+<h4 id="函數1" data-id="函數"><a class="anchor hidden-xs" href="#函數1" title="函數1"><span class="octicon octicon-link"></span></a><span>函數</span></h4>
+<p><span>提供的函數可以參考</span><a href="#%E5%87%BD%E6%95%B8%E8%AA%AA%E6%98%8E"><span>函數說明</span></a></p>
+<h4 id="特殊參數變量" data-id="特殊參數變量"><a class="anchor hidden-xs" href="#特殊參數變量" title="特殊參數變量"><span class="octicon octicon-link"></span></a><span>特殊參數變量</span></h4>
+<ul>
+<li><code>%Y</code><span> 年份，四位數字西元年</span></li>
+<li><code>%年</code><span> 年份，中文數字</span></li>
+<li><code>%M</code><span> 月份，一至二位數字</span></li>
+<li><code>%月</code><span> 月份，中文數字（一至十二）</span></li>
+<li><code>%D</code><span> 日期，一至二位數字</span></li>
+<li><code>%日</code><span> 日期，中文數字</span></li>
+<li><code>%d</code><span> 星期幾，英文全寫</span></li>
+<li><code>%星</code><span> 星期幾，中文</span></li>
+<li><code>%H</code><span> 時，數字（24 時制）</span></li>
+<li><code>%h</code><span> 時，數字（12 時制）</span></li>
+<li><code>%c</code><span> 上下午，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%m</code><span> 分，數字</span></li>
+<li><code>%s</code><span> 秒，數字</span></li>
+<li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
+</ul>
+<ul>
+<li><code>$user</code><span> 發送訊息的使用者名稱</span></li>
+<li><code>$cont</code><span> 使用者發送的內容</span></li>
+<li><code>$args</code><span> 使用者發送內容第一個空格後的所有內容</span><br>
+<span>使用者發送：</span><code>play BUMP OF CHICKEN「Hello,world!」</code><br>
+<code>$args</code><span>：</span><code>BUMP OF CHICKEN「Hello,world!」</code></li>
+<li><code>$url</code><span> 使用者夾上的 URL</span></li>
+<li><code>$</code><span> 轉義字符 </span><code>$</code></li>
+</ul>
+<h4 id="特殊參數用法" data-id="特殊參數用法"><a class="anchor hidden-xs" href="#特殊參數用法" title="特殊參數用法"><span class="octicon octicon-link"></span></a><span>特殊參數用法</span></h4>
+<p><span>這裡還有一些特殊用法。</span><br>
+<span>對於收到的訊息，會以空格分開成參數列，而用引號可以避免分開。</span><br>
+<span>而對分開的內容，可以用以下方法作為參數。</span></p>
+<ul>
+<li><code>$N</code><span> N 為數字，以數字取第 N 個參數，從零開始。</span></li>
+<li><code>$[N-M]</code><span> 取從 N 到 M 的參數。N 不給則從零開始，M 不給取到最後。</span></li>
+</ul>
+<h4 id="特殊函數" data-id="特殊函數"><a class="anchor hidden-xs" href="#特殊函數" title="特殊函數"><span class="octicon octicon-link"></span></a><span>特殊函數</span></h4>
+<ul>
+<li><code>$tenor(keyword)</code><span> 回傳 tenor 搜尋的 gif URL</span></li>
+<li><code>$giphy(keyword)</code><span> 回傳 giphy 搜尋的 gif URL</span></li>
+</ul>
+<h4 id="參數圖示" data-id="參數圖示"><a class="anchor hidden-xs" href="#參數圖示" title="參數圖示"><span class="octicon octicon-link"></span></a><span>參數圖示</span></h4>
+<pre><code>this is  a  message send from user
 ---- --  -  ------- ---- ---- ----
 $0   $1  $2 $3      $4   $5   $6
 ----------------------------------
@@ -357,44 +513,210 @@ $0   $1 $2 $3               $4   $5    $6
 $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------
 $[-]
-
-</code></pre><p>範例：接上點歌功能。</p><pre><code class="js hljs"><span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$args"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/play\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[2-]"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/playsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"plym"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/add\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$args"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/add\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/addsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/addsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"addm"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/list"</span>, <span class="hljs-string">"lstm"</span>, []
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/next"</span>, <span class="hljs-string">"nxtm"</span>, []
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/del\\\\s+\\\\d+"</span>, <span class="hljs-string">"delm"</span>, [<span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s*$"</span>, <span class="hljs-string">"pndm"</span>, []
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$args"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pending\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pendsrc\\\\s+[千易]\\\\s+(\\\\D|\\\\d\\\\S)"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/pendsrc\\\\s+[千易]\\\\s+\\\\d\\\\s+\\\\S+"</span>, <span class="hljs-string">"pndm"</span>, [<span class="hljs-string">"$[3-]"</span>, <span class="hljs-string">"$1"</span>, <span class="hljs-string">"$2"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/sc\\\\s+([千易]\\\\S+|[^千易])"</span>, <span class="hljs-string">"schm"</span>, [<span class="hljs-string">"$args"</span>]
-<span class="hljs-string">"msg"</span>, <span class="hljs-string">""</span>, <span class="hljs-string">"^/sc\\\\s+[千易]\\\\s+\\\\S+"</span>, <span class="hljs-string">"schm"</span>, [<span class="hljs-string">"$[2-]"</span>, <span class="hljs-string">"$1"</span>]
-</code></pre><p>使用者發送以下字串可以觸發設定好的功能：</p><pre><code>/play 剛好遇見你
-/play 2 剛好遇見你
-/playsrc 千 剛好遇見你
-/play 易 2 剛好遇見你
-/add  山丘
-/add  2 山丘
-/addsrc 千 山丘
-/addsrc 易 2 山丘
-/pending
-/pending 平凡之路
-/pending 2 平凡之路
-/pendsrc 千 平凡之路
-/pendsrc 易 2 平凡之路
-/del  1
-/list
-/next
-/sc 花心
-/sc 千 花心
-</code></pre></div>
+</code></pre>
+<h4 id="範例5" data-id="範例"><a class="anchor hidden-xs" href="#範例5" title="範例5"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<pre><code>"msg", "", "^/tenor", "umsg", ["$tenor($args)", "$args"]
+"msg", "", "^/giphy", "umsg", ["$giphy($args)", "$args"]
+"msg", "", "^/play", "plym", ["$args"]
+"leave", "", "", "msg", ["$user bye!"]
+</code></pre>
+<h4 id="調用" data-id="調用"><a class="anchor hidden-xs" href="#調用" title="調用"><span class="octicon octicon-link"></span></a><span>調用</span></h4>
+<pre><code>/tenor 貓
+/giphy iron man
+/play yellow
+</code></pre>
+</div><h4 id="函數說明" data-id="函數說明"><a class="anchor hidden-xs" href="#函數說明" title="函數說明"><span class="octicon octicon-link"></span></a><span>函數說明</span></h4><div class="alert alert-warning">
+<p><span>函數 [參數列] 說明：</span></p>
+<ul>
+<li><code>msg</code><span> </span><code>["訊息", "訊息", ...]</code><br>
+<span>從訊息中選擇一個推送。</span></li>
+<li><code>umsg</code><span> </span><code>["URL", "訊息", ...]</code><br>
+<span>夾帶 URL 並隨機選擇一個訊息推送。</span></li>
+<li><code>dm</code><span> </span><code>["使用者名稱", "訊息", "訊息", ...]</code><br>
+<span>私訊使用者，選擇一個訊息私訊。</span></li>
+<li><code>udm</code><span> </span><code>["使用者名稱", "URL", "訊息", ...]</code><br>
+<span>私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。</span></li>
+<li><code>kick</code><span> </span><code>["使用者名稱"]</code><br>
+<span>踢出使用者。</span></li>
+<li><code>ban</code><span> </span><code>["使用者名稱"]</code><br>
+<span>踢出並屏蔽使用者。</span></li>
+<li><code>banrpt</code><span> </span><code>["使用者名稱"]</code><br>
+<span>踢出並屏蔽舉報使用者。</span></li>
+<li><code>plym</code><span> </span><code>["歌曲關鍵字"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "數字"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<span>播放音樂。</span>
+<ol>
+<li><span>“關鍵字”：歌曲關鍵字。</span></li>
+<li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</span></li>
+</ol>
+</li>
+<li><code>addm</code><span> </span><code>["歌曲關鍵字"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "數字"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<span>加入音樂至待播清單。</span>
+<ol>
+<li><span>“關鍵字”：歌曲關鍵字。</span></li>
+<li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</span></li>
+</ol>
+</li>
+<li><code>delm</code><span> </span><code>["數字"]</code><br>
+<span>從清單刪除音樂（依索引數字）。</span></li>
+<li><code>lstm</code><span> </span><code>[]</code><br>
+<span>列出待播清單。</span></li>
+<li><code>nxtm</code><span> </span><code>[]</code><br>
+<span>播放下一首曲子。</span></li>
+<li><code>pndm</code><span> </span><code>[]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "數字"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<span>無參數則列出待播清單。</span><br>
+<span>如當前沒音樂，播放音樂。</span><br>
+<span>如有音樂，將音樂加入清單</span><br>
+<span>如關鍵字為空字串，列出待播清單。</span>
+<ol>
+<li><span>“關鍵字”：歌曲關鍵字。</span></li>
+<li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</span></li>
+</ol>
+</li>
+<li><code>schm</code><span> </span><code>["歌曲關鍵字"]</code><br>
+<code>schm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
+<span>列出搜尋結果。</span>
+<ol>
+<li><span>“關鍵字”：歌曲關鍵字。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “易”, “狗”, “我” 及 “Ｙ” 可以使用。</span></li>
+</ol>
+</li>
+<li><code>horm</code><span> </span><code>["使用者名稱"]</code><br>
+<span>轉移房主權限給該使用者。</span></li>
+<li><code>ocdr</code><span> </span><code>[]</code><br>
+<span>離開房間又進入房間。</span></li>
+<li><code>gofr</code><span> </span><code>["房間名稱(RegExp)"]</code><br>
+<span>前往符合房間名稱的房間。若失敗則回到原房間。</span></li>
+</ul>
+<blockquote>
+<p><code>me</code><span> 可以用 </span><code>/me + 推送訊息</code><span> 以 msg 達成。</span></p>
+</blockquote>
+</div><h3 id="Local-本地設定" data-id="Local-本地設定"><a class="anchor hidden-xs" href="#Local-本地設定" title="Local-本地設定"><span class="octicon octicon-link"></span></a><span>Local 本地設定</span></h3><div class="alert alert-success">
+<p><img src="https://i.imgur.com/NMY9ZAx.png" alt=""></p>
+<h4 id="功能鍵9" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵9" title="功能鍵9"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
+<p><i class="glyphicon glyphicon-question-sign"></i><span> 前往說明頁面</span><br>
+<i class="glyphicon glyphicon-info-sign"></i><span> 關於作者</span><br>
+<i class="glyphicon glyphicon-refresh"></i><span> 重製所有設定</span><br>
+<i class="glyphicon glyphicon-export"></i><span> 匯出設定</span><br>
+<span>選擇檔案：匯入設定</span></p>
+<h4 id="模組資料" data-id="模組資料"><a class="anchor hidden-xs" href="#模組資料" title="模組資料"><span class="octicon octicon-link"></span></a><span>模組資料</span></h4>
+<p><span>你可以照著格式編輯他。</span></p>
+</div><h3 id="Script-浪語終端" data-id="Script-浪語終端"><a class="anchor hidden-xs" href="#Script-浪語終端" title="Script-浪語終端"><span class="octicon octicon-link"></span></a><span>Script 浪語終端</span></h3><div class="alert alert-success">
+<p><span>對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑&gt;◡&lt;๑)۶</span></p>
+<p><img src="https://i.imgur.com/bmRYjbn.png" alt=""></p>
+<h4 id="側欄按鍵" data-id="側欄按鍵"><a class="anchor hidden-xs" href="#側欄按鍵" title="側欄按鍵"><span class="octicon octicon-link"></span></a><span>側欄按鍵</span></h4>
+<ul>
+<li><span>Package 套件管理器</span></li>
+<li><span>ToggleRoom 隱藏/顯示右側聊天室</span></li>
+<li><span>Sublime bindings 顯示編輯器快捷鍵</span></li>
+<li><span>腳本運行相關按鍵</span>
+<ul>
+<li><span>Introduction 浪語介紹</span></li>
+<li><span>Save 儲存編輯器腳本</span></li>
+<li><span>Clear 清除腳本運行結果</span></li>
+<li><span>Pause 清除正在運行的腳本</span></li>
+<li><span>Execute 運行編輯器的腳本</span></li>
+</ul>
+</li>
+</ul>
+<h4 id="編輯器和直譯終端" data-id="編輯器和直譯終端"><a class="anchor hidden-xs" href="#編輯器和直譯終端" title="編輯器和直譯終端"><span class="octicon octicon-link"></span></a><span>編輯器和直譯終端</span></h4>
+<p><span>Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會生效。</span><br>
+<span>運行一段腳本後，你可以用在直譯終端做測試，他會以運行後的環境執行。</span><br>
+<code>ctrl</code><span> + </span><code>enter</code><span> 執行直譯終端的腳本（游標要在終端裡面）。</span></p>
+</div><div class="alert alert-warning">
+<h4 id="浪語" data-id="浪語"><a class="anchor hidden-xs" href="#浪語" title="浪語"><span class="octicon octicon-link"></span></a><span>浪語</span></h4>
+<p><span>細節請參考 </span><a href="https://drrr.wiki/%E6%B5%AA%E8%AA%9E" target="_blank" rel="noopener"><span>wiki</span></a><span>。</span></p>
+</div><div class="alert alert-warning">
+<h4 id="套件管理器" data-id="套件管理器"><a class="anchor hidden-xs" href="#套件管理器" title="套件管理器"><span class="octicon octicon-link"></span></a><span>套件管理器</span></h4>
+<p><img src="https://i.imgur.com/wPOJvM4.png" alt=""></p>
+<p><span>選擇 mirror 後，點選 update 更新套件索引。</span><br>
+<span>之後可以選擇分類和套件，可以把他載入到編輯器或是儲存到本地。</span></p>
+<p><img src="https://i.imgur.com/PpMOgh3.png" alt=""></p>
+<p><span>本地的套件勾選後，可以選擇預載入，或是刪除。</span><br>
+<span>重新開啟視窗，如果是有句選，就代表為預載入套件。</span></p>
+<p><img src="https://i.imgur.com/2BJoP6w.png" alt=""></p>
+<p><span>確定預載入後，在編輯器以套件名作為函數調用。</span><br>
+<span>（套件通常會提供這個函數，但具體還是要看套件內容定義）</span></p>
+<p><img src="https://i.imgur.com/qsuuL1q.png" alt=""></p>
+<p><span>運行成功！</span></p>
+<p><img src="https://i.imgur.com/XbC57JG.png" alt=""></p>
+<p><span>你也可以 fork 一份 </span><a href="https://gitee.com/DrrrChatbots/bs-pkgs" target="_blank" rel="noopener"><span>bs-pkgs</span></a><span> 維護一個 mirror，</span><br>
+<span>然後透過 </span><code>add_mirror(alias, repo)</code><span> 來添加你的 mirror。</span></p>
+<p><img src="https://i.imgur.com/XpQ4dcG.png" alt=""></p>
+<p><span>或者直接呼叫也行</span><br>
+<img src="https://i.imgur.com/l7oYdK5.png" alt=""></p>
+<p><span>要刪除的話就呼叫 </span><code>del_mirror(alias)</code><span>。</span></p>
+<p><img src="https://i.imgur.com/NV1iXRn.png" alt=""></p>
+</div><h2 id="特別誌謝" data-id="特別誌謝"><a class="anchor hidden-xs" href="#特別誌謝" title="特別誌謝"><span class="octicon octicon-link"></span></a><span>特別誌謝</span></h2><h3 id="個人" data-id="個人"><a class="anchor hidden-xs" href="#個人" title="個人"><span class="octicon octicon-link"></span></a><span>個人</span></h3><div class="alert alert-success">
+<p><span>@LanCeLoT</span><br>
+<s><span>這個人什麼都沒做</span></s><span> &lt; 他自己寫的</span><br>
+<s><span>說明書編寫上幫了很大的忙</span></s><span>。&lt;其實並沒有_(:з」∠)_</span></p>
+</div><div class="alert alert-success">
+<p><span>@iijjoy</span><br>
+<span>kiwi browser 的愛好者，貌似是句點君？</span><br>
+<span>在 kiwi 上幫忙做了很多測試。</span></p>
+</div><h3 id="部屋" data-id="部屋"><a class="anchor hidden-xs" href="#部屋" title="部屋"><span class="octicon octicon-link"></span></a><span>部屋</span></h3><div class="alert alert-success">
+<p><strong><span>上帝酒屋</span></strong></p>
+<p><span>酒屋客人們（</span><a href="https://drrr.wiki/@%E7%8B%AC%E7%9C%BC%E9%A9%81" target="_blank" rel="noopener"><span>@独眼驁</span></a><span>, </span><a href="https://drrr.wiki/@%E9%B3%84%E7%8C%AB" target="_blank" rel="noopener"><span>@鳄猫</span></a><span>, @codeine, @Lang, @天羽, </span><a href="https://drrr.wiki/@%E5%A4%A7%E5%BA%AD%E5%8F%B6%E8%97%8F" target="_blank" rel="noopener"><span>@大庭叶藏</span></a><span>, </span><a href="https://drrr.wiki/@%E5%8D%83%E7%A7%8B%E7%8B%90%E7%8B%B8" target="_blank" rel="noopener"><span>@千秋</span></a><span>, @Y …) 幫忙測試狼人殺腳本</span></p>
+<p><span>以及在編寫此文檔時偶遇的上帝酒屋客人兼使用者 @課長</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>休息室 || 限熟</span></strong><br>
+<span>房主：@莉可</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>湖神的池子</span></strong><br>
+<span>神：@湖神</span><br>
+<span>湖神眾：@小光、@小周、@小草、@影子（、隱藏的@卡卡）</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>𝓯𝓪𝔂𝓮的忧鬱</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/@faye" target="_blank" rel="noopener"><span>@faye</span></a></p>
+</div><div class="alert alert-success">
+<p><strong><span>窗边</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/@%E7%8E%84%E9%BB%9B" target="_blank" rel="noopener"><span>@玄黛</span></a><br>
+<span>房客：</span><a href="https://drrr.wiki/@smile" target="_blank" rel="noopener"><span>@smile</span></a></p>
+</div><div class="alert alert-success">
+<p><strong><span>雾之湖</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/User:%E7%AE%97%E6%95%B0%E5%A4%A9%E6%89%8D%E7%90%AA%E9%9C%B2%E8%AF%BA" target="_blank" rel="noopener"><span>@琪露诺</span></a></p>
+</div><div class="alert alert-success">
+<p><strong><span>万人的死角</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/@Kyon" target="_blank" rel="noopener"><span>@Kyon</span></a></p>
+</div><div class="alert alert-success">
+<p><strong><span>掛</span></strong><br>
+<span>房主：@音子</span><br>
+<span>房客：</span><a href="https://drrr.wiki/@%E5%8C%97%E6%A5%B5" target="_blank" rel="noopener"><span>@北極</span></a><span>（在草創期的大力宣傳者）、</span><a href="https://drrr.wiki/@P" target="_blank" rel="noopener"><span>@P</span></a><span>、@小梁、@可賊</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>小挂屋</span></strong><br>
+<span>房主：@周夢蝶#.MengDI//. aka 周總</span><br>
+<span>房客：</span><a href="https://drrr.wiki/User:%E5%B0%8F%E6%9F%B4" target="_blank" rel="noopener"><span>@小柴</span></a><span> aka 柴總、魚 aka 魚總</span></p>
+</div><div class="alert alert-success">
+<p><strong><span>九十九的画室</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/%E4%B9%9D%E5%8D%81%E4%B9%9D" target="_blank" rel="noopener"><span>@九十九</span></a><span>、@二號姬</span></p>
+</div><div class="alert alert-success">
+<p><strong><a href="https://drrr.wiki/zh-hans/@%E6%91%98%E6%98%9F%E5%A1%94" target="_blank" rel="noopener"><span>摘星塔</span></a></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/@%E5%B0%91%E5%A5%B3" target="_blank" rel="noopener"><span>@少女</span></a></p>
+</div><div class="alert alert-success">
+<p><strong><span>自习区</span></strong><br>
+<span>房主：</span><a href="https://drrr.wiki/@A_Bot" target="_blank" rel="noopener"><span>@A_Bot</span></a><span>、</span><a href="https://drrr.wiki/@%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%B0%8F%E7%BB%BF" target="_blank" rel="noopener"><span>@机器人小绿</span></a></p>
+</div><h2 id="相關鏈結" data-id="相關鏈結"><a class="anchor hidden-xs" href="#相關鏈結" title="相關鏈結"><span class="octicon octicon-link"></span></a><span>相關鏈結</span></h2><p><a href="https://drrr.wiki/@%E6%B5%AA%E6%89%93%E8%B2%93" target="_blank" rel="noopener"><span>浪打</span></a><br>
+<a href="https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6" target="_blank" rel="noopener"><span>DrrrWiKi</span></a><br>
+<a href="https://jq.qq.com/?_wv=1027&amp;k=7JjKVhV0" target="_blank" rel="noopener"><span>QQ 討論群</span></a><br>
+<a href="https://discord.com/invite/BBCw3UY" target="_blank" rel="noopener"><span>Discord QA 群</span></a><br>
+<a href="https://gitee.com/DrrrChatbots" target="_blank" rel="noopener"><span>Gitee Organization</span></a><br>
+<a href="https://github.com/DrrrChatbots" target="_blank" rel="noopener"><span>GitHub Organization</span></a></p></div>
     <div class="ui-toc dropup unselectable hidden-print" style="display:none;">
         <div class="pull-right dropdown">
             <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
@@ -403,25 +725,32 @@ $[-]
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
-<li class=""><a href="#安裝" title="安裝">安裝</a></li>
-<li class=""><a href="#使用界面" title="使用界面">使用界面</a><ul class="nav">
-<li class=""><a href="#功能開關（-表示須先設定才能開啟）" title="功能開關（ 表示須先設定才能開啟）">功能開關（ 表示須先設定才能開啟）</a></li>
-<li class=""><a href="#功能頁籤" title="功能頁籤">功能頁籤</a></li>
-<li class=""><a href="#功能鍵（無關鍵字）：" title="功能鍵（無關鍵字）：">功能鍵（無關鍵字）：</a></li>
-<li class=""><a href="#功能鍵（有關鍵字）" title="功能鍵（有關鍵字）">功能鍵（有關鍵字）</a></li>
+<li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
+<li><a href="#電腦版" title="電腦版">電腦版</a></li>
+<li><a href="#手機端" title="手機端">手機端</a></li>
 </ul>
 </li>
-<li class=""><a href="#後台設定" title="後台設定">後台設定</a><ul class="nav">
-<li><a href="#Quick-Regex-Tester-（快速正則表達式測試）" title="Quick Regex Tester （快速正則表達式測試）">Quick Regex Tester （快速正則表達式測試）</a></li>
-<li><a href="#Music-Delay-（樂曲延遲）" title="Music Delay （樂曲延遲）">Music Delay （樂曲延遲）</a></li>
-<li class=""><a href="#Timer-Configuration-定時器配置" title="Timer Configuration (定時器配置)">Timer Configuration (定時器配置)</a></li>
-<li><a href="#Welcome-Configuration-歡迎詞配置" title="Welcome Configuration (歡迎詞配置)">Welcome Configuration (歡迎詞配置)</a></li>
-<li><a href="#WhiteList-Configuration-白名單配置" title="WhiteList Configuration (白名單配置)">WhiteList Configuration (白名單配置)</a></li>
-<li><a href="#BlackList-Configuration-黑名單配置" title="BlackList Configuration (黑名單配置)">BlackList Configuration (黑名單配置)</a></li>
-<li><a href="#BanAbuse-Configuration-禁止詞配置" title="BanAbuse Configuration (禁止詞配置)">BanAbuse Configuration (禁止詞配置)</a></li>
-<li class=""><a href="#EventAction-Configuration-事件動作配置" title="EventAction Configuration (事件動作配置)">EventAction Configuration (事件動作配置)</a></li>
+<li><a href="#前端控制" title="前端控制">前端控制</a><ul class="nav">
+<li><a href="#Bio" title="Bio">Bio</a></li>
+<li><a href="#Local" title="Local">Local</a></li>
+<li><a href="#Friends" title="Friends">Friends</a></li>
+<li><a href="#Music" title="Music">Music</a></li>
+<li><a href="#Module" title="Module">Module</a></li>
+<li><a href="#Sticker" title="Sticker">Sticker</a></li>
 </ul>
 </li>
+<li><a href="#後台設定" title="後台設定">後台設定</a><ul class="nav">
+<li><a href="#Sync-同步設定" title="Sync 同步設定">Sync 同步設定</a></li>
+<li><a href="#Local-本地設定" title="Local 本地設定">Local 本地設定</a></li>
+<li><a href="#Script-浪語終端" title="Script 浪語終端">Script 浪語終端</a></li>
+</ul>
+</li>
+<li><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
+<li><a href="#個人" title="個人">個人</a></li>
+<li><a href="#部屋" title="部屋">部屋</a></li>
+</ul>
+</li>
+<li><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
 </ul>
 </li>
 </ul>
@@ -432,34 +761,41 @@ $[-]
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
-<li class=""><a href="#安裝" title="安裝">安裝</a></li>
-<li class=""><a href="#使用界面" title="使用界面">使用界面</a><ul class="nav">
-<li class=""><a href="#功能開關（-表示須先設定才能開啟）" title="功能開關（ 表示須先設定才能開啟）">功能開關（ 表示須先設定才能開啟）</a></li>
-<li class=""><a href="#功能頁籤" title="功能頁籤">功能頁籤</a></li>
-<li class=""><a href="#功能鍵（無關鍵字）：" title="功能鍵（無關鍵字）：">功能鍵（無關鍵字）：</a></li>
-<li class=""><a href="#功能鍵（有關鍵字）" title="功能鍵（有關鍵字）">功能鍵（有關鍵字）</a></li>
+<li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
+<li><a href="#電腦版" title="電腦版">電腦版</a></li>
+<li><a href="#手機端" title="手機端">手機端</a></li>
 </ul>
 </li>
-<li class=""><a href="#後台設定" title="後台設定">後台設定</a><ul class="nav">
-<li><a href="#Quick-Regex-Tester-（快速正則表達式測試）" title="Quick Regex Tester （快速正則表達式測試）">Quick Regex Tester （快速正則表達式測試）</a></li>
-<li><a href="#Music-Delay-（樂曲延遲）" title="Music Delay （樂曲延遲）">Music Delay （樂曲延遲）</a></li>
-<li class=""><a href="#Timer-Configuration-定時器配置" title="Timer Configuration (定時器配置)">Timer Configuration (定時器配置)</a></li>
-<li><a href="#Welcome-Configuration-歡迎詞配置" title="Welcome Configuration (歡迎詞配置)">Welcome Configuration (歡迎詞配置)</a></li>
-<li><a href="#WhiteList-Configuration-白名單配置" title="WhiteList Configuration (白名單配置)">WhiteList Configuration (白名單配置)</a></li>
-<li><a href="#BlackList-Configuration-黑名單配置" title="BlackList Configuration (黑名單配置)">BlackList Configuration (黑名單配置)</a></li>
-<li><a href="#BanAbuse-Configuration-禁止詞配置" title="BanAbuse Configuration (禁止詞配置)">BanAbuse Configuration (禁止詞配置)</a></li>
-<li class=""><a href="#EventAction-Configuration-事件動作配置" title="EventAction Configuration (事件動作配置)">EventAction Configuration (事件動作配置)</a></li>
+<li><a href="#前端控制" title="前端控制">前端控制</a><ul class="nav">
+<li><a href="#Bio" title="Bio">Bio</a></li>
+<li><a href="#Local" title="Local">Local</a></li>
+<li><a href="#Friends" title="Friends">Friends</a></li>
+<li><a href="#Music" title="Music">Music</a></li>
+<li><a href="#Module" title="Module">Module</a></li>
+<li><a href="#Sticker" title="Sticker">Sticker</a></li>
 </ul>
 </li>
+<li><a href="#後台設定" title="後台設定">後台設定</a><ul class="nav">
+<li><a href="#Sync-同步設定" title="Sync 同步設定">Sync 同步設定</a></li>
+<li><a href="#Local-本地設定" title="Local 本地設定">Local 本地設定</a></li>
+<li><a href="#Script-浪語終端" title="Script 浪語終端">Script 浪語終端</a></li>
+</ul>
+</li>
+<li><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
+<li><a href="#個人" title="個人">個人</a></li>
+<li><a href="#部屋" title="部屋">部屋</a></li>
+</ul>
+</li>
+<li><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
 </ul>
 </li>
 </ul>
 </div><div class="toc-menu"><a class="expand-toggle" href="#">全部展開</a><a class="back-to-top" href="#">回到頂部</a><a class="go-to-bottom" href="#">移至底部</a></div>
     </div>
-
-
-
-
+    
+    
+    
+    
 
     <script src="/js/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="/js/bootstrap-3.3.7.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" defer></script>

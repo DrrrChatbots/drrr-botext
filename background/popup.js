@@ -492,6 +492,19 @@ var BanAbuseH = new Handler("BanAbuse",
       }
     },
 
+    [event_me]: {
+      precond: (config, uis) => config[SWITCH_BANABUSE],
+      onevent: (req, config, uis) => {
+        if(assoc(req.text, config, BANABUSE)){
+          console.log("abuse kick");
+          sendTab({
+            fn: kick_member,
+            args: { user: req.user }
+          })
+        }
+      }
+    },
+
     [event_dm]: {
       precond: (config, uis) => config[SWITCH_BANABUSE],
       onevent: (req, config, uis) => {

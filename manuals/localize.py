@@ -20,7 +20,7 @@ with open(filename, 'r') as doc:
     <link rel="stylesheet" href="/css/emojify.min.css" integrity="sha256-UOrvMOsSDSrW6szVLe8ZDZezBxh5IoIfgTwdNDgTjiU=" crossorigin="anonymous" />""", ctx)
     ctx = re.sub(r'<script.*?</script>', '', ctx)
     ctx = re.sub(r'<script(.|\n)*</script>', '', ctx)
-    ctx = re.sub(r'</body>', 
+    ctx = re.sub(r'</body>',
     """
     <script src="/js/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="/js/bootstrap-3.3.7.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" defer></script>

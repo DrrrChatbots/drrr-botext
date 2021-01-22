@@ -22834,17 +22834,6 @@ var PS = {};
           });
       });
   };
-  var parseArgs = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
-      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(reservedOp("(")))(function () {
-          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp(")"))(function () {
-              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.consume(Data_Identity.monadIdentity))(function () {
-                  return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
-                      return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([  ]);
-                  });
-              });
-          });
-      });
-  });
   var parseObjKey = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(parseStringLiteral)(parseKeyLiteral))(function (key) {
       return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp(":"))(function () {
           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(key);
@@ -22884,6 +22873,17 @@ var PS = {};
   var symbol = function (xs) {
       return tokParser.symbol(xs);
   };
+  var parseArgs = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
+      return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(reservedOp("(")))(function () {
+          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp(")"))(function () {
+              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.consume(Data_Identity.monadIdentity))(function () {
+                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
+                      return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([  ]);
+                  });
+              });
+          });
+      });
+  });
   var parseEtype = Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)(Data_Functor.map(Data_Functor.functorArray)(function (n) {
       return symbol(n);
   })(event$primetypes)))(Data_Show.show(Data_Show.showArray(Data_Show.showString))(event$primetypes));
@@ -23020,13 +23020,13 @@ var PS = {};
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.lookAhead(Data_Identity.monadIdentity)(parsePmatch))(function (v) {
           if (v.value0) {
               return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parsePmatch)(function () {
-                  return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
+                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
                       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([ new Data_Tuple.Tuple(v.value1.value0, v.value1.value1) ]);
                   });
               });
           };
           return Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parsePmatch)(function () {
-              return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
+              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
                   return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([ new Data_Tuple.Tuple(v.value1.value0, v.value1.value1) ]);
               });
           }));
@@ -23036,14 +23036,14 @@ var PS = {};
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.lookAhead(Data_Identity.monadIdentity)(parens(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(Data_Array.fromFoldable(Data_List_Types.foldableList))(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(parsePmatch)(reservedOp(","))))))(function (args) {
           if (args.length === 1 && !args[0].value0) {
               return Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parens(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(Data_Array.fromFoldable(Data_List_Types.foldableList))(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(parsePmatch)(reservedOp(",")))))(function () {
-                  return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
+                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
                       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([ new Data_Tuple.Tuple(args[0].value1.value0, args[0].value1.value1) ]);
                   });
               }));
           };
           return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parens(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(Data_Array.fromFoldable(Data_List_Types.foldableList))(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(parsePmatch)(reservedOp(",")))))(function () {
               return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.consume(Data_Identity.monadIdentity))(function () {
-                  return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(reservedOp("=>"))(function () {
+                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
                       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(Data_Functor.map(Data_Functor.functorArray)(function (v) {
                           return new Data_Tuple.Tuple(v.value1.value0, v.value1.value1);
                       })(args));

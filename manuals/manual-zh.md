@@ -568,7 +568,6 @@ otoko
 - `msg` 普通訊息
 - `me` 以 `/me` 發出的訊息（小字）
 - `dmto` 自己私訊給別人
-- `submit` 自己送出訊息
 - `roll` 有人搖了一個人
 - `music` 播放音樂（某人播放了音樂）
 - `musicbeg` 音樂開始（進度條開始）
@@ -926,3 +925,9 @@ kiwi browser 的愛好者，貌似是句點君？
 
 ## 相關鏈結
 
+[浪打](https://drrr.wiki/@%E6%B5%AA%E6%89%93%E8%B2%93)
+[DrrrWiKi](https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6)
+[QQ 討論群](https://jq.qq.com/?_wv=1027&k=7JjKVhV0)
+[Discord QA 群](https://discord.com/invite/BBCw3UY)
+[Gitee Organization](https://gitee.com/DrrrChatbots)
+[GitHub Organization](https://github.com/DrrrChatbots)

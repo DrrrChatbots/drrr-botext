@@ -727,13 +727,6 @@ var AutoDMH = new Handler("AutoDM",
         chrome.storage.sync.set({
           [DM_USERNAME]: req.user
         });
-      }
-    },
-
-    [event_submit]: {
-      precond: (config, uis) => config[SWITCH_DM],
-      onevent: (req, config, uis) => {
-        console.log("here you are");
         if(config[DM_USERNAME]){
           console.log("there");
 
@@ -743,7 +736,7 @@ var AutoDMH = new Handler("AutoDM",
           })
         }
       }
-    }
+    },
   }
 );
 

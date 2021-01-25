@@ -20,13 +20,13 @@ Note: Yandex on iOS is not supported.
 
 ## FrontEnd Control
 
-> Click the extension icon, open the popup window.
+> Click the extension icon to open the popup window.
 
 ![](https://i.imgur.com/wGUTTot.png)
 
 :::success
 **Button**
-<i class="glyphicon glyphicon-question-sign"></i> Go to this help page
+<i class="glyphicon glyphicon-question-sign"></i> Go to this manual page
 <i class="fa fa-youtube-play"></i> YouTube Tutorial
 <i class="glyphicon glyphicon-console"></i> Script Console
 <i class="glyphicon glyphicon-cog"></i> Go to background settings
@@ -74,7 +74,7 @@ Note: Yandex on iOS is not supported.
 <i class="glyphicon glyphicon glyphicon-picture"></i> Use image URL as background
 <i class="glyphicon glyphicon-transfer"></i> Switch to selected account
 <i class="glyphicon glyphicon-floppy-save"></i> Save the current account
-<i class="glyphicon glyphicon-floppy-remove"></i> delete the selected account
+<i class="glyphicon glyphicon-floppy-remove"></i> Delete the selected account
 
 #### Account Icon
 - 🔖 Current login account
@@ -119,9 +119,7 @@ Match rule pattern:
 - <i class="glyphicon glyphicon-lock"></i> with tripcode
 - <i class="glyphicon glyphicon-user"></i> by username
 - <i class="glyphicon glyphicon-home"></i> by room name
-
-
-<i class="glyphicon glyphicon-tag"></i> Store rules
+- <i class="glyphicon glyphicon-tag"></i> Store rules
 
 Jump mode：
 - <i class="glyphicon glyphicon-send"></i> Jump directly
@@ -187,7 +185,7 @@ Directly after input:
 <i class="glyphicon glyphicon-heart"></i> Expand favorites list
 <i class="glyphicon glyphicon-link"></i> Set other YouTube API server
 
-You can lunch your YouTube API server locally, please refer [the link](https://github.com/DrrrChatbots/youtube-api).
+You can lunch your YouTube API server locally, please refer to [this link](https://github.com/DrrrChatbots/youtube-api).
 Run it with python will show `http://127.0.0.1:5000/`,
 Click the button and stuff `http://127.0.0.1:5000/`, and follow the prompt.
 
@@ -218,7 +216,7 @@ When there are some keywords in search field
 
 ![](https://i.imgur.com/gJeqaLs.png)
 
-#### 功能鍵
+#### Button
 
 <i class="glyphicon glyphicon-search"></i> Expand results <i class="glyphicon glyphicon-play"></i> Play the most relevant song <i class="glyphicon glyphicon-plus"></i> Add the most relevant song to playlist
 :::
@@ -312,9 +310,9 @@ Mode：
 Reload the chatroom can stop effect
 
 Mode：
-- <i class="glyphicon glyphicon-cloud"></i>Snow
-- <i class="glyphicon glyphicon-fire"></i>Firework
-- <i class="glyphicon glyphicon-sort"></i>Elevator
+- <i class="glyphicon glyphicon-cloud"></i> Snow
+- <i class="glyphicon glyphicon-fire"></i> Firework
+- <i class="glyphicon glyphicon-sort"></i> Elevator
 
 :::
 
@@ -324,7 +322,7 @@ Mode：
 ![](https://i.imgur.com/p3aaoEu.png)
 
 Set Number：
-- Method 1：trigger by `/start`, the number will be generated randomly
+- Method 1：trigger by `/start`, a random number will be generated.
 - Method 2：input four digits and click <i id="list_type" class="glyphicon glyphicon glyphicon-pencil"></i> to setup number. click <i class="glyphicon glyphicon-volume-up"></i> to announce game start.
 
 Quick Start：System will hint - NANB
@@ -371,7 +369,7 @@ The settings would be syncronized, so you can use same Google account to login d
 <i class="glyphicon glyphicon-export"></i> Export settings
 choose file：import settings
 
-`HELP` Open the 
+`HELP` Open the manual for the current page
 
 ### Quick Regex Tester (Quick Regular Expression Test)
 
@@ -488,7 +486,8 @@ cat$
 :::warning
 ### BlackList Configuration
 
-Function: Use [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#) to automatically kick out specific uses in list.
+#### Function
+Use [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#) to automatically kick out specific uses in list.
 
 #### Format
 ```js
@@ -496,7 +495,7 @@ Usermatching
 ```
 
 #### Note
-- **No** double quote (or you want to match username with double quote)
+- **No double quote** (or you want to match username with double quote)
 
 #### Example
 kick out users who have `otoko` in their names and some qualified robots.
@@ -561,7 +560,6 @@ when...
 - `msg` normal message
 - `me` as `/me`
 - `dmto` you send private message to other
-- `submit` you send message
 - `roll` someone roll
 - `music` play music(someone play it)
 - `musicbeg` music begins（progress bar beg）

@@ -1484,7 +1484,7 @@ function local_setup(config){
   if(!select_local) select_local = Object.keys(local_functions)[0];
 
   $('#local-select').val(select_local);
-  var local_switch = config[select_local + '-switch'];
+  var local_switch = config[`switch_${select_local}`];
   $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
 
   $('#local-switch-btn').click(function(){
@@ -1493,7 +1493,7 @@ function local_setup(config){
     var optionSelected = $("option:selected", sel);
     var valueSelected = sel.value;
     chrome.storage.local.set({
-      [valueSelected + '-switch']: v
+      ['switch_' + valueSelected]: v
     });
     $('#local-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
   });
@@ -1513,7 +1513,7 @@ function local_setup(config){
       'select_local': valueSelected
     }, function(){
       chrome.storage.local.get((config)=>{
-        var local_switch = config[valueSelected + '-switch'];
+        var local_switch = config['switch_' + valueSelected];
         $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
       });
     });

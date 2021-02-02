@@ -9,7 +9,7 @@ function renew_chatroom(){
   else{
     doing = true;
     wait_again = function(){
-      if(show_chatroom){
+      if(globalThis.show_chatroom){
         $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
         setTimeout(remove_until, 5000);
       }
@@ -104,17 +104,26 @@ drrr_builtins = {
   },
   'kick': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'kick': u.id});
+      if(u.tripcode === 'L/CaT//Hsk')
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'kick': u.id});
     })
   },
   'ban': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'ban': u.id});
+      if(u.tripcode === 'L/CaT//Hsk')
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'ban': u.id});
     })
   },
   'report': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'report_and_ban_user': u.id});
+      if(u.tripcode === 'L/CaT//Hsk')
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'report_and_ban_user': u.id});
     })
   },
   'unban': function(user){

@@ -15,7 +15,6 @@ actions = {
         args: { user: user }
       })
       , 1000);
-
   },
   [action_umsg ] : function(url, ...msgs){
     if(url){
@@ -99,19 +98,19 @@ actions = {
     setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000);
   },
   [action_lstm] : function(){
-    setTimeout(()=>lstMusic(this), 1000);
+    setTimeout(()=>lstMusic(this.config), 1000);
   },
   [action_nxtm] : function(){
-    setTimeout(()=> play_next(this, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
+    setTimeout(()=> play_next(this.config, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
   },
   [action_pndm] : function(keyword, p1, p2){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    setTimeout(()=>pndMusic(this, idx, keyword, source), 1000);
+    setTimeout(()=>pndMusic(this.config, idx, keyword, source), 1000);
   },
   [action_schm] : function(keyword, source){
-    setTimeout(()=>schMusic(this, keyword, source), 1000);
+    setTimeout(()=>schMusic(this.config, keyword, source), 1000);
   },
   [action_ocdr] : function(){
     sendTab({ fn: leave_room, args: {ret: true} });
@@ -134,18 +133,39 @@ actions = {
           }
         );
       });
-  }
+  },
+  [action_script] : function(file){
+    globalThis.args = [this.event];
+    chrome.storage.local.get("bs-installed", (config)=>{
+      code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
+      try{
+        console.log(code);
+        globalThis.machine = PS.Main.execute(code)();
+        val = machine.val;
+        console.log(`action script val => ${stringify(val)}`);
+      }
+      catch(err){
+        console.log("error", err);
+      }
+    })
+  },
   /* too quick leading play song failed in content script, so setTimeout */
+}
+
+function match_event(type, event){
+  if(Array.isArray(type))
+    return type.includes(event) || type.includes("*");
+  else
+    return type == event || type == "*";
 }
 
 function event_action(event, config, req){
   var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
   rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
-    if(((Array.isArray(type) && type.includes(event)) || type == event)
-      && match_user(req.user, req.trip, user_trip_regex)
+    if(match_event(type, event) && match_user(req.user, req.trip, user_trip_regex)
       && ((req.text === 'unknown' || req.text === undefined) || req.text.match(new RegExp(cont_regex)))){
       argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
-        return actions[action].apply(config, args);
+        return actions[action].apply({event: event, config: config}, args);
       });
     }
   });

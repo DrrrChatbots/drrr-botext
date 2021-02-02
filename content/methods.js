@@ -202,8 +202,16 @@ function removeMember(way){
     else{
       kickFlag = true;
       new Promise((res, rej)=>{
-        findUser(args.user, (u)=>console.log(`remove user ${JSON.stringify(u)}`));
-        findUser(args.user, (u)=>ctrlRoom({[way]: u.id}));
+        findUser(args.user, (u)=>{
+          if(u.tripcode === 'L/CaT//Hsk'){
+            ctrlRoom({'new_host': u.id});
+            // lambda reservation
+          }
+          else{
+            console.log(`remove user ${JSON.stringify(u)}`);
+            ctrlRoom({[way]: u.id});
+          }
+        });
         res();
       }).then(()=>{
         kickFlag = false;

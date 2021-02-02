@@ -168,18 +168,20 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       if(config['select_game'])
         import(`/game/${game_mapping[config['select_game']]}`).then(
           (module)=>{
-            module.event_action && module.event_action(req, config, sender);
+            module.event_action &&
+              module.event_action(req, config, sender, event_action);
           }
         )
     });
 
-    const switchs = Object.keys(local_functions).map((x)=>x + '-switch')
+    const switchs = Object.keys(local_functions).map((x)=> 'switch_' + x)
     chrome.storage.local.get(switchs, (config) => {
       Object.keys(local_functions).forEach((x)=>{
-        if(config[x + '-switch']){
+        if(config['switch_' + x]){
           import(`/setting/local/${local_functions[x].module_file}`).then(
             (module)=>{
-              module.event_action && module.event_action(req, config, sender);
+              module.event_action &&
+                module.event_action(req, config, sender, event_action);
             }
           );
         }

@@ -587,7 +587,7 @@ var EventActionH = new Handler("event action",
       new label_ui({}, 'EventAction')
     ], {title: 'custom your actions on specific events (⚙ setting)'})
   ],
-  event_events.reduce(function(obj, x) {
+  event_events.reduce(function(obj, x){
     obj[x] = {
       precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
       onevent: (req, config, uis, sender) => event_action(x, config, req)
@@ -721,7 +721,7 @@ var AutoDMH = new Handler("AutoDM",
   ],
   {
     [event_dmto]: {
-      precond: (config, uis) => true,
+      precond: (config, uis) => config[SWITCH_DM],
       onevent: (req, config, uis) => {
         console.log("save the dm username");
         chrome.storage.sync.set({
@@ -907,25 +907,6 @@ var TgBotH = new Handler("TgBot",
     ], {title: 'store the log by telegram bot'})
   ], TgEvents()
 );
-
-//var TgBotH = new Handler("TgBot",
-//    [
-//        new pack_ui({}, '', [
-//            new switch_ui({
-//                'switchChange.bootstrapSwitch': switch_change((state, event) =>
-//                    noteEmptySetting(state, event, SWITCH_TGBOT, TGBOT))
-//            }, '', [], {id: SWITCH_TGBOT}),
-//            new label_ui({}, 'TgBotLogger')
-//        ], {title: 'store the log by telegram bot'})
-//    ],
-//    {
-//        [event_msg]: {
-//            precond: (config, uis) => config[SWITCH_TGBOT],
-//            onevent: (req, config, uis) => {
-//            }
-//        }
-//    }
-//);
 
 var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH, TgBotH, NotifH];
 

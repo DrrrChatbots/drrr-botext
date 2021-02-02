@@ -13,7 +13,7 @@ with open(filename, 'r') as doc:
         loc = 'img/{}'.format(ntpath.basename(img))
         if not os.path.isfile(loc):
             os.system("wget -O {} {}".format(loc, img))
-    ctx = re.sub(r'https://i.imgur.com/', './img/', ctx)
+    ctx = re.sub(r'https://i.imgur.com/', '/manuals/img/', ctx)
 
 print(ctx)
 

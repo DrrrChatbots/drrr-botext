@@ -225,8 +225,8 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
         $(`#${sid(e)}`).attr(
           'placeholder',
           '');
-        if(res[`${e}`]){
-          var val = local_functions[e].plain(res[`${e}`]);
+        if(res[`${sid(e)}`]){
+          var val = local_functions[e].plain(res[`${sid(e)}`]);
           setting_cache[`${sid(e)}`] = val;
           $(`#${sid(e)}`).val(val);
           //$(`#save-${$(this).attr('data')}`).hide();
@@ -242,18 +242,18 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       if(val.match(/^\s*$/)){
         $(this).hide();
         $(`#reset-${$(this).attr('data')}`).hide();
-        chrome.storage.local.remove(`${$(this).attr('data')}`);
+        chrome.storage.local.remove(`${sid($(this).attr('data'))}`);
         setting_cache[`${sid($(this).attr('data'))}`] = '';
         $(`#${sid($(this).attr('data'))}`).val('')
         /* close switch */
-        local_functions[$(this).attr('data')].empty_cbk();
+        local_functions[$(this).attr('data')].empty_cbk($(this).attr('data'), val);
       }
       else try{
         local_functions[$(this).attr('data')].validate(val);
         $(this).hide();
         $(`#reset-${$(this).attr('data')}`).hide();
         chrome.storage.local.set({
-          [`${$(this).attr('data')}`]:
+          [`${sid($(this).attr('data'))}`]:
           local_functions[$(this).attr('data')].store(val)
         });
         setting_cache[`${sid($(this).attr('data'))}`] = val;

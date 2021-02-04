@@ -22725,7 +22725,7 @@ var PS = {};
           });
       };
   };
-  var event$primetypes = [ "me", "music", "leave", "join", "new-host", "msg", "dm", "dmto", "submit", "newtab", "exittab", "exitalarm", "logout", "musicbeg", "musicend", "timer", "clock", "kick", "ban", "report_and_ban_user", "unban", "roll", "room-profile", "new-description", "timeout" ];
+  var event$primetypes = [ "me", "music", "leave", "join", "new-host", "msg", "dm", "dmto", "newtab", "exittab", "exitalarm", "musicbeg", "musicend", "kick", "ban", "unban", "roll", "room-profile", "new-description", "lounge", "*" ];
   var customStyle = (function () {
       var v = CustomToken.unGenLanguageDef(CustomToken.emptyDef);
       return {
@@ -22786,7 +22786,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 336, column 3 - line 340, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 332, column 3 - line 336, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -22849,19 +22849,19 @@ var PS = {};
                   return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.withErrorMessage(Data_Identity.monadIdentity)(exprP)("Binding Expression"))(function (rval) {
                       return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
                           if (op === "+=") {
-                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("+", lval, expr)));
+                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("+", lval, rval)));
                           };
                           if (op === "-=") {
-                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("-", lval, expr)));
+                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("-", lval, rval)));
                           };
                           if (op === "*=") {
-                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("*", lval, expr)));
+                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("*", lval, rval)));
                           };
                           if (op === "/=") {
-                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("/", lval, expr)));
+                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("/", lval, rval)));
                           };
                           if (op === "%=") {
-                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("%", lval, expr)));
+                              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, new BotScript.Bin("%", lval, rval)));
                           };
                           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Renew(lval, rval));
                       });
@@ -23002,7 +23002,7 @@ var PS = {};
           if (maybe instanceof Data_Maybe.Nothing) {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(false, new Data_Tuple.Tuple($$var, BotScript.Trm.create(BotScript.toTerm("String")("")))));
           };
-          throw new Error("Failed pattern match at BotScriptParser (line 134, column 5 - line 136, column 72): " + [ maybe.constructor.name ]);
+          throw new Error("Failed pattern match at BotScriptParser (line 130, column 5 - line 132, column 72): " + [ maybe.constructor.name ]);
       });
   });
   var parseExpr = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
@@ -23575,7 +23575,7 @@ var PS = {};
   exports.listen = state => types => args => next => () => {
     exports.events[state] = exports.events[state] || [];
 
-    [user_regex, cont_regex] = padArray(args);
+    [user_regex, cont_regex] = padArray(args, 2, "");
 
     exports.events[state].push([
       types, user_regex, cont_regex, next
@@ -23844,8 +23844,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "||") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $98 = $foreign.toBoolean(lv$prime);
-                  if ($98) {
+                  var $96 = $foreign.toBoolean(lv$prime);
+                  if ($96) {
                       return Control_Monad_Rec_Class.Loop.create({
                           val: lv$prime,
                           cur: machine$prime.cur,
@@ -23867,8 +23867,8 @@ var PS = {};
           if (v.exprs.value0.value0 instanceof BotScript.Bin && v.exprs.value0.value0.value0 === "&&") {
               return function __do() {
                   var lv$prime = evalExpr(v)(v.exprs.value0.value0.value1)();
-                  var $102 = $foreign.toBoolean(lv$prime);
-                  if ($102) {
+                  var $100 = $foreign.toBoolean(lv$prime);
+                  if ($100) {
                       var rv$prime = evalExpr(v)(v.exprs.value0.value0.value2)();
                       return Control_Monad_Rec_Class.Loop.create({
                           val: rv$prime,
@@ -24007,7 +24007,7 @@ var PS = {};
                       states: machine$prime.states
                   }));
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 246, column 13 - line 251, column 65): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 248, column 13 - line 253, column 65): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Obj) {
               var v1 = Data_Array.unzip(v.exprs.value0.value0.value0);
@@ -24052,7 +24052,7 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 267, column 13 - line 279, column 38): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 269, column 13 - line 281, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Visit) {
               var v1 = Data_Foldable.find(Data_Foldable.foldableArray)(function (v2) {
@@ -24077,7 +24077,7 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 282, column 13 - line 292, column 38): " + [ v1.constructor.name ]);
+              throw new Error("Failed pattern match at BotScriptVM (line 284, column 13 - line 294, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Reset) {
               return function __do() {
@@ -24225,7 +24225,7 @@ var PS = {};
               });
           };
       };
-      throw new Error("Failed pattern match at BotScriptVM (line 118, column 1 - line 118, column 63): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at BotScriptVM (line 120, column 1 - line 120, column 63): " + [ v.constructor.name ]);
   };
   var make$primeevent$primeaction = function (syms) {
       return function (expr) {
@@ -24256,7 +24256,7 @@ var PS = {};
               if (lval instanceof BotScript.Dot) {
                   return function __do() {
                       var obj$prime = evalExpr(v)(lval.value0)();
-                      var v1 = $foreign.updMem(obj$prime)(lval.value1)(val);
+                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.updMem(obj$prime)(lval.value1)(val))();
                       return v.env;
                   };
               };
@@ -24264,7 +24264,7 @@ var PS = {};
                   return function __do() {
                       var obj$prime = evalExpr(v)(lval.value0)();
                       var sub$prime = evalExpr(v)(lval.value1)();
-                      var v1 = $foreign.updMem(obj$prime)(lval.value1)(val);
+                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.updMem(obj$prime)(lval.value1)(val))();
                       return v.env;
                   };
               };

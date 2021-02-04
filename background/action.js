@@ -125,7 +125,25 @@ actions = {
           findRule,
           lounge, undefined, (groups, config)=>{
             if(groups.length){
-              sendTab({ fn: leave_room, args: {jump: `https://drrr.com/room/?id=${groups[Math.floor(Math.random() * groups.length)][0].roomId}`} });
+              toURL = `https://drrr.com/room/?id=${groups[Math.floor(Math.random() * groups.length)][0].roomId}`
+              sendTab({
+                fn: leave_room,
+                args: {
+                  jump: toURL
+                }
+              }, () => {
+                chrome.storage.sync.get('jumpToRoom', conf => {
+                  if(conf['jumpToRoom']) return;
+                  roomTabs((tabs) => {
+                    if(tabs.length){
+                      chrome.storage.sync.set({
+                        jumpToRoom: toURL
+                      }, () => chrome.tabs.reload(tabs[0].id));
+                      ;
+                    }
+                  }, 'https://drrr.com/lounge/*')
+                })
+              });
             }
             else{
               sendTab({ fn: leave_room, args: {ret: true} });
@@ -135,16 +153,28 @@ actions = {
       });
   },
   [action_script] : function(file){
-    globalThis.args = [this.event];
-    chrome.storage.local.get("bs-installed", (config)=>{
+    envName = `env-${file}`
+    chrome.storage.local.get(["bs-installed", envName], (config)=>{
       code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
+      if(typeof(code) != "string"){
+        alert(`${file} not existed`);
+        return;
+      }
+      storage = config[envName] || {}
       try{
-        console.log(code);
-        globalThis.machine = PS.Main.execute(code)();
+        storage["evt"] = this.event;
+        machine = PS.Main.newMachine();
+        machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
+        machine = PS.Main.interact(machine)(code)();
         val = machine.val;
         console.log(`action script val => ${stringify(val)}`);
+        config[envName] = storage;
+        chrome.storage.local.set({
+          [envName]: config[envName]
+        });
       }
       catch(err){
+        alert(JSON.stringify(err));
         console.log("error", err);
       }
     })
@@ -165,7 +195,17 @@ function event_action(event, config, req){
     if(match_event(type, event) && match_user(req.user, req.trip, user_trip_regex)
       && ((req.text === 'unknown' || req.text === undefined) || req.text.match(new RegExp(cont_regex)))){
       argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
-        return actions[action].apply({event: event, config: config}, args);
+        return actions[action].apply({
+          event: {
+            type: req.type,
+            host: req.host,
+            user: req.user,
+            trip: req.trip,
+            text: req.text,
+            url: req.url
+          },
+          config: config
+        }, args);
       });
     }
   });

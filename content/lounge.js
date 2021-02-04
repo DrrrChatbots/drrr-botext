@@ -42,8 +42,41 @@ function checkGoToRoom(config){
   }
 }
 
+annoyingList = undefined;
+
+function clear_annoying(){
+  if(!annoyingList) return;
+  console.log("clear...")
+  rooms = $('.rooms').get()
+  console.log(rooms);
+  if(annoyingList && rooms.length){
+    rooms.map(room => {
+      list = annoyingList.map(x => RegExp(x, 'i'))
+      console.log(list);
+      console.log($(room).attr('data-meta'))
+      if(list.some(reg => $(room).attr('data-meta').match(reg))){
+        $(room).hide();
+      }
+    })
+  }
+}
+
+function monit_lounge(){
+  if($('.rooms-wrap').length){
+    var observer = new MutationObserver(function(mutations){
+      clear_annoying();
+      //mutations.forEach(function(mutation) {
+      //});
+    });
+    observer.observe($('.rooms-wrap')[0], {
+      attributes: true //configure it to listen to attribute changes
+    });
+  }
+}
+
 $(document).ready(function(){
 
+  monit_lounge();
   chrome.runtime.sendMessage({ start: 'lounge' });
   chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
   //'https://drrr.com/room/.*'
@@ -51,8 +84,9 @@ $(document).ready(function(){
     chrome.storage.sync.remove(['profile', 'cookie']);
   })
 
-  chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile'], (config) => {
+  chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile', 'annoyingList'], (config) => {
     console.log('config', config);
+    annoyingList = config['annoyingList'];
 
     function task(){
       Profile.loc = 'lounge';

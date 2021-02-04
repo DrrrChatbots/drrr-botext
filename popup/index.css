@@ -4,12 +4,10 @@
 .align-right{ float: right;width:50%; margin-top:10px; height:25px;}
 
 .cog{
-    background-color: #dff0d8;
     border-top-width: 0px;
     border-bottom-width: 0px;
     border-left-width: 1px;
     border-right-width: 0px;
-    border-color: #d6e9c6;
     border-top-left-radius: 0;
     border-top-right-radius: 3px;
     border-bottom-left-radius: 0;
@@ -18,8 +16,6 @@
 }
 
 .cog:hover{
-    background-color: #d6e9c6;
-    border-color: #d6e9c6;
     border-top-left-radius: 0;
     border-top-right-radius: 3px;
     border-bottom-left-radius: 0;
@@ -28,12 +24,10 @@
 }
 
 .manual {
-    background-color: #dff0d8;
     border-top-width: 0px;
     border-bottom-width: 0px;
     border-left-width: 0px;
     border-right-width: 1px;
-    border-color: #d6e9c6;
     border-top-left-radius: 3px;
     border-top-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -41,8 +35,6 @@
 }
 
 .manual:hover{
-    background-color: #d6e9c6;
-    border-color: #d6e9c6;
     border-top-left-radius: 3px;
     border-top-right-radius: 0;
     border-bottom-left-radius: 0;

@@ -292,6 +292,7 @@ function remove_module(){
   for(mod of $('.local-modules')){
     if(mod.checked){
       [c, m] = mod.name.split('/')
+      chrome.storage.local.remove(`env-${mod.name}`);
       delete local_modules[mod.name];
       removeItemAll(mirrors['Local'].index[c], m)
       if(!mirrors['Local'].index[c].length)
@@ -348,6 +349,14 @@ function new_module(){
   else alert("empty input");
 }
 
+function clear_module_env(){
+  c = $('#category').val();
+  m = $('#module').val();
+  if(c && m){
+    chrome.storage.local.remove(`env-${c}/${m}`);
+  }
+}
+
 function preloaded_code(code){
   pre = '';
   for(n in local_modules)
@@ -371,12 +380,14 @@ function module_button_display(){
     $('#mirror-update').hide();
     $('#module-save').show();
     $('#module-new').show();
+    $('#module-clear-env').show();
   }
   else{
     $('#module-install').show();
     $('#mirror-update').show();
     $('#module-save').hide();
     $('#module-new').hide();
+    $('#module-clear-env').hide();
   }
 }
 
@@ -503,6 +514,10 @@ function set_modules(config){
 
   $('#module-new').click(function(){
     new_module();
+  })
+
+  $('#module-clear-env').click(function(){
+    clear_module_env();
   })
 
   $('#module-preload').click(function(){

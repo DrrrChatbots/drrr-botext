@@ -159,37 +159,62 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     generate_notification(req);
   }
   else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
-    console.log(req);
-    console.log(JSON.stringify(sender))
-    chrome.storage.sync.get((config) => {
-      var reg_funcs = reg_table[req.type] || [];
-      for(handle of reg_funcs)
-        handle(req, config, sender)
-      if(config['select_game'])
-        import(`/game/${game_mapping[config['select_game']]}`).then(
-          (module)=>{
-            module.event_action &&
-              module.event_action(req, config, sender, event_action);
-          }
-        )
-    });
-
-    const switchs = Object.keys(local_functions).map((x)=> 'switch_' + x)
-    chrome.storage.local.get(switchs, (config) => {
-      Object.keys(local_functions).forEach((x)=>{
-        if(config['switch_' + x]){
-          import(`/setting/local/${local_functions[x].module_file}`).then(
+    if(req && req.info) updateInfo(req.info);
+    if(req.start){
+      updateProfile();
+      updateLoc();
+      updateLounge();
+    }
+    updateProfile(()=>{
+      console.log(req);
+      console.log(JSON.stringify(sender))
+      chrome.storage.sync.get((config) => {
+        var reg_funcs = reg_table[req.type] || [];
+        for(handle of reg_funcs)
+          handle(req, config, sender)
+        if(config['select_game'])
+          import(`/game/${game_mapping[config['select_game']]}`).then(
             (module)=>{
               module.event_action &&
                 module.event_action(req, config, sender, event_action);
             }
-          );
-        }
+          )
       });
-    });
+
+      const switchs = Object.keys(local_functions).map((x)=> 'switch_' + x)
+      chrome.storage.local.get(switchs, (config) => {
+        Object.keys(local_functions).forEach((x)=>{
+          if(config['switch_' + x]){
+            import(`/setting/local/${local_functions[x].module_file}`).then(
+              (module)=>{
+                module.event_action &&
+                  module.event_action(req, config, sender, event_action);
+              }
+            );
+          }
+        });
+      });
+    })
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
-
+    if(req && req.start){
+      updateProfile();
+      updateLoc();
+      updateLounge();
+    }
+    updateProfile(()=>{
+      req.type = event_lounge;
+      req.host = false;
+      req.user = profile.name;
+      req.trip = profile.tripcode;
+      req.text = '';
+      req.url = '';
+      chrome.storage.sync.get((config) => {
+        var reg_funcs = reg_table[req.type] || [];
+        for(handle of reg_funcs)
+          handle(req, config, sender)
+      });
+    })
   }
   if(callback){
     //alert(JSON.stringify(req));

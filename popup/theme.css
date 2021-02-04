@@ -1,0 +1,22 @@
+.panel-heading{
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.panel-body{
+  /*background-color: gray;*/
+}
+
+.btn-success{
+  /*background-color: red !important;*/
+}
+
+.panel-heading-button{
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.panel-heading-button:hover{
+  background-color: #d6e9c6;
+  border-color: #d6e9c6;
+}

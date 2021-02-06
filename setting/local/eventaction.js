@@ -6,7 +6,7 @@ export const event_action = (req, config, sender, pre_event_action) => {
   chrome.storage.local.get(MODULE_SETTING, (config)=>{
     if(!config[MODULE_SETTING]) return;
     event_events.forEach(et => {
-      pre_event_action(et, config, req)
+      if(et === req.type) pre_event_action(et, config, req)
     })
   });
 };

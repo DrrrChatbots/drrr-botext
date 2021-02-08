@@ -152,7 +152,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     return; // callback finished
   }
   else if(req && req.setCookies){
-    setCookies(req.cookies, callback);
+    setCookies(sender.tab.id, req.cookies);
     return; // callback finished
   }
   else if(req && req.notification){

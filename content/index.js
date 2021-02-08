@@ -6,17 +6,7 @@ $(document).ready(function(){
     (config)=>{
       if(config['profile'] && config['cookie']){
         chrome.runtime.sendMessage(
-          { setCookies: true, cookies: config['cookie'] },
-          ()=>{
-            ajaxProfile(function(p){
-              if(p) setTimeout(()=>location.reload(), 1000);
-              else{
-                alert("Bio Expired");
-                chrome.storage.sync.remove(['profile', 'cookie']);
-                chrome.runtime.sendMessage({expired_bio: true});
-              }
-            }, true, 'login');
-          }
+          { setCookies: true, cookies: config['cookie'] }
         )
       }
       else if(config['profile'] || config['cookie']){
@@ -24,4 +14,17 @@ $(document).ready(function(){
       }
     }
   );
+});
+
+chrome.runtime.onMessage.addListener((req, sender, callback) => {
+  if(req.cookieDone){
+    ajaxProfile(function(p, err){
+    if(p) location.reload()
+    else{
+      alert(`Bio Expired ${JSON.stringify(err)}`);
+      chrome.storage.sync.remove(['profile', 'cookie']);
+      chrome.runtime.sendMessage({expired_bio: true});
+    }
+  }, true, 'login');
+  }
 });

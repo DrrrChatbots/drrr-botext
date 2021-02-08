@@ -962,9 +962,3 @@ function make_switch_panel($, panel_id){
 }
 
 var popupURL = chrome.extension.getURL('popup/index.html');
-chrome.runtime.onMessage.addListener((req, sender, callback) => {
-  if(sender.url === popupURL){
-    console.log(req);
-  }
-  if(callback) callback();
-});

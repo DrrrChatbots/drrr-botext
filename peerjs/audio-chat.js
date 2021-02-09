@@ -30,8 +30,19 @@ function initialize() {
       console.log("Here's a stream");
       playStream(stream);
     });
+
+    incoming.on('close', function() {
+      // Do something with this audio stream
+      alert("call ended")
+    });
+
+    incoming.on('error', function(err) {
+      alert(`call error: ${JSON.stringify(err)}`)
+      // Do something with this audio stream
+    });
+
     //call.answer(mediaStream);
-    incoming.answer(null);
+    incoming.answer(audioStream);
   });
 
   peer.on('disconnected', function () {

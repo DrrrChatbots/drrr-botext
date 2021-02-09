@@ -64,6 +64,7 @@ function playStream(stream) {
  * connection and data received on it.
  */
 function join(id) {
+  alert("join");
   // Close old connection
   if (conn) {
     conn.close();
@@ -123,6 +124,7 @@ $(document).ready(function(){
     // Success callback
     function success(localAudioStream) {
       // Do something with audio stream
+      alert("success");
       audioStream = localAudioStream;
       remote = findGetParameter('remote');
       if(remote) join(`${remote}`);

@@ -140,6 +140,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
           chrome.notifications.clear(n);
     })
   }
+  else if(req && req.newTab){
+    chrome.tabs.create({
+      url: req.newTab
+    });
+  }
   else if(req && req.saveCookie){
     chrome.cookies.getAll({
       url : 'https://drrr.com'
@@ -172,8 +177,8 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
         var reg_funcs = reg_table[req.type] || [];
         for(handle of reg_funcs)
           handle(req, config, sender)
-        if(config['select_game'])
-          import(`/game/${game_mapping[config['select_game']]}`).then(
+        if(config['select_module'])
+          import(`/module/${module_mapping[config['select_module']]}`).then(
             (module)=>{
               module.event_action &&
                 module.event_action(req, config, sender, event_action);

@@ -318,6 +318,17 @@ function lambda_conservation(){
   $(document).on('mousedown', '.dropdown-item-report-user', conservation);
 }
 
+function enable_call_link(){
+  $('#talks').on('click', 'a.message-link', function(e){
+    if($(this).attr('href').endsWith('.call')){
+      e.preventDefault();
+      id = $(this).attr('href').replace('https://', '').replace('.call', '');
+      url = chrome.extension.getURL(`/peerjs/audio-chat.html?host=${roomProfile().id}&remote=${id}`);
+      chrome.runtime.sendMessage({ newTab: url });
+    }
+  })
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -326,6 +337,8 @@ $(document).ready(function(){
   chrome.runtime.sendMessage({ start: 'room' });
 
   lambda_conservation();
+
+  enable_call_link();
 
   //$('#body').prepend(MacroModal);
 

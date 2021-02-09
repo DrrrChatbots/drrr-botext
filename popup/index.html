@@ -9,7 +9,7 @@
     <link href="/popup/index.css" rel="stylesheet">
     <script src="/lib/globals.js" type="text/javascript" charset="utf-8"></script>
     <script src="/lib/api.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/game/index.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/module/index.js" type="text/javascript" charset="utf-8"></script>
     <script src="/setting/local/function.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap-switch.min.js"></script>
@@ -398,9 +398,9 @@
                 </button>
               </div>
 
-              <select id="game-select"
+              <select id="module-select"
                       class="form-control"
-                      data-target="#game_list"
+                      data-target="#module_list"
                       style="text-align:center; text-align-last:center;"
                       title="select game">
               </select>
@@ -429,12 +429,12 @@
               </div>
 
             </div>
-            <div id="game_list" class="collapse">
+            <div id="module_list" class="collapse">
               <div class="row" style="height:100%">
                 <div class="col-md-4">
                   <div class="list-group" style="margin-bottom: 0px;">
                     <hr>
-                    <div id='game_list_container'></div>
+                    <div id='module_list_container'></div>
                   </div>
                 </div>
               </div>

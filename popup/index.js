@@ -1442,20 +1442,20 @@ function sticker_setup(config){
 
 }
 
-function game_setup(config){
-  Object.keys(game_mapping).forEach((v)=>{
-    $('#game-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
+function module_setup(config){
+  Object.keys(module_mapping).forEach((v)=>{
+    $('#module-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
   })
 
-  var select_game = config['select_game'];
-  if(!select_game) select_game = 'none';
-  $('#game-select').val(select_game);
+  var select_module = config['select_module'];
+  if(!select_module) select_module = 'none';
+  $('#module-select').val(select_module);
 
-  var $target = $($('#game-select').attr("data-target"));
-  import(`/game/${game_mapping[select_game]}`).then(
+  var $target = $($('#module-select').attr("data-target"));
+  import(`/module/${module_mapping[select_module]}`).then(
     (module)=>{
       if(module.ui && module.ui_event){
-        $('#game_list_container').html(module.ui())
+        $('#module_list_container').html(module.ui())
           .promise().then(()=>{
             $target.collapse('show').promise().then(
               ()=> module.ui_event(config)
@@ -1464,7 +1464,7 @@ function game_setup(config){
       } else $target.collapse('hide');
     });
 
-  $('#game-select').on('change', function (e) {
+  $('#module-select').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
     var $target = $($(this).attr("data-target"));
@@ -1474,14 +1474,14 @@ function game_setup(config){
     $target.attr('data', this.id);
 
     chrome.storage.sync.set({
-      'select_game': valueSelected
+      'select_module': valueSelected
     });
 
     chrome.storage.sync.get((config)=>{
-      import(`/game/${game_mapping[valueSelected]}`).then(
+      import(`/module/${module_mapping[valueSelected]}`).then(
         (module)=>{
           if(module.ui && module.ui_event){
-            $('#game_list_container').html(module.ui(config))
+            $('#module_list_container').html(module.ui(config))
               .promise().then(()=>{
                 $target.collapse('show').promise().then(
                   ()=> module.ui_event(config)
@@ -1599,7 +1599,7 @@ $(document).ready(function(){
     music_bar_setup(config);
     sticker_setup(config);
     friend_bio_setup(config);
-    game_setup(config);
+    module_setup(config);
     chrome.storage.local.get((config)=> local_setup(config));
     var tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();

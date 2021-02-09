@@ -64,19 +64,22 @@ function playStream(stream) {
  * connection and data received on it.
  */
 function join(id) {
-  alert("join");
   // Close old connection
-  if (conn) {
-    conn.close();
-  }
+  // TODO
 
-  var outgoing = null;
-  if(id) outgoing = peer.call(id, audioStream);
-  else outgoing = peer.call(prompt("input your peerID"), audioStream);
+  setTimeout(()=>{
+    if(!audioStream){
+      alert("please enable your audio stream");
+      return;
+    }
+    var outgoing = null;
+    if(id) outgoing = peer.call(id, audioStream);
+    else outgoing = peer.call(prompt("input your peerID"), audioStream);
 
-  outgoing.on('stream', function(stream) {
-    // Do something with this audio stream
-  });
+    outgoing.on('stream', function(stream) {
+      // Do something with this audio stream
+    });
+  }, 2500);
 };
 
 /**
@@ -124,7 +127,6 @@ $(document).ready(function(){
     // Success callback
     function success(localAudioStream) {
       // Do something with audio stream
-      alert("success");
       audioStream = localAudioStream;
       remote = findGetParameter('remote');
       if(remote) join(`${remote}`);
@@ -140,13 +142,7 @@ $(document).ready(function(){
     // Failure callback
     function error(err) {
       // handle error
-      alert("You won't be able to talk to your peer");
-      call = findGetParameter('call');
-      if(call){
-        alert("No Mic, so you cannot call peer");
-      }
-      remote = findGetParameter('remote');
-      if(remote) join(`${remote}`);
+      alert("No Mic, so you cannot call peer, please close the tab");
     }
   );
 });

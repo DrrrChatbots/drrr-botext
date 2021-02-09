@@ -20,7 +20,7 @@ function findGetParameter(parameterName) {
 function initialize() {
   // Create own peer object with connection to shared PeerJS server
   peer = new Peer(peerID, {
-    debug: 2
+    debug: 3
   });
 
   peer.on('call', function(incoming) {
@@ -28,7 +28,7 @@ function initialize() {
     incoming.on('stream', function(stream) {
       // Do something with this audio stream
       console.log("Here's a stream");
-      playStream(stream);
+      playStream(call, stream);
     });
 
     incoming.on('close', function() {
@@ -59,14 +59,19 @@ function initialize() {
   });
   peer.on('error', function (err) {
     console.log(err);
-    alert('' + err);
   });
 };
 
-function playStream(stream) {
-  var audio = $('<audio autoplay />').appendTo('body');
+function playStream(id, stream) {
+  $("#status").text("Connecting");
+  var audio = $(`<audio id="${id}" autoplay />`).appendTo('body');
   audio[0].srcObject = stream;
-  //audio[0].src = (URL || webkitURL || mozURL).createObjectURL(stream);
+}
+
+function removeStream(){
+  $('#status').text('No Connection');
+  if(call) $(`#${call}`).remove();
+  if(remote) $(`#${remote}`).remove();
 }
 /**
  * Create the connection between the two Peers.
@@ -84,13 +89,29 @@ function join(id) {
       return;
     }
     var outgoing = null;
-    if(id) outgoing = peer.call(id, audioStream);
-    else outgoing = peer.call(prompt("input your peerID"), audioStream);
+
+    while(!id){
+      id = prompt("input your peerID");
+      if(!id) alert("Invalid ID");
+    }
+
+    outgoing = peer.call(id, audioStream);
 
     outgoing.on('stream', function(stream) {
       // Do something with this audio stream
-      playStream(stream);
+      playStream(id, stream);
     });
+
+    outgoing.on('close', function() {
+      // Do something with this audio stream
+      alert("call ended")
+    });
+
+    outgoing.on('error', function(err) {
+      alert(`call error: ${JSON.stringify(err)}`)
+      // Do something with this audio stream
+    });
+
   }, 2500);
 };
 
@@ -117,6 +138,8 @@ var conn = null;
 var peer = null; // Own peer object
 var host = null;
 var audioStream = null;
+var remote = null;
+var call = null;
 
 $(document).ready(function(){
 

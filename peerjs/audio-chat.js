@@ -95,25 +95,23 @@ function ready() {
   });
 }
 
-
+var remoteStream = null;
+var lastPeerId = null;
+var conn = null;
+var peer = null; // Own peer object
+var host = null;
+var audioStream = null;
 
 $(document).ready(function(){
-  remoteStream = null;
 
-  var lastPeerId = null;
-  var conn = null;
-  var peer = null; // Own peer object
   host = findGetParameter('host');
   if(host) peerID = `DRRR${host}`;
   else peerID = prompt("input your peerID");
 
-  var joinButton = document.getElementById("joinButton");
-
-  var audioStream = null;
   // handle browser prefixes
   navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
-  joinButton.addEventListener('click', join);
+  document.getElementById("joinButton").addEventListener('click', join);
 
   initialize();
 

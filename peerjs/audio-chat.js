@@ -153,7 +153,7 @@ $(document).ready(function(){
       // Do something with audio stream
       audioStream = localAudioStream;
       remote = findGetParameter('remote');
-      if(remote) join(`DRRR${remote}`);
+      if(remote) join(`${remote}`);
       call = findGetParameter('call');
       if(call){
         ctrlRoom({
@@ -172,7 +172,7 @@ $(document).ready(function(){
         alert("No Mic, so you cannot call peer");
       }
       remote = findGetParameter('remote');
-      if(remote) join(`DRRR${remote}`);
+      if(remote) join(`${remote}`);
     }
   );
 });

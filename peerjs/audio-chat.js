@@ -23,8 +23,41 @@ function initialize() {
     debug: 3
   });
 
+  peer.on('open', function(){
+    // Get access to microphone
+    navigator.getUserMedia (
+      // Only request audio
+      {video: false, audio: true},
+
+      // Success callback
+      function success(localAudioStream) {
+        // Do something with audio stream
+        audioStream = localAudioStream;
+        remote = findGetParameter('remote');
+        if(remote) join(`${remote}`);
+        call = findGetParameter('call');
+        if(call){
+          $("#status").text("Waiting call...");
+          ctrlRoom({
+            'message': 'Click to answer my call',
+            'url': `https://${peerID}.call`,
+            'to': call,
+          })
+        }
+      },
+      // Failure callback
+      function error(err) {
+        // handle error
+        alert("No Mic, so you cannot call peer, please close the tab");
+      }
+    );
+  })
+
   peer.on('call', function(incoming) {
+
     console.log("Here's a call");
+    incoming.answer(audioStream);
+
     incoming.on('stream', function(stream) {
       // Do something with this audio stream
       console.log("Here's a stream");
@@ -41,8 +74,6 @@ function initialize() {
       // Do something with this audio stream
     });
 
-    //call.answer(mediaStream);
-    incoming.answer(audioStream);
   });
 
   peer.on('disconnected', function () {
@@ -63,7 +94,7 @@ function initialize() {
 };
 
 function playStream(id, stream) {
-  $("#status").text("Connecting");
+  $("#status").text("Connected");
   var audio = $(`<audio id="${id}" autoplay />`).appendTo('body');
   audio[0].srcObject = stream;
 }
@@ -83,36 +114,34 @@ function join(id) {
   // Close old connection
   // TODO
 
-  setTimeout(()=>{
-    if(!audioStream){
-      alert("please enable your audio stream");
-      return;
-    }
-    var outgoing = null;
+  $("#status").text("Connecting...");
+  if(!audioStream){
+    alert("please enable your audio stream");
+    return;
+  }
+  var outgoing = null;
 
-    while(!id){
-      id = prompt("input your peerID");
-      if(!id) alert("Invalid ID");
-    }
+  while(!id){
+    id = prompt("input your peerID");
+    if(!id) alert("Invalid ID");
+  }
 
-    outgoing = peer.call(id, audioStream);
+  outgoing = peer.call(id, audioStream);
 
-    outgoing.on('stream', function(stream) {
-      // Do something with this audio stream
-      playStream(id, stream);
-    });
+  outgoing.on('stream', function(stream) {
+    // Do something with this audio stream
+    playStream(id, stream);
+  });
 
-    outgoing.on('close', function() {
-      // Do something with this audio stream
-      alert("call ended")
-    });
+  outgoing.on('close', function() {
+    // Do something with this audio stream
+    alert("call ended")
+  });
 
-    outgoing.on('error', function(err) {
-      alert(`call error: ${JSON.stringify(err)}`)
-      // Do something with this audio stream
-    });
-
-  }, 2500);
+  outgoing.on('error', function(err) {
+    alert(`call error: ${JSON.stringify(err)}`)
+    // Do something with this audio stream
+  });
 };
 
 /**
@@ -153,31 +182,4 @@ $(document).ready(function(){
   document.getElementById("joinButton").addEventListener('click', join);
 
   initialize();
-
-  // Get access to microphone
-  navigator.getUserMedia (
-    // Only request audio
-    {video: false, audio: true},
-
-    // Success callback
-    function success(localAudioStream) {
-      // Do something with audio stream
-      audioStream = localAudioStream;
-      remote = findGetParameter('remote');
-      if(remote) join(`${remote}`);
-      call = findGetParameter('call');
-      if(call){
-        ctrlRoom({
-          'message': 'Click to answer my call',
-          'url': `https://${peerID}.call`,
-          'to': call,
-        })
-      }
-    },
-    // Failure callback
-    function error(err) {
-      // handle error
-      alert("No Mic, so you cannot call peer, please close the tab");
-    }
-  );
 });

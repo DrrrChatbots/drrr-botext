@@ -18,7 +18,7 @@ $(document).ready(function(){
   var conn = null;
   var peer = null; // Own peer object
   host = findGetParameter('host');
-  if(host) peerID = host;
+  if(host) peerID = `DRRR${host}`;
   else peerID = prompt("input your peerID");
 
   var joinButton = document.getElementById("joinButton");
@@ -154,11 +154,23 @@ $(document).ready(function(){
       audioStream = localAudioStream;
       remote = findGetParameter('remote');
       if(remote) join(`DRRR${remote}`);
+      call = findGetParameter('call');
+      if(call){
+        ctrlRoom({
+          'message': 'Click to answer my call',
+          'url': `https://${peerID}.call`,
+          'to': call,
+        })
+      }
     },
     // Failure callback
     function error(err) {
       // handle error
       alert("You won't be able to talk to your peer");
+      call = findGetParameter('call');
+      if(call){
+        alert("No Mic, so you cannot call peer");
+      }
       remote = findGetParameter('remote');
       if(remote) join(`DRRR${remote}`);
     }

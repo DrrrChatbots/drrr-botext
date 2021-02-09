@@ -58,11 +58,9 @@ var call_peer_btn = (args) =>
 
 function bind_call_peer(args){
   $(`.call-peer[data="${args.data.id}"]`).click(function(){
-    ctrlRoom({
-      'message': 'Click to answer my call',
-      'url': `https://${args.data.selfID}.call`,
-      'to': args.data.id,
-    })
+    chrome.tabs.create({
+      url: chrome.extension.getURL(`/peerjs/audio-chat.html?host=${args.data.selfID}&call=${args.data.id}`)
+    });
   });
 }
 

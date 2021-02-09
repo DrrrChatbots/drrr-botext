@@ -78,6 +78,7 @@ function join(id) {
 
     outgoing.on('stream', function(stream) {
       // Do something with this audio stream
+      playStream(stream);
     });
   }, 2500);
 };

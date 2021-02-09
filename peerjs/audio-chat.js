@@ -114,7 +114,7 @@ $(document).ready(function(){
     }
 
     var outgoing = null;
-    if(id) outgoing = id
+    if(id) outgoing = peer.call(id, audioStream);
     else outgoing = peer.call(prompt("input your peerID"), audioStream);
 
     outgoing.on('stream', function(stream) {

@@ -66,10 +66,12 @@ function initialize() {
 
     incoming.on('close', function() {
       // Do something with this audio stream
+      removeStream();
       alert("call ended")
     });
 
     incoming.on('error', function(err) {
+      removeStream();
       alert(`call error: ${JSON.stringify(err)}`)
       // Do something with this audio stream
     });
@@ -78,6 +80,7 @@ function initialize() {
 
   peer.on('disconnected', function () {
     console.log("Connection lost. Please reconnect");
+    removeStream();
 
     // Workaround for peer.reconnect deleting previous id
     peer.id = lastPeerId;
@@ -87,9 +90,11 @@ function initialize() {
   peer.on('close', function() {
     // destroy audio tag, remove incoming
     console.log("Connection destroyed. Please refresh");
+    removeStream();
   });
   peer.on('error', function (err) {
     console.log(err);
+    removeStream();
   });
 };
 
@@ -144,26 +149,8 @@ function join(id) {
   });
 };
 
-/**
- * Triggered once a connection has been achieved.
- * Defines callbacks to handle incoming data and connection events.
- */
-function ready() {
-  setTimeout(function(){
-    console.log("done");
-  }, 2e3);
-  conn.on('data', function (data) {
-    console.log(`peer: ${data}`)
-  });
-  conn.on('close', function () {
-    console.log("Connection reset\nAwaiting connection...");
-    conn = null;
-  });
-}
-
 var remoteStream = null;
 var lastPeerId = null;
-var conn = null;
 var peer = null; // Own peer object
 var host = null;
 var audioStream = null;

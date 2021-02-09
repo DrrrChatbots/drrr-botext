@@ -68,14 +68,15 @@ export const ui_event = (config) => {
   var data = {'peers': []};
   btn_funcbind[call_peer_btn] = bind_call_peer;
   getRoom((info) => {
-    info.room.users.forEach(u => {
-      if(info.profile.name !== u.name)
-        data.peers.push({
-          name: `${u.name}`,
-          id: u.id,
-          selfID: info.profile.id
-        });
-    })
+    if(info.room)
+      info.room.users.forEach(u => {
+        if(info.profile.name !== u.name)
+          data.peers.push({
+            name: `${u.name}`,
+            id: u.id,
+            selfID: info.profile.id
+          });
+      })
     show_peer_list(data);
   }, (err) => {
     alert("Cannot get room list");

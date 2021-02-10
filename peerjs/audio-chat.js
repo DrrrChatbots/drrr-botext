@@ -236,18 +236,19 @@ $(document).ready(function(){
   });
 
   $('#callRemote').click(function(){
-    if(remote){
-      window.call = peer.call(remote, window.localStream);
-      //window.onbeforeunload = askBeforeLeave;
-      handlecall(window.call);
-    }
+    if(remote) join(remote);
     else alert("Please set remote ID");
   });
 
+  $('#endCall').click(function(){
+    if(window.call){
+      window.call.close();
+    }
+    else alert("There's no call now");
+  })
+
   // handle browser prefixes
   navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-
-  document.getElementById("joinButton").addEventListener('click', join);
 
   initialize();
 });

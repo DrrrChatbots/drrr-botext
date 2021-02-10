@@ -115,7 +115,7 @@ function initialize() {
   // incoming call
   peer.on('call', function(call) {
     window.call = call;
-    window.onbeforeunload = askBeforeLeave;
+    //window.onbeforeunload = askBeforeLeave;
     console.log("Here's a call");
     call.answer(window.localStream);
     handlecall(call);
@@ -176,7 +176,7 @@ function join(id) {
 
   // outgoing call
   window.call = peer.call(id, window.localStream);
-  window.onbeforeunload = askBeforeLeave;
+  //window.onbeforeunload = askBeforeLeave;
   handlecall(window.call);
 }
 

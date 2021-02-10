@@ -29,6 +29,12 @@ function handlecall(call){
     alert(`call error: ${JSON.stringify(err)}`)
     // Do something with this audio stream
   });
+
+  call.peerConnection.onconnectionstatechange = function (event) {
+    if (event.currentTarget.connectionState === 'disconnected') {
+      peer.close();
+    }
+  };
 }
 
 /**
@@ -163,16 +169,15 @@ $(document).ready(function(){
 });
 
 window.onbeforeunload = function (e) {
-  var message = "Connection break, click yes to reconnect",
-  e = e || window.event;
+  var message = "Audio chat will end, do you wanna leave?",
+    e = e || window.event;
   // For IE and Firefox
   if(window.call){
     if (e) {
       e.returnValue = message;
     }
-    window.call.close();
     // For Safari
     return message;
   }
   return undefined;
-};
+}

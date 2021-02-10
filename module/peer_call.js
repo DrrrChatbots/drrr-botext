@@ -2,7 +2,7 @@ var PEER_CALL = "PEER_CALL"
 
 var language = window.navigator.userLanguage || window.navigator.language;
 var intro = (language == 'zh-CN' || language == 'zh-TW') ?
-  `<p>歡迎使用點對點通話模組。</p>`:`<p>Welcome to Peer Call module.</p>`
+  `歡迎使用點對點通話模組。`:`Welcome to Peer Call module.`
 
 //Object.defineProperty(String.prototype, 'hashCode', {
 //  value: function() {
@@ -18,7 +18,15 @@ var intro = (language == 'zh-CN' || language == 'zh-TW') ?
 
 export const ui = (config) => {
   return `
-  ${intro}
+  <div class="input-group">
+     <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+     <span class="input-group-addon form-control panel-footer text-center" title="call the peer">${intro}</span>
+     <div class="input-group-btn">
+      <button id="call_ui" class="btn btn-default" type="button" title="Lunch UI">
+        <i class="glyphicon glyphicon-phone-alt"></i>
+      </button>
+     </div>
+  </div>
   <!--
   <div class="input-group">
     <div class="input-group-btn">
@@ -68,6 +76,12 @@ export const ui_event = (config) => {
   var data = {'peers': []};
   btn_funcbind[call_peer_btn] = bind_call_peer;
   getRoom((info) => {
+    $('#call_ui').click(function(){
+      var param = info.profile ? `?host=${info.profile.id}` : '';
+      chrome.tabs.create({
+        url: chrome.extension.getURL(`/peerjs/audio-chat.html${param}`)
+      });
+    });
     if(info.room)
       info.room.users.forEach(u => {
         if(info.profile.name !== u.name)

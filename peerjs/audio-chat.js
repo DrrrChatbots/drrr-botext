@@ -119,10 +119,8 @@ function initialize() {
 
   // incoming call
   peer.on('call', function(call) {
-    answer = true;
-    if(call.peer != remote)
-      answer = prompt(`Call from ${call.peer}, do you wanna answer?`);
-    if(answer){
+
+    function answer_call(){
       $('#remote-id').text(call.peer);
       remote = call.peer;
       window.call = call;
@@ -131,12 +129,29 @@ function initialize() {
       call.answer(window.localStream);
       handlecall(call);
     }
+
+    if(window.call){
+      answer = prompt(`New call from ${call.peer}, break current and answer?`);
+      if(!answer) return;
+      // break and answer
+      window.call.close();
+      var until_close = () => setTimeout(function(){
+        if(window.call) until_close();
+        else answer_call();
+      }, 2500);
+      until_close();
+    }
+    else{
+      answer = true;
+      if(call.peer != remote)
+        answer = prompt(`Call from ${call.peer}, do you wanna answer?`);
+      if(answer) answer_call();
+    }
   });
 
   peer.on('disconnected', function () {
     stopStream();
     console.log("Connection lost. Please reconnect");
-    alert("Connection lost. Please reconnect");
     // Workaround for peer.reconnect deleting previous id
     //peer.id = lastPeerId;
     //peer._lastServerId = lastPeerId;
@@ -145,14 +160,14 @@ function initialize() {
   peer.on('close', function() {
     stopStream();
     console.log("Connection destroyed. Please refresh");
-    alert("Connection destroyed. Please refresh");
   });
 
   peer.on('error', function (err) {
     stopStream();
     console.log(err);
-    if(err.type === 'unavailable-id' || err.type === 'peer-unavailable'){
+    if(err.type === 'peer-unavailable'){
       //'peer-unavailable'
+      window.call = null;
       if(tryCall){
         $("#status").text("Waiting answer...");
         ctrlRoom({
@@ -162,6 +177,12 @@ function initialize() {
         })
         tryCall = false;
       }
+    }
+    else if(err.type === 'unavailable-id'){
+      alert("the id is taken");
+      peerID = null;
+
+
     }
     else{
       console.log('Error:' + err.type);
@@ -189,22 +210,32 @@ function stopStream(){
 function join(id) {
   // Close old connection
   // TODO
+  function _join(){
+    $("#status").text("Connecting...");
+    if(!window.localStream){
+      alert("please enable your audio stream");
+      return;
+    }
 
-  $("#status").text("Connecting...");
-  if(!window.localStream){
-    alert("please enable your audio stream");
-    return;
+    while(!id){
+      id = prompt("Input the peerID you want to call");
+      if(!id) alert("Invalid ID");
+    }
+
+    // outgoing call
+    window.call = peer.call(id, window.localStream);
+    //window.onbeforeunload = askBeforeLeave;
+    handlecall(window.call);
   }
 
-  while(!id){
-    id = prompt("Input the peerID you want to call");
-    if(!id) alert("Invalid ID");
-  }
-
-  // outgoing call
-  window.call = peer.call(id, window.localStream);
-  //window.onbeforeunload = askBeforeLeave;
-  handlecall(window.call);
+  if(window.call){
+    window.call.close();
+    var until_close = () => setTimeout(function(){
+      if(window.call) until_close();
+      else _join();
+    }, 2500);
+    until_close();
+  } else _join();
 }
 
 var peer = null; // Own peer object
@@ -222,15 +253,22 @@ $(document).ready(function(){
 
   $('#setID').click(function(){
     // TODO:clear window.call?
-    peerID = prompt("input your peerID");
-    initialize();
+    input = prompt("Input your peerID");
+    if(input){
+      peerID = input;
+      initialize();
+    }
+    else{
+      peerID = null;
+      $('#id').text('Please set your ID');
+    }
   });
 
   $('#inviteRemote').click(function(){
     if(peerID){
-      $("#status").text("Waiting answer...");
+      $("#status").text("Waiting...");
       ctrlRoom({
-        'message': 'Click to answer my call',
+        'message': 'Click to call me',
         'url': `https://${peerID}.call`,
       })
     }
@@ -239,7 +277,15 @@ $(document).ready(function(){
 
   $('#setRemoteID').click(function(){
     // TODO:clear window.call?
-    remote = prompt("input your peerID");
+    id = prompt("Input your peerID");
+    if(id){
+      remote = id;
+      $('#remote-id').text(remote);
+    }
+    else{
+      remote = null;
+      $('#remote-id').text('Please set remote ID');
+    }
   });
 
   $('#callRemote').click(function(){
@@ -248,9 +294,7 @@ $(document).ready(function(){
   });
 
   $('#endCall').click(function(){
-    if(window.call){
-      window.call.close();
-    }
+    if(window.call) window.call.close();
     else alert("There's no call now");
   })
 

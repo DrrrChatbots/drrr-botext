@@ -59,7 +59,7 @@ var call_peer_btn = (args) =>
 function bind_call_peer(args){
   $(`.call-peer[data="${args.data.id}"]`).click(function(){
     chrome.tabs.create({
-      url: chrome.extension.getURL(`/peerjs/audio-chat.html?host=${args.data.selfID}&call=${args.data.id}`)
+      url: chrome.extension.getURL(`/peerjs/audio-chat.html?host=${args.data.selfID}&to=${args.data.id}`)
     });
   });
 }

@@ -323,7 +323,7 @@ function enable_call_link(){
     if($(this).attr('href').endsWith('.call')){
       e.preventDefault();
       id = $(this).attr('href').replace('https://', '').replace('.call', '');
-      url = chrome.extension.getURL(`/peerjs/audio-chat.html?host=${roomProfile().id}&remote=${id}`);
+      url = chrome.extension.getURL(`/peerjs/audio-chat.html?host=${roomProfile().id}&from=${id}`);
       chrome.runtime.sendMessage({ newTab: url });
     }
   })

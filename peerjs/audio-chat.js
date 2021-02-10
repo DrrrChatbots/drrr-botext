@@ -11,6 +11,26 @@ function findGetParameter(parameterName) {
   return result;
 }
 
+function handle_call(call){
+  call.on('stream', function(stream) {
+    // Do something with this audio stream
+    console.log("Here's a stream");
+    playStream(remote, stream);
+  });
+
+  call.on('close', function() {
+    // Do something with this audio stream
+    stopStream();
+    alert("call ended")
+  });
+
+  call.on('error', function(err) {
+    stopStream();
+    alert(`call error: ${JSON.stringify(err)}`)
+    // Do something with this audio stream
+  });
+}
+
 /**
  * Create the Peer object for our end of the connection.
  *
@@ -20,7 +40,7 @@ function findGetParameter(parameterName) {
 function initialize() {
   // Create own peer object with connection to shared PeerJS server
   peer = new Peer(peerID, {
-    debug: 3
+    //debug: 3
   });
 
   peer.on('open', function(){
@@ -30,19 +50,22 @@ function initialize() {
       {video: false, audio: true},
 
       // Success callback
-      function success(localAudioStream) {
+      function success(stream) {
         // Do something with audio stream
-        audioStream = localAudioStream;
-        remote = findGetParameter('remote');
+        window.localStream = stream;
+
+        remote = findGetParameter('from');
         if(remote) join(`${remote}`);
-        call = findGetParameter('call');
-        if(call){
-          $("#status").text("Waiting call...");
-          ctrlRoom({
-            'message': 'Click to answer my call',
-            'url': `https://${peerID}.call`,
-            'to': call,
-          })
+        else{
+          remote = findGetParameter('to');
+          if(remote){
+            $("#status").text("Waiting call...");
+            ctrlRoom({
+              'message': 'Click to answer my call',
+              'url': `https://${peerID}.call`,
+              'to': remote,
+            })
+          }
         }
       },
       // Failure callback
@@ -53,48 +76,31 @@ function initialize() {
     );
   })
 
-  peer.on('call', function(incoming) {
-
+  // incoming call
+  peer.on('call', function(call) {
     console.log("Here's a call");
-    incoming.answer(audioStream);
-
-    incoming.on('stream', function(stream) {
-      // Do something with this audio stream
-      console.log("Here's a stream");
-      playStream(call, stream);
-    });
-
-    incoming.on('close', function() {
-      // Do something with this audio stream
-      removeStream();
-      alert("call ended")
-    });
-
-    incoming.on('error', function(err) {
-      removeStream();
-      alert(`call error: ${JSON.stringify(err)}`)
-      // Do something with this audio stream
-    });
-
+    call.answer(window.localStream);
+    handle_call(call);
   });
 
   peer.on('disconnected', function () {
+    stopStream();
     console.log("Connection lost. Please reconnect");
-    removeStream();
-
+    alert("Connection lost. Please reconnect");
     // Workaround for peer.reconnect deleting previous id
     peer.id = lastPeerId;
     peer._lastServerId = lastPeerId;
     peer.reconnect();
   });
   peer.on('close', function() {
-    // destroy audio tag, remove incoming
+    stopStream();
     console.log("Connection destroyed. Please refresh");
-    removeStream();
+    alert("Connection destroyed. Please refresh");
   });
   peer.on('error', function (err) {
+    stopStream();
     console.log(err);
-    removeStream();
+    console.log('Error:' + err);
   });
 };
 
@@ -104,9 +110,8 @@ function playStream(id, stream) {
   audio[0].srcObject = stream;
 }
 
-function removeStream(){
+function stopStream(){
   $('#status').text('No Connection');
-  if(call) $(`#${call}`).remove();
   if(remote) $(`#${remote}`).remove();
 }
 /**
@@ -120,42 +125,25 @@ function join(id) {
   // TODO
 
   $("#status").text("Connecting...");
-  if(!audioStream){
+  if(!window.localStream){
     alert("please enable your audio stream");
     return;
   }
-  var outgoing = null;
 
   while(!id){
     id = prompt("input your peerID");
     if(!id) alert("Invalid ID");
   }
 
-  outgoing = peer.call(id, audioStream);
-
-  outgoing.on('stream', function(stream) {
-    // Do something with this audio stream
-    playStream(id, stream);
-  });
-
-  outgoing.on('close', function() {
-    // Do something with this audio stream
-    alert("call ended")
-  });
-
-  outgoing.on('error', function(err) {
-    alert(`call error: ${JSON.stringify(err)}`)
-    // Do something with this audio stream
-  });
+  // outgoing call
+  var call = peer.call(id, window.localStream);
+  handle_call(call);
 };
 
-var remoteStream = null;
-var lastPeerId = null;
 var peer = null; // Own peer object
 var host = null;
-var audioStream = null;
 var remote = null;
-var call = null;
+var lastPeerId = null;
 
 $(document).ready(function(){
 

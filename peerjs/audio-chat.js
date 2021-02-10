@@ -43,7 +43,7 @@ function handlecall(call){
   call.on('error', function(err) {
     window.onbeforeunload = null;
     stopStream();
-    alert(`call error: ${JSON.stringify(err)}`)
+    alert(`call error: ${err.type}`)
     window.call = null;
     // Do something with this audio stream
   });
@@ -91,16 +91,19 @@ function initialize() {
         window.localStream = stream;
 
         remote = findGetParameter('from');
-        if(remote) join(`${remote}`);
+        if(remote){
+          $('#remote-id').text(remote);
+          join(`${remote}`);
+        }
         else{
           remote = findGetParameter('to');
           if(remote){
-            $("#status").text("Waiting call...");
-            ctrlRoom({
-              'message': 'Click to answer my call',
-              'url': `https://${peerID}.call`,
-              'to': remote,
-            })
+            remote = `DRRR${remote}`
+            $('#remote-id').text(remote);
+            tryCall = true;
+            $("#status").text("Try Calling...");
+            window.call = peer.call(id, window.localStream);
+            handlecall(window.call);
           }
         }
       },
@@ -139,7 +142,18 @@ function initialize() {
   peer.on('error', function (err) {
     stopStream();
     console.log(err);
-    console.log('Error:' + err);
+    if(err.type === 'peer-unavailable'){
+      if(tryCall){
+        $("#status").text("Waiting answer...");
+        ctrlRoom({
+          'message': 'Click to answer my call',
+          'url': `https://${peerID}.call`,
+          'to': remote,
+        })
+      }
+    }
+    console.log('Error:' + err.type);
+    alert('Error:' + err.type);
   });
 };
 
@@ -184,6 +198,7 @@ var peer = null; // Own peer object
 var host = null;
 var remote = null;
 var lastPeerId = null;
+var tryCall = false;
 window.localStream = null;
 window.call = null;
 

@@ -119,11 +119,18 @@ function initialize() {
 
   // incoming call
   peer.on('call', function(call) {
-    window.call = call;
-    //window.onbeforeunload = askBeforeLeave;
-    console.log("Here's a call");
-    call.answer(window.localStream);
-    handlecall(call);
+    answer = true;
+    if(call.peer != remote)
+      answer = prompt(`Call from ${call.peer}, do you wanna answer?`);
+    if(answer){
+      $('#remote-id').text(call.peer);
+      remote = call.peer;
+      window.call = call;
+      //window.onbeforeunload = askBeforeLeave;
+      console.log("Here's a call");
+      call.answer(window.localStream);
+      handlecall(call);
+    }
   });
 
   peer.on('disconnected', function () {

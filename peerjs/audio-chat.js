@@ -140,14 +140,14 @@ function initialize() {
           else answer_call();
         }, 2500);
         until_close();
-      } else call.close();
+      } else { call.answer(); call.close(); }
     }
     else{
       answer = true;
       if(call.peer != remote)
         answer = confirm(`Call from ${call.peer}, do you wanna answer?`);
       if(answer) answer_call();
-      else call.close();
+      else { call.answer(); call.close(); }
     }
   });
 
@@ -183,8 +183,7 @@ function initialize() {
     else if(err.type === 'unavailable-id'){
       alert("the id is taken");
       peerID = null;
-
-
+      $('#id').text('Please set your ID');
     }
     else{
       console.log('Error:' + err.type);

@@ -1,3 +1,9 @@
+/*
+ let screenStream = await navigator.mediaDevices.getDisplayMedia({
+    video: true
+});
+*/
+
 function askBeforeLeave(e) {
   var message = "Audio chat will end, do you wanna leave?",
     e = e || window.event;
@@ -12,10 +18,11 @@ function askBeforeLeave(e) {
   return undefined;
 }
 
-function findGetParameter(parameterName) {
+function findGetParameter(parameterName, url) {
+  var search = url ? (new URL(url)).search : location.search;
   var result = null,
     tmp = [];
-  location.search
+  search
     .substr(1)
     .split("&")
     .forEach(function (item) {
@@ -92,13 +99,13 @@ function initialize() {
         // Do something with audio stream
         window.localStream = stream;
 
-        remote = findGetParameter('from');
+        remote = findGetParameter('invite');
         if(remote){
           $('#remote-id').text(remote);
           join(`${remote}`);
         }
         else{
-          remote = findGetParameter('to');
+          remote = findGetParameter('wait');
           if(remote){
             remote = `DRRR${remote}`
             $('#remote-id').text(remote);
@@ -134,8 +141,7 @@ function initialize() {
       call.answer();
       setTimeout(function(){
         call.close();
-        alert("cancel the call");
-      }, 1500);
+      }, 2500);
     }
 
     if(window.call){
@@ -182,7 +188,7 @@ function initialize() {
         $("#status").text("Waiting answer...");
         ctrlRoom({
           'message': 'Click to answer my call',
-          'url': `https://${peerID}.call`,
+          'url': `https://drrrchatbots.gitee.io${location.pathname}?invite=${peerID}`,
           'to': remote.replace('DRRR', ''),
         })
         tryCall = false;

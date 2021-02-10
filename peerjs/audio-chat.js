@@ -99,14 +99,12 @@ function initialize() {
         // Do something with audio stream
         window.localStream = stream;
 
-        remote = findGetParameter('invite');
-        if(remote){
+        if(findGetParameter('invite')){
           $('#remote-id').text(remote);
           join(`${remote}`);
         }
         else{
-          remote = findGetParameter('wait');
-          if(remote){
+          if(findGetParameter('wait')){
             remote = `DRRR${remote}`
             $('#remote-id').text(remote);
             tryCall = true;
@@ -255,16 +253,32 @@ function join(id) {
 
 var peer = null; // Own peer object
 var host = null;
+var peerID = null;
 var remote = null;
 var lastPeerId = null;
 var tryCall = false;
 window.localStream = null;
 window.call = null;
 
+function makeid(length) {
+   var result           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+
+function randomPeerID(){
+  return 'DRRR' + makeid(20);
+}
+
 $(document).ready(function(){
 
   host = findGetParameter('host');
   if(host) peerID = `DRRR${host}`;
+  else peerID = randomPeerID();
 
   $('#setID').click(function(){
     // TODO:clear window.call?
@@ -315,5 +329,6 @@ $(document).ready(function(){
   // handle browser prefixes
   navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
+  remote = findGetParameter('invite') || findGetParameter('wait');
   initialize();
 });

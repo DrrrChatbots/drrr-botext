@@ -219,6 +219,17 @@ $(document).ready(function(){
     initialize();
   });
 
+  $('#inviteRemote').click(function(){
+    if(peerID){
+      $("#status").text("Waiting answer...");
+      ctrlRoom({
+        'message': 'Click to answer my call',
+        'url': `https://${peerID}.call`,
+      })
+    }
+    else alert("Please set your ID");
+  })
+
   $('#setRemoteID').click(function(){
     // TODO:clear window.call?
     remote = prompt("input your peerID");
@@ -230,7 +241,7 @@ $(document).ready(function(){
       //window.onbeforeunload = askBeforeLeave;
       handlecall(window.call);
     }
-    else alert("Please remote ID");
+    else alert("Please set remote ID");
   });
 
   // handle browser prefixes

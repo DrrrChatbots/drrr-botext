@@ -130,6 +130,14 @@ function initialize() {
       handlecall(call);
     }
 
+    function cancel_call(){
+      call.answer();
+      setTimeout(function(){
+        call.close();
+        alert("cancel the call");
+      }, 1500);
+    }
+
     if(window.call){
       answer = confirm(`New call from ${call.peer}, break current and answer?`);
       if(answer){
@@ -140,14 +148,14 @@ function initialize() {
           else answer_call();
         }, 2500);
         until_close();
-      } else { call.answer(); call.close(); }
+      } else cancel_call();
     }
     else{
       answer = true;
       if(call.peer != remote)
         answer = confirm(`Call from ${call.peer}, do you wanna answer?`);
       if(answer) answer_call();
-      else { call.answer(); call.close(); }
+      else cancel_call();
     }
   });
 

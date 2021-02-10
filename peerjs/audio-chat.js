@@ -60,6 +60,11 @@ function handlecall(call){
  */
 function initialize() {
   // Create own peer object with connection to shared PeerJS server
+  if(!peerID)
+    peerID = prompt("input your peerID");
+
+  $('#id').text(peerID);
+
   peer = new Peer(peerID, {
     //debug: 3
   });
@@ -154,7 +159,7 @@ function join(id) {
   }
 
   while(!id){
-    id = prompt("input your peerID");
+    id = prompt("Input the peerID you want to call");
     if(!id) alert("Invalid ID");
   }
 
@@ -175,7 +180,6 @@ $(document).ready(function(){
 
   host = findGetParameter('host');
   if(host) peerID = `DRRR${host}`;
-  else peerID = prompt("input your peerID");
 
   // handle browser prefixes
   navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);

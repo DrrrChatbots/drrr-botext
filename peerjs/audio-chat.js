@@ -132,20 +132,22 @@ function initialize() {
 
     if(window.call){
       answer = confirm(`New call from ${call.peer}, break current and answer?`);
-      if(!answer) return;
-      // break and answer
-      window.call.close();
-      var until_close = () => setTimeout(function(){
-        if(window.call) until_close();
-        else answer_call();
-      }, 2500);
-      until_close();
+      if(answer){
+        // break and answer
+        window.call.close();
+        var until_close = () => setTimeout(function(){
+          if(window.call) until_close();
+          else answer_call();
+        }, 2500);
+        until_close();
+      } else call.close();
     }
     else{
       answer = true;
       if(call.peer != remote)
         answer = confirm(`Call from ${call.peer}, do you wanna answer?`);
       if(answer) answer_call();
+      else call.close();
     }
   });
 

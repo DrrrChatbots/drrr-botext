@@ -219,12 +219,12 @@ $(document).ready(function(){
     initialize();
   });
 
-  $('#setRemoteID')(function(){
+  $('#setRemoteID').click(function(){
     // TODO:clear window.call?
     remote = prompt("input your peerID");
   });
 
-  $('#callRemote')(function(){
+  $('#callRemote').click(function(){
     if(remote){
       window.call = peer.call(remote, window.localStream);
       //window.onbeforeunload = askBeforeLeave;

@@ -297,7 +297,7 @@ $(document).ready(function(){
     if(peerID){
       ctrlRoom({
         'message': 'Click to call me',
-        'url': `https://${peerID}.call`,
+        'url': `https://drrrchatbots.gitee.io${location.pathname}?invite=${peerID}`,
       })
     }
     else alert("Please set your ID");

@@ -266,7 +266,6 @@ $(document).ready(function(){
 
   $('#inviteRemote').click(function(){
     if(peerID){
-      $("#status").text("Waiting...");
       ctrlRoom({
         'message': 'Click to call me',
         'url': `https://${peerID}.call`,

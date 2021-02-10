@@ -11,7 +11,7 @@ function findGetParameter(parameterName) {
   return result;
 }
 
-function handle_call(call){
+function handlecall(call){
   call.on('stream', function(stream) {
     // Do something with this audio stream
     console.log("Here's a stream");
@@ -78,9 +78,10 @@ function initialize() {
 
   // incoming call
   peer.on('call', function(call) {
+    window.call = call;
     console.log("Here's a call");
     call.answer(window.localStream);
-    handle_call(call);
+    handlecall(call);
   });
 
   peer.on('disconnected', function () {
@@ -136,14 +137,16 @@ function join(id) {
   }
 
   // outgoing call
-  var call = peer.call(id, window.localStream);
-  handle_call(call);
-};
+  window.call = peer.call(id, window.localStream);
+  handlecall(window.call);
+}
 
 var peer = null; // Own peer object
 var host = null;
 var remote = null;
 var lastPeerId = null;
+window.localStream = null;
+window.call = null;
 
 $(document).ready(function(){
 
@@ -158,3 +161,18 @@ $(document).ready(function(){
 
   initialize();
 });
+
+window.onbeforeunload = function (e) {
+  var message = "Connection break, click yes to reconnect",
+  e = e || window.event;
+  // For IE and Firefox
+  if(window.call){
+    if (e) {
+      e.returnValue = message;
+    }
+    window.call.close();
+    // For Safari
+    return message;
+  }
+  return undefined;
+};

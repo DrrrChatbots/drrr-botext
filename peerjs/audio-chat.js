@@ -131,7 +131,7 @@ function initialize() {
     }
 
     if(window.call){
-      answer = prompt(`New call from ${call.peer}, break current and answer?`);
+      answer = confirm(`New call from ${call.peer}, break current and answer?`);
       if(!answer) return;
       // break and answer
       window.call.close();
@@ -144,7 +144,7 @@ function initialize() {
     else{
       answer = true;
       if(call.peer != remote)
-        answer = prompt(`Call from ${call.peer}, do you wanna answer?`);
+        answer = confirm(`Call from ${call.peer}, do you wanna answer?`);
       if(answer) answer_call();
     }
   });

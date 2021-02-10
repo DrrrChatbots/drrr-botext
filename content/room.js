@@ -319,7 +319,7 @@ function lambda_conservation(){
 }
 
 function findGetParameter(parameterName, url) {
-  var search = url ? (new URL(url)).search || location.search;
+  var search = url ? (new URL(url)).search : location.search;
   var result = null,
     tmp = [];
   search

@@ -1,3 +1,17 @@
+function askBeforeLeave(e) {
+  var message = "Audio chat will end, do you wanna leave?",
+    e = e || window.event;
+  // For IE and Firefox
+  if(window.call){
+    if (e) {
+      e.returnValue = message;
+    }
+    // For Safari
+    return message;
+  }
+  return undefined;
+}
+
 function findGetParameter(parameterName) {
   var result = null,
     tmp = [];
@@ -20,6 +34,7 @@ function handlecall(call){
 
   call.on('close', function() {
     // Do something with this audio stream
+    window.onbeforeunload = null;
     stopStream();
     alert("call ended")
   });
@@ -85,6 +100,7 @@ function initialize() {
   // incoming call
   peer.on('call', function(call) {
     window.call = call;
+    window.onbeforeunload = askBeforeLeave;
     console.log("Here's a call");
     call.answer(window.localStream);
     handlecall(call);
@@ -144,6 +160,7 @@ function join(id) {
 
   // outgoing call
   window.call = peer.call(id, window.localStream);
+  window.onbeforeunload = askBeforeLeave;
   handlecall(window.call);
 }
 
@@ -167,17 +184,3 @@ $(document).ready(function(){
 
   initialize();
 });
-
-window.onbeforeunload = function (e) {
-  var message = "Audio chat will end, do you wanna leave?",
-    e = e || window.event;
-  // For IE and Firefox
-  if(window.call){
-    if (e) {
-      e.returnValue = message;
-    }
-    // For Safari
-    return message;
-  }
-  return undefined;
-}

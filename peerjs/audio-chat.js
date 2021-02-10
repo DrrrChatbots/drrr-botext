@@ -70,8 +70,10 @@ function clearPeer(){
  */
 function initialize() {
   // Create own peer object with connection to shared PeerJS server
-  if(!peerID)
-    peerID = prompt("input your peerID");
+  if(!peerID) {
+    alert("Please set your ID");
+    return;
+  }
 
   $('#id').text(peerID);
 
@@ -142,18 +144,22 @@ function initialize() {
   peer.on('error', function (err) {
     stopStream();
     console.log(err);
-    if(err.type === 'peer-unavailable'){
+    if(err.type === 'unavailable-id' || err.type === 'peer-unavailable'){
+      //'peer-unavailable'
       if(tryCall){
         $("#status").text("Waiting answer...");
         ctrlRoom({
           'message': 'Click to answer my call',
           'url': `https://${peerID}.call`,
-          'to': remote,
+          'to': remote.replace('DRRR', ''),
         })
+        tryCall = false;
       }
     }
-    console.log('Error:' + err.type);
-    alert('Error:' + err.type);
+    else{
+      console.log('Error:' + err.type);
+      alert('Error:' + err.type);
+    }
   });
 };
 
@@ -206,6 +212,26 @@ $(document).ready(function(){
 
   host = findGetParameter('host');
   if(host) peerID = `DRRR${host}`;
+
+  $('#setID').click(function(){
+    // TODO:clear window.call?
+    peerID = prompt("input your peerID");
+    initialize();
+  });
+
+  $('#setRemoteID')(function(){
+    // TODO:clear window.call?
+    remote = prompt("input your peerID");
+  });
+
+  $('#callRemote')(function(){
+    if(remote){
+      window.call = peer.call(remote, window.localStream);
+      //window.onbeforeunload = askBeforeLeave;
+      handlecall(window.call);
+    }
+    else alert("Please remote ID");
+  });
 
   // handle browser prefixes
   navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);

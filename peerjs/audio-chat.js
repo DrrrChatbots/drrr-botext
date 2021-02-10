@@ -37,11 +37,14 @@ function handlecall(call){
     window.onbeforeunload = null;
     stopStream();
     alert("call ended")
+    window.call = null;
   });
 
   call.on('error', function(err) {
+    window.onbeforeunload = null;
     stopStream();
     alert(`call error: ${JSON.stringify(err)}`)
+    window.call = null;
     // Do something with this audio stream
   });
 
@@ -50,6 +53,13 @@ function handlecall(call){
       call.close();
     }
   };
+}
+
+function clearPeer(){
+  peer.destroy();
+  $('#id').text('Please set your peerID');
+  peerID = null;
+  peer = null;
 }
 
 /**
@@ -116,15 +126,16 @@ function initialize() {
     console.log("Connection lost. Please reconnect");
     alert("Connection lost. Please reconnect");
     // Workaround for peer.reconnect deleting previous id
-    peer.id = lastPeerId;
-    peer._lastServerId = lastPeerId;
-    peer.reconnect();
+    //peer.id = lastPeerId;
+    //peer._lastServerId = lastPeerId;
+    //peer.reconnect();
   });
   peer.on('close', function() {
     stopStream();
     console.log("Connection destroyed. Please refresh");
     alert("Connection destroyed. Please refresh");
   });
+
   peer.on('error', function (err) {
     stopStream();
     console.log(err);

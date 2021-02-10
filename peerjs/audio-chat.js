@@ -32,7 +32,7 @@ function handlecall(call){
 
   call.peerConnection.onconnectionstatechange = function (event) {
     if (event.currentTarget.connectionState === 'disconnected') {
-      peer.close();
+      call.close();
     }
   };
 }

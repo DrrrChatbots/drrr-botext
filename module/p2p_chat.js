@@ -1,4 +1,4 @@
-var PEER_CALL = "PEER_CALL"
+var P2P_CHAT = "P2P_CHAT"
 
 var language = window.navigator.userLanguage || window.navigator.language;
 var intro = (language == 'zh-CN' || language == 'zh-TW') ?
@@ -67,7 +67,7 @@ var call_peer_btn = (args) =>
 function bind_call_peer(args){
   $(`.call-peer[data="${args.data.id}"]`).click(function(){
     chrome.tabs.create({
-      url: chrome.extension.getURL(`/peerjs/audio-chat.html?host=${args.data.selfID}&wait=${args.data.id}`)
+      url: chrome.extension.getURL(`/peerjs/p2p-chat.html?host=${args.data.selfID}&wait=${args.data.id}`)
     });
   });
 }
@@ -79,7 +79,7 @@ export const ui_event = (config) => {
     $('#call_ui').click(function(){
       var param = info.profile ? `?host=${info.profile.id}` : '';
       chrome.tabs.create({
-        url: chrome.extension.getURL(`/peerjs/audio-chat.html${param}`)
+        url: chrome.extension.getURL(`/peerjs/p2p-chat.html${param}`)
       });
     });
     if(info.room)

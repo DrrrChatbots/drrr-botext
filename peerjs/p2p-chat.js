@@ -5,26 +5,26 @@
 */
 
 const createMediaStreamFake = () => {
-      return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack({ width:640, height:480 })]);
+  return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack({ width:640, height:480 })]);
 }
 
 const createEmptyAudioTrack = () => {
-    const ctx = new AudioContext();
-    const oscillator = ctx.createOscillator();
-    const dst = oscillator.connect(ctx.createMediaStreamDestination());
-    oscillator.start();
-    const track = dst.stream.getAudioTracks()[0];
-    return Object.assign(track, { enabled: false });
+  const ctx = new AudioContext();
+  const oscillator = ctx.createOscillator();
+  const dst = oscillator.connect(ctx.createMediaStreamDestination());
+  oscillator.start();
+  const track = dst.stream.getAudioTracks()[0];
+  return Object.assign(track, { enabled: false });
 }
 
 const createEmptyVideoTrack = ({ width, height }) => {
-    const canvas = Object.assign(document.createElement('canvas'), { width, height });
-    canvas.getContext('2d').fillRect(0, 0, width, height);
+  const canvas = Object.assign(document.createElement('canvas'), { width, height });
+  canvas.getContext('2d').fillRect(0, 0, width, height);
 
-    const stream = canvas.captureStream();
-    const track = stream.getVideoTracks()[0];
+  const stream = canvas.captureStream();
+  const track = stream.getVideoTracks()[0];
 
-    return Object.assign(track, { enabled: false });
+  return Object.assign(track, { enabled: false });
 };
 
 function askBeforeLeave(e) {
@@ -68,6 +68,8 @@ function handlecall(call){
     stopStream();
     alert("call ended")
     window.call = null;
+    $("#chat-setting-container").show();
+    $("#chat-video-container").hide();
   });
 
   call.on('error', function(err) {
@@ -86,10 +88,58 @@ function handlecall(call){
 }
 
 function clearPeer(){
+  peer.close();
   peer.destroy();
   $('#id').text('Please set your peerID');
   peerID = null;
   peer = null;
+}
+
+function getConfig(){
+  return {
+    dev: {
+      video: $('#video').val() === 'screen',
+      audio: $('input[name="speaker"]').is(":checked")
+    },
+    user: {
+      video: $('#video').val() === 'camera',
+      audio: $('input[name="microphone"]').is(":checked")
+    }
+  };
+}
+
+function getStream(config, success, error){
+
+  var srcs = []
+
+  if(navigator.mediaDevices.getUserMedia)
+    srcs.push(['user', navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)])
+  if(navigator.mediaDevices.getDisplayMedia)
+    srcs.push(['dev', navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices)])
+
+  function merge(ss, cfg, tracks, onSucc, onErr){
+    if(ss.length){
+      let [[name, func], ...rss] = ss;
+      if(cfg[name].video || cfg[name].audio){
+        func(cfg[name])
+          .then((stream) => {
+            if(cfg[name].video){
+              tracks = tracks.concat(stream.getVideoTracks());
+            }
+            if(cfg[name].audio)
+              tracks = tracks.concat(stream.getAudioTracks());
+            merge(rss, cfg , tracks , onSucc, onErr);
+          })
+          .catch((e) => {
+            err(e);
+          });
+      }
+      else merge(rss, cfg, tracks, onSucc, onErr);
+    }
+    else if(tracks) onSucc(new MediaStream(tracks));
+    else onSucc(new MediaStream([createEmptyAudioTrack()]));
+  }
+  merge(srcs, config, [], success, error);
 }
 
 /**
@@ -112,37 +162,20 @@ function initialize() {
   });
 
   peer.on('open', function(){
-    // Get access to microphone
-    navigator.getUserMedia (
-      // Only request audio
-      {video: false, audio: true},
-
-      // Success callback
-      function success(stream) {
-        // Do something with audio stream
-        window.localStream = stream;
-
-        if(findGetParameter('invite')){
-          $('#remote-id').text(remote);
-          join(`${remote}`);
-        }
-        else{
-          if(findGetParameter('wait')){
-            remote = `DRRR${remote}`
-            $('#remote-id').text(remote);
-            tryCall = true;
-            $("#status").text("Try Calling...");
-            window.call = peer.call(id, window.localStream);
-            handlecall(window.call);
-          }
-        }
-      },
-      // Failure callback
-      function error(err) {
-        // handle error
-        alert("No Mic, so you cannot call peer, please close the tab");
+    if(findGetParameter('invite')){
+      $('#remote-id').text(remote);
+      join(`${remote}`);
+    }
+    else{
+      if(findGetParameter('wait')){
+        remote = `DRRR${remote}`
+        $('#remote-id').text(remote);
+        tryCall = true;
+        $("#status").text("Try Calling...");
+        window.call = peer.call(id, window.localStream);
+        handlecall(window.call);
       }
-    );
+    }
   })
 
   // incoming call
@@ -229,8 +262,18 @@ function initialize() {
 
 function playStream(id, stream) {
   $("#status").text("Connected");
-  var audio = $(`<audio id="${id}" autoplay />`).appendTo('body');
-  audio[0].srcObject = stream;
+  $("#chat-setting-container").hide();
+  $("#chat-video-container").show();
+
+  var localVideo =
+    $(`#${id}`).length ? $(`#${id}`)[0] :
+    $(`<video id="${id}" autoplay />`).appendTo('#chat-video-container')[0];
+
+  if ("srcObject" in localVideo) {
+    localVideo.srcObject = stream;
+  } else {
+    localVideo.src = window.URL.createObjectURL(stream);
+  }
 }
 
 function stopStream(){
@@ -248,20 +291,25 @@ function join(id) {
   // TODO
   function _join(){
     $("#status").text("Connecting...");
-    if(!window.localStream){
-      alert("please enable your audio stream");
-      return;
-    }
+    try{
+      if(!window.localStream){
+        alert("please enable your audio stream");
+        return;
+      }
 
-    while(!id){
-      id = prompt("Input the peerID you want to call");
-      if(!id) alert("Invalid ID");
-    }
+      while(!id){
+        id = prompt("Input the peerID you want to call");
+        if(!id) alert("Invalid ID");
+      }
 
-    // outgoing call
-    window.call = peer.call(id, window.localStream);
-    //window.onbeforeunload = askBeforeLeave;
-    handlecall(window.call);
+      // outgoing call
+      window.call = peer.call(id, window.localStream);
+      //window.onbeforeunload = askBeforeLeave;
+      handlecall(window.call);
+    }
+    catch(err){
+      alert(String(err));
+    }
   }
 
   if(window.call){
@@ -284,13 +332,13 @@ window.localStream = null;
 window.call = null;
 
 function makeid(length) {
-   var result           = '';
-   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-   var charactersLength = characters.length;
-   for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-   }
-   return result;
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 function randomPeerID(){
@@ -349,13 +397,40 @@ $(document).ready(function(){
     else alert("There's no call now");
   })
 
-  // handle browser prefixes
-  navigator.getUserMedia
-    = navigator.getUserMedia
-    || navigator.webkitGetUserMedia
-    || navigator.mozGetUserMedia
-    || navigator.msGetUserMedia;
+  $('#complete').click(function(){
+    getStream(getConfig(),
+      function success(stream) {
+        window.localStream = stream;
+        $('#stream-ui').hide();
+        $('#chat-ui').show();
+        if(!peer) initialize();
+      },
+      function error(e) {
+        //alert("No Mic, so you cannot call peer, please close the tab");
+        alert("error: " + e);
+      });
+  });
+
+  $('#setup').click(function(){
+    //window.location.reload();
+    $('#chat-ui').hide();
+    $('#stream-ui').show();
+    if(window.call) window.call.close();
+  });
+
+  $('#stream-setting-form').submit(()=>false);
+  $('#chat-setting-form').submit(()=>false);
 
   remote = findGetParameter('invite') || findGetParameter('wait');
-  initialize();
+
+  if(navigator.mediaDevices.getUserMedia){
+    $('#video').append(`<option value="camera">Camera</option>`)
+    $('#audio').append(`<label><input type="checkbox" name="microphone" value="microphone" checked>Microphone</label><br>`)
+
+  }
+  if(navigator.mediaDevices.getDisplayMedia){
+    $('#video').append(`<option value="screen">Screen</option>`)
+    $('#audio').append(`<label><input type="checkbox" name="speaker" value="speaker">Device Speaker</label><br>`)
+
+  }
 });

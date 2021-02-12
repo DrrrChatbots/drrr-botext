@@ -122,13 +122,13 @@ function getStream(config, success, error){
           stream
             .getTracks()
             .forEach(track => initStream.addTrack(track));
-          success(initStream);
+          success(wrapAudioVideo(initStream));
         })
         .catch(e => {
           error(e);
         });
     }
-    else success(initStream);
+    else success(wrapAudioVideo(initStream));
   }
 
   if(!config.video && !config.audio)

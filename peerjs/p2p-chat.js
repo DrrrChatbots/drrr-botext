@@ -2,12 +2,12 @@
 const defaultVideoSize = { width:640, height:480 };
 
 var call_constraints = {
-    'mandatory': {
-        'OfferToReceiveAudio': true,
-        'OfferToReceiveVideo': true
-    },
-    offerToReceiveAudio: 10,
-    offerToReceiveVideo: 10,
+  'mandatory': {
+    'OfferToReceiveAudio': true,
+    'OfferToReceiveVideo': true
+  },
+  offerToReceiveAudio: 10,
+  offerToReceiveVideo: 10,
 }
 
 const createMediaStreamFake = () => {
@@ -121,14 +121,14 @@ function getConfig(){
 function getStream(config, success, error){
 
   function wrapAudioVideo(stream){
-    if(!stream.getAudioTracks().length){
-      stream.addTrack(createEmptyAudioTrack());
-      alert("wrap empty audio");
-    }
-    if(!stream.getVideoTracks().length){
-      stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
-      alert("wrap empty video");
-    }
+    //if(!stream.getAudioTracks().length){
+    //  stream.addTrack(createEmptyAudioTrack());
+    //  alert("wrap empty audio");
+    //}
+    //if(!stream.getVideoTracks().length){
+    //  stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
+    //  alert("wrap empty video");
+    //}
     return stream;
   }
 
@@ -150,7 +150,8 @@ function getStream(config, success, error){
   }
 
   if(!config.video && !config.audio)
-    success(createMediaStreamFake());
+    //success(createMediaStreamFake());
+    success(new MediaStream([createEmptyAudioTrack()]))
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
       .getDisplayMedia({video: true, audio: true})
@@ -291,50 +292,50 @@ function playStream(id, stream) {
 
   var uelt = $(`#${id}`);
   if(uelt.length){
-    localVideo = uelt.find(`#${id}-video`)[0];
-    localAudio = uelt.find(`#${id}-audio`)[0];
+    // skip
+    //localVideo = uelt.find(`#${id}-video`)[0];
+    //localAudio = uelt.find(`#${id}-audio`)[0];
   }
   else{
-    full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    video = $(`<video poster="./p2p-chat.png" muted id="${id}-video" autoplay controls playsinline/>`)
-    audio = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
-    localVideo = video[0];
-    localAudio = audio[0];
+    full = null;
+    if(stream.getVideoTracks.length){
+      media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
+      full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
+      full.click(function(){
+        if (media[0].requestFullscreen)
+          media[0].requestFullscreen();
+        else if (media[0].webkitRequestFullscreen)
+          media[0].webkitRequestFullscreen();
+        else if (media[0].msRequestFullScreen)
+          media[0].msRequestFullScreen();
+      });
+    }
+    else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
 
-    full.click(function(){
-      if (localVideo.requestFullscreen)
-        localVideo.requestFullscreen();
-      else if (localVideo.webkitRequestFullscreen)
-        localVideo.webkitRequestFullscreen();
-      else if (localVideo.msRequestFullScreen)
-        localVideo.msRequestFullScreen();
-    });
+    localMedia = media[0];
 
     function wrap(elt){
       return $(`<div class="col-100"></div>`).append(elt);
     }
-    $(`<div id="${id}" class="row"></div>`)
-      .append(wrap(video))
-      .append(wrap(audio))
-      .append(wrap(full))
+    var container = $(`<div id="${id}" class="row"></div>`)
+      .append(wrap(media))
       .appendTo('#chat-video-container');
+    if(full) container.append(wrap(full));
   }
 
-  if(!localVideo.srcObject ||
-    (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
-    if ("srcObject" in localVideo) {
-      localVideo.srcObject = stream;
-      localAudio.srcObject = stream;
+  if(!media[0].srcObject ||
+    (stream.getTracks().length > media[0].srcObject.getTracks().length)){
+    if ("srcObject" in media[0]) {
+      media[0].srcObject = stream;
       // once I stop one video (0x0), the other one would be break
-      //if(!localVideo.videoHeight || !localVideo.videoWidth)
+      //if(!media[0].videoHeight || !media[0].videoWidth)
       //  if(stream.getVideoTracks().length){
       //    var tracks = stream.getVideoTracks();
       //    //tracks[0].stop();
       //    //stream.removeTrack(tracks[0]);
       //  }
     } else {
-      localVideo.src = window.URL.createObjectURL(stream);
-      localAudio.src = window.URL.createObjectURL(stream);
+      media[0].src = window.URL.createObjectURL(stream);
     }
   }
 }

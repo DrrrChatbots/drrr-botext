@@ -297,6 +297,7 @@ function playStream(id, stream) {
     //localAudio = uelt.find(`#${id}-audio`)[0];
   }
   else{
+    window.remoteStream = stream;
     full = null;
     if(stream.getVideoTracks().length){
       media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)

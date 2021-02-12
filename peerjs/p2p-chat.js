@@ -1,5 +1,8 @@
+const defaultVideoSize = { width:0, height:0 };
+//const defaultVideoSize = { width:640, height:480 };
+
 const createMediaStreamFake = () => {
-  return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack({ width:640, height:480 })]);
+  return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack(defaultVideoSize)]);
 }
 
 const createEmptyAudioTrack = () => {
@@ -110,7 +113,7 @@ function getStream(config, success, error){
     if(!stream.getAudioTracks().length)
       stream.addTrack(createEmptyAudioTrack());
     if(!stream.getVideoTracks().length)
-      stream.addTrack(createEmptyVideoTrack({ width:640, height:480 }));
+      stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
     return stream;
   }
 

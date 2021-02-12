@@ -1,6 +1,15 @@
 //const defaultVideoSize = { width:0, height:0 };
 const defaultVideoSize = { width:640, height:480 };
 
+var call_constraints = {
+    'mandatory': {
+        'OfferToReceiveAudio': true,
+        'OfferToReceiveVideo': true
+    },
+    offerToReceiveAudio: 10,
+    offerToReceiveVideo: 10,
+}
+
 const createMediaStreamFake = () => {
   alert("empty video audio");
   return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack(defaultVideoSize)]);
@@ -358,7 +367,7 @@ function join(id) {
       }
 
       // outgoing call
-      window.call = peer.call(id, window.localStream);
+      window.call = peer.call(id, window.localStream, call_constraints);
       //window.onbeforeunload = askBeforeLeave;
       handleCall(window.call);
       handleCallClose(window.call);

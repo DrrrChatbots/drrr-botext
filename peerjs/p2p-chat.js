@@ -96,50 +96,52 @@ function clearPeer(){
 }
 
 function getConfig(){
+  const audioSources =
+    $('#audio-input')
+    .find(':checkbox')
+    .filter(':checked')
+    .get().map(e => e.value);
+
+  const videoSource = $('#video-input').val();
   return {
-    dev: {
-      video: $('#video').val() === 'screen',
-      audio: $('input[name="speaker"]').is(":checked")
-    },
-    user: {
-      video: $('#video').val() === 'camera',
-      audio: $('input[name="microphone"]').is(":checked")
-    }
+    audio: audioSources.length ? {deviceId: audioSources} : false,
+    video: videoSource === "none" ? false : {deviceId: videoSource}
   };
 }
 
 function getStream(config, success, error){
 
-  var srcs = []
-
-  if(navigator.mediaDevices.getUserMedia)
-    srcs.push(['user', navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)])
-  if(navigator.mediaDevices.getDisplayMedia)
-    srcs.push(['dev', navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices)])
-
-  function merge(ss, cfg, tracks, onSucc, onErr){
-    if(ss.length){
-      let [[name, func], ...rss] = ss;
-      if(cfg[name].video || cfg[name].audio){
-        func(cfg[name])
-          .then((stream) => {
-            if(cfg[name].video){
-              tracks = tracks.concat(stream.getVideoTracks());
-            }
-            if(cfg[name].audio)
-              tracks = tracks.concat(stream.getAudioTracks());
-            merge(rss, cfg , tracks , onSucc, onErr);
-          })
-          .catch((e) => {
-            onErr(e);
-          });
-      }
-      else merge(rss, cfg, tracks, onSucc, onErr);
+  function getOtherStreams(cfg, initStream){
+    if(cfg.video || cfg.audio){
+      navigator.mediaDevices
+        .getUserMedia(cfg)
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach(track => initStream.addTrack(track));
+          success(initStream);
+        })
+        .catch(e => {
+          error(e);
+        });
     }
-    else if(tracks) onSucc(new MediaStream(tracks));
-    else onSucc(new MediaStream([createEmptyAudioTrack()]));
+    else success(initStream);
   }
-  merge(srcs, config, [], success, error);
+
+  if(!config.video && !config.audio)
+    success(new MediaStream([createEmptyAudioTrack()]));
+  else if(config.video && config.video.deviceId == 'screen'){
+    navigator.mediaDevices
+      .getDisplayMedia({video: true, audio: false})
+      .then(stream => {
+        config.video = false;
+        getOtherStreams(config, new MediaStream(stream))
+      })
+      .catch(e => {
+        error(e);
+      });
+  }
+  else getOtherStreams(config,new MediaStream());
 }
 
 /**
@@ -254,8 +256,8 @@ function initialize() {
       $('#id').text('Please set your ID');
     }
     else{
-      console.log('Error:' + err.type);
-      alert('Error:' + err.type);
+      console.log('peer error:' + err.type);
+      alert('peer error:' + err.type);
     }
   });
 };
@@ -270,7 +272,7 @@ function playStream(id, stream) {
     localVideo = uelt.find(`${id}-video`)[0];
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    video = $(`<video id="${id}-video" autoplay />`)
+    video = $(`<video id="${id}-video" autoplay controls playsinline/>`)
     localVideo = video[0];
 
     full.click(function(){
@@ -367,6 +369,59 @@ function randomPeerID(){
   return 'DRRR' + makeid(20);
 }
 
+function handleError(error) {
+  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+}
+
+function gotDevices(deviceInfos) {
+  // Handles being called several times to update labels. Preserve values.
+  //const values = selectors.map(select => select.value);
+  //selectors.forEach(select => {
+  //    while (select.firstChild) {
+  //        select.removeChild(select.firstChild);
+  //    }
+  //});
+  var videoSelect = $('#video-input');
+  var audioInputChecks = $('#audio-input');
+  var audioOutputSelect = $('#audio-output');
+  for (let i = 0; i !== deviceInfos.length; ++i) {
+    const deviceInfo = deviceInfos[i];
+    //const option = document.createElement('option');
+    //option.value = deviceInfo.deviceId;
+    if (deviceInfo.kind === 'audioinput') {
+      var label = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+      audioInputChecks.append($(`<label><input type="checkbox" name="microphone" value="${deviceInfo.deviceId}">${label}</label><br>`));
+    } else if (deviceInfo.kind === 'audiooutput') {
+      var label = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
+      audioOutputSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
+    } else if (deviceInfo.kind === 'videoinput') {
+      var label = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+      videoSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
+    } else {
+      console.log('Some other kind of source/device: ', deviceInfo);
+    }
+  }
+  if(navigator.mediaDevices.getDisplayMedia)
+    videoSelect.append($(`<option value="screen">Screen</option>`));
+  //selectors.forEach((select, selectorIndex) => {
+  //    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+  //        select.value = values[selectorIndex];
+  //    }
+  //});
+}
+
+function setMediaSources(){
+  //if(navigator.mediaDevices.getUserMedia){
+  //  $('#video').append(`<option value="camera">Camera</option>`)
+  //  $('#audio').append(`<label><input type="checkbox" name="microphone" value="microphone" checked>Microphone</label><br>`)
+  //}
+  //if(navigator.mediaDevices.getDisplayMedia){
+  //  $('#video').append(`<option value="screen">Screen</option>`)
+  //  $('#audio').append(`<label><input type="checkbox" name="speaker" value="speaker">Device Speaker</label><br>`)
+  //}
+  navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+}
+
 $(document).ready(function(){
 
   host = findGetParameter('host');
@@ -429,7 +484,8 @@ $(document).ready(function(){
       },
       function error(e) {
         //alert("No Mic, so you cannot call peer, please close the tab");
-        alert("error: " + e);
+        alert("stream error: " + e);
+        console.log(e);
       });
   });
 
@@ -438,6 +494,10 @@ $(document).ready(function(){
     $('#chat-ui').hide();
     $('#stream-ui').show();
     if(window.call) window.call.close();
+    if (window.localStream) {
+      window.localStream.getTracks().forEach(track => track.stop());
+      window.localStream = null;
+    }
   });
 
   $('#stream-setting-form').submit(()=>false);
@@ -445,12 +505,5 @@ $(document).ready(function(){
 
   remote = findGetParameter('invite') || findGetParameter('wait');
 
-  if(navigator.mediaDevices.getUserMedia){
-    $('#video').append(`<option value="camera">Camera</option>`)
-    $('#audio').append(`<label><input type="checkbox" name="microphone" value="microphone" checked>Microphone</label><br>`)
-  }
-  if(navigator.mediaDevices.getDisplayMedia){
-    $('#video').append(`<option value="screen">Screen</option>`)
-    $('#audio').append(`<label><input type="checkbox" name="speaker" value="speaker">Device Speaker</label><br>`)
-  }
+  setMediaSources();
 });

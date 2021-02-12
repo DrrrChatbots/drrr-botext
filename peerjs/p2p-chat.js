@@ -292,12 +292,14 @@ function playStream(id, stream) {
   var uelt = $(`#${id}`);
   if(uelt.length){
     localVideo = uelt.find(`#${id}-video`)[0];
+    localAudio = uelt.find(`#${id}-audio`)[0];
   }
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    //video = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
-    video = $(`<audio id="${id}-video" autoplay controls playsinline/>`)
+    video = $(`<video poster="./p2p-chat.png" muted id="${id}-video" autoplay controls playsinline/>`)
+    audio = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
     localVideo = video[0];
+    localAudio = audio[0];
 
     full.click(function(){
       if (localVideo.requestFullscreen)
@@ -313,6 +315,7 @@ function playStream(id, stream) {
     }
     $(`<div id="${id}" class="row"></div>`)
       .append(wrap(video))
+      .append(wrap(audio))
       .append(wrap(full))
       .appendTo('#chat-video-container');
   }
@@ -321,6 +324,7 @@ function playStream(id, stream) {
     (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
     if ("srcObject" in localVideo) {
       localVideo.srcObject = stream;
+      localAudio.srcObject = stream;
       // once I stop one video (0x0), the other one would be break
       //if(!localVideo.videoHeight || !localVideo.videoWidth)
       //  if(stream.getVideoTracks().length){
@@ -330,6 +334,7 @@ function playStream(id, stream) {
       //  }
     } else {
       localVideo.src = window.URL.createObjectURL(stream);
+      localAudio.src = window.URL.createObjectURL(stream);
     }
   }
 }

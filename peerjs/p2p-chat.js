@@ -116,10 +116,10 @@ function getStream(config, success, error){
       stream.addTrack(createEmptyAudioTrack());
       alert("wrap empty audio");
     }
-    //if(!stream.getVideoTracks().length){
-    //  stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
-    //  alert("wrap empty video");
-    //}
+    if(!stream.getVideoTracks().length){
+      stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
+      alert("wrap empty video");
+    }
     return stream;
   }
 

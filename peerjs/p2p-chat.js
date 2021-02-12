@@ -166,6 +166,12 @@ function initialize() {
     else{
       if(findGetParameter('wait')){
         remote = `DRRR${remote}`
+
+        if(remote === peerID){
+          stopStream();
+          return alert("You cannot call yourself");
+        }
+
         $('#remote-id').text(remote);
         tryCall = true;
         $("#status").text("Try Calling...");
@@ -180,8 +186,8 @@ function initialize() {
   peer.on('call', function(call) {
 
     function answer_call(){
-      $('#remote-id').text(call.peer);
       remote = call.peer;
+      $('#remote-id').text(call.peer);
       window.call = call;
       //window.onbeforeunload = askBeforeLeave;
       console.log("Here's a call");
@@ -303,7 +309,8 @@ function playStream(id, stream) {
 
 function stopStream(){
   $('#status').text('No Connection');
-  if(remote) $(`#${remote}`).remove();
+  if(remote && $(`#${remote}`).length)
+    $(`#${remote}`).remove();
 }
 /**
  * Create the connection between the two Peers.
@@ -325,6 +332,11 @@ function join(id) {
       while(!id){
         id = prompt("Input the peerID you want to call");
         if(!id) alert("Invalid ID");
+      }
+
+      if(id === peerID){
+        stopStream();
+        return alert("You cannot call yourself");
       }
 
       // outgoing call

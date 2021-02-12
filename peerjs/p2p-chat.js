@@ -265,9 +265,31 @@ function playStream(id, stream) {
   $("#chat-setting-container").hide();
   $("#chat-video-container").show();
 
-  var localVideo =
-    $(`#${id}`).length ? $(`#${id}`)[0] :
-    $(`<video id="${id}" autoplay />`).appendTo('#chat-video-container')[0];
+  var uelt = $(`#${id}`);
+  if(uelt.length)
+    localVideo = uelt.find(`${id}-video`)[0];
+  else{
+    full = $(`<input type="button" id="${id}-full" value="full screen" />`)
+    video = $(`<video id="${id}-video" autoplay />`)
+    localVideo = video[0];
+
+    full.click(function(){
+      if (localVideo.requestFullscreen)
+        localVideo.requestFullscreen();
+      else if (localVideo.webkitRequestFullscreen)
+        localVideo.webkitRequestFullscreen();
+      else if (localVideo.msRequestFullScreen)
+        localVideo.msRequestFullScreen();
+    });
+
+    function wrap(elt){
+      return $(`<div class="col-100"></div>`).append(elt);
+    }
+    $(`<div id="${id}" class="row"></div>`)
+      .append(wrap(full))
+      .append(wrap(video))
+      .appendTo('#chat-video-container');
+  }
 
   if ("srcObject" in localVideo) {
     localVideo.srcObject = stream;
@@ -426,11 +448,9 @@ $(document).ready(function(){
   if(navigator.mediaDevices.getUserMedia){
     $('#video').append(`<option value="camera">Camera</option>`)
     $('#audio').append(`<label><input type="checkbox" name="microphone" value="microphone" checked>Microphone</label><br>`)
-
   }
   if(navigator.mediaDevices.getDisplayMedia){
     $('#video').append(`<option value="screen">Screen</option>`)
     $('#audio').append(`<label><input type="checkbox" name="speaker" value="speaker">Device Speaker</label><br>`)
-
   }
 });

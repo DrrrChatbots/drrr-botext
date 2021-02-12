@@ -304,13 +304,13 @@ function playStream(id, stream) {
   if(!localVideo.srcObject ||
     (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
     if ("srcObject" in localVideo) {
-      if(stream.getVideoTracks().length){
-        var tracks = stream.getVideoTracks();
-        var canvas = tracks[0].canvas;
-        if(canvas && !canvas.width || !canvas.height)
-          stream.removeTrack(tracks[0]);
-      }
       localVideo.srcObject = stream;
+      if(!localVideo.videoHeight || !localVideo.videoWidth)
+        if(stream.getVideoTracks().length){
+          var tracks = stream.getVideoTracks();
+          //tracks[0].stop();
+          stream.removeTrack(tracks[0]);
+        }
     } else {
       localVideo.src = window.URL.createObjectURL(stream);
     }

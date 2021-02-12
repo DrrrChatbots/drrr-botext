@@ -110,7 +110,7 @@ function getStream(config, success, error){
     if(!stream.getAudioTracks().length)
       stream.addTrack(createEmptyAudioTrack());
     if(!stream.getVideoTracks().length)
-      stream.addTrack(createEmptyVideoTrack({ width:640, height:480 });
+      stream.addTrack(createEmptyVideoTrack({ width:640, height:480 }));
     return stream;
   }
 

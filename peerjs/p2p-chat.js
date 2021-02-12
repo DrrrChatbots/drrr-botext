@@ -332,7 +332,8 @@ function join(id) {
       // outgoing call
       window.call = peer.call(id, window.localStream);
       //window.onbeforeunload = askBeforeLeave;
-      handlecall(window.call);
+      handleCall(window.call);
+      handleCallClose(window.call);
     }
     catch(err){
       alert(String(err));

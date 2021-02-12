@@ -189,8 +189,8 @@ function initialize() {
       window.call = call;
       //window.onbeforeunload = askBeforeLeave;
       console.log("Here's a call");
-      call.answer(window.localStream);
       handlecall(call);
+      setTimeout(() => call.answer(window.localStream), 1000);
     }
 
     function cancel_call(){

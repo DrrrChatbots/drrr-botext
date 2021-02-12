@@ -305,12 +305,13 @@ function playStream(id, stream) {
     (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
     if ("srcObject" in localVideo) {
       localVideo.srcObject = stream;
-      if(!localVideo.videoHeight || !localVideo.videoWidth)
-        if(stream.getVideoTracks().length){
-          var tracks = stream.getVideoTracks();
-          //tracks[0].stop();
-          //stream.removeTrack(tracks[0]);
-        }
+      // once I stop one video (0x0), the other one would be break
+      //if(!localVideo.videoHeight || !localVideo.videoWidth)
+      //  if(stream.getVideoTracks().length){
+      //    var tracks = stream.getVideoTracks();
+      //    //tracks[0].stop();
+      //    //stream.removeTrack(tracks[0]);
+      //  }
     } else {
       localVideo.src = window.URL.createObjectURL(stream);
     }

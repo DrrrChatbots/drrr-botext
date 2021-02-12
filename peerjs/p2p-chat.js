@@ -308,7 +308,7 @@ function playStream(id, stream) {
       if(!localVideo.videoHeight || !localVideo.videoWidth)
         if(stream.getVideoTracks().length){
           var tracks = stream.getVideoTracks();
-          tracks[0].stop();
+          //tracks[0].stop();
           //stream.removeTrack(tracks[0]);
         }
     } else {

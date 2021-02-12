@@ -183,7 +183,10 @@ function initialize() {
       //window.onbeforeunload = askBeforeLeave;
       console.log("Here's a call");
       handlecall(call);
-      setTimeout(() => call.answer(window.localStream), 1000);
+      setTimeout(() => {
+        call.answer(window.localStream)
+        alert("answered");
+      }, 5000);
     }
 
     function cancel_call(){
@@ -371,26 +374,17 @@ function handleError(error) {
 }
 
 function gotDevices(deviceInfos) {
-  // Handles being called several times to update labels. Preserve values.
-  //const values = selectors.map(select => select.value);
-  //selectors.forEach(select => {
-  //    while (select.firstChild) {
-  //        select.removeChild(select.firstChild);
-  //    }
-  //});
   var videoSelect = $('#video-input');
   var audioInputChecks = $('#audio-input');
   //var audioOutputSelect = $('#audio-output');
   for (let i = 0; i !== deviceInfos.length; ++i) {
     const deviceInfo = deviceInfos[i];
-    //const option = document.createElement('option');
-    //option.value = deviceInfo.deviceId;
     if (deviceInfo.kind === 'audioinput') {
       var label = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
       audioInputChecks.append($(`<label><input type="checkbox" name="microphone" value="${deviceInfo.deviceId}">${label}</label><br>`));
-    //} else if (deviceInfo.kind === 'audiooutput') {
-    //  var label = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
-    //  audioOutputSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
+    } else if (deviceInfo.kind === 'audiooutput') {
+      //var label = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
+      //audioOutputSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
     } else if (deviceInfo.kind === 'videoinput') {
       var label = deviceInfo.label || `camera ${videoSelect.length + 1}`;
       videoSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
@@ -400,22 +394,9 @@ function gotDevices(deviceInfos) {
   }
   if(navigator.mediaDevices.getDisplayMedia)
     videoSelect.append($(`<option value="screen">Screen</option>`));
-  //selectors.forEach((select, selectorIndex) => {
-  //    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-  //        select.value = values[selectorIndex];
-  //    }
-  //});
 }
 
 function setMediaSources(){
-  //if(navigator.mediaDevices.getUserMedia){
-  //  $('#video').append(`<option value="camera">Camera</option>`)
-  //  $('#audio').append(`<label><input type="checkbox" name="microphone" value="microphone" checked>Microphone</label><br>`)
-  //}
-  //if(navigator.mediaDevices.getDisplayMedia){
-  //  $('#video').append(`<option value="screen">Screen</option>`)
-  //  $('#audio').append(`<label><input type="checkbox" name="speaker" value="speaker">Device Speaker</label><br>`)
-  //}
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 }
 

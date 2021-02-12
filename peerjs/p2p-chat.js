@@ -267,8 +267,9 @@ function playStream(id, stream) {
   $("#chat-video-container").show();
 
   var uelt = $(`#${id}`);
-  if(uelt.length)
+  if(uelt.length){
     localVideo = uelt.find(`${id}-video`)[0];
+  }
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
     video = $(`<video id="${id}-video" autoplay controls playsinline/>`)
@@ -292,11 +293,18 @@ function playStream(id, stream) {
       .appendTo('#chat-video-container');
   }
 
-  if ("srcObject" in localVideo) {
-    localVideo.srcObject = stream;
-  } else {
-    localVideo.src = window.URL.createObjectURL(stream);
+  if(!localVideo){
+    alert("no local video...");
   }
+  else if(!localVideo.srcObject ||
+    (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
+    if ("srcObject" in localVideo) {
+      localVideo.srcObject = stream;
+    } else {
+      localVideo.src = window.URL.createObjectURL(stream);
+    }
+  }
+  else alert("no replace origin");
 }
 
 function stopStream(){

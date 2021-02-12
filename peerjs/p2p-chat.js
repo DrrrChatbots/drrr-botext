@@ -106,6 +106,14 @@ function getConfig(){
 
 function getStream(config, success, error){
 
+  function wrapAudioVideo(stream){
+    if(!stream.getAudioTracks().length)
+      stream.addTrack(createEmptyAudioTrack());
+    if(!stream.getVideoTracks().length)
+      stream.addTrack(createEmptyVideoTrack({ width:640, height:480 });
+    return stream;
+  }
+
   function getOtherStreams(cfg, initStream){
     if(cfg.video || cfg.audio){
       navigator.mediaDevices
@@ -124,7 +132,8 @@ function getStream(config, success, error){
   }
 
   if(!config.video && !config.audio)
-    success(new MediaStream([createEmptyAudioTrack()]));
+    success(createMediaStreamFake());
+    //success(new MediaStream([createEmptyAudioTrack()]));
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
       .getDisplayMedia({video: true, audio: true})

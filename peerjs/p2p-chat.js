@@ -54,11 +54,6 @@ function handlecall(call){
     // Do something with this audio stream
     console.log("Here's a stream");
     playStream(remote, stream);
-    call.peerConnection.onconnectionstatechange = function (event) {
-      if (event.currentTarget.connectionState === 'disconnected') {
-        call.close();
-      }
-    };
   });
 
   call.on('close', function() {
@@ -78,6 +73,12 @@ function handlecall(call){
     window.call = null;
     // Do something with this audio stream
   });
+
+  call.peerConnection.onconnectionstatechange = function (event) {
+    if (event.currentTarget.connectionState === 'disconnected') {
+      call.close();
+    }
+  };
 }
 
 function clearPeer(){

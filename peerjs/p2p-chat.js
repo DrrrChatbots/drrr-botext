@@ -132,7 +132,7 @@ function getStream(config, success, error){
     success(new MediaStream([createEmptyAudioTrack()]));
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
-      .getDisplayMedia({video: true, audio: false})
+      .getDisplayMedia({video: true, audio: true})
       .then(stream => {
         config.video = false;
         getOtherStreams(config, new MediaStream(stream))

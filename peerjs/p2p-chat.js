@@ -103,7 +103,8 @@ function getConfig(){
 
   const videoSource = $('#video-input').val();
   return {
-    audio: audioSources.length ? {deviceId: audioSources} : false,
+    audio: audioSources.length ? true : false,
+    //audio: audioSources.length ? {deviceId: audioSources} : false,
     video: videoSource === "none" ? false : {deviceId: videoSource}
   };
 }
@@ -410,8 +411,8 @@ function gotDevices(deviceInfos) {
   for (let i = 0; i !== deviceInfos.length; ++i) {
     const deviceInfo = deviceInfos[i];
     if (deviceInfo.kind === 'audioinput') {
-      var label = deviceInfo.label || `microphone ${audioInputChecks.find(':checkbox').length + 1}`;
-      audioInputChecks.append($(`<label><input type="checkbox" name="microphone" value="${deviceInfo.deviceId}">${label}</label><br>`));
+      //var label = deviceInfo.label || `microphone ${audioInputChecks.find(':checkbox').length + 1}`;
+      //audioInputChecks.append($(`<label><input type="checkbox" name="microphone" value="${deviceInfo.deviceId}">${label}</label><br>`));
     } else if (deviceInfo.kind === 'audiooutput') {
       //var label = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
       //audioOutputSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
@@ -424,6 +425,9 @@ function gotDevices(deviceInfos) {
   }
   if(navigator.mediaDevices.getDisplayMedia)
     videoSelect.append($(`<option value="screen">Screen</option>`));
+
+  audioInputChecks.append(
+    $(`<label><input type="checkbox" name="microphone" value="microphone">Microphone</label>`));
 }
 
 function setMediaSources(){

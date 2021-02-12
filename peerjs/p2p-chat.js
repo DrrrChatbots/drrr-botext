@@ -298,7 +298,7 @@ function playStream(id, stream) {
   }
   else{
     full = null;
-    if(stream.getVideoTracks.length){
+    if(stream.getVideoTracks().length){
       media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
       full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
       full.click(function(){

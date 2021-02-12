@@ -131,7 +131,7 @@ function getStream(config, success, error){
             merge(rss, cfg , tracks , onSucc, onErr);
           })
           .catch((e) => {
-            err(e);
+            onErr(e);
           });
       }
       else merge(rss, cfg, tracks, onSucc, onErr);
@@ -269,7 +269,7 @@ function playStream(id, stream) {
   if(uelt.length)
     localVideo = uelt.find(`${id}-video`)[0];
   else{
-    full = $(`<input type="button" id="${id}-full" value="full screen" />`)
+    full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
     video = $(`<video id="${id}-video" autoplay />`)
     localVideo = video[0];
 
@@ -286,8 +286,8 @@ function playStream(id, stream) {
       return $(`<div class="col-100"></div>`).append(elt);
     }
     $(`<div id="${id}" class="row"></div>`)
-      .append(wrap(full))
       .append(wrap(video))
+      .append(wrap(full))
       .appendTo('#chat-video-container');
   }
 

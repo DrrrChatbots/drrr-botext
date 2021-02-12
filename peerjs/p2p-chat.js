@@ -185,11 +185,12 @@ function initialize() {
         }
 
         $('#remote-id').text(remote);
-        tryCall = true;
-        $("#status").text("Try Calling...");
-        window.call = peer.call(id, window.localStream);
-        handleCall(window.call);
-        handleCallClose(window.call);
+        $("#status").text("Waiting answer...");
+        ctrlRoom({
+          'message': 'Click to answer my call',
+          'url': `https://drrrchatbots.gitee.io${location.pathname}?invite=${peerID}`,
+          'to': remote.replace('DRRR', ''),
+        })
       }
     }
   })
@@ -254,19 +255,11 @@ function initialize() {
     console.log(err);
     if(err.type === 'peer-unavailable'){
       //'peer-unavailable'
+      alert("User not existed");
       window.call = null;
-      if(tryCall){
-        $("#status").text("Waiting answer...");
-        ctrlRoom({
-          'message': 'Click to answer my call',
-          'url': `https://drrrchatbots.gitee.io${location.pathname}?invite=${peerID}`,
-          'to': remote.replace('DRRR', ''),
-        })
-        tryCall = false;
-      }
     }
     else if(err.type === 'unavailable-id'){
-      alert("the id is taken");
+      alert("The ID is taken, close duplicated tab or rename");
       peerID = null;
       $('#id').text('Please set your ID');
     }
@@ -288,7 +281,7 @@ function playStream(id, stream) {
   }
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    video = $(`<video id="${id}-video" autoplay controls playsinline/>`)
+    video = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
     localVideo = video[0];
 
     full.click(function(){

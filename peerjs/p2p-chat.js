@@ -1,9 +1,3 @@
-/*
- let screenStream = await navigator.mediaDevices.getDisplayMedia({
-    video: true
-});
-*/
-
 const createMediaStreamFake = () => {
   return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack({ width:640, height:480 })]);
 }
@@ -268,7 +262,7 @@ function playStream(id, stream) {
 
   var uelt = $(`#${id}`);
   if(uelt.length){
-    localVideo = uelt.find(`${id}-video`)[0];
+    localVideo = uelt.find(`#${id}-video`)[0];
   }
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
@@ -293,10 +287,7 @@ function playStream(id, stream) {
       .appendTo('#chat-video-container');
   }
 
-  if(!localVideo){
-    alert("no local video...");
-  }
-  else if(!localVideo.srcObject ||
+  if(!localVideo.srcObject ||
     (stream.getTracks().length > localVideo.srcObject.getTracks().length)){
     if ("srcObject" in localVideo) {
       localVideo.srcObject = stream;
@@ -304,7 +295,6 @@ function playStream(id, stream) {
       localVideo.src = window.URL.createObjectURL(stream);
     }
   }
-  else alert("no replace origin");
 }
 
 function stopStream(){

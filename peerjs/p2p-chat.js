@@ -1,7 +1,8 @@
-const defaultVideoSize = { width:0, height:0 };
-//const defaultVideoSize = { width:640, height:480 };
+//const defaultVideoSize = { width:0, height:0 };
+const defaultVideoSize = { width:640, height:480 };
 
 const createMediaStreamFake = () => {
+  alert("empty video audio");
   return new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack(defaultVideoSize)]);
 }
 
@@ -110,10 +111,14 @@ function getConfig(){
 function getStream(config, success, error){
 
   function wrapAudioVideo(stream){
-    if(!stream.getAudioTracks().length)
+    if(!stream.getAudioTracks().length){
       stream.addTrack(createEmptyAudioTrack());
-    if(!stream.getVideoTracks().length)
+      alert("wrap empty audio");
+    }
+    if(!stream.getVideoTracks().length){
       stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
+      alert("wrap empty video");
+    }
     return stream;
   }
 
@@ -405,13 +410,13 @@ function gotDevices(deviceInfos) {
   for (let i = 0; i !== deviceInfos.length; ++i) {
     const deviceInfo = deviceInfos[i];
     if (deviceInfo.kind === 'audioinput') {
-      var label = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+      var label = deviceInfo.label || `microphone ${audioInputChecks.find(':checkbox').length + 1}`;
       audioInputChecks.append($(`<label><input type="checkbox" name="microphone" value="${deviceInfo.deviceId}">${label}</label><br>`));
     } else if (deviceInfo.kind === 'audiooutput') {
       //var label = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
       //audioOutputSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
     } else if (deviceInfo.kind === 'videoinput') {
-      var label = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+      var label = deviceInfo.label || `camera ${videoSelect.length}`;
       videoSelect.append($(`<option value="${deviceInfo.deviceId}">${label}</option>`));
     } else {
       console.log('Some other kind of source/device: ', deviceInfo);

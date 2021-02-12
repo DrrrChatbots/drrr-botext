@@ -295,8 +295,8 @@ function playStream(id, stream) {
   }
   else{
     full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    //video = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
-    video = $(`<audio id="${id}-video" autoplay controls playsinline/>`)
+    video = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
+    //video = $(`<audio id="${id}-video" autoplay controls playsinline/>`)
     localVideo = video[0];
 
     full.click(function(){

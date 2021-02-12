@@ -49,7 +49,7 @@ function findGetParameter(parameterName, url) {
   return result;
 }
 
-function handlecall(call){
+function handleCall(call){
   call.on('stream', function(stream) {
     // Do something with this audio stream
     console.log("Here's a stream");
@@ -73,7 +73,8 @@ function handlecall(call){
     window.call = null;
     // Do something with this audio stream
   });
-
+}
+function handleCallClose(call){
   call.peerConnection.onconnectionstatechange = function (event) {
     if (event.currentTarget.connectionState === 'disconnected') {
       call.close();
@@ -169,7 +170,8 @@ function initialize() {
         tryCall = true;
         $("#status").text("Try Calling...");
         window.call = peer.call(id, window.localStream);
-        handlecall(window.call);
+        handleCall(window.call);
+        handleCallClose(window.call);
       }
     }
   })
@@ -183,11 +185,11 @@ function initialize() {
       window.call = call;
       //window.onbeforeunload = askBeforeLeave;
       console.log("Here's a call");
-      handlecall(call);
       setTimeout(() => {
+        handleCall(call);
         call.answer(window.localStream)
-        alert("answered");
-      }, 5000);
+        handleCallClose(call);
+      }, 2500);
     }
 
     function cancel_call(){

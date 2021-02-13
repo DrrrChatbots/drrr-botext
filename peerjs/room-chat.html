@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PeerJS Simple Example</title>
+    <link rel="stylesheet" href="./p2p-chat.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div id="stream-ui">
+
+      <h2>Stream Setting</h2>
+      <p>Select your video and audio stream</p>
+
+      <div class="container">
+        <form id="stream-setting-form">
+          <div class="row">
+            <div class="col-25">
+              <label for="video-input">Video Input</label>
+            </div>
+            <div class="col-75">
+              <select id="video-input">
+                <option value="none">None</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-25">
+              <label for="audio-input">Audio Input</label>
+            </div>
+            <div id="audio-input" class="col-75">
+            </div>
+          </div>
+          <!--
+          <div class="row">
+            <div class="col-25">
+              <label for="audio-output">Audio Output</label>
+            </div>
+            <div class="col-75">
+              <select id="audio-output">
+              </select>
+            </div>
+          </div>
+          -->
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-100">
+          <input id="complete" type="submit" value="Complete">
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-ui" style="display:none">
+      <h2>Chat Setting</h2>
+
+      <p id="status">No Connection</p>
+
+      <div id="chat-video-container" class="container">
+      </div>
+
+      <div id="chat-setting-container" class="container">
+        <form id="chat-setting-form">
+          <div class="row">
+            <div class="col-100">
+              <label>LOCAL ID:</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-100">
+              <label><b><span id="id">Please set your ID</span></b></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-50">
+              <input id="setID" type="button" value="set">
+            </div>
+            <div class="col-50">
+              <input id="inviteRemote" type="button" value="invite">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-100">
+              <label>REMOTE ID:</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-100">
+              <label><b><span id="remote-id">Please set remote ID</span></b></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-50">
+              <input id="setRemoteID" type="button" value="set">
+            </div>
+            <div class="col-50">
+              <input id="callRemote" type="button" value="call">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-100">
+          <input id="endCall" type="submit" value="end call">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-100">
+          <input id="setup" type="submit" value="end call and reset stream">
+        </div>
+      </div>
+    </div>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/peerjs.min.js"></script>
+    <script src="/js/adapter-latest.js"></script>
+    <script src="/lib/globals.js" charset="utf-8"></script>
+    <script src="./p2p-chat.js"></script>
+  </body>
+</html>

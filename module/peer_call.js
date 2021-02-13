@@ -20,7 +20,7 @@ export const ui = (config) => {
   return `
   <div class="input-group">
      <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-     <span class="input-group-addon form-control panel-footer text-center" title="call the peer">${intro}</span>
+     <span class="input-group-addon form-control panel-footer text-center">${intro}</span>
      <div class="input-group-btn">
       <button id="call_ui" class="btn btn-default" type="button" title="Launch UI">
         <i class="glyphicon glyphicon-phone-alt"></i>

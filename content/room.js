@@ -338,7 +338,7 @@ function enable_call_link(){
       e.preventDefault();
 
       var url = new URL($(this).attr('href'));
-      url.searchParams.append('host', roomProfile().id);
+      url.searchParams.append('uid', roomProfile().id);
       url = chrome.extension.getURL(`${url.pathname}${url.search}`);
 
       chrome.runtime.sendMessage({ newTab: url });

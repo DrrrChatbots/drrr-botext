@@ -126,6 +126,7 @@ function handlePeer(peer){
     peer.on('open', function(){
       $('#stream-ui').hide();
       $('#chat-ui').show();
+      // delete this
     })
 
     peer.on('disconnected', function () {
@@ -164,7 +165,7 @@ function Room(id, name, owner){
   this.run = function(){
     this.peer = new Peer(this.id);
 
-    handlePeer(this.peer);
+    handlePeer.bind(this)(this.peer);
 
     // text connection
     peer.on('connection', function(conn) {
@@ -211,7 +212,7 @@ function User(id, name, host){
   this.run = function(){
     this.peer = new Peer(this.id);
 
-    handlePeer(this.peer);
+    handlePeer.bind(this)(this.peer);
 
     // text connection
     peer.on('connection', function(conn) {
@@ -254,12 +255,12 @@ function User(id, name, host){
 
 function initialize(){
   // Create own peer object with connection to shared PeerJS server
-  if(host){
-
-  }
-  else if(join){
-
-  }
+  var get = name => $(`input[name="${name}"]`).val().trim()
+  if(host)
+    profile = new Room(get("hid"), get("hname"), get("uname"));
+  else if(join)
+    profile = new User(get("uid"), get("uname"), get("jid"));
+  profile.run();
 };
 
 function playStream(id, stream) {
@@ -427,16 +428,15 @@ function setMediaSources(){
 }
 
 function validSetting(){
-  if(!$('#uname').val().trim()) return false;
+  if(!$('input[name="uname"]').val().trim()) return false;
   if(host){
-    if(!$('#hname').val().trim()) return false;
-    if(!$('#hid').val().trim()) return false;
+    if(!$('input[name="hname"]').val().trim()) return false;
+    if(!$('input[name="hid"]').val().trim()) return false;
     return true;
   }
   else if(join){
-    if(!$('#uid').val().trim()) return false;
-    if(!$('#jname').val().trim()) return false;
-    if(!$('#jid').val().trim()) return false;
+    if(!$('input[name="uid"]').val().trim()) return false;
+    if(!$('input[name="jid"]').val().trim()) return false;
     return true;
   }
   return false;

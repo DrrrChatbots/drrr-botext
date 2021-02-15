@@ -519,7 +519,6 @@ $(document).ready(function(){
   });
 
   $('#setup').click(function(){
-    //window.location.reload();
     $('#chat-ui').hide();
     $('#stream-ui').show();
     if(window.call) window.call.close();

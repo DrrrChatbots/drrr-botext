@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>PeerJS Simple Example</title>
-    <link rel="stylesheet" href="./p2p-chat.css">
+    <link rel="stylesheet" href="./room-chat.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
@@ -14,7 +14,7 @@
 
       <div class="container">
         <form id="stream-setting-form">
-          <div class="row">
+          <div id="video-div" style="display:none;" class="row">
             <div class="col-25">
               <label for="video-input">Video Input</label>
             </div>
@@ -31,17 +31,55 @@
             <div id="audio-input" class="col-75">
             </div>
           </div>
-          <!--
+
           <div class="row">
             <div class="col-25">
-              <label for="audio-output">Audio Output</label>
+              <label for="uname"><span style="color: red;">*</span>User Name:</label>
             </div>
             <div class="col-75">
-              <select id="audio-output">
-              </select>
+              <input name="uname" placeholder="User name"/>
             </div>
           </div>
-          -->
+
+          <div id="host-setting" style="display:none;">
+            <div class="row">
+              <div class="col-25">
+                <label for="hname"><span style="color: red;">*</span>Room Name:</label>
+              </div>
+              <div class="col-75">
+                <input name="hname" placeholder="Room name"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-25">
+                <label for="hid"><span style="color: red;">*</span>Room ID to host:</label>
+              </div>
+              <div class="col-75">
+                <input name="hid" placeholder="Room id"/>
+              </div>
+            </div>
+          </div>
+
+          <div id="join-setting" style="display:none;">
+            <div class="row">
+              <div class="col-25">
+                <label for="uid"><span style="color: red;">*</span>User ID:</label>
+              </div>
+              <div class="col-75">
+                <input name="uid" placeholder="User id"/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-25">
+                <label for="jid">Room ID to join<span style="color: red;">*</span>:</label>
+              </div>
+              <div class="col-75">
+                <input name="jid" placeholder="Room id"/>
+              </div>
+            </div>
+          </div>
+
         </form>
       </div>
       <div class="row">
@@ -52,13 +90,14 @@
     </div>
 
     <div id="chat-ui" style="display:none">
-      <h2>Chat Setting</h2>
+      <h2>ROOM:<span id="room-name"></span></h2>
 
       <p id="status">No Connection</p>
 
       <div id="chat-video-container" class="container">
       </div>
 
+      <!--
       <div id="chat-setting-container" class="container">
         <form id="chat-setting-form">
           <div class="row">
@@ -99,6 +138,7 @@
           </div>
         </form>
       </div>
+      -->
       <div class="row">
         <div class="col-100">
           <input id="endCall" type="submit" value="end call">
@@ -114,6 +154,6 @@
     <script src="/js/peerjs.min.js"></script>
     <script src="/js/adapter-latest.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
-    <script src="./p2p-chat.js"></script>
+    <script src="./room-chat.js"></script>
   </body>
 </html>

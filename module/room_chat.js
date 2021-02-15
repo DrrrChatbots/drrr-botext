@@ -55,7 +55,7 @@ export const ui_event = (config) => {
           .attr('disabled', false)
           .click(function(){
             chrome.tabs.create({
-              url: chrome.extension.getURL(`/peerjs/room-chat.html?host=${info.room.roomId}&uid=${info.profile.id}&name=${info.profile.name}`)
+              url: chrome.extension.getURL(`/peerjs/room-chat.html?room=${encodeURIComponent(info.room.name)}&host=${info.room.roomId}&uid=${info.profile.id}&name=${info.profile.name}`)
             });
           });
       }
@@ -64,7 +64,7 @@ export const ui_event = (config) => {
         .attr('disabled', false)
         .click(function(){
         chrome.tabs.create({
-          url: chrome.extension.getURL(`/peerjs/room-chat.html?room=${info.room.roomId}&uid=${info.profile.id}&name=${info.profile.name}`)
+          url: chrome.extension.getURL(`/peerjs/room-chat.html?join=${info.room.roomId}&uid=${info.profile.id}&name=${info.profile.name}`)
         });
       });
     }

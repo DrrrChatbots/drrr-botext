@@ -30,136 +30,6 @@ function findGetParameter(parameterName, url) {
   return result;
 }
 
-function handlePeer(peer){
-    peer.on('open', function(){
-      $('#stream-ui').hide();
-      $('#chat-ui').show();
-    })
-
-    peer.on('disconnected', function () {
-
-    });
-
-    peer.on('close', function() {
-      $('#stream-ui').show();
-      $('#chat-ui').hide();
-    });
-
-    peer.on('error', function (err) {
-      stopStream();
-      console.log(err);
-      if(err.type === 'peer-unavailable'){
-        alert("ROOM not existed");
-      }
-      else if(err.type === 'unavailable-id'){
-        alert("The ROOM ID is taken, close duplicated tab or rename");
-      }
-      else{
-        console.log('peer error:' + err.type);
-        alert('peer error:' + err.type);
-      }
-      $('#stream-ui').show();
-      $('#chat-ui').hide();
-    });
-}
-
-function Room(id, name, owner){
-  this.id = id;
-  this.name = name;
-  this.host = host;
-  this.users = [];
-  this.conns = {};
-  this.run = function(){
-    this.peer = new Peer(this.id);
-
-    handlePeer(this.peer);
-
-    // text connection
-    peer.on('connection', function(conn) {
-      conn.on('open', function() {
-        //conn.send("Sender does not accept incoming connections");
-        //setTimeout(function() { conn.close(); }, 500);
-      });
-      conn.on('data', function(data) {
-        switch(data.fn){
-          case 'join':
-            this.users[conn.peer] = data.arg;
-            this.conns[conn.peer] = conn;
-            conn.send({list: this.users})
-            Object.values(this.users).forEach(u => {
-              if(u.id != conn.peer) u.send({ user: data.arg });
-            })
-            break;
-          case 'msg':
-            console.log(`${this.users[conn.peer].name}: ${data.arg}`)
-            break;
-          default:
-            console.log(`unknown cmd ${data}`)
-            break;
-        }
-      });
-      conn.on('close', function () {
-
-      });
-    });
-
-    // stream connection
-    peer.on('call', function(call) {
-
-    });
-  }
-}
-
-function User(id, name, stream){
-  this.id = id;
-  this.name = name;
-  this.stream = stream;
-  this.users = [];
-  this.conns = {};
-  this.run = function(){
-    this.peer = new Peer(this.id);
-
-    handlePeer(this.peer);
-
-    // text connection
-    peer.on('connection', function(conn) {
-      conn.on('open', function() {
-        //conn.send("Sender does not accept incoming connections");
-        //setTimeout(function() { conn.close(); }, 500);
-      });
-      conn.on('data', function(data) {
-        switch(data.fn){
-          case 'user':
-            // check from host
-            this.users.append(data.arg);
-            this.conns[data.arg.id] = peer.connect(data.arg.id)
-            this.handleNewUser(data.arg.id)
-            break;
-          case 'list':
-            // check from host
-            this.users = data.arg
-            break;
-          default:
-            console.log(`unknown cmd ${data}`)
-            break;
-        }
-      });
-      conn.on('close', function () {
-
-      });
-    });
-
-    // stream connection
-    peer.on('call', function(call) {
-
-    });
-  }
-
-  this.handleNewUser = function(id){
-    // this.conns[id]
-  }
-}
-
 function handleCall(call){
   call.on('stream', function(stream) {
     // Do something with this audio stream
@@ -252,12 +122,136 @@ function getStream(config, success, error){
   else getOtherStreams(config,new MediaStream());
 }
 
-/**
- * Create the Peer object for our end of the connection.
- *
- * Sets up callbacks that handle any events related to our
- * peer object.
- */
+function handlePeer(peer){
+    peer.on('open', function(){
+      $('#stream-ui').hide();
+      $('#chat-ui').show();
+    })
+
+    peer.on('disconnected', function () {
+
+    });
+
+    peer.on('close', function() {
+      $('#stream-ui').show();
+      $('#chat-ui').hide();
+    });
+
+    peer.on('error', function (err) {
+      stopStream();
+      console.log(err);
+      if(err.type === 'peer-unavailable'){
+        alert("ROOM not existed");
+      }
+      else if(err.type === 'unavailable-id'){
+        alert("The ROOM ID is taken, close duplicated tab or rename");
+      }
+      else{
+        console.log('peer error:' + err.type);
+        alert('peer error:' + err.type);
+      }
+      $('#stream-ui').show();
+      $('#chat-ui').hide();
+    });
+}
+
+function Room(id, name, owner){
+  this.id = id;
+  this.name = name;
+  this.owner = owner;
+  this.users = [];
+  this.conns = {};
+  this.run = function(){
+    this.peer = new Peer(this.id);
+
+    handlePeer(this.peer);
+
+    // text connection
+    peer.on('connection', function(conn) {
+      conn.on('open', function() {
+        //conn.send("Sender does not accept incoming connections");
+        //setTimeout(function() { conn.close(); }, 500);
+      });
+      conn.on('data', function(data) {
+        switch(data.fn){
+          case 'join':
+            this.users[conn.peer] = data.arg;
+            this.conns[conn.peer] = conn;
+            conn.send({list: this.users})
+            Object.values(this.users).forEach(u => {
+              if(u.id != conn.peer) u.send({ user: data.arg });
+            })
+            break;
+          case 'msg':
+            console.log(`${this.users[conn.peer].name}: ${data.arg}`)
+            break;
+          default:
+            console.log(`unknown cmd ${data}`)
+            break;
+        }
+      });
+      conn.on('close', function () {
+
+      });
+    });
+
+    // stream connection
+    peer.on('call', function(call) {
+
+    });
+  }
+}
+
+function User(id, name, host){
+  this.id = id;
+  this.name = name;
+  this.host = host;
+  this.users = [];
+  this.conns = {};
+  this.run = function(){
+    this.peer = new Peer(this.id);
+
+    handlePeer(this.peer);
+
+    // text connection
+    peer.on('connection', function(conn) {
+      conn.on('open', function() {
+        //conn.send("Sender does not accept incoming connections");
+        //setTimeout(function() { conn.close(); }, 500);
+      });
+      conn.on('data', function(data) {
+        switch(data.fn){
+          case 'user':
+            // check from host
+            this.users.append(data.arg);
+            this.conns[data.arg.id] = peer.connect(data.arg.id)
+            this.handleNewUser(data.arg.id)
+            break;
+          case 'list':
+            // check from host
+            this.users = data.arg
+            break;
+          default:
+            console.log(`unknown cmd ${data}`)
+            break;
+        }
+      });
+      conn.on('close', function () {
+
+      });
+    });
+
+    // stream connection
+    peer.on('call', function(call) {
+
+    });
+  }
+
+  this.handleNewUser = function(id){
+    // this.conns[id]
+  }
+}
+
 function initialize(){
   // Create own peer object with connection to shared PeerJS server
   if(host){

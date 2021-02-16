@@ -123,148 +123,208 @@ function getStream(config, success, error){
 }
 
 function handlePeer(peer){
-    peer.on('open', function(){
-      $('#stream-ui').hide();
-      $('#chat-ui').show();
-      // delete this
-    })
 
-    peer.on('disconnected', function () {
+  peer.on('disconnected', function () {
 
-    });
+  });
 
-    peer.on('close', function() {
-      $('#stream-ui').show();
-      $('#chat-ui').hide();
-    });
+  peer.on('close', function() {
+    backToProfile();
+  });
 
-    peer.on('error', function (err) {
-      stopStream();
-      console.log(err);
-      if(err.type === 'peer-unavailable'){
-        alert("ROOM not existed");
-      }
-      else if(err.type === 'unavailable-id'){
-        alert("The ROOM ID is taken, close duplicated tab or rename");
-      }
-      else{
-        console.log('peer error:' + err.type);
-        alert('peer error:' + err.type);
-      }
-      $('#stream-ui').show();
-      $('#chat-ui').hide();
-    });
+  peer.on('error', function (err) {
+    if(err.type === 'peer-unavailable'){
+      alert("ROOM not existed");
+    }
+    else if(err.type === 'unavailable-id'){
+      alert("The ROOM ID is taken, close duplicated tab or rename");
+    }
+    else{
+      console.log('peer error:' + err.type);
+      alert('peer error:' + err.type);
+    }
+    $('#profile-ui').show();
+    $('#chat-ui').hide();
+  });
 }
 
-function Room(id, name, owner){
+function Host(id, hostName, name, avatar){
   this.id = id;
+  this.hostName = hostName;
   this.name = name;
-  this.owner = owner;
-  this.users = [];
+  this.avatar = avatar;
+  this.users = {};
   this.conns = {};
   this.run = function(){
     this.peer = new Peer(this.id);
 
     handlePeer.bind(this)(this.peer);
 
+    this.peer.on('open', function(){
+      goToChat();
+    })
+
     // text connection
-    peer.on('connection', function(conn) {
+    this.peer.on('connection', (function(conn) {
       conn.on('open', function() {
         //conn.send("Sender does not accept incoming connections");
         //setTimeout(function() { conn.close(); }, 500);
       });
-      conn.on('data', function(data) {
+      conn.on('data', (function(data) {
         switch(data.fn){
           case 'join':
+            data.arg.id = conn.peer;
             this.users[conn.peer] = data.arg;
             this.conns[conn.peer] = conn;
-            conn.send({list: this.users})
-            Object.values(this.users).forEach(u => {
-              if(u.id != conn.peer) u.send({ user: data.arg });
+            conn.send({
+              fn: 'room',
+              arg: {
+                room: this.name,
+                users: this.users
+              }
+            })
+            Object.values(this.conns).forEach(c => {
+              if(c.peer != conn.peer) c.send({ user: data.arg });
             })
             break;
           case 'msg':
             console.log(`${this.users[conn.peer].name}: ${data.arg}`)
             break;
           default:
-            console.log(`unknown cmd ${data}`)
+            console.log(`unknown cmd:`, data)
             break;
         }
-      });
+      }).bind(this));
       conn.on('close', function () {
 
       });
-    });
+    }).bind(this));
 
     // stream connection
-    peer.on('call', function(call) {
+    this.peer.on('call', function(call) {
 
     });
   }
 }
 
-function User(id, name, host){
+function User(id, name, hostID, avatar){
   this.id = id;
   this.name = name;
-  this.host = host;
-  this.users = [];
+  this.hostID = hostID;
+  this.hostName = '';
+  this.avatar = avatar;
+  this.users = {};
   this.conns = {};
   this.run = function(){
     this.peer = new Peer(this.id);
 
     handlePeer.bind(this)(this.peer);
 
-    // text connection
-    peer.on('connection', function(conn) {
-      conn.on('open', function() {
-        //conn.send("Sender does not accept incoming connections");
-        //setTimeout(function() { conn.close(); }, 500);
-      });
-      conn.on('data', function(data) {
+    this.peer.on('open', (function(){
+      // connect to server
+      console.log(this)
+      this.host = this.peer.connect(this.hostID);
+      this.host.on('open', (function() {
+        this.host.send({
+          fn: 'join',
+          arg: {
+            name: this.name,
+            avatar: this.avatar
+          }
+        })
+        //this.host.send("Sender does not accept incoming connections");
+        //setTimeout(function() { this.host.close(); }, 500);
+      }).bind(this));
+      this.host.on('data', (function(data) {
         switch(data.fn){
           case 'user':
-            // check from host
-            this.users.append(data.arg);
-            this.conns[data.arg.id] = peer.connect(data.arg.id)
-            this.handleNewUser(data.arg.id)
+            this.users[data.arg.id] = data.arg;
+            this.conns[data.arg.id] = this.peer.connect(data.arg.id)
+            this.handleUser(this.conns[data.arg.id])
             break;
-          case 'list':
-            // check from host
-            this.users = data.arg
+          case 'room':
+            this.hostName = data.arg.room;
+            this.users = data.arg.users;
+            console.log('room command:', data)
+            goToChat();
             break;
           default:
-            console.log(`unknown cmd ${data}`)
+            console.log(`unknown cmd`, data)
             break;
         }
+      }).bind(this));
+      this.host.on('close', function () {
+        alert("Host left");
+        backToProfile();
       });
-      conn.on('close', function () {
 
+      this.host.on('error', function (err) {
+        if(err.type === 'peer-unavailable'){
+          alert("ROOM not existed");
+        }
+        else{
+          console.log('peer error:' + err.type);
+          alert('peer error:' + err.type);
+        }
       });
+    }).bind(this))
+
+    // text connection
+    this.peer.on('connection', function(conn) {
+      handleUser(conn);
     });
 
     // stream connection
-    peer.on('call', function(call) {
+    this.peer.on('call', function(call) {
 
     });
   }
 
-  this.handleNewUser = function(id){
+  this.handleUser = function(conn){
     // this.conns[id]
+    conn.on('open', function() {
+      // ADD USER TO UI
+    });
+    conn.on('data', function(data) {
+      switch(data.fn){
+        case 'msg':
+          console.log(data.arg)
+          break;
+        default:
+          console.log(`unknown cmd ${data}`)
+          break;
+      }
+    });
+    conn.on('close', function () {
+      // REMOVE USER FROM LIST
+    });
   }
+}
+
+function backToProfile(){
+  // TODO delete profile
+  $('#chat-ui').hide();
+  $('#profile-ui').show();
+}
+
+function goToChat(){
+  $('.room-title-name').text(profile.hostName);
+  $('#profile-ui').hide();
+  $('#chat-ui').show();
 }
 
 function initialize(){
   // Create own peer object with connection to shared PeerJS server
   var get = name => $(`input[name="${name}"]`).val().trim()
+  var avatar = $('.user-icon.active').attr('data-avatar');
   if(host)
-    profile = new Room(get("hid"), get("hname"), get("uname"));
+    profile = new Host(get("hid"), get("hname"), get("uname"), avatar);
   else if(join)
-    profile = new User(get("uid"), get("uname"), get("jid"));
+    profile = new User(get("uid"), get("uname"), get("jid"), avatar);
   profile.run();
 };
 
 function playStream(id, stream) {
-  $("#status").text("Connected");
   $("#chat-setting-container").hide();
   $("#chat-video-container").show();
 
@@ -320,7 +380,6 @@ function playStream(id, stream) {
 }
 
 function stopStream(){
-  $('#status').text('No Connection');
   if(remote && $(`#${remote}`).length)
     $(`#${remote}`).remove();
 }
@@ -330,6 +389,8 @@ function stopStream(){
  * Sets up callbacks that handle any events related to the
  * connection and data received on it.
  */
+
+/*
 function join(id) {
   // Close old connection
   // TODO
@@ -370,24 +431,25 @@ function join(id) {
     until_close();
   } else _join();
 }
+*/
 
-var profile = null;
-var peer = null; // Own peer object
-var peerID = null;
-var remote = null;
-var tryCall = false;
-window.localStream = null;
-window.call = null;
+      var profile = null;
+      //var peer = null; // Own peer object
+      var peerID = null;
+      var remote = null;
+      var tryCall = false;
+      window.localStream = null;
+      window.call = null;
 
-function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+      function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
 
 function randomPeerID(len){
   return 'DRRR' + makeid(len || 20);
@@ -427,21 +489,6 @@ function setMediaSources(){
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 }
 
-function validSetting(){
-  if(!$('input[name="uname"]').val().trim()) return false;
-  if(host){
-    if(!$('input[name="hname"]').val().trim()) return false;
-    if(!$('input[name="hid"]').val().trim()) return false;
-    return true;
-  }
-  else if(join){
-    if(!$('input[name="uid"]').val().trim()) return false;
-    if(!$('input[name="jid"]').val().trim()) return false;
-    return true;
-  }
-  return false;
-}
-
 $(document).ready(function(){
 
   setMediaSources();
@@ -461,96 +508,33 @@ $(document).ready(function(){
 
   if(!name) name = id;
 
-  $(`input[name="uid"]`).val(uid)
   $(`input[name="uname"]`).val(name)
+
+  $('#home-extra-toggle').click(function(){
+    $('#home-extra').toggle();
+  })
+
+  $('.user-icon').click(function(){
+    $('.user-icon').removeClass('active');
+    $(this).addClass('active');
+  })
 
   if(host){
     $('#video-div').show();
     $('#host-setting').show();
-    $(`input[name="hid"]`).val(host);
-    $(`input[name="hname"]`).val(room);
+    $(`input[name="hid"]`).val(host).attr('required', true);
+    $(`input[name="hname"]`).val(room).attr('required', true);
+    // TODO: if require uid
   }
 
   if(join){
     $('#join-setting').show();
-    $(`input[name="jid"]`).val(join);
+    $(`input[name="uid"]`).val(uid).attr('required', true)
+    $(`input[name="jid"]`).val(join).attr('required', true);
   }
 
-  $('#complete').click(function(){
-    if(validSetting()){
-      getStream(getConfig(),
-        function success(stream) {
-          window.localStream = stream;
-          initialize();
-        },
-        function error(e) {
-          //alert("No Mic, so you cannot call peer, please close the tab");
-          alert("stream error: " + e);
-          console.log(e);
-        });
-    } else alert("* field cannot be blank");
+  $('#profile-setting-form').submit(()=>{
+    initialize();
+    return false;
   });
-
-
-  //  $('#setID').click(function(){
-  //    // TODO:clear window.call?
-  //    input = prompt("Input your peerID");
-  //    if(input){
-  //      peerID = input;
-  //      initialize();
-  //    }
-  //    else{
-  //      peerID = null;
-  //      $('#id').text('Please set your ID');
-  //    }
-  //  });
-  //
-  //  $('#inviteRemote').click(function(){
-  //    if(peerID){
-  //      ctrlRoom({
-  //        'message': 'Click to call me',
-  //        'url': `https://drrrchatbots.gitee.io${location.pathname}?invite=${peerID}`,
-  //      })
-  //    }
-  //    else alert("Please set your ID");
-  //  })
-  //
-  //  $('#setRemoteID').click(function(){
-  //    // TODO:clear window.call?
-  //    id = prompt("Input your peerID");
-  //    if(id){
-  //      remote = id;
-  //      $('#remote-id').text(remote);
-  //    }
-  //    else{
-  //      remote = null;
-  //      $('#remote-id').text('Please set remote ID');
-  //    }
-  //  });
-  //
-  //  $('#callRemote').click(function(){
-  //    if(remote) join(remote);
-  //    else alert("Please set remote ID");
-  //  });
-  //
-  //  $('#endCall').click(function(){
-  //    if(window.call) window.call.close();
-  //    else alert("There's no call now");
-  //  })
-  //
-  //  $('#setup').click(function(){
-  //    $('#chat-ui').hide();
-  //    $('#stream-ui').show();
-  //    if(window.call) window.call.close();
-  //    if (window.localStream) {
-  //      window.localStream.getTracks().forEach(track => track.stop());
-  //      window.localStream = null;
-  //    }
-  //  });
-  //
-  //  $('#stream-setting-form').submit(()=>false);
-  //  $('#chat-setting-form').submit(()=>false);
-  //
-  //  remote = findGetParameter('invite') || findGetParameter('wait');
-  //
 });

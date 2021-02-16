@@ -310,6 +310,7 @@ function backToProfile(){
 function goToChat(){
   $('.room-title-name').text(profile.hostName);
   $('#profile-ui').hide();
+  $('#musicBox').show();
   $('#chat-ui').show();
 }
 

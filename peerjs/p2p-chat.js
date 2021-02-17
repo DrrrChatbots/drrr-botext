@@ -200,14 +200,16 @@ function handleText(conn){
       else{
         alert(JSON.stringify(data.callType));
         if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
-          setTimeout(()=>{
-            window.call = peer.call(id, window.localStream, call_constraints);
-            handleCall(window.call);
-            handleCallClose(window.call);
-          }, 1000)
+          alert("do call");
+          //setTimeout(()=>{
+          //  window.call = peer.call(id, window.localStream, call_constraints);
+          //  handleCall(window.call);
+          //  handleCallClose(window.call);
+          //}, 1000)
         }
         else{
           window.remoteCallType = data.callType;
+          alert("callback")
           setTimeout(()=> conn.send({
             callType: window.localCallType
           }), 1000);

@@ -6,8 +6,8 @@ var call_constraints = {
     'OfferToReceiveAudio': true,
     'OfferToReceiveVideo': true
   },
-  offerToReceiveAudio: 10,
-  offerToReceiveVideo: 10,
+  offerToReceiveAudio: 1,
+  offerToReceiveVideo: 1,
 }
 
 const createMediaStreamFake = () => {
@@ -140,10 +140,10 @@ function getStream(config, success, error){
       stream.addTrack(createEmptyAudioTrack());
       alert("wrap empty audio");
     }
-    //if(!stream.getVideoTracks().length){
-    //  stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
-    //  alert("wrap empty video");
-    //}
+    if(!stream.getVideoTracks().length){
+      stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
+      alert("wrap empty video");
+    }
     return stream;
   }
 

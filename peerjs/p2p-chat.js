@@ -210,7 +210,7 @@ function handleText(conn){
           console.log("callback")
           conn.send({
             callType: window.localCallType
-          }
+          });
         }
       }
     }

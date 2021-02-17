@@ -478,6 +478,18 @@ function initialize(){
   profile.run();
 };
 
+function toggleMediaSrc(media, src){
+  if(media.srcObject || media.src)
+    clearMediaSrc(media);
+  else bindMediaSrc(media, src);
+}
+
+function clearMediaSrc(media){
+  if ("srcObject" in media)
+    media.srcObject = null;
+  else media.src = null;
+}
+
 function bindMediaSrc(dom, stream){
   if(!dom.srcObject ||
     (stream.getTracks().length > dom.srcObject.getTracks().length)){
@@ -497,22 +509,25 @@ function playStream(id, stream) {
   video = $(`<video class="user-video" style="width: 75%;" poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline></video>`).appendTo('#videos');
 
   media = profile.users[id].call.video ? video[0] : audio[0];
-  bindMediaSrc(media, stream);
+
+  if(id !== profile.id) bindMediaSrc(media, stream);
+  video.click(function(){
+    toggleMediaSrc($(`#${id}-video`)[0], stream);
+    setTimeout(() => $(`#${id}`).click(), 1000);
+  })
 
   $('#user_list').on("click", `#${id}`, function(event){
     if($(`#${id}`).hasClass('is-tripcode')){
       $('.user-audio').hide();
-      $(`#${id}-audio`).show();
       $('.user-video').hide();
+      $(`#${id}-audio`).show();
       $(`#${id}-video`).show();
     }
-  }).click();
-}
-
-function clearMediaSrc(media){
-  if ("srcObject" in media)
-    media.srcObject = null;
-  else media.src = null;
+  });
+  $('.user-audio').hide();
+  $('.user-video').hide();
+  $(`#${id}-audio`).show();
+  $(`#${id}-video`).show();
 }
 
 function stopStream(id){
@@ -768,7 +783,6 @@ $(document).ready(function(){
     // others will call me
   });
   $('#end-call').click(function(){
-    profile.call = false;
     // inform host
     if(profile.id === profile.owner){
       sendCmd({
@@ -794,6 +808,7 @@ $(document).ready(function(){
     $('#stream-info').text('點擊手機圖示加入通話');
     Object.values(profile.calls).forEach(call => call.close());
     profile.calls = {};
+    profile.call = false;
   })
 
   $('#save-stream').click(function(){

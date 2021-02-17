@@ -267,7 +267,11 @@ function Host(id, hostName, name, avatar){
               }
             })
             Object.values(profile.conns).forEach(c => {
-              if(c.peer != conn.peer) c.send({ user: data.arg });
+              if(c.peer != conn.peer)
+                c.send({
+                  fn: 'user',
+                  arg : data.arg
+                });
             })
             addJoin(data.arg.id);
             renewUserList();

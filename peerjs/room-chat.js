@@ -188,12 +188,12 @@ function addJoin(id){
 
 function leftUser(id){
   addLeft(id);
-  delete profile.users[id];
-  delete profile.conns[id];
   if(profile.calls[id]){
     stopStream(profile.calls[id])
     delete profile.calls[id];
   }
+  delete profile.users[id];
+  delete profile.conns[id];
   renewUserList();
 }
 

@@ -194,10 +194,11 @@ function handleText(conn){
         if(JSON.stringify(window.remoteCallType) !== JSON.stringify(data.callType)){
           if(remote && $(`#${remote}`).length)
             $(`#${remote}`).remove();
-            bindMediaSrc(createMediaDom(id, stream), window.remoteStream);
+          bindMediaSrc(createMediaDom(id, stream), window.remoteStream);
         }
       }
       else{
+        alert(JSON.stringify(data.callType));
         if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
           window.call = peer.call(id, window.localStream, call_constraints);
           handleCall(window.call);
@@ -205,9 +206,10 @@ function handleText(conn){
         }
         else{
           window.remoteCallType = data.callType;
-          conn.send({
+          setTimeout(()=> conn.send({
             callType: window.localCallType
-          });
+          }), 1000);
+
         }
       }
     }

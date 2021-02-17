@@ -6,8 +6,8 @@ var call_constraints = {
     'OfferToReceiveAudio': true,
     'OfferToReceiveVideo': true
   },
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1,
+  offerToReceiveAudio: 10,
+  offerToReceiveVideo: 10,
 }
 
 const createMediaStreamFake = () => {

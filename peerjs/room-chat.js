@@ -632,7 +632,7 @@ $(document).ready(function(){
   setMediaSources();
 
   uid = findGetParameter('uid');
-  name = findGetParameter('name');
+  name = findGetParameter('name') || '';
   host = findGetParameter('host');
   join = findGetParameter('join');
   room = findGetParameter('room') || 'This is a Lambda Room';

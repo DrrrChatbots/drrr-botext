@@ -200,9 +200,11 @@ function handleText(conn){
       else{
         alert(JSON.stringify(data.callType));
         if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
-          window.call = peer.call(id, window.localStream, call_constraints);
-          handleCall(window.call);
-          handleCallClose(window.call);
+          setTimeout(()=>{
+            window.call = peer.call(id, window.localStream, call_constraints);
+            handleCall(window.call);
+            handleCallClose(window.call);
+          }, 1000)
         }
         else{
           window.remoteCallType = data.callType;
@@ -264,6 +266,9 @@ function initialize() {
   })
 
   peer.on('connection', function(conn) {
+    conn.on('open', function() {
+      // nothing
+    });
     handleText(conn);
   });
 

@@ -33,25 +33,16 @@ function findGetParameter(parameterName, url) {
 function handleCall(call){
   call.on('stream', function(stream) {
     // Do something with this audio stream
-    console.log("Here's a stream");
-    playStream(remote, stream);
+    playStream(this.peer, stream);
   });
 
   call.on('close', function() {
     // Do something with this audio stream
-    window.onbeforeunload = null;
-    stopStream();
-    alert("call ended")
-    window.call = null;
-    $("#chat-setting-container").show();
-    $("#chat-video-container").hide();
+    stopStream(this.peer);
   });
 
   call.on('error', function(err) {
-    window.onbeforeunload = null;
-    stopStream();
-    alert(`call error: ${err.type}`)
-    window.call = null;
+    stopStream(this.peer);
     // Do something with this audio stream
   });
 }
@@ -62,14 +53,6 @@ function handleCallClose(call){
       call.close();
     }
   };
-}
-
-function clearPeer(){
-  peer.close();
-  peer.destroy();
-  $('#id').text('Please set your peerID');
-  peerID = null;
-  peer = null;
 }
 
 function getConfig(){
@@ -148,19 +131,118 @@ function handlePeer(peer){
   });
 }
 
+function profile2user(p){
+  return {
+    id: p.id,
+    name: p.name,
+    avatar: p.avatar,
+    call: p.call
+  };
+}
+
+function addMessage(id, arg){
+  let user = id === profile.id ?
+    profile2user(profile) : profile.users[id];
+
+  $('#talks').prepend(
+    `<dl class="talk ${user.avatar}" id="">
+      <dt class="dropdown user">
+      <div class="avatar avatar-${user.avatar}"></div>
+      <div class="name" data-toggle="dropdown"><span class="select-text">${user.name}</span></div>
+      <ul class="dropdown-menu" role="menu"></ul>
+      </dt>
+      <dd class="bounce">
+      <div class="bubble">
+        <div class="tail-wrap center" style="background-size: 65px;">
+          <div class="tail-mask"></div>
+        </div>
+        <p class="body select-text">${arg.message}</p>
+      </div>
+      </dd>
+    </dl>`);
+}
+
+function addLeft(id){
+  let user = profile.users[id];
+  $('#talks').prepend(`<div class="talk leave system" id="">
+    ►► @
+    <span class="dropdown user">
+      <span data-toggle="dropdown" class="name">${user.name}</span>
+      <ul class="dropdown-menu" role="menu"></ul>
+    </span>
+    已退出部屋
+  </div>`);
+}
+
+function addJoin(id){
+  let user = profile.users[id];
+  $('#talks').prepend(`<div class="talk join system" id="">
+    ►► @
+    <span class="dropdown user">
+      <span data-toggle="dropdown" class="name">${user.name}</span>
+      <ul class="dropdown-menu" role="menu"></ul>
+    </span>
+    已登入部屋
+  </div>`);
+}
+
+function leftUser(id){
+  addLeft(id);
+  delete profile.users[id];
+  delete profile.conns[id];
+  if(profile.calls[id]){
+    stopStream(profile.calls[id])
+    delete profile.calls[id];
+  }
+  renewUserList();
+}
+
+function sendCmd(cmd){
+  Object.values(profile.conns).forEach(c => {
+    if(c.peer != profile.id) c.send(cmd);
+  });
+}
+
+function sendHost(cmd){
+  Object.values(profile.conns).forEach(c => {
+    if(c.peer === profile.hostID) c.send(cmd);
+  });
+}
+
+function handleCallCmd(arg){
+  if(arg.call){
+    profile.users[arg.user].call = true;
+    $(`#${arg.user}`).addClass('is-tripcode');
+    if(arg.user === profile.id || !profile.call) return;
+    //call him
+    profile.calls[arg.user] = profile.peer.call(arg.user, window.localStream, call_constraints);
+    handleCall(profile.calls[arg.user]);
+    handleCallClose(profile.calls[arg.user]);
+  }
+  else{
+    profile.users[arg.user].call = false;
+    $(`#${arg.user}`).removeClass('is-tripcode');
+  }
+}
+
 function Host(id, hostName, name, avatar){
   this.id = id;
+  this.hostID = id;
   this.hostName = hostName;
   this.name = name;
   this.avatar = avatar;
-  this.users = {};
+  this.owner = id;
+  this.users = {[id]: profile2user(this)};
   this.conns = {};
+  this.call = false;
+  this.calls = {}
   this.run = function(){
     this.peer = new Peer(this.id);
 
     handlePeer.bind(this)(this.peer);
 
     this.peer.on('open', function(){
+      renewUserList();
       goToChat();
     })
 
@@ -170,39 +252,59 @@ function Host(id, hostName, name, avatar){
         //conn.send("Sender does not accept incoming connections");
         //setTimeout(function() { conn.close(); }, 500);
       });
-      conn.on('data', (function(data) {
+      conn.on('data', function(data) {
         switch(data.fn){
           case 'join':
             data.arg.id = conn.peer;
-            this.users[conn.peer] = data.arg;
-            this.conns[conn.peer] = conn;
+            profile.users[conn.peer] = data.arg;
+            profile.conns[conn.peer] = conn;
             conn.send({
               fn: 'room',
               arg: {
-                room: this.name,
-                users: this.users
+                room: profile.hostName,
+                owner: profile.owner,
+                users: profile.users
               }
             })
-            Object.values(this.conns).forEach(c => {
+            Object.values(profile.conns).forEach(c => {
               if(c.peer != conn.peer) c.send({ user: data.arg });
             })
+            addJoin(data.arg.id);
+            renewUserList();
             break;
-          case 'msg':
-            console.log(`${this.users[conn.peer].name}: ${data.arg}`)
+          case 'message':
+            console.log(`${profile.users[conn.peer].name}:`, data.arg)
+            addMessage(this.peer, data.arg)
+            break;
+          case 'call':
+            data.arg.user = this.peer;
+            data.arg.call = data.arg.call ? true : false;
+            sendCmd(data);
+            handleCallCmd(data.arg);
             break;
           default:
             console.log(`unknown cmd:`, data)
             break;
         }
-      }).bind(this));
+      });
       conn.on('close', function () {
-
+        leftUser(this.peer);
       });
     }).bind(this));
 
     // stream connection
     this.peer.on('call', function(call) {
-
+      if(profile.call){
+        handleCall(call);
+        call.answer(window.localStream);
+        handleCallClose(call);
+      }
+      else{
+        call.answer();
+        setTimeout(function(){
+          call.close();
+        }, 2500);
+      }
     });
   }
 }
@@ -215,6 +317,9 @@ function User(id, name, hostID, avatar){
   this.avatar = avatar;
   this.users = {};
   this.conns = {};
+  this.owner = null;
+  this.call = false;
+  this.calls = {}
   this.run = function(){
     this.peer = new Peer(this.id);
 
@@ -223,42 +328,50 @@ function User(id, name, hostID, avatar){
     this.peer.on('open', (function(){
       // connect to server
       console.log(this)
-      this.host = this.peer.connect(this.hostID);
-      this.host.on('open', (function() {
-        this.host.send({
+      this.conns[this.hostID] = this.peer.connect(this.hostID);
+      this.conns[this.hostID].on('open', (function() {
+        this.conns[this.hostID].send({
           fn: 'join',
-          arg: {
-            name: this.name,
-            avatar: this.avatar
-          }
+          arg: profile2user(profile)
         })
         //this.host.send("Sender does not accept incoming connections");
         //setTimeout(function() { this.host.close(); }, 500);
       }).bind(this));
-      this.host.on('data', (function(data) {
+      this.conns[this.hostID].on('data', function(data) {
         switch(data.fn){
           case 'user':
-            this.users[data.arg.id] = data.arg;
-            this.conns[data.arg.id] = this.peer.connect(data.arg.id)
-            this.handleUser(this.conns[data.arg.id])
+            profile.users[data.arg.id] = data.arg;
+            profile.conns[data.arg.id] = profile.peer.connect(data.arg.id)
+            profile.handleUser(profile.conns[data.arg.id])
+            addJoin(data.arg.id);
+            renewUserList();
             break;
           case 'room':
-            this.hostName = data.arg.room;
-            this.users = data.arg.users;
-            console.log('room command:', data)
+            profile.hostName = data.arg.room;
+            profile.owner = data.arg.owner;
+            profile.users = data.arg.users;
+            console.log('room command:', data);
+            addJoin(profile.id);
+            renewUserList();
             goToChat();
+            break;
+          case 'message':
+            addMessage(this.peer, data.arg);
+            break;
+          case 'call':
+            handleCallCmd(data.arg);
             break;
           default:
             console.log(`unknown cmd`, data)
             break;
         }
-      }).bind(this));
-      this.host.on('close', function () {
+      });
+      this.conns[this.hostID].on('close', function () {
         alert("Host left");
         backToProfile();
       });
 
-      this.host.on('error', function (err) {
+      this.conns[this.hostID].on('error', function (err) {
         if(err.type === 'peer-unavailable'){
           alert("ROOM not existed");
         }
@@ -276,7 +389,17 @@ function User(id, name, hostID, avatar){
 
     // stream connection
     this.peer.on('call', function(call) {
-
+      if(profile.call){
+        handleCall(call);
+        call.answer(window.localStream);
+        handleCallClose(call);
+      }
+      else{
+        call.answer();
+        setTimeout(function(){
+          call.close();
+        }, 2500);
+      }
     });
   }
 
@@ -287,8 +410,9 @@ function User(id, name, hostID, avatar){
     });
     conn.on('data', function(data) {
       switch(data.fn){
-        case 'msg':
-          console.log(data.arg)
+        case 'message':
+          console.log(data.arg);
+          addMessage(this.peer, data.arg);
           break;
         default:
           console.log(`unknown cmd ${data}`)
@@ -296,7 +420,7 @@ function User(id, name, hostID, avatar){
       }
     });
     conn.on('close', function () {
-      // REMOVE USER FROM LIST
+      leftUser(this.peer);
     });
   }
 }
@@ -312,6 +436,13 @@ function goToChat(){
   $('#profile-ui').hide();
   $('#musicBox').show();
   $('#chat-ui').show();
+  $('.sharer').attr('data-url', `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`)
+  $('.sharer').attr('data-image', `https://drrr.com/banner/?t=${profile.hostName}`)
+  $('.sharer').attr('data-subject', `${profile.hostName}@DOLLARS Mirror（Durarara!! Mirror）`)
+  $('#settings-info-room-name').html(`<p>${profile.hostName}</p>`);
+  $('#settings-info-room-description').html(`<p>${profile.name}<p></p>${profile.id}</p>`);
+  $('#settings-info-room-uptime').html(`<p>Avatar: ${profile.avatar}</p>`);
+  $('title').text(profile.hostName);
 }
 
 function initialize(){
@@ -326,41 +457,25 @@ function initialize(){
 };
 
 function playStream(id, stream) {
-  $("#chat-setting-container").hide();
-  $("#chat-video-container").show();
-
-  var uelt = $(`#${id}`);
-  if(uelt.length){
-    // skip
-    //localVideo = uelt.find(`#${id}-video`)[0];
-    //localAudio = uelt.find(`#${id}-audio`)[0];
-  }
+  var uelt = $(`#${id}-audio`);
+  if(uelt.length) return;
   else{
     window.remoteStream = stream;
-    full = null;
-    if(stream.getVideoTracks().length){
-      media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
-      full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-      full.click(function(){
-        if (media[0].requestFullscreen)
-          media[0].requestFullscreen();
-        else if (media[0].webkitRequestFullscreen)
-          media[0].webkitRequestFullscreen();
-        else if (media[0].msRequestFullScreen)
-          media[0].msRequestFullScreen();
-      });
+    if(id === profile.owner){
+      if(stream.getVideoTracks().length)
+        media = $(`#room-video`)
+      else
+        media = $(`#room-audio`)
     }
-    else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
-
+    else{
+      media = $(`<audio id="${id}-audio" class="user-audio" style="height:100%; width:100%;" autoplay controls playsinline/>`)
+      media.appendTo('#audios');
+    }
     localMedia = media[0];
-
-    function wrap(elt){
-      return $(`<div class="col-100"></div>`).append(elt);
-    }
-    var container = $(`<div id="${id}" class="row"></div>`)
-      .append(wrap(media))
-      .appendTo('#chat-video-container');
-    if(full) container.append(wrap(full));
+    $('#user_list').on("click", `#${id}`, function(event){
+      $('.user-audio').hide();
+      $(`#${id}-audio`).show();
+    });
   }
 
   if(!media[0].srcObject ||
@@ -380,77 +495,32 @@ function playStream(id, stream) {
   }
 }
 
-function stopStream(){
-  if(remote && $(`#${remote}`).length)
-    $(`#${remote}`).remove();
+function clearMediaSrc(media){
+  if ("srcObject" in media)
+    media.srcObject = null;
+  else media.src = null;
 }
-/**
- * Create the connection between the two Peers.
- *
- * Sets up callbacks that handle any events related to the
- * connection and data received on it.
- */
 
-/*
-function join(id) {
-  // Close old connection
-  // TODO
-  function _join(){
-    $("#status").text("Connecting...");
-    try{
-      if(!window.localStream){
-        alert("please enable your audio stream");
-        return;
-      }
-
-      while(!id){
-        id = prompt("Input the peerID you want to call");
-        if(!id) alert("Invalid ID");
-      }
-
-      if(id === peerID){
-        stopStream();
-        return alert("You cannot call yourself");
-      }
-
-      // outgoing call
-      window.call = peer.call(id, window.localStream, call_constraints);
-      handleCall(window.call);
-      handleCallClose(window.call);
-    }
-    catch(err){
-      alert(String(err));
-    }
+function stopStream(id){
+  if($(`#${id}-audio`).length)
+    $(`#${id}-audio`).remove();
+  if(id === profile.owner){
+    clearMediaSrc($('#room-video')[0]);
+    clearMediaSrc($('#room-audio')[0]);
   }
-
-  if(window.call){
-    window.call.close();
-    var until_close = () => setTimeout(function(){
-      if(window.call) until_close();
-      else _join();
-    }, 2500);
-    until_close();
-  } else _join();
 }
-*/
 
-      var profile = null;
-      //var peer = null; // Own peer object
-      var peerID = null;
-      var remote = null;
-      var tryCall = false;
-      window.localStream = null;
-      window.call = null;
+window.localStream = null;
 
-      function makeid(length) {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-          result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-      }
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 function randomPeerID(len){
   return 'DRRR' + makeid(len || 20);
@@ -490,6 +560,30 @@ function setMediaSources(){
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 }
 
+function renewUserList(){
+  //  is-tripcode
+  let owner = profile.users[profile.owner]
+  let hostinfo = `<li id="${owner.id}" title="${owner.name} (host)" class="${owner.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${owner.avatar} is-host" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${owner.avatar}"></span><span class="select-text name">${owner.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
+  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.owner).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
+  $('#user_list').html(`${hostinfo}${usersinfo}`);
+  setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+}
+
+function replaceStream(peerConnection, mediaStream) {
+  for(sender of peerConnection.getSenders()){
+    if(sender.track.kind == "audio") {
+      if(mediaStream.getAudioTracks().length > 0){
+        sender.replaceTrack(mediaStream.getAudioTracks()[0]);
+      }
+    }
+    if(sender.track.kind == "video") {
+      if(mediaStream.getVideoTracks().length > 0){
+        sender.replaceTrack(mediaStream.getVideoTracks()[0]);
+      }
+    }
+  }
+}
+
 $(document).ready(function(){
 
   setMediaSources();
@@ -515,10 +609,12 @@ $(document).ready(function(){
     $('#home-extra').toggle();
   })
 
-  $('.user-icon').click(function(){
+  let icons = $('.user-icon').click(function(){
     $('.user-icon').removeClass('active');
     $(this).addClass('active');
   })
+  // random avatar
+  icons.get(Math.floor(Math.random()*icons.length)).click();
 
   if(host){
     $('#video-div').show();
@@ -537,5 +633,146 @@ $(document).ready(function(){
   $('#profile-setting-form').submit(()=>{
     initialize();
     return false;
+  });
+
+  $('#message').submit(function(){
+    return false;
+  });
+
+  let post = $('input[name="post"]').click(function(){
+    message = $('textarea[name="message"]').val();
+    $('textarea[name="message"]').val('');
+    sendCmd({
+      fn: 'message',
+      arg: {'message': message}
+    })
+    addMessage(profile.id, {'message': message})
+  })
+
+  $('textarea[name="message"]').on('keydown', function(e){
+    if(!e.ctrlKey && !e.shiftKey && (e.keyCode || e.which) == 13){
+      e.preventDefault();
+      if(!$(this).val().trim().length) return $(this).val('');
+      if($('#textcomplete-dropdown-1').is(':visible')) return;
+      post.click();
+    }
+    setTimeout(() => $('.counter').text(140 - $(this).val().length), 100);
+  });
+
+  /*
+  $('.dropdown').click(function(){
+    if($(this).hasClass('open')){
+      $(this).removeClass('open');
+      $(this).find('.preferences').attr("aria-expanded","false");
+    }
+    else{
+      $(this).addClass('open')
+      $(this).find('.preferences').attr("aria-expanded","true");
+    }
+  })
+  */
+
+  //$('.icon-settings').click(function(){
+  //  //$('#modal-settings').addClass('in');
+  //  $('#modal-settings').modal('show');
+  //});
+
+  $('.icon-users').click(function(){
+    $('#user_list').slideToggle();
+    setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+  })
+
+  $('#invite').click(function(){
+    ctrlRoom({
+      'message': 'Click to join',
+      'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`,
+    })
+    alert("shared!");
+  })
+
+  $('.icon-list').click(function(){
+    $('#image_panel').slideToggle();
+    setTimeout(() => $('#setting_pannel').css('top',$('.message_box').height() + 'px'), 500);
+    setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+  })
+
+  $('.logout').click(function(){
+    window.location.reload();
+  });
+
+  $('#call').click(function(){
+    if(!window.localStream)
+      return alert("Setup your stream first, thx!");
+
+    profile.call = true;
+    // inform host
+    if(profile.id === profile.owner){
+      sendCmd({
+        fn: 'call',
+        arg: {
+          user: profile.id,
+          call: true
+        }
+      });
+      handleCallCmd({ user: profile.id, call: true });
+    }
+    else{
+      sendHost({
+        fn: 'call',
+        arg: {
+          user: profile.id,
+          call: true
+        }
+      })
+    }
+    $('#end-call')[0].style.display = 'list-item';
+    $('#call')[0].style.display = 'none';
+    // others will call me
+  });
+  $('#end-call').click(function(){
+    profile.call = false;
+    // inform host
+    if(profile.id === profile.owner){
+      sendCmd({
+        fn: 'call',
+        arg: {
+          user: profile.id,
+          call: false
+        }
+      });
+      handleCallCmd({ user: profile.id, call: false });
+    }
+    else{
+      sendHost({
+        fn: 'call',
+        arg: {
+          user: profile.id,
+          call: false
+        }
+      })
+    }
+    $('#end-call')[0].style.display = 'none';
+    $('#call')[0].style.display = 'list-item';
+    Object.values(profile.calls).forEach(call => call.close());
+    profile.calls = {};
+  })
+
+  $('#save-stream').click(function(){
+    getStream(getConfig(),
+      function success(stream) {
+        if(window.localStream){
+          // TEST: update peer stream
+          Object.values(profile.calls).forEach(call => {
+            replaceStream(call.peerConnection, stream);
+          });
+          window.localStream.getTracks().forEach(track => track.stop());
+        }
+        window.localStream = stream;
+        alert("done!");
+      },
+      function error(e) {
+        alert("Error: " + e);
+        console.log(e);
+      });
   });
 });

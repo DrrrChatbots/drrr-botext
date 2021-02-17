@@ -2,43 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>PeerJS Simple Example</title>
+    <title>DOLLARS Mirror</title>
     <link rel="stylesheet" href="./room-chat.css">
     <link rel="stylesheet" href="./drrr.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      #video-input {
+        border-right-width: 2px; background: rgba(255,255,255,.1); color: #fff; border-width: 2px;
+      }
+    </style>
   </head>
   <body>
 
     <div id="body">
       <div id="stream-ui" style="display:none;">
-        <h2>Stream Setting</h2>
-        <p>Profile setup</p>
-        <div class="container">
-          <form id="stream-setting-form">
-            <div id="video-div" style="display:none;" class="row">
-              <div class="col-25">
-                <label for="video-input">Video Input</label>
-              </div>
-              <div class="col-75">
-                <select id="video-input">
-                  <option value="none">None</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-25">
-                <label for="audio-input">Audio Input</label>
-              </div>
-              <div id="audio-input" class="col-75">
-              </div>
-            </div>
-          </form>
-          <div class="row">
-            <div class="col-100">
-              <input id="call" type="button" value="CALL">
-            </div>
-          </div>
-        </div>
+
       </div>
 
       <div id="profile-ui">
@@ -252,7 +230,7 @@
         <div class="message_box select-none">
           <div class="message_box_effect_wraper">
             <div class="message_box_inner">
-              <form action="#" method="post" id="message">
+              <form id="message">
                 <div class="clearfix">
                   <h2 id="room_name" class="select-text">
                     <!-- <span class="room-title-capacity">8/15</span> -->
@@ -260,14 +238,23 @@
                   </h2>
                   <ul class="menu">
 
-                    <!--
+                      <li id="end-call" class="image needsclick" style="display: none;">
+                      <i class="icon icon-pause"></i>
+                      </li>
+
+                      <li id="call" class="image needsclick" style="display: list-item;">
+                      <i class="icon icon-phone"></i>
+                      </li>
+
                       <li id="image" class="image needsclick" style="display: list-item;">
                       <i class="icon icon-list"></i>
                       </li>
 
+                      <!--
                       <li id="musicShare" class="music needsclick music_on" style="display: list-item;">
                       <i class="icon icon-music"></i>
                       </li>
+                      -->
 
                       <li class="setting needsclick" style="display: list-item;">
                       <i class="icon icon-users"></i>
@@ -279,6 +266,7 @@
                       <i class="icon icon-share"></i>
                       </a>
                       <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop6">
+                      <li><a id="invite" data-subject="🌈你画我猜🌈摘星塔🍎✨@DOLLARS 聊天室（Durarara!! 聊天室）">Invite</a></li>
                       <li><a class="sharer" data-sharer="email" data-title="I'm in 'share link' room @dollarschat" data-url="https://drrr.com/room?id=6YehCFGhdC" data-to="" data-subject="🌈你画我猜🌈摘星塔🍎✨@DOLLARS 聊天室（Durarara!! 聊天室）">Email</a></li>
 
                       <li data-langs="zh-CN zh-TW" class="visible"><a class="sharer" data-sharer="weibo" data-title="我在「🌈你画我猜🌈摘星塔🍎✨」房间（点击链接可加入房间）／drrr.com #DOLLARS聊天室# #无头骑士异闻录#" data-url="https://drrr.com/room?id=6YehCFGhdC" data-image="https://drrr.com/banner/?t=🌈你画我猜🌈摘星塔🍎✨" data-appkey="2793388877" data-ralateuid="5842424001">微博</a></li>
@@ -308,6 +296,7 @@
                       <a class="needsclick" role="menuitem" tabindex="-1" data-toggle="modal" data-target="#modal-settings">
                       設置                  </a>
                       </li>
+                      <!--
                       <li>
                       <a class="needsclick" role="menuitem" tabindex="-1" onclick="location.reload(true)">
                       重新載入                  </a>
@@ -324,6 +313,7 @@
                       <a class="needsclick export-coll" role="menuitem" tabindex="-1">
                       導出收藏                  </a>
                       </li>
+                      -->
 
                       <li role="presentation" class="divider"></li>
 
@@ -335,7 +325,6 @@
                       <li class="logout needsclick"><a class="btn-link do-logout">離開房間</a></li>
                       </ul>
                       </li>
-                    -->
 
                   </ul>
 
@@ -350,7 +339,7 @@
                 </div>
 
                 <div class="room-submit-wrap">
-                  <div style="display:none"><input type="submit" class="form-control room-submit-btn" name="post" value="POST!" tabindex="3"></div><input type="button" class="form-control room-submit-btn" name="ext_post" value="POST!" tabindex="3">
+                  <div><input type="submit" class="form-control room-submit-btn" name="post" value="POST!" tabindex="3"></div>
                 </div>
 
                 <ul id="members" class="room-members panel-hide">
@@ -373,12 +362,19 @@
               </form>
 
               <!-- akakoori -->
-              <div id="image_panel" class="panel-image panel-hide">
+              <div id="image_panel" class="panel-image panel-hide" style="max-height: 100%;">
                 <div class="container-fluid">
                   <div class="row">
                     <!-- shows when no images -->
-                    <div id="no_images" class="col-lg-12" style="display: none;"><p class="text-center">您尚未收藏任何圖片。</p></div>
-                    <div class="col-xs-3 col-sm-2 col-lg-1p5"><div class="image-mask"><img src="https://i.loli.net/2019/04/07/5ca9d7861f53b.gif" alt="5ca9d7861f53b.gif" data-src="https://i.loli.net/2019/04/07/5ca9d7861f53b.gif" class="img-thumbnail"><a href="javascript:;" class="icon btn-delete-image">×</a></div></div><div class="col-xs-3 col-sm-2 col-lg-1p5"><div class="image-mask"><img src="https://i.loli.net/2020/03/30/l4cktoROXYWzSCL.gif" alt="l4cktoROXYWzSCL.gif" data-src="https://i.loli.net/2020/03/30/l4cktoROXYWzSCL.gif" class="img-thumbnail"><a href="javascript:;" class="icon btn-delete-image">×</a></div></div></div>
+                    <div id="no_images" class="col-lg-12">
+                      <p class="text-center">直播間</p>
+                      <video style="width: 100%;" poster="./p2p-chat.png" id="room-video" autoplay controls playsinline></video>
+                      <audio id="room-audio" class="user-audio" style="width:100%;" autoplay controls playsinline/>
+                    </div>
+                    <!--
+                    <div class="col-xs-3 col-sm-2 col-lg-1p5"><div class="image-mask"><img src="https://i.loli.net/2019/04/07/5ca9d7861f53b.gif" alt="5ca9d7861f53b.gif" data-src="https://i.loli.net/2019/04/07/5ca9d7861f53b.gif" class="img-thumbnail"><a href="javascript:;" class="icon btn-delete-image">×</a></div></div><div class="col-xs-3 col-sm-2 col-lg-1p5"><div class="image-mask"><img src="https://i.loli.net/2020/03/30/l4cktoROXYWzSCL.gif" alt="l4cktoROXYWzSCL.gif" data-src="https://i.loli.net/2020/03/30/l4cktoROXYWzSCL.gif" class="img-thumbnail"><a href="javascript:;" class="icon btn-delete-image">×</a></div></div>
+                    -->
+                    </div>
                   <!-- mirrorContainer for dragula -->
                   <div class="row">
                   </div>
@@ -405,7 +401,7 @@
               <!-- Willian -->
 
               <div id="setting_pannel" class="panel-hide" style="top: 115px; display: block;">
-                <ul id="user_list" class="user-list"><li title="少女 (host)" class="dropdown user clearfix symbol-wrap-eight is-host is-tripcode" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-eight"></span><span class="select-text name">少女</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="柴" class="dropdown user clearfix symbol-wrap-setton is-tripcode" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-setton"></span><span class="select-text name">柴</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="🌊" class="dropdown user clearfix symbol-wrap-setton is-tripcode" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-setton"></span><span class="select-text name">🌊</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="浪" class="dropdown user clearfix symbol-wrap-bakyura-2x is-tripcode" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-bakyura-2x"></span><span class="select-text name">浪</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="KAGU辣酱" class="dropdown user clearfix symbol-wrap-bakyura-2x" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-bakyura-2x"></span><span class="select-text name">KAGU辣酱</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="阳光，海浪与沙雕" class="dropdown user clearfix symbol-wrap-setton is-tripcode" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-setton"></span><span class="select-text name">阳光，海浪与沙雕</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="Soutider" class="dropdown user clearfix symbol-wrap-ya-2x" device="mobile"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-ya-2x"></span><span class="select-text name">Soutider</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li><li title="seth" class="dropdown user clearfix symbol-wrap-zaika-2x is-tripcode" device="mobile"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-zaika-2x"></span><span class="select-text name">seth</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li></ul>
+                <ul id="user_list" class="user-list"></ul>
               </div>
             </div>
           </div>
@@ -418,419 +414,7 @@
           </div>
         </div><!-- end #header -->
 
-        <div id="talks" class="talks select-none" style="transform: translate3d(0px, 115px, 0px);">
-          <div class="talk me system select-text" id="6b7dd5dfc879006857a04bcfd601c933">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给seth递上一杯香草拿铁咖啡
-          </div>
-          <div class="talk me system select-text" id="bd85deeb837a99b3b055fbc0608b1572">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk leave system" id="faafe9b3f3d6b71046f0f07c89476ba4">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">jysonwoo</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已退出部屋
-          </div>
-          <div class="talk join system" id="b718e535538f2ecf63177580d0ee6207">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">seth</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <dl class="talk setton" id="2d7b7b8405a5ae2c03723c611c82c896">
-            <dt class="dropdown user">
-            <div class="avatar avatar-setton"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">阳光，海浪与沙雕</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd class="bounce">
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">太草了</p>
-            </div>
-            </dd>
-          </dl>
-          <dl class="talk ya-2x" id="88cac1999f3e06fd7cff23659dc87369">
-            <dt class="dropdown user">
-            <div class="avatar avatar-ya-2x"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">Soutider</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd class="bounce">
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">夜安</p>
-            </div>
-            </dd>
-          </dl>
-          <dl class="talk sharo-2x" id="93b88e87eddd0d35f5e5940b410ae411">
-            <dt class="dropdown user">
-            <div class="avatar avatar-sharo-2x"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">jysonwoo</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">啧啧啧</p>
-            </div>
-            </dd>
-          </dl>
-          <div class="talk me system select-text" id="b0f8833ff6b5b70b2298a73d39c399f2">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk me system select-text" id="a52b4d7f73b2d8502ca55ac64dcaf5db">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给Soutider递上一杯大大大巧克力脆酥圈
-          </div>
-          <div class="talk join system" id="e5d2d332848efbf1342f19125faa0224">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">Soutider</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <div class="talk me system select-text" id="118291bb2b34781c689c06d1e79e1f0d">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给jysonwoo递上一杯圣代
-          </div>
-          <div class="talk me system select-text" id="54b89d08d41910c337d5c349e0022bd4">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk join system" id="ad0e3bb42cf0d5aadb1df7e854e0f73e">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">jysonwoo</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <div class="talk leave system" id="40439855269d556242f187955dfee50a">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">seth</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已退出部屋
-          </div>
-          <div class="talk me system select-text" id="0f39178feb0fa7f11818d973146b3d56">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk me system select-text" id="4184a10ea5d39e9a8566ffc84115daf1">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给seth递上一杯果冻
-          </div>
-          <dl class="talk bakyura-2x" id="9b94de481be6e4de5c01ea3afdc4318c">
-            <dt class="dropdown user">
-            <div class="avatar avatar-bakyura-2x"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">KAGU辣酱</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">今天网超级不好，掉了请踢我</p>
-            </div>
-            </dd>
-          </dl>
-          <div class="talk join system" id="60abd00244feea3358edb9844e544560">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">seth</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <div class="talk leave system" id="932b7eac2cdcc720cf12658ef2717cda">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">SETH</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已退出部屋
-          </div>
-          <dl class="talk zaika-2x" id="780c4f6c3d4975bb31acbe732728d0cd">
-            <dt class="dropdown user">
-            <div class="avatar avatar-zaika-2x"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">SETH</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">怪哎我复制不了链接我换个游览器试试</p>
-            </div>
-            </dd>
-          </dl>
-          <div class="talk me system select-text" id="dece0747045eeccb32a496d1c12758e4">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给阳光，海浪与沙雕递上一杯坚果派对风味酸奶慕斯蛋糕
-          </div>
-          <div class="talk me system select-text" id="87bfdbd00f6481389df3bbd8b9210f24">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk join system" id="9fc93409a185cf18ee926b98bd366142">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">阳光，海浪与沙雕</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <dl class="talk bakyura-2x" id="1f8754472669eadd042fb97d2443d27c">
-            <dt class="dropdown user">
-            <div class="avatar avatar-bakyura-2x"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">KAGU辣酱</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">好久不见哇/</p>
-            </div>
-            </dd>
-          </dl>
-          <dl class="talk eight" id="d7769f6e4a6f61106a7eabbfaad5a40d">
-            <dt class="dropdown user">
-            <div class="avatar avatar-eight"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">少女</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">好久不见卡箍啦</p>
-            </div>
-            </dd>
-          </dl>
-          <div class="talk me system select-text" id="b718b6970b858d3702749569700b0415">
-            ►►
-            <span>
-              <span class="symbol symbol-bakyura-2x"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">KAGU辣酱</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            一口喝掉
-          </div>
-          <div class="talk new-description system select-text" id="2f2d0e52bdaa3ba8e302e12867d51b37">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">少女</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            設置部屋主題：——预计凑齐8人开始，这是邀请链接https://garticphone.com/zh-CN/?c=0c0739c34——// ♪♪[.help]
-          </div>
-          <div class="talk me system select-text" id="748c121ca288bf6fe42b3e656ac749ab">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk me system select-text" id="71b22ab3f56c1a1e234ca757550305a7">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给KAGU辣酱递上一杯绿豆冰沙~
-          </div>
-          <div class="talk join system" id="fe35de7f4b3eec2842881963c551cb1a">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">KAGU辣酱</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <div class="talk me system select-text" id="e0d6804f356ddae2f750c4a8660b8646">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给SETH递上一杯绿豆冰沙~
-          </div>
-          <div class="talk me system select-text" id="cf28060bbb14a02eead0e78146c03e40">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk join system" id="b4db9f58d9dd4fd7c708739a2f759097">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">SETH</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <div class="talk leave system" id="ed390f238c8540553c0854a15bffc6e1">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">蛋子哥</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已退出部屋
-          </div>
-          <div class="talk me system select-text" id="cb0b974d38614d296e38b32ef4bf9436">
-            ►►
-            <span>
-              <span class="symbol symbol-eight"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">少女</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            给蛋子哥递上一杯抹茶拿铁
-          </div>
-          <div class="talk me system select-text" id="b8a875feb46e25fc2a6fc10fa58dd9a4">
-            ►►
-            <span>
-              <span class="symbol symbol-setton"></span>
-              <span class="dropdown user">
-                <span data-toggle="dropdown" class="name">柴</span>
-                <ul class="dropdown-menu" role="menu"></ul>
-              </span>
-            </span>
-            🍵
-          </div>
-          <div class="talk join system" id="ffafa802170bd0659d014ba24e33fdc0">
-            ►► @
-            <span class="dropdown user">
-              <span data-toggle="dropdown" class="name">蛋子哥</span>
-              <ul class="dropdown-menu" role="menu"></ul>
-            </span>
-            已登入部屋
-          </div>
-          <dl class="talk setton" id="698abca6c80cf0b8626fd50bdd2bbef4">
-            <dt class="dropdown user">
-            <div class="avatar avatar-setton"></div>
-            <div class="name" data-toggle="dropdown"><span class="select-text">🌊</span></div>
-            <ul class="dropdown-menu" role="menu"></ul>
-            </dt>
-            <dd>
-            <div class="bubble">
-              <div class="tail-wrap center" style="background-size: 65px;">
-                <div class="tail-mask"></div>
-              </div>
-              <p class="body select-text">听你的</p>
-            </div>
-            </dd>
-          </dl>
-
+        <div id="talks" class="talks select-none">
         </div><!-- /#talks -->
 
         <!-- Tripcode Modal -->
@@ -879,6 +463,28 @@
 
                     <!-- User settings -->
                     <div role="tabpanel" class="tab-pane" id="settings-user">
+                      <p><p>
+                      <div class="form-group" id="settings-util-name">
+                        <label for="video-input">Video Input</label>
+                        <div class="input-group">
+                          <select id="video-input" class="form-control" style="background: rgba(0,0,0,.75);; color: #fff;">
+                                <option value="none">None</option>
+                          </select>
+
+                          <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" id="save-stream">SAVE</button>
+                          </span>
+
+                        </div>
+
+                      <div class="checkbox" id="settings-sound">
+                        <div id="audio-input" class="col-75">
+                        </div>
+                      </div>
+
+                      </div>
+
+                      <!--
                       <div class="checkbox" id="settings-sound">
                         <label>
                           <input type="checkbox" id="form-settings-system-sound"> 音效                </label>
@@ -891,6 +497,7 @@
                         <label>
                           <input type="checkbox" id="form-settings-autoload-image"> 自動加載圖片                </label>
                       </div>
+                      -->
                     </div>
 
                     <!-- Room settings  -->
@@ -992,9 +599,17 @@
         </div>
       -->
       <div id="musicBox" class="select-none" style="display:none;">
-        <div class="player-inner-wrap">
+        <div id="audios" class="player-inner-wrap" style="width: 100%; height: 100%;">
+          <!--
           <div class="progress-music" role="progressbar"></div>
+          -->
+
+
+          <!--
           <div id="control">
+            <a id="" class="control-button" href="javascript:void(0);" onclick="box.addNP()">
+              <i class="icon icon-heart"></i>
+            </a>
             <a id="add-this-music" class="control-button" href="javascript:void(0);" onclick="box.addNP()">
               <i class="icon icon-heart"></i>
             </a>
@@ -1007,9 +622,15 @@
             </a>
             <a id="do-not-disturb" class="control-button" href="javascript:void(0);" onclick="box.doNotDisturbSwitch()"></a>
           </div>
+          -->
+
+          <!-- <audio id="example-audio" style="height:100%; width:100%;" autoplay controls playsinline/> -->
+            <!--
           <div class="volume">
             <input type="range" step="1" id="volume" min="0" max="100" value="0" onchange="box.changeVolume(this.value)" oninput="box.changeVolume(this.value)">
           </div>
+            -->
+
           <div id="np">
             <span id="np-mode"></span>
             <span id="np-text" class="select-text"></span>
@@ -1018,6 +639,7 @@
       </div>
     </div>
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="./vendor.min.js"></script>
     <script src="/js/peerjs.min.js"></script>
     <script src="/js/adapter-latest.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>

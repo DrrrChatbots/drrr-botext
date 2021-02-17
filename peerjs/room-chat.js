@@ -520,6 +520,7 @@ function stopStream(id){
     $(`#${id}-audio`).remove();
   if($(`#${id}-video`).length)
     $(`#${id}-video`).remove();
+  setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
 }
 
 window.localStream = null;
@@ -573,10 +574,11 @@ function setMediaSources(){
 }
 
 function renewUserList(){
-  //  is-tripcode
+  //let clickMenu = `<ul class="dropdown-menu" role="menu"></ul>`;
+  let clickMenu = '';
   let owner = profile.users[profile.owner]
-  let hostinfo = `<li id="${owner.id}" title="${owner.name} (host)" class="${owner.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${owner.avatar} is-host" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${owner.avatar}"></span><span class="select-text name">${owner.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
-  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.owner).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop"><ul class="dropdown-menu" role="menu"></ul><div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
+  let hostinfo = `<li id="${owner.id}" title="${owner.name} (host)" class="${owner.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${owner.avatar} is-host" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${owner.avatar}"></span><span class="select-text name">${owner.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
+  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.owner).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
   $('#user_list').html(`${hostinfo}${usersinfo}`);
   setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
 }
@@ -762,6 +764,7 @@ $(document).ready(function(){
     }
     $('#end-call')[0].style.display = 'list-item';
     $('#call')[0].style.display = 'none';
+    $('#stream-info').text('直播間');
     // others will call me
   });
   $('#end-call').click(function(){
@@ -788,6 +791,7 @@ $(document).ready(function(){
     }
     $('#end-call')[0].style.display = 'none';
     $('#call')[0].style.display = 'list-item';
+    $('#stream-info').text('點擊手機圖示加入通話');
     Object.values(profile.calls).forEach(call => call.close());
     profile.calls = {};
   })

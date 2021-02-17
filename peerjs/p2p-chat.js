@@ -115,7 +115,7 @@ function clearPeer(){
   peer.destroy();
   $('#id').text('Please set your peerID');
   peerID = null;
-  peer = null;
+  window.peer = null;
 }
 
 function getConfig(){
@@ -136,7 +136,7 @@ function getConfig(){
 function getStream(config, success, error){
 
   function wrapAudioVideo(stream){
-    window.localCallType = {}
+    window.localCallType = {video: false, audio: false};
     if(!stream.getAudioTracks().length)
       stream.addTrack(createEmptyAudioTrack());
     else window.localCallType.audio = true;
@@ -238,7 +238,7 @@ function initialize() {
 
   $('#id').text(peerID);
 
-  peer = new Peer(peerID, {
+  window.peer = new Peer(peerID, {
     //debug: 3
   });
 
@@ -433,13 +433,17 @@ function join(id) {
       }
 
 
-      window.remoteConn = peer.connect(peerID);
-      window.remoteConn.on('open', function() {
-        window.remoteConn.send({
-          callType: window.localCallType
+      setTimeout(()=>{
+        window.remoteConn = window.peer.connect(window.peerID);
+        window.remoteConn.on('open', function() {
+          setTimeout(()=>{
+            window.remoteConn.send({
+              callType: window.localCallType
+            });
+          }, 1000);
         });
-      });
-      handleText(window.remoteConn);
+        handleText(window.remoteConn);
+      }, 500);
     }
     catch(err){
       alert(String(err));
@@ -456,7 +460,7 @@ function join(id) {
   } else _join();
 }
 
-var peer = null; // Own peer object
+window.peer = null; // Own peer object
 var host = null;
 var peerID = null;
 var remote = null;

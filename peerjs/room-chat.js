@@ -225,13 +225,19 @@ function handleCallCmd(arg){
   profile.users[arg.user].call = arg.call;
   if(arg.call){
     $(`#${arg.user}`).addClass('is-tripcode');
+    if(arg.user === profile.id && profile.call)
+      playStream(profile.id, window.localStream);
     if(arg.user === profile.id || !profile.call) return;
     //call him
     profile.calls[arg.user] = profile.peer.call(arg.user, window.localStream, call_constraints);
     handleCall(profile.calls[arg.user]);
     handleCallClose(profile.calls[arg.user]);
   }
-  else $(`#${arg.user}`).removeClass('is-tripcode');
+  else{
+    if(arg.user === profile.id)
+      stopStream(profile.id);
+    $(`#${arg.user}`).removeClass('is-tripcode');
+  }
 }
 
 function Host(id, hostName, name, avatar){

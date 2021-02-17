@@ -268,6 +268,7 @@ function initialize() {
   })
 
   peer.on('connection', function(conn) {
+    window.remoteConn = conn;
     conn.on('open', function() {
       // nothing
     });

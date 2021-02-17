@@ -1,3 +1,5 @@
+const defaultVideoSize = { width:640, height:480 };
+
 var call_constraints = {
   'mandatory': {
     'OfferToReceiveAudio': true,
@@ -15,6 +17,16 @@ const createEmptyAudioTrack = () => {
   const track = dst.stream.getAudioTracks()[0];
   return Object.assign(track, { enabled: false });
 }
+
+const createEmptyVideoTrack = ({ width, height }) => {
+  const canvas = Object.assign(document.createElement('canvas'), { width, height });
+  canvas.getContext('2d').fillRect(0, 0, width, height);
+
+  const stream = canvas.captureStream();
+  const track = stream.getVideoTracks()[0];
+
+  return Object.assign(track, { enabled: false });
+};
 
 function findGetParameter(parameterName, url) {
   var search = url ? (new URL(url)).search : location.search;
@@ -80,17 +92,17 @@ function getStream(config, success, error){
           stream
             .getTracks()
             .forEach(track => initStream.addTrack(track));
-          success(initStream);
+          success(wrapAudioVideo(initStream));
         })
         .catch(e => {
           error(e);
         });
     }
-    else success(initStream);
+    else success(wrapAudioVideo(initStream));
   }
 
   if(!config.video && !config.audio)
-    success(new MediaStream([createEmptyAudioTrack()]))
+    success(wrapAudioVideo(new MediaStream([createEmptyAudioTrack()])))
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
       .getDisplayMedia({video: true, audio: true})
@@ -210,8 +222,8 @@ function sendHost(cmd){
 }
 
 function handleCallCmd(arg){
+  profile.users[arg.user].call = arg.call;
   if(arg.call){
-    profile.users[arg.user].call = true;
     $(`#${arg.user}`).addClass('is-tripcode');
     if(arg.user === profile.id || !profile.call) return;
     //call him
@@ -219,10 +231,7 @@ function handleCallCmd(arg){
     handleCall(profile.calls[arg.user]);
     handleCallClose(profile.calls[arg.user]);
   }
-  else{
-    profile.users[arg.user].call = false;
-    $(`#${arg.user}`).removeClass('is-tripcode');
-  }
+  else $(`#${arg.user}`).removeClass('is-tripcode');
 }
 
 function Host(id, hostName, name, avatar){
@@ -235,6 +244,7 @@ function Host(id, hostName, name, avatar){
   this.users = {[id]: profile2user(this)};
   this.conns = {};
   this.call = false;
+  this.callType = null;
   this.calls = {}
   this.run = function(){
     this.peer = new Peer(this.id);
@@ -282,7 +292,7 @@ function Host(id, hostName, name, avatar){
             break;
           case 'call':
             data.arg.user = this.peer;
-            data.arg.call = data.arg.call ? true : false;
+            data.arg.call = data.arg.call;
             sendCmd(data);
             handleCallCmd(data.arg);
             break;
@@ -323,6 +333,7 @@ function User(id, name, hostID, avatar){
   this.conns = {};
   this.owner = null;
   this.call = false;
+  this.callType = null;
   this.calls = {}
   this.run = function(){
     this.peer = new Peer(this.id);
@@ -461,43 +472,62 @@ function initialize(){
   profile.run();
 };
 
+function bindMediaSrc(dom, stream){
+  if(!dom.srcObject ||
+    (stream.getTracks().length > dom.srcObject.getTracks().length)){
+    if ("srcObject" in dom) {
+      dom.srcObject = stream;
+    } else {
+      dom.src = window.URL.createObjectURL(stream);
+    }
+  }
+}
+
+// to fix
+function createMediaDom(id, stream){
+  full = null;
+  if(window.remoteCallType.video){
+    media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
+    full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
+    full.click(function(){
+      if (media[0].requestFullscreen)
+        media[0].requestFullscreen();
+      else if (media[0].webkitRequestFullscreen)
+        media[0].webkitRequestFullscreen();
+      else if (media[0].msRequestFullScreen)
+        media[0].msRequestFullScreen();
+    });
+  }
+  else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
+
+  function wrap(elt){
+    return $(`<div class="col-100"></div>`).append(elt);
+  }
+  var container = $(`<div id="${id}" class="row"></div>`)
+    .append(wrap(media))
+    .appendTo('#chat-video-container');
+  if(full) container.append(wrap(full));
+  return media[0];
+}
+
 function playStream(id, stream) {
   var uelt = $(`#${id}-audio`);
   if(uelt.length) return;
-  else{
-    window.remoteStream = stream;
-    if(id === profile.owner){
-      if(stream.getVideoTracks().length)
-        media = $(`#room-video`)
-      else
-        media = $(`#room-audio`)
-    }
-    else{
-      media = $(`<audio id="${id}-audio" class="user-audio" style="height:100%; width:100%;" autoplay controls playsinline/>`)
-      media.appendTo('#audios');
-    }
-    localMedia = media[0];
-    $('#user_list').on("click", `#${id}`, function(event){
+  profile.users[id].call.stream = stream;
+  audio = $(`<audio id="${id}-audio" class="user-audio" style="height:100%; width:100%;" autoplay controls playsinline/>`).appendTo('#audios');
+  video = $(`<video class="user-video" style="width: 75%;" poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline></video>`).appendTo('#videos');
+
+  media = profile.users[id].call.video ? video[0] : audio[0];
+  bindMediaSrc(media, stream);
+
+  $('#user_list').on("click", `#${id}`, function(event){
+    if($(`#${id}`).hasClass('is-tripcode')){
       $('.user-audio').hide();
       $(`#${id}-audio`).show();
-    });
-  }
-
-  if(!media[0].srcObject ||
-    (stream.getTracks().length > media[0].srcObject.getTracks().length)){
-    if ("srcObject" in media[0]) {
-      media[0].srcObject = stream;
-      // once I stop one video (0x0), the other one would be break
-      //if(!media[0].videoHeight || !media[0].videoWidth)
-      //  if(stream.getVideoTracks().length){
-      //    var tracks = stream.getVideoTracks();
-      //    //tracks[0].stop();
-      //    //stream.removeTrack(tracks[0]);
-      //  }
-    } else {
-      media[0].src = window.URL.createObjectURL(stream);
+      $('.user-video').hide();
+      $(`#${id}-video`).show();
     }
-  }
+  }).click();
 }
 
 function clearMediaSrc(media){
@@ -509,10 +539,8 @@ function clearMediaSrc(media){
 function stopStream(id){
   if($(`#${id}-audio`).length)
     $(`#${id}-audio`).remove();
-  if(id === profile.owner){
-    clearMediaSrc($('#room-video')[0]);
-    clearMediaSrc($('#room-audio')[0]);
-  }
+  if($(`#${id}-video`).length)
+    $(`#${id}-video`).remove();
 }
 
 window.localStream = null;
@@ -587,6 +615,17 @@ function replaceStream(peerConnection, mediaStream) {
       }
     }
   }
+}
+
+function wrapAudioVideo(stream){
+  profile.callType = {video: false, audio: false};
+  if(!stream.getAudioTracks().length)
+    stream.addTrack(createEmptyAudioTrack());
+  else profile.callType.audio = true;
+  if(!stream.getVideoTracks().length)
+    stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
+  else profile.callType.video = true;
+  return stream;
 }
 
 $(document).ready(function(){
@@ -697,7 +736,14 @@ $(document).ready(function(){
 
   $('.icon-list').click(function(){
     $('#image_panel').slideToggle();
-    setTimeout(() => $('#setting_pannel').css('top',$('.message_box').height() + 'px'), 500);
+    $('.room-submit-wrap').slideToggle();
+    //$('.room-input-wrap').slideToggle();
+    setTimeout(() => {
+      if($('#image_panel').is(":visible"))
+        $('#setting_pannel').css('top', '0px');
+      else
+        $('#setting_pannel').css('top',$('.message_box').height() + 'px');
+    }, 500);
     setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
   })
 
@@ -706,27 +752,32 @@ $(document).ready(function(){
   });
 
   $('#call').click(function(){
-    if(!window.localStream)
-      return alert("Setup your stream first, thx!");
+    if(!window.localStream){
+      window.tryCall = true;
+      alert("Setup your stream first! (need save)");
+      $('#modal-settings').modal('show');
+      $(`#settings-user-tab`).find('a').click();
+      return;
+    }
 
-    profile.call = true;
+    profile.call = profile.callType;
     // inform host
     if(profile.id === profile.owner){
       sendCmd({
         fn: 'call',
         arg: {
           user: profile.id,
-          call: true
+          call: profile.call
         }
       });
-      handleCallCmd({ user: profile.id, call: true });
+      handleCallCmd({ user: profile.id, call: profile.call });
     }
     else{
       sendHost({
         fn: 'call',
         arg: {
           user: profile.id,
-          call: true
+          call: profile.call
         }
       })
     }
@@ -773,7 +824,11 @@ $(document).ready(function(){
           window.localStream.getTracks().forEach(track => track.stop());
         }
         window.localStream = stream;
-        alert("done!");
+        if(window.tryCall){
+          $('#call').click();
+          window.tryCall = false;
+        }
+        $('#modal-settings').modal('hide');
       },
       function error(e) {
         alert("Error: " + e);

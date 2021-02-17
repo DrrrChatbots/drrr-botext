@@ -170,8 +170,7 @@ function getStream(config, success, error){
   }
 
   if(!config.video && !config.audio)
-    //success(createMediaStreamFake());
-    success(new MediaStream([createEmptyAudioTrack()]))
+    success(wrapAudioVideo(new MediaStream([createEmptyAudioTrack()])))
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
       .getDisplayMedia({video: true, audio: true})

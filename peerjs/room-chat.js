@@ -388,7 +388,7 @@ function User(id, name, hostID, avatar){
 
     // text connection
     this.peer.on('connection', function(conn) {
-      handleUser(conn);
+      profile.handleUser(conn);
     });
 
     // stream connection

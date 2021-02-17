@@ -521,7 +521,7 @@ $(document).ready(function(){
   $('#complete').click(function(){
     getStream(getConfig(),
       function success(stream) {
-        if(window.localStream){
+        if(window.localStream && window.call.peerConnection){
           // TEST: update peer stream
           replaceStream(window.call.peerConnection, stream);
           window.localStream.getTracks().forEach(track => track.stop());

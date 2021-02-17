@@ -34,6 +34,21 @@ const createEmptyVideoTrack = ({ width, height }) => {
   return Object.assign(track, { enabled: false });
 };
 
+function replaceStream(peerConnection, mediaStream) {
+  for(sender of peerConnection.getSenders()){
+    if(sender.track.kind == "audio") {
+      if(mediaStream.getAudioTracks().length > 0){
+        sender.replaceTrack(mediaStream.getAudioTracks()[0]);
+      }
+    }
+    if(sender.track.kind == "video") {
+      if(mediaStream.getVideoTracks().length > 0){
+        sender.replaceTrack(mediaStream.getVideoTracks()[0]);
+      }
+    }
+  }
+}
+
 function askBeforeLeave(e) {
   var message = "Audio chat will end, do you wanna leave?",
     e = e || window.event;
@@ -506,6 +521,11 @@ $(document).ready(function(){
   $('#complete').click(function(){
     getStream(getConfig(),
       function success(stream) {
+        if(window.localStream){
+          // TEST: update peer stream
+          replaceStream(window.call.peerConnection, stream);
+          window.localStream.getTracks().forEach(track => track.stop());
+        }
         window.localStream = stream;
         $('#stream-ui').hide();
         $('#chat-ui').show();
@@ -521,11 +541,6 @@ $(document).ready(function(){
   $('#setup').click(function(){
     $('#chat-ui').hide();
     $('#stream-ui').show();
-    if(window.call) window.call.close();
-    if (window.localStream) {
-      window.localStream.getTracks().forEach(track => track.stop());
-      window.localStream = null;
-    }
   });
 
   $('#stream-setting-form').submit(()=>false);

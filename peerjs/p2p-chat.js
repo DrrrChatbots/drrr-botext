@@ -198,19 +198,19 @@ function handleText(conn){
         }
       }
       else{
+        console.log('remoteCallType:', data.callType);
         if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
-          setTimeout(()=>{
-            window.call = peer.call(id, window.localStream, call_constraints);
-            handleCall(window.call);
-            handleCallClose(window.call);
-          }, 1000)
+          console.log("do call");
+          window.call = peer.call(id, window.localStream, call_constraints);
+          handleCall(window.call);
+          handleCallClose(window.call);
         }
         else{
           window.remoteCallType = data.callType;
-          setTimeout(()=> conn.send({
+          console.log("callback")
+          conn.send({
             callType: window.localCallType
-          }), 1000);
-
+          }
         }
       }
     }

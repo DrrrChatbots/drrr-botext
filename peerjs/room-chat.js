@@ -483,38 +483,11 @@ function bindMediaSrc(dom, stream){
   }
 }
 
-// to fix
-function createMediaDom(id, stream){
-  full = null;
-  if(window.remoteCallType.video){
-    media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
-    full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-    full.click(function(){
-      if (media[0].requestFullscreen)
-        media[0].requestFullscreen();
-      else if (media[0].webkitRequestFullscreen)
-        media[0].webkitRequestFullscreen();
-      else if (media[0].msRequestFullScreen)
-        media[0].msRequestFullScreen();
-    });
-  }
-  else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
-
-  function wrap(elt){
-    return $(`<div class="col-100"></div>`).append(elt);
-  }
-  var container = $(`<div id="${id}" class="row"></div>`)
-    .append(wrap(media))
-    .appendTo('#chat-video-container');
-  if(full) container.append(wrap(full));
-  return media[0];
-}
-
 function playStream(id, stream) {
   var uelt = $(`#${id}-audio`);
   if(uelt.length) return;
   profile.users[id].call.stream = stream;
-  audio = $(`<audio id="${id}-audio" class="user-audio" style="height:100%; width:100%;" autoplay controls playsinline/>`).appendTo('#audios');
+  audio = $(`<audio id="${id}-audio" class="user-audio" style="width:100%;" autoplay controls playsinline/>`).appendTo('#audios');
   video = $(`<video class="user-video" style="width: 75%;" poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline></video>`).appendTo('#videos');
 
   media = profile.users[id].call.video ? video[0] : audio[0];

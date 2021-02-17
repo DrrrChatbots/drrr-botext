@@ -201,7 +201,7 @@ function handleText(conn){
         console.log('remoteCallType:', data.callType);
         if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
           console.log("do call");
-          window.call = peer.call(id, window.localStream, call_constraints);
+          window.call = peer.call(window.remote, window.localStream, call_constraints);
           handleCall(window.call);
           handleCallClose(window.call);
         }
@@ -271,7 +271,6 @@ function initialize() {
     });
     handleText(conn);
   });
-
 
   // incoming call
   peer.on('call', function(call) {
@@ -457,11 +456,11 @@ function join(id) {
 }
 
 window.peer = null; // Own peer object
-var host = null;
-var peerID = null;
-var remote = null;
-var lastPeerId = null;
-var tryCall = false;
+window.host = null;
+window.peerID = null;
+window.remote = null;
+window.lastPeerId = null;
+window.tryCall = false;
 window.localStream = null;
 window.call = null;
 window.remoteCallType = null;

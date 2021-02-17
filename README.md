@@ -31,12 +31,11 @@ Join our discord channel to have some discussion.
 - add neteaseWorld support
 - pokemon monster module
 - netease playlist
-- hidden room on drrr.chat
-
-- hashtag v
-- chatlog v
-- live2d  v
-- trpg script (port from AvgLang)
+- hidden room on drrr.chat (by peer.js)
 - tripcode storage
-- welcome back
-- peer.js
+
+### Haven't documented features
+
+- abuse room hiding
+- script binding on timer and event
+- peer chat

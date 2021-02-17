@@ -318,6 +318,45 @@ function lambda_conservation(){
   $(document).on('mousedown', '.dropdown-item-report-user', conservation);
 }
 
+function findGetParameter(parameterName, url) {
+  var search = url ? (new URL(url)).search : location.search;
+  var result = null,
+    tmp = [];
+  search
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      tmp = item.split("=");
+      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+  return result;
+}
+
+function enable_call_link(){
+  $('#talks').on('click', 'a.message-link', function(e){
+    if($(this).attr('href').startsWith('https://drrrchatbots.gitee.io/peerjs/')){
+      e.preventDefault();
+
+      var url = new URL($(this).attr('href'));
+      url.searchParams.append('uid', roomProfile().id);
+      url.searchParams.append('name', roomProfile().name);
+      url = chrome.extension.getURL(`${url.pathname}${url.search}`);
+
+      chrome.runtime.sendMessage({ newTab: url });
+    }
+  })
+}
+
+function replace_youtube_talk(){
+  $('a.message-link').get().forEach(e => {
+    var ue = $(e);
+    var ytid = youtube_parser(ue.attr('href'));
+    if(ytid){
+      ue.replaceWith(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+    }
+  })
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -326,6 +365,10 @@ $(document).ready(function(){
   chrome.runtime.sendMessage({ start: 'room' });
 
   lambda_conservation();
+
+  enable_call_link();
+
+  replace_youtube_talk();
 
   //$('#body').prepend(MacroModal);
 

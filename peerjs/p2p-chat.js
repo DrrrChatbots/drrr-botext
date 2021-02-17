@@ -436,12 +436,11 @@ function join(id) {
 
       window.remoteConn = window.peer.connect(window.remote);
       window.remoteConn.on('open', function() {
-        alert("connected");
-        //setTimeout(()=>{
-        //  window.remoteConn.send({
-        //    callType: window.localCallType
-        //  });
-        //}, 1000);
+        setTimeout(()=>{
+          window.remoteConn.send({
+            callType: window.localCallType
+          });
+        }, 1000);
       });
       handleText(window.remoteConn);
     }

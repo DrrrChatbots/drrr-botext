@@ -189,7 +189,7 @@ function addJoin(id){
 function leftUser(id){
   addLeft(id);
   if(profile.calls[id]){
-    stopStream(profile.calls[id])
+    stopStream(id)
     delete profile.calls[id];
   }
   delete profile.users[id];

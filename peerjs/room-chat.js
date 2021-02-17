@@ -388,6 +388,7 @@ function User(id, name, hostID, avatar){
 
     // text connection
     this.peer.on('connection', function(conn) {
+      profile.conns[this.peer] = conn;
       profile.handleUser(conn);
     });
 

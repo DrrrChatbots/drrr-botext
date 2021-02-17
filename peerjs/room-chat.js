@@ -685,7 +685,7 @@ $(document).ready(function(){
   $('#invite').click(function(){
     ctrlRoom({
       'message': 'Click to join',
-      'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`,
+      'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`,
     })
     alert("shared!");
   })

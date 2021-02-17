@@ -252,6 +252,7 @@ function Host(id, hostName, name, avatar){
   this.call = false;
   this.callType = null;
   this.calls = {}
+  this.streams = {}
   this.run = function(){
     this.peer = new Peer(this.id);
 
@@ -341,6 +342,7 @@ function User(id, name, hostID, avatar){
   this.call = false;
   this.callType = null;
   this.calls = {}
+  this.streams = {}
   this.run = function(){
     this.peer = new Peer(this.id);
 
@@ -504,7 +506,7 @@ function bindMediaSrc(dom, stream){
 function playStream(id, stream) {
   var uelt = $(`#${id}-audio`);
   if(uelt.length) return;
-  profile.users[id].call.stream = stream;
+  profile.streams[id] = stream;
   audio = $(`<audio id="${id}-audio" class="user-audio" style="width:100%;" autoplay controls playsinline/>`).appendTo('#audios');
   video = $(`<video class="user-video" style="width: 75%;" poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline></video>`).appendTo('#videos');
 
@@ -535,6 +537,7 @@ function stopStream(id){
     $(`#${id}-audio`).remove();
   if($(`#${id}-video`).length)
     $(`#${id}-video`).remove();
+  delete profile.streams[id]
   setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
 }
 

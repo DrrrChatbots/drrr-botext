@@ -136,13 +136,18 @@ function getConfig(){
 function getStream(config, success, error){
 
   function wrapAudioVideo(stream){
-    if(!stream.getAudioTracks().length){
+    window.localCallType = {}
+    if(!stream.getAudioTracks().length)
       stream.addTrack(createEmptyAudioTrack());
-      alert("wrap empty audio");
-    }
-    if(!stream.getVideoTracks().length){
+    else window.localCallType.audio = true;
+    if(!stream.getVideoTracks().length)
       stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
-      alert("wrap empty video");
+    else window.localCallType.video = true;
+
+    if(window.call && window.remoteConn){
+      window.remoteConn.send({
+        callType: window.localCallType
+      }); // update AudioType
     }
     return stream;
   }
@@ -179,6 +184,37 @@ function getStream(config, success, error){
       });
   }
   else getOtherStreams(config,new MediaStream());
+}
+
+function handleText(conn){
+  conn.on('data', function(data) {
+    if(data.callType){
+      // TODO: change video or audio if now playing
+      if(window.call){
+        if(JSON.stringify(window.remoteCallType) !== JSON.stringify(data.callType)){
+          if(remote && $(`#${remote}`).length)
+            $(`#${remote}`).remove();
+            bindMediaSrc(createMediaDom(id, stream), window.remoteStream);
+        }
+      }
+      else{
+        if(JSON.stringify(window.remoteCallType) === JSON.stringify(data.callType)){
+          window.call = peer.call(id, window.localStream, call_constraints);
+          handleCall(window.call);
+          handleCallClose(window.call);
+        }
+        else{
+          window.remoteCallType = data.callType;
+          conn.send({
+            callType: window.localCallType
+          });
+        }
+      }
+    }
+  });
+  conn.on('close', function () {
+
+  });
 }
 
 /**
@@ -224,6 +260,11 @@ function initialize() {
       }
     }
   })
+
+  peer.on('connection', function(conn) {
+    handleText(conn);
+  });
+
 
   // incoming call
   peer.on('call', function(call) {
@@ -300,63 +341,57 @@ function initialize() {
   });
 };
 
-function playStream(id, stream) {
-  $("#status").text("Connected");
-  $("#chat-setting-container").hide();
-  $("#chat-video-container").show();
-
-  var uelt = $(`#${id}`);
-  if(uelt.length){
-    // skip
-    //localVideo = uelt.find(`#${id}-video`)[0];
-    //localAudio = uelt.find(`#${id}-audio`)[0];
-  }
-  else{
-    window.remoteStream = stream;
-    full = null;
-    if(stream.getVideoTracks().length){
-      media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
-      full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
-      full.click(function(){
-        if (media[0].requestFullscreen)
-          media[0].requestFullscreen();
-        else if (media[0].webkitRequestFullscreen)
-          media[0].webkitRequestFullscreen();
-        else if (media[0].msRequestFullScreen)
-          media[0].msRequestFullScreen();
-      });
-    }
-    else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
-
-    localMedia = media[0];
-
-    function wrap(elt){
-      return $(`<div class="col-100"></div>`).append(elt);
-    }
-    var container = $(`<div id="${id}" class="row"></div>`)
-      .append(wrap(media))
-      .appendTo('#chat-video-container');
-    if(full) container.append(wrap(full));
-  }
-
-  if(!media[0].srcObject ||
-    (stream.getTracks().length > media[0].srcObject.getTracks().length)){
-    if ("srcObject" in media[0]) {
-      media[0].srcObject = stream;
-      // once I stop one video (0x0), the other one would be break
-      //if(!media[0].videoHeight || !media[0].videoWidth)
-      //  if(stream.getVideoTracks().length){
-      //    var tracks = stream.getVideoTracks();
-      //    //tracks[0].stop();
-      //    //stream.removeTrack(tracks[0]);
-      //  }
+function bindMediaSrc(dom, stream){
+  if(!dom.srcObject ||
+    (stream.getTracks().length > dom.srcObject.getTracks().length)){
+    if ("srcObject" in dom) {
+      dom.srcObject = stream;
     } else {
-      media[0].src = window.URL.createObjectURL(stream);
+      dom.src = window.URL.createObjectURL(stream);
     }
   }
 }
 
+function createMediaDom(id, stream){
+  full = null;
+  if(window.remoteCallType.video){
+    media = $(`<video poster="./p2p-chat.png" id="${id}-video" autoplay controls playsinline/>`)
+    full = $(`<input type="submit" id="${id}-full" value="full screen" />`)
+    full.click(function(){
+      if (media[0].requestFullscreen)
+        media[0].requestFullscreen();
+      else if (media[0].webkitRequestFullscreen)
+        media[0].webkitRequestFullscreen();
+      else if (media[0].msRequestFullScreen)
+        media[0].msRequestFullScreen();
+    });
+  }
+  else media = $(`<audio id="${id}-audio" autoplay controls playsinline/>`)
+
+  localMedia = media[0];
+
+  function wrap(elt){
+    return $(`<div class="col-100"></div>`).append(elt);
+  }
+  var container = $(`<div id="${id}" class="row"></div>`)
+    .append(wrap(media))
+    .appendTo('#chat-video-container');
+  if(full) container.append(wrap(full));
+  return media[0];
+}
+
+function playStream(id, stream) {
+  $("#status").text("Connected");
+  $("#chat-setting-container").hide();
+  $("#chat-video-container").show();
+  var uelt = $(`#${id}`);
+  if(uelt.length) return;
+  window.remoteStream = stream;
+  bindMediaSrc(createMediaDom(id, stream), stream);
+}
+
 function stopStream(){
+  window.remoteCallType = null;
   $('#status').text('No Connection');
   if(remote && $(`#${remote}`).length)
     $(`#${remote}`).remove();
@@ -388,11 +423,14 @@ function join(id) {
         return alert("You cannot call yourself");
       }
 
-      // outgoing call
-      window.call = peer.call(id, window.localStream, call_constraints);
-      //window.onbeforeunload = askBeforeLeave;
-      handleCall(window.call);
-      handleCallClose(window.call);
+
+      window.remoteConn = peer.connect(peerID);
+      window.remoteConn.on('open', function() {
+        window.remoteConn.send({
+          callType: window.localCallType
+        });
+      });
+      handleText(window.remoteConn);
     }
     catch(err){
       alert(String(err));
@@ -417,6 +455,8 @@ var lastPeerId = null;
 var tryCall = false;
 window.localStream = null;
 window.call = null;
+window.remoteCallType = null;
+window.localCallType = null;
 
 function makeid(length) {
   var result           = '';
@@ -521,7 +561,7 @@ $(document).ready(function(){
   $('#complete').click(function(){
     getStream(getConfig(),
       function success(stream) {
-        if(window.localStream && window.call.peerConnection){
+        if(window.localStream && window.call && window.call.peerConnection){
           // TEST: update peer stream
           replaceStream(window.call.peerConnection, stream);
           window.localStream.getTracks().forEach(track => track.stop());

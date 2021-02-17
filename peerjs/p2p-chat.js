@@ -136,10 +136,10 @@ function getConfig(){
 function getStream(config, success, error){
 
   function wrapAudioVideo(stream){
-    //if(!stream.getAudioTracks().length){
-    //  stream.addTrack(createEmptyAudioTrack());
-    //  alert("wrap empty audio");
-    //}
+    if(!stream.getAudioTracks().length){
+      stream.addTrack(createEmptyAudioTrack());
+      alert("wrap empty audio");
+    }
     //if(!stream.getVideoTracks().length){
     //  stream.addTrack(createEmptyVideoTrack(defaultVideoSize));
     //  alert("wrap empty video");

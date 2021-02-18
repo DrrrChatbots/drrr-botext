@@ -299,6 +299,8 @@ function UserHost(id, name, avatar, room, host){
   THIS.name = name;
   THIS.avatar = avatar;
 
+  THIS.where = 'login';
+
   THIS.host = host || id;
   THIS.room = room || '';
 
@@ -414,9 +416,28 @@ function UserHost(id, name, avatar, room, host){
     });
 
     THIS.conns[THIS.host].on('close', function () {
+      if(profile.where === 'login')
+        return;
+      profile.where = 'login';
       swal("Host Left!");
       setTimeout(backToProfile, 3000);
     });
+
+    THIS.conns[THIS.host].peerConnection.onconnectionstatechange = function(event){
+      switch(event.currentTarget.connectionState){
+        case "disconnected":
+        case "failed":
+        case "closed":
+          if(profile.where === 'login')
+            return;
+          profile.where = 'login';
+          swal("Host Left!");
+          setTimeout(backToProfile, 3000);
+          break;
+        default:
+          break;
+      }
+    };
 
     THIS.conns[THIS.host].on('error', function (err) {
       if(err.type === 'peer-unavailable'){
@@ -483,11 +504,13 @@ function UserHost(id, name, avatar, room, host){
 
 function backToProfile(){
   // TODO delete profile
+  profile.where = 'login';
   $('#chat-ui').hide();
   $('#profile-ui').show();
 }
 
 function goToChat(){
+  profile.where = 'room';
   $('.room-title-name').text(profile.room);
   $('#profile-ui').hide();
   $('#musicBox').show();

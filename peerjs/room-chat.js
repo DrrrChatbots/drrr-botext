@@ -1,3 +1,28 @@
+function copyToClipboard(text) {
+  if (window.clipboardData && window.clipboardData.setData) {
+    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+    return clipboardData.setData("Text", text);
+
+  }
+  else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+    }
+    catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return false;
+    }
+    finally {
+      document.body.removeChild(textarea);
+    }
+  }
+}
+
 const defaultVideoSize = { width:640, height:480 };
 
 var call_constraints = {
@@ -19,6 +44,7 @@ if(Settings.is("mute-message")){
 
 var sound = {};
 sound.play = function(item){
+  if(this.mute) return;
   var newSound = new Howl({
     src: [
       "/media/effect.mp3"
@@ -37,9 +63,7 @@ sound.play = function(item){
   newSound.play(item);
   sound = newSound;
 };
-
-
-
+sound.mute = 0;
 
 const createEmptyAudioTrack = () => {
   const ctx = new AudioContext();
@@ -114,7 +138,12 @@ function getConfig(){
   };
 }
 
-function getStream(config, success, error){
+function getStream(config, _success, error){
+
+  let success = val => {
+    profile.streamConfig = config;
+    _success(val);
+  }
 
   function getOtherStreams(cfg, initStream){
     if(cfg.video || cfg.audio){
@@ -209,30 +238,21 @@ function addMessage(id, arg){
 function addLeft(id){
   let user = profile.users[id];
   $('#talks').prepend(`<div class="talk leave system" id="">
-    ►► @
-    <span class="dropdown user">
-      <span data-toggle="dropdown" class="name">${user.name}</span>
-      <ul class="dropdown-menu" role="menu"></ul>
-    </span>
-    已退出部屋
-  </div>`);
+    ►► @<span class="dropdown user"><span data-toggle="dropdown" class="name">${user.name}</span><ul class="dropdown-menu" role="menu"></ul></span> 已退出部屋</div>`);
   sound.play("userout");
 }
 
 function addJoin(id){
   let user = profile.users[id];
   $('#talks').prepend(`<div class="talk join system" id="">
-    ►► @
-    <span class="dropdown user">
-      <span data-toggle="dropdown" class="name">${user.name}</span>
-      <ul class="dropdown-menu" role="menu"></ul>
-    </span>
-    已登入部屋
-  </div>`);
+    ►► @<span class="dropdown user"><span data-toggle="dropdown" class="name">${user.name}</span><ul class="dropdown-menu" role="menu"></ul></span> 已登入部屋</div>`);
   sound.play("userin");
 }
 
 function leftUser(id){
+  if(!profile.users[id]
+    || !profile.users[id])
+    return;
   addLeft(id);
   if(profile.calls[id]){
     stopStream(id)
@@ -276,9 +296,9 @@ function handleCallCmd(arg){
 
 function Host(id, hostName, name, avatar){
   this.id = id;
+  this.name = name;
   this.hostID = id;
   this.hostName = hostName;
-  this.name = name;
   this.avatar = avatar;
   this.owner = id;
   this.users = {[id]: profile2user(this)};
@@ -287,6 +307,7 @@ function Host(id, hostName, name, avatar){
   this.callType = null;
   this.calls = {}
   this.streams = {}
+  this.streamConfig = null;
   this.run = function(){
     this.peer = new Peer(this.id);
 
@@ -342,9 +363,19 @@ function Host(id, hostName, name, avatar){
             break;
         }
       });
-      conn.on('close', function () {
-        leftUser(this.peer);
-      });
+
+      conn.peerConnection.onconnectionstatechange = function(event){
+        switch(event.currentTarget.connectionState){
+          case "disconnected":
+          case "failed":
+          case "closed":
+            leftUser(conn.peer);
+            break;
+          default:
+            break;
+        }
+      };
+
     }).bind(this));
 
     // stream connection
@@ -377,6 +408,7 @@ function User(id, name, hostID, avatar){
   this.callType = null;
   this.calls = {}
   this.streams = {}
+  this.streamConfig = null;
   this.run = function(){
     this.peer = new Peer(this.id);
 
@@ -424,8 +456,8 @@ function User(id, name, hostID, avatar){
         }
       });
       this.conns[this.hostID].on('close', function () {
-        alert("Host left");
-        backToProfile();
+        swal("Host Left!");
+        setTimeout(backToProfile, 3000);
       });
 
       this.conns[this.hostID].on('error', function (err) {
@@ -477,9 +509,18 @@ function User(id, name, hostID, avatar){
           break;
       }
     });
-    conn.on('close', function () {
-      leftUser(this.peer);
-    });
+
+    conn.peerConnection.onconnectionstatechange = function(event){
+      switch(event.currentTarget.connectionState){
+        case "disconnected":
+        case "failed":
+        case "closed":
+          leftUser(conn.peer);
+          break;
+        default:
+          break;
+      }
+    };
   }
 }
 
@@ -764,7 +805,12 @@ $(document).ready(function(){
       'message': 'Click to join',
       'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`,
     })
-    alert("shared!");
+    swal("shared!");
+  })
+
+  $('#inviteURL').click(function(){
+    copyToClipboard(`https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`)
+    swal("copied!");
   })
 
   $('.icon-list').click(function(){
@@ -785,40 +831,49 @@ $(document).ready(function(){
   });
 
   $('#call').click(function(){
-    if(!window.localStream){
+    if(!profile.streamConfig){
       window.tryCall = true;
-      alert("Setup your stream first! (need save)");
+      swal("Setup your stream first! (need save)");
       $('#modal-settings').modal('show');
       $(`#settings-user-tab`).find('a').click();
       return;
     }
 
-    profile.call = profile.callType;
-    // inform host
-    if(profile.id === profile.owner){
-      sendCmd({
+    function doCall(){
+      profile.call = profile.callType;
+      callCmd = {
         fn: 'call',
         arg: {
           user: profile.id,
           call: profile.call
         }
-      });
-      handleCallCmd({ user: profile.id, call: profile.call });
+      };
+      // inform host
+      if(profile.id === profile.owner){
+        sendCmd(callCmd);
+        handleCallCmd(callCmd.arg);
+      }
+      else sendHost(callCmd)
+      $('#end-call')[0].style.display = 'list-item';
+      $('#call')[0].style.display = 'none';
+      $('#stream-info').text('直播間');
+      // others will call me
     }
-    else{
-      sendHost({
-        fn: 'call',
-        arg: {
-          user: profile.id,
-          call: profile.call
+
+    if(!window.localStream){
+      getStream(getConfig(),
+        function success(stream) {
+          window.localStream = stream;
+          doCall();
+        },
+        function error(e) {
+          alert("Error: " + e);
+          console.log(e);
         }
-      })
-    }
-    $('#end-call')[0].style.display = 'list-item';
-    $('#call')[0].style.display = 'none';
-    $('#stream-info').text('直播間');
-    // others will call me
+      );
+    } else doCall();
   });
+
   $('#end-call').click(function(){
     // inform host
     if(profile.id === profile.owner){

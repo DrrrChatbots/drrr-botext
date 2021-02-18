@@ -1,28 +1,4 @@
-function copyToClipboard(text) {
-  if (window.clipboardData && window.clipboardData.setData) {
-    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
-    return clipboardData.setData("Text", text);
-
-  }
-  else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
-    var textarea = document.createElement("textarea");
-    textarea.textContent = text;
-    textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      return document.execCommand("copy");  // Security exception may be thrown by some browsers.
-    }
-    catch (ex) {
-      console.warn("Copy to clipboard failed.", ex);
-      return false;
-    }
-    finally {
-      document.body.removeChild(textarea);
-    }
-  }
-}
-
+window.localStream = null;
 const defaultVideoSize = { width:640, height:480 };
 
 var call_constraints = {
@@ -33,7 +9,6 @@ var call_constraints = {
   offerToReceiveAudio: 10,
   offerToReceiveVideo: 10,
 }
-
 
 // Init Howler sound sprite
 /* need port
@@ -65,24 +40,29 @@ sound.play = function(item){
 };
 sound.mute = 0;
 
-const createEmptyAudioTrack = () => {
-  const ctx = new AudioContext();
-  const oscillator = ctx.createOscillator();
-  const dst = oscillator.connect(ctx.createMediaStreamDestination());
-  oscillator.start();
-  const track = dst.stream.getAudioTracks()[0];
-  return Object.assign(track, { enabled: false });
+function copyToClipboard(text) {
+  if (window.clipboardData && window.clipboardData.setData) {
+    return clipboardData.setData("Text", text);
+
+  }
+  else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      return document.execCommand("copy");
+    }
+    catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return false;
+    }
+    finally {
+      document.body.removeChild(textarea);
+    }
+  }
 }
-
-const createEmptyVideoTrack = ({ width, height }) => {
-  const canvas = Object.assign(document.createElement('canvas'), { width, height });
-  canvas.getContext('2d').fillRect(0, 0, width, height);
-
-  const stream = canvas.captureStream();
-  const track = stream.getVideoTracks()[0];
-
-  return Object.assign(track, { enabled: false });
-};
 
 function findGetParameter(parameterName, url) {
   var search = url ? (new URL(url)).search : location.search;
@@ -98,20 +78,34 @@ function findGetParameter(parameterName, url) {
   return result;
 }
 
+const createEmptyAudioTrack = () => {
+  const ctx = new AudioContext();
+  const oscillator = ctx.createOscillator();
+  const dst = oscillator.connect(ctx.createMediaStreamDestination());
+  oscillator.start();
+  const track = dst.stream.getAudioTracks()[0];
+  return Object.assign(track, { enabled: false });
+}
+
+const createEmptyVideoTrack = ({ width, height }) => {
+  const canvas = Object.assign(document.createElement('canvas'), { width, height });
+  canvas.getContext('2d').fillRect(0, 0, width, height);
+  const stream = canvas.captureStream();
+  const track = stream.getVideoTracks()[0];
+  return Object.assign(track, { enabled: false });
+};
+
 function handleCall(call){
   call.on('stream', function(stream) {
-    // Do something with this audio stream
     playStream(this.peer, stream);
   });
 
   call.on('close', function() {
-    // Do something with this audio stream
     stopStream(this.peer);
   });
 
   call.on('error', function(err) {
     stopStream(this.peer);
-    // Do something with this audio stream
   });
 }
 
@@ -153,17 +147,17 @@ function getStream(config, _success, error){
           stream
             .getTracks()
             .forEach(track => initStream.addTrack(track));
-          success(wrapAudioVideo(initStream));
+          success(wrapMedia(initStream));
         })
         .catch(e => {
           error(e);
         });
     }
-    else success(wrapAudioVideo(initStream));
+    else success(wrapMedia(initStream));
   }
 
   if(!config.video && !config.audio)
-    success(wrapAudioVideo(new MediaStream([createEmptyAudioTrack()])))
+    success(wrapMedia(new MediaStream([createEmptyAudioTrack()])))
   else if(config.video && config.video.deviceId == 'screen'){
     navigator.mediaDevices
       .getDisplayMedia({video: true, audio: true})
@@ -204,18 +198,9 @@ function handlePeer(peer){
   });
 }
 
-function profile2user(p){
-  return {
-    id: p.id,
-    name: p.name,
-    avatar: p.avatar,
-    call: p.call
-  };
-}
-
 function addMessage(id, arg){
   let user = id === profile.id ?
-    profile2user(profile) : profile.users[id];
+    profile.toUser() : profile.users[id];
   $('#talks').prepend(
     `<dl class="talk ${user.avatar}" id="">
       <dt class="dropdown user">
@@ -271,7 +256,7 @@ function sendCmd(cmd){
 
 function sendHost(cmd){
   Object.values(profile.conns).forEach(c => {
-    if(c.peer === profile.hostID) c.send(cmd);
+    if(c.peer === profile.host) c.send(cmd);
   });
 }
 
@@ -288,82 +273,168 @@ function handleCallCmd(arg){
     handleCallClose(profile.calls[arg.user]);
   }
   else{
-    if(arg.user === profile.id)
-      stopStream(profile.id);
+    stopStream(arg.user);
     $(`#${arg.user}`).removeClass('is-tripcode');
   }
 }
 
-function Host(id, hostName, name, avatar){
-  this.id = id;
-  this.name = name;
-  this.hostID = id;
-  this.hostName = hostName;
-  this.avatar = avatar;
-  this.owner = id;
-  this.users = {[id]: profile2user(this)};
-  this.conns = {};
-  this.call = false;
-  this.callType = null;
-  this.calls = {}
-  this.streams = {}
-  this.streamConfig = null;
-  this.run = function(){
-    this.peer = new Peer(this.id);
+function UserHost(id, name, avatar, room, host){
 
-    handlePeer.bind(this)(this.peer);
+  let THIS = this;
 
-    this.peer.on('open', function(){
-      renewUserList();
-      goToChat();
-    })
+  THIS.id = id;
+  THIS.name = name;
+  THIS.avatar = avatar;
+
+  THIS.host = host || id;
+  THIS.room = room || '';
+
+  THIS.conns = {};
+
+  // if join group call now
+  THIS.call = false;
+
+  // the call type you selected (audio/video)
+  THIS.callType = null;
+
+  // call object
+  THIS.calls = {}
+
+  // stream of each call object
+  THIS.streams = {}
+
+  // your localStream config (mic/camear/screen)
+  THIS.streamConfig = null;
+
+  THIS.toUser = function(){
+    return {
+      id: THIS.id,
+      name: THIS.name,
+      avatar: THIS.avatar,
+      call: THIS.call
+    };
+  }
+
+  THIS.users = {[id]: THIS.toUser()};
+
+  THIS.isHost = function(){
+    return THIS.host === THIS.id;
+  }
+
+  THIS.handleCommand(data, conn){
+    switch(data.fn){
+      // host handle only
+      case 'join':
+        if(THIS.isHost()){
+          data.arg.id = conn.peer;
+          THIS.users[conn.peer] = data.arg;
+          THIS.conns[conn.peer] = conn;
+          conn.send({
+            fn: 'room',
+            arg: {
+              room: THIS.room,
+              host: THIS.host,
+              users: THIS.users
+            }
+          })
+          Object.values(THIS.conns).forEach(c => {
+            if(c.peer != conn.peer)
+              c.send({ fn: 'user', arg : data.arg });
+          })
+          addJoin(data.arg.id);
+          renewUserList();
+        }
+        break;
+      // both handle in different way
+      case 'call':
+        if(THIS.isHost()){
+          data.arg.user = conn.peer;
+          data.arg.call = data.arg.call;
+          sendCmd(data);
+        }
+        handleCallCmd(data.arg);
+        break;
+      // user handle only
+      case 'user':
+        if(conn.peer === THIS.host){
+          THIS.users[data.arg.id] = data.arg;
+          THIS.conns[data.arg.id] = THIS.peer.connect(data.arg.id)
+          THIS.handleUser(THIS.conns[data.arg.id])
+          addJoin(data.arg.id);
+          renewUserList();
+        }
+        break;
+      // user handle only
+      case 'room':
+        if(conn.peer === THIS.host){
+          THIS.room = data.arg.room;
+          THIS.host = data.arg.host;
+          THIS.users = data.arg.users;
+          console.log('room command:', data);
+          addJoin(THIS.id);
+          renewUserList();
+          goToChat();
+        }
+        break;
+      // both handle
+      case 'message':
+        addMessage(conn.peer, data.arg)
+        break;
+      default:
+        break;
+    }
+  }
+
+  THIS.connectToHost = function(){
+
+    THIS.conns[THIS.host] = THIS.peer.connect(THIS.host);
+
+    THIS.conns[THIS.host].on('open', function() {
+      THIS.conns[THIS.host].send({
+        fn: 'join',
+        arg: THIS.toUser()
+      })
+    });
+
+    THIS.conns[THIS.host].on('data', function(data) {
+      THIS.handleCommand(data, this);
+    });
+
+    THIS.conns[THIS.host].on('close', function () {
+      swal("Host Left!");
+      setTimeout(backToProfile, 3000);
+    });
+
+    THIS.conns[THIS.host].on('error', function (err) {
+      if(err.type === 'peer-unavailable'){
+        alert("ROOM not existed");
+      }
+      else{
+        console.log('peer error:' + err.type);
+        alert('peer error:' + err.type);
+      }
+    });
+  }
+
+  THIS.run = function(){
+    THIS.peer = new Peer(THIS.id);
+
+    handlePeer.bind(THIS)(THIS.peer);
+
+    THIS.peer.on('open', function(){
+      if(THIS.isHost()){
+        renewUserList();
+        goToChat();
+      }
+      else connectToHost();
+    });
 
     // text connection
-    this.peer.on('connection', (function(conn) {
-      conn.on('open', function() {
-        //conn.send("Sender does not accept incoming connections");
-        //setTimeout(function() { conn.close(); }, 500);
-      });
+    THIS.peer.on('connection', function(conn) {
+      conn.on('open', function() { });
       conn.on('data', function(data) {
-        switch(data.fn){
-          case 'join':
-            data.arg.id = conn.peer;
-            profile.users[conn.peer] = data.arg;
-            profile.conns[conn.peer] = conn;
-            conn.send({
-              fn: 'room',
-              arg: {
-                room: profile.hostName,
-                owner: profile.owner,
-                users: profile.users
-              }
-            })
-            Object.values(profile.conns).forEach(c => {
-              if(c.peer != conn.peer)
-                c.send({
-                  fn: 'user',
-                  arg : data.arg
-                });
-            })
-            addJoin(data.arg.id);
-            renewUserList();
-            break;
-          case 'message':
-            console.log(`${profile.users[conn.peer].name}:`, data.arg)
-            addMessage(this.peer, data.arg)
-            break;
-          case 'call':
-            data.arg.user = this.peer;
-            data.arg.call = data.arg.call;
-            sendCmd(data);
-            handleCallCmd(data.arg);
-            break;
-          default:
-            console.log(`unknown cmd:`, data)
-            break;
-        }
+        THIS.handleCommand(data, conn);
       });
-
       conn.peerConnection.onconnectionstatechange = function(event){
         switch(event.currentTarget.connectionState){
           case "disconnected":
@@ -375,12 +446,11 @@ function Host(id, hostName, name, avatar){
             break;
         }
       };
-
-    }).bind(this));
+    });
 
     // stream connection
-    this.peer.on('call', function(call) {
-      if(profile.call){
+    THIS.peer.on('call', function(call) {
+      if(THIS.call){
         handleCall(call);
         call.answer(window.localStream);
         handleCallClose(call);
@@ -392,135 +462,6 @@ function Host(id, hostName, name, avatar){
         }, 2500);
       }
     });
-  }
-}
-
-function User(id, name, hostID, avatar){
-  this.id = id;
-  this.name = name;
-  this.hostID = hostID;
-  this.hostName = '';
-  this.avatar = avatar;
-  this.users = {};
-  this.conns = {};
-  this.owner = null;
-  this.call = false;
-  this.callType = null;
-  this.calls = {}
-  this.streams = {}
-  this.streamConfig = null;
-  this.run = function(){
-    this.peer = new Peer(this.id);
-
-    handlePeer.bind(this)(this.peer);
-
-    this.peer.on('open', (function(){
-      // connect to server
-      console.log(this)
-      this.conns[this.hostID] = this.peer.connect(this.hostID);
-      this.conns[this.hostID].on('open', (function() {
-        this.conns[this.hostID].send({
-          fn: 'join',
-          arg: profile2user(profile)
-        })
-        //this.host.send("Sender does not accept incoming connections");
-        //setTimeout(function() { this.host.close(); }, 500);
-      }).bind(this));
-      this.conns[this.hostID].on('data', function(data) {
-        switch(data.fn){
-          case 'user':
-            profile.users[data.arg.id] = data.arg;
-            profile.conns[data.arg.id] = profile.peer.connect(data.arg.id)
-            profile.handleUser(profile.conns[data.arg.id])
-            addJoin(data.arg.id);
-            renewUserList();
-            break;
-          case 'room':
-            profile.hostName = data.arg.room;
-            profile.owner = data.arg.owner;
-            profile.users = data.arg.users;
-            console.log('room command:', data);
-            addJoin(profile.id);
-            renewUserList();
-            goToChat();
-            break;
-          case 'message':
-            addMessage(this.peer, data.arg);
-            break;
-          case 'call':
-            handleCallCmd(data.arg);
-            break;
-          default:
-            console.log(`unknown cmd`, data)
-            break;
-        }
-      });
-      this.conns[this.hostID].on('close', function () {
-        swal("Host Left!");
-        setTimeout(backToProfile, 3000);
-      });
-
-      this.conns[this.hostID].on('error', function (err) {
-        if(err.type === 'peer-unavailable'){
-          alert("ROOM not existed");
-        }
-        else{
-          console.log('peer error:' + err.type);
-          alert('peer error:' + err.type);
-        }
-      });
-    }).bind(this))
-
-    // text connection
-    this.peer.on('connection', function(conn) {
-      profile.conns[this.peer] = conn;
-      profile.handleUser(conn);
-    });
-
-    // stream connection
-    this.peer.on('call', function(call) {
-      if(profile.call){
-        handleCall(call);
-        call.answer(window.localStream);
-        handleCallClose(call);
-      }
-      else{
-        call.answer();
-        setTimeout(function(){
-          call.close();
-        }, 2500);
-      }
-    });
-  }
-
-  this.handleUser = function(conn){
-    // this.conns[id]
-    conn.on('open', function() {
-      // ADD USER TO UI
-    });
-    conn.on('data', function(data) {
-      switch(data.fn){
-        case 'message':
-          console.log(data.arg);
-          addMessage(this.peer, data.arg);
-          break;
-        default:
-          console.log(`unknown cmd ${data}`)
-          break;
-      }
-    });
-
-    conn.peerConnection.onconnectionstatechange = function(event){
-      switch(event.currentTarget.connectionState){
-        case "disconnected":
-        case "failed":
-        case "closed":
-          leftUser(conn.peer);
-          break;
-        default:
-          break;
-      }
-    };
   }
 }
 
@@ -531,27 +472,26 @@ function backToProfile(){
 }
 
 function goToChat(){
-  $('.room-title-name').text(profile.hostName);
+  $('.room-title-name').text(profile.room);
   $('#profile-ui').hide();
   $('#musicBox').show();
   $('#chat-ui').show();
   $('.sharer').attr('data-url', `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`)
-  $('.sharer').attr('data-image', `https://drrr.com/banner/?t=${profile.hostName}`)
-  $('.sharer').attr('data-subject', `${profile.hostName}@DOLLARS Mirror（Durarara!! Mirror）`)
-  $('#settings-info-room-name').html(`<p>${profile.hostName}</p>`);
+  $('.sharer').attr('data-image', `https://drrr.com/banner/?t=${profile.room}`)
+  $('.sharer').attr('data-subject', `${profile.room}@DOLLARS Mirror（Durarara!! Mirror）`)
+  $('#settings-info-room-name').html(`<p>${profile.room}</p>`);
   $('#settings-info-room-description').html(`<p>${profile.name}<p></p>${profile.id}</p>`);
   $('#settings-info-room-uptime').html(`<p>Avatar: ${profile.avatar}</p>`);
-  $('title').text(profile.hostName);
+  $('title').text(profile.room);
 }
 
 function initialize(){
-  // Create own peer object with connection to shared PeerJS server
   var get = name => $(`input[name="${name}"]`).val().trim()
   var avatar = $('.user-icon.active').attr('data-avatar');
-  if(host)
-    profile = new Host(get("hid"), get("hname"), get("uname"), avatar);
-  else if(join)
-    profile = new User(get("uid"), get("uname"), get("jid"), avatar);
+  if(doHost)
+    profile = new UserHost(get("hid"), get("uname"), avatar, get("hname"));
+  else if(doJoin)
+    profile = new UserHost(get("uid"), get("uname"), avatar, undefined, get("jid"))
   profile.run();
 };
 
@@ -607,6 +547,9 @@ function playStream(id, stream) {
   $(`#${id}-video`).show();
 }
 
+// stopStream by
+// - stream terminated
+// - 'call' command
 function stopStream(id){
   if($(`#${id}-audio`).length)
     $(`#${id}-audio`).remove();
@@ -615,8 +558,6 @@ function stopStream(id){
   delete profile.streams[id]
   setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
 }
-
-window.localStream = null;
 
 function makeid(length) {
   var result           = '';
@@ -669,9 +610,9 @@ function setMediaSources(){
 function renewUserList(){
   //let clickMenu = `<ul class="dropdown-menu" role="menu"></ul>`;
   let clickMenu = '';
-  let owner = profile.users[profile.owner]
-  let hostinfo = `<li id="${owner.id}" title="${owner.name} (host)" class="${owner.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${owner.avatar} is-host" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${owner.avatar}"></span><span class="select-text name">${owner.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
-  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.owner).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
+  let theHost = profile.users[profile.host]
+  let hostinfo = `<li id="${theHost.id}" title="${theHost.name} (host)" class="${theHost.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${theHost.avatar} is-host" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${theHost.avatar}"></span><span class="select-text name">${theHost.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
+  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.host).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
   $('#user_list').html(`${hostinfo}${usersinfo}`);
   setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
 }
@@ -691,7 +632,7 @@ function replaceStream(peerConnection, mediaStream) {
   }
 }
 
-function wrapAudioVideo(stream){
+function wrapMedia(stream){
   profile.callType = {video: false, audio: false};
   if(!stream.getAudioTracks().length)
     stream.addTrack(createEmptyAudioTrack());
@@ -708,16 +649,16 @@ $(document).ready(function(){
 
   uid = findGetParameter('uid');
   name = findGetParameter('name') || '';
-  host = findGetParameter('host');
-  join = findGetParameter('join');
+  doHost = findGetParameter('host');
+  doJoin = findGetParameter('join');
   room = findGetParameter('room') || 'This is a Lambda Room';
 
-  if(host && join) host = null;
+  if(doHost && doJoin) doHost = null;
 
   uid = uid ? `DRRR${uid}` : randomPeerID();
 
-  if(host) host = `DRROOM${host}`
-  if(join) join = `DRROOM${join}`
+  if(doHost) doHost = `DRROOM${doHost}`
+  if(doJoin) doJoin = `DRROOM${doJoin}`
 
   if(!name) name = uid.substr(4, 5);
 
@@ -734,18 +675,18 @@ $(document).ready(function(){
   // random avatar
   icons.get(Math.floor(Math.random()*icons.length)).click();
 
-  if(host){
+  if(doHost){
     $('#video-div').show();
     $('#host-setting').show();
-    $(`input[name="hid"]`).val(host).attr('required', true);
+    $(`input[name="hid"]`).val(doHost).attr('required', true);
     $(`input[name="hname"]`).val(room).attr('required', true);
     // TODO: if require uid
   }
 
-  if(join){
+  if(doJoin){
     $('#join-setting').show();
     $(`input[name="uid"]`).val(uid).attr('required', true)
-    $(`input[name="jid"]`).val(join).attr('required', true);
+    $(`input[name="jid"]`).val(doJoin).attr('required', true);
   }
 
   $('#profile-setting-form').submit(()=>{
@@ -776,24 +717,6 @@ $(document).ready(function(){
     }
     setTimeout(() => $('.counter').text(140 - $(this).val().length), 100);
   });
-
-  /*
-  $('.dropdown').click(function(){
-    if($(this).hasClass('open')){
-      $(this).removeClass('open');
-      $(this).find('.preferences').attr("aria-expanded","false");
-    }
-    else{
-      $(this).addClass('open')
-      $(this).find('.preferences').attr("aria-expanded","true");
-    }
-  })
-  */
-
-  //$('.icon-settings').click(function(){
-  //  //$('#modal-settings').addClass('in');
-  //  $('#modal-settings').modal('show');
-  //});
 
   $('.icon-users').click(function(){
     $('#user_list').slideToggle();
@@ -849,15 +772,16 @@ $(document).ready(function(){
         }
       };
       // inform host
-      if(profile.id === profile.owner){
+      if(profile.id === profile.host){
         sendCmd(callCmd);
         handleCallCmd(callCmd.arg);
       }
       else sendHost(callCmd)
       $('#end-call')[0].style.display = 'list-item';
       $('#call')[0].style.display = 'none';
-      $('#stream-info').text('直播間');
+      $('#stream-info').text('Streaming...');
       // others will call me
+      // consider call failed, set the UI back
     }
 
     if(!window.localStream){
@@ -876,7 +800,7 @@ $(document).ready(function(){
 
   $('#end-call').click(function(){
     // inform host
-    if(profile.id === profile.owner){
+    if(profile.id === profile.host){
       sendCmd({
         fn: 'call',
         arg: {
@@ -897,7 +821,7 @@ $(document).ready(function(){
     }
     $('#end-call')[0].style.display = 'none';
     $('#call')[0].style.display = 'list-item';
-    $('#stream-info').text('點擊手機圖示加入通話');
+    $('#stream-info').text('Click phone to join group chat');
     Object.values(profile.calls).forEach(call => call.close());
     profile.calls = {};
     profile.call = false;

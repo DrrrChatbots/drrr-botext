@@ -321,7 +321,7 @@ function UserHost(id, name, avatar, room, host){
     return THIS.host === THIS.id;
   }
 
-  THIS.handleCommand(data, conn){
+  THIS.handleCommand = function(data, conn){
     switch(data.fn){
       // host handle only
       case 'join':

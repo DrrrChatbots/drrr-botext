@@ -261,16 +261,24 @@ function sendHost(cmd){
 }
 
 function handleCallCmd(arg){
+
+  let prevCall = profile.users[arg.user].call;
   profile.users[arg.user].call = arg.call;
+
   if(arg.call){
     $(`#${arg.user}`).addClass('is-tripcode');
     if(arg.user === profile.id && profile.call)
       playStream(profile.id, window.localStream);
     if(arg.user === profile.id || !profile.call) return;
-    //call him
-    profile.calls[arg.user] = profile.peer.call(arg.user, window.localStream, call_constraints);
-    handleCall(profile.calls[arg.user]);
-    handleCallClose(profile.calls[arg.user]);
+
+    if(prevCall && JSON.stringify(prevCall) !== JSON.stringify(arg.call))
+      replayStream(arg.user);
+    else if(!prevCall){
+      //call him
+      profile.calls[arg.user] = profile.peer.call(arg.user, window.localStream, call_constraints);
+      handleCall(profile.calls[arg.user]);
+      handleCallClose(profile.calls[arg.user]);
+    }
   }
   else{
     stopStream(arg.user);
@@ -516,6 +524,13 @@ function bindMediaSrc(dom, stream){
   } else {
     dom.src = window.URL.createObjectURL(stream);
   }
+}
+
+// on audio/video type change, replay it
+function replayStream(id){
+  let stream = profile.streams[id];
+  stopStream(id);
+  playStream(id, stream);
 }
 
 function playStream(id, stream) {
@@ -772,7 +787,7 @@ $(document).ready(function(){
         }
       };
       // inform host
-      if(profile.id === profile.host){
+      if(profile.isHost()){
         sendCmd(callCmd);
         handleCallCmd(callCmd.arg);
       }
@@ -800,7 +815,7 @@ $(document).ready(function(){
 
   $('#end-call').click(function(){
     // inform host
-    if(profile.id === profile.host){
+    if(profile.isHost()){
       sendCmd({
         fn: 'call',
         arg: {
@@ -840,9 +855,27 @@ $(document).ready(function(){
         window.localStream = stream;
 
         if(profile.call){
+          // TODO, consider audio or video
           profile.streams[profile.id] = stream;
-          bindMediaSrc($(`#${profile.id}-video`)[0], stream);
-          setTimeout(() => $(`#${profile.id}`).click(), 1000);
+
+          if(profile.call.video){
+            bindMediaSrc($(`#${profile.id}-video`)[0], stream);
+            setTimeout(() => $(`#${profile.id}`).click(), 1000);
+          }
+          else replayStream(profile.id);
+
+          if(JSON.stringify(profile.call) !== JSON.stringify(profile.callType)){
+            profile.call = profile.callType;
+            // alert others
+            bindMediaSrc(createMediaDom(id, stream), window.remoteStream);
+            (profile.isHost() ? sendCmd : sendHost)({
+              fn: 'call',
+              arg: {
+                user: profile.id,
+                call: profile.call
+              }
+            });
+          }
         }
 
         if(window.tryCall){

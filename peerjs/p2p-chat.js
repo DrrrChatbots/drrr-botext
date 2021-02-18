@@ -111,7 +111,6 @@ function handleCallClose(call){
 }
 
 function clearPeer(){
-  peer.close();
   peer.destroy();
   $('#id').text('Please set your peerID');
   peerID = null;
@@ -347,13 +346,10 @@ function initialize() {
 };
 
 function bindMediaSrc(dom, stream){
-  if(!dom.srcObject ||
-    (stream.getTracks().length > dom.srcObject.getTracks().length)){
-    if ("srcObject" in dom) {
-      dom.srcObject = stream;
-    } else {
-      dom.src = window.URL.createObjectURL(stream);
-    }
+  if ("srcObject" in dom) {
+    dom.srcObject = stream;
+  } else {
+    dom.src = window.URL.createObjectURL(stream);
   }
 }
 

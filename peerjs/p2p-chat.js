@@ -347,13 +347,10 @@ function initialize() {
 };
 
 function bindMediaSrc(dom, stream){
-  if(!dom.srcObject ||
-    (stream.getTracks().length > dom.srcObject.getTracks().length)){
-    if ("srcObject" in dom) {
-      dom.srcObject = stream;
-    } else {
-      dom.src = window.URL.createObjectURL(stream);
-    }
+  if ("srcObject" in dom) {
+    dom.srcObject = stream;
+  } else {
+    dom.src = window.URL.createObjectURL(stream);
   }
 }
 

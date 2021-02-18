@@ -323,7 +323,7 @@ function UserHost(id, name, avatar, room, host){
 
   THIS.handleCommand = function(data, conn){
     switch(data.fn){
-      // host handle only
+        // host handle only
       case 'join':
         if(THIS.isHost()){
           data.arg.id = conn.peer;
@@ -345,7 +345,7 @@ function UserHost(id, name, avatar, room, host){
           renewUserList();
         }
         break;
-      // both handle in different way
+        // both handle in different way
       case 'call':
         if(THIS.isHost()){
           data.arg.user = conn.peer;
@@ -354,7 +354,7 @@ function UserHost(id, name, avatar, room, host){
         }
         handleCallCmd(data.arg);
         break;
-      // user handle only
+        // user handle only
       case 'user':
         if(conn.peer === THIS.host){
           THIS.users[data.arg.id] = data.arg;
@@ -364,7 +364,7 @@ function UserHost(id, name, avatar, room, host){
           renewUserList();
         }
         break;
-      // user handle only
+        // user handle only
       case 'room':
         if(conn.peer === THIS.host){
           THIS.room = data.arg.room;
@@ -376,7 +376,7 @@ function UserHost(id, name, avatar, room, host){
           goToChat();
         }
         break;
-      // both handle
+        // both handle
       case 'message':
         addMessage(conn.peer, data.arg)
         break;
@@ -511,13 +511,10 @@ function clearMediaSrc(media){
 }
 
 function bindMediaSrc(dom, stream){
-  if(!dom.srcObject ||
-    (stream.getTracks().length > dom.srcObject.getTracks().length)){
-    if ("srcObject" in dom) {
-      dom.srcObject = stream;
-    } else {
-      dom.src = window.URL.createObjectURL(stream);
-    }
+  if ("srcObject" in dom) {
+    dom.srcObject = stream;
+  } else {
+    dom.src = window.URL.createObjectURL(stream);
   }
 }
 
@@ -532,7 +529,7 @@ function playStream(id, stream) {
 
   if(id !== profile.id) bindMediaSrc(media, stream);
   video.click(function(){
-    toggleMediaSrc($(`#${id}-video`)[0], stream);
+    toggleMediaSrc($(`#${id}-video`)[0], profile.streams[id]);
     setTimeout(() => $(`#${id}`).click(), 1000);
   })
 
@@ -759,7 +756,7 @@ $(document).ready(function(){
   $('#call').click(function(){
     if(!profile.streamConfig){
       window.tryCall = true;
-      swal("Setup your stream first! (need save)");
+      swal("Setup your stream first!\n(need save)");
       $('#modal-settings').modal('show');
       $(`#settings-user-tab`).find('a').click();
       return;
@@ -841,6 +838,13 @@ $(document).ready(function(){
           window.localStream.getTracks().forEach(track => track.stop());
         }
         window.localStream = stream;
+
+        if(profile.call){
+          profile.streams[profile.id] = stream;
+          bindMediaSrc($(`#${profile.id}-video`)[0], stream);
+          setTimeout(() => $(`#${profile.id}`).click(), 1000);
+        }
+
         if(window.tryCall){
           $('#call').click();
           window.tryCall = false;

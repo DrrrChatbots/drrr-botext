@@ -271,9 +271,10 @@ function handleCallCmd(arg){
       playStream(profile.id, window.localStream);
     if(arg.user === profile.id || !profile.call) return;
 
-    if(prevCall && JSON.stringify(prevCall) !== JSON.stringify(arg.call))
-      replayStream(arg.user);
-    else if(!prevCall){
+    //if(prevCall && JSON.stringify(prevCall) !== JSON.stringify(arg.call))
+    //  replayStream(arg.user);
+    //else if(!prevCall){
+    if(!prevCall){
       //call him
       profile.calls[arg.user] = profile.peer.call(arg.user, window.localStream, call_constraints);
       handleCall(profile.calls[arg.user]);
@@ -867,7 +868,6 @@ $(document).ready(function(){
           if(JSON.stringify(profile.call) !== JSON.stringify(profile.callType)){
             profile.call = profile.callType;
             // alert others
-            bindMediaSrc(createMediaDom(id, stream), window.remoteStream);
             (profile.isHost() ? sendCmd : sendHost)({
               fn: 'call',
               arg: {

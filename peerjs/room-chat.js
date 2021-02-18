@@ -426,7 +426,7 @@ function UserHost(id, name, avatar, room, host){
         renewUserList();
         goToChat();
       }
-      else connectToHost();
+      else THIS.connectToHost();
     });
 
     // text connection
@@ -434,6 +434,10 @@ function UserHost(id, name, avatar, room, host){
       conn.on('open', function() { });
       conn.on('data', function(data) {
         THIS.handleCommand(data, conn);
+      });
+      conn.on('close', function () {
+        //swal("Host Left!");
+        //setTimeout(backToProfile, 3000);
       });
       conn.peerConnection.onconnectionstatechange = function(event){
         switch(event.currentTarget.connectionState){

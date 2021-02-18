@@ -436,8 +436,7 @@ function UserHost(id, name, avatar, room, host){
         THIS.handleCommand(data, conn);
       });
       conn.on('close', function () {
-        //swal("Host Left!");
-        //setTimeout(backToProfile, 3000);
+        leftUser(conn.peer);
       });
       conn.peerConnection.onconnectionstatechange = function(event){
         switch(event.currentTarget.connectionState){

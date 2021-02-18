@@ -678,7 +678,7 @@ $(document).ready(function(){
   if(host) host = `DRROOM${host}`
   if(join) join = `DRROOM${join}`
 
-  if(!name) name = uid;
+  if(!name) name = uid.substr(4, 5);
 
   $(`input[name="uname"]`).val(name)
 

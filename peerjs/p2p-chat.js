@@ -111,7 +111,6 @@ function handleCallClose(call){
 }
 
 function clearPeer(){
-  peer.close();
   peer.destroy();
   $('#id').text('Please set your peerID');
   peerID = null;

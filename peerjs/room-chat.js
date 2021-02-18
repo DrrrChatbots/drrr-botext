@@ -416,6 +416,7 @@ function UserHost(id, name, avatar, room, host){
     });
 
     THIS.conns[THIS.host].on('close', function () {
+      if(!profile) return;
       if(profile.where === 'login')
         return;
       profile.where = 'login';
@@ -428,6 +429,7 @@ function UserHost(id, name, avatar, room, host){
         case "disconnected":
         case "failed":
         case "closed":
+          if(!profile) return;
           if(profile.where === 'login')
             return;
           profile.where = 'login';
@@ -504,7 +506,11 @@ function UserHost(id, name, avatar, room, host){
 
 function backToProfile(){
   // TODO delete profile
-  profile.where = 'login';
+  // consider more
+  profile.peer.destroy();
+  if(window.localStream)
+    window.localStream.getTracks().forEach(track => track.stop());
+  profile = null;
   $('#chat-ui').hide();
   $('#profile-ui').show();
 }

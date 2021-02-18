@@ -9,6 +9,38 @@ var call_constraints = {
   offerToReceiveVideo: 10,
 }
 
+
+// Init Howler sound sprite
+/* need port
+if(Settings.is("mute-message")){
+  Howler.mobileAutoEnable = false;
+}
+*/
+
+var sound = {};
+sound.play = function(item){
+  var newSound = new Howl({
+    src: [
+      "/media/effect.mp3"
+    ],
+    preload: true,
+    volume: 1,
+    sprite: {
+      bubble: [0, 287.3469387755102],
+      userin: [2000, 975.2380952380952],
+      userout: [4000, 400.5442176870746]
+    },
+    onloaderror: function(){
+      console.warn('Load Sound effect error');
+    }
+  });
+  newSound.play(item);
+  sound = newSound;
+};
+
+
+
+
 const createEmptyAudioTrack = () => {
   const ctx = new AudioContext();
   const oscillator = ctx.createOscillator();
@@ -155,7 +187,6 @@ function profile2user(p){
 function addMessage(id, arg){
   let user = id === profile.id ?
     profile2user(profile) : profile.users[id];
-
   $('#talks').prepend(
     `<dl class="talk ${user.avatar}" id="">
       <dt class="dropdown user">
@@ -172,6 +203,7 @@ function addMessage(id, arg){
       </div>
       </dd>
     </dl>`);
+  sound.play("bubble");
 }
 
 function addLeft(id){
@@ -184,6 +216,7 @@ function addLeft(id){
     </span>
     已退出部屋
   </div>`);
+  sound.play("userout");
 }
 
 function addJoin(id){
@@ -196,6 +229,7 @@ function addJoin(id){
     </span>
     已登入部屋
   </div>`);
+  sound.play("userin");
 }
 
 function leftUser(id){

@@ -49,7 +49,7 @@ export const ui_event = (config) => {
   getRoom((info) => {
     console.log(info)
     if(info.room){
-      if(info.room.host === info.profile.id){
+      if(info.room.host === info.profile.id || 1){
         $('#launch_room')
           .attr('title', 'Launch Room Call')
           .attr('disabled', false)

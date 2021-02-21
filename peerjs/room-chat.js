@@ -17,28 +17,21 @@ if(Settings.is("mute-message")){
 }
 */
 
-var sound = {};
-sound.play = function(item){
-  if(this.mute) return;
-  var newSound = new Howl({
-    src: [
-      "/media/effect.mp3"
-    ],
-    preload: true,
-    volume: 1,
-    sprite: {
-      bubble: [0, 287.3469387755102],
-      userin: [2000, 975.2380952380952],
-      userout: [4000, 400.5442176870746]
-    },
-    onloaderror: function(){
-      console.warn('Load Sound effect error');
-    }
-  });
-  newSound.play(item);
-  sound = newSound;
-};
-sound.mute = 0;
+var sound = new Howl({
+  src: [
+    "/media/effect.mp3"
+  ],
+  preload: true,
+  volume: 1,
+  sprite: {
+    bubble: [0, 287.3469387755102],
+    userin: [2000, 975.2380952380952],
+    userout: [4000, 400.5442176870746]
+  },
+  onloaderror: function(){
+    console.warn('Load Sound effect error');
+  }
+});
 
 function copyToClipboard(text) {
   if (window.clipboardData && window.clipboardData.setData) {
@@ -395,6 +388,12 @@ function UserHost(id, name, avatar, room, host){
       case 'message':
         addMessage(conn.peer, data.arg)
         break;
+      case 'newhost':
+        // TODO: complete UI control
+        if(conn.peer === THIS.host){
+          THIS.host = data.arg;
+        }
+        break;
       default:
         break;
     }
@@ -692,27 +691,8 @@ function wrapMedia(stream){
   return stream;
 }
 
-$(document).ready(function(){
-
-  setMediaSources();
-
-  uid = findGetParameter('uid');
-  name = findGetParameter('name') || '';
-  doHost = findGetParameter('host');
-  doJoin = findGetParameter('join');
-  room = findGetParameter('room') || 'This is a Lambda Room';
-
-  if(doHost && doJoin) doHost = null;
-
-  uid = uid ? `DRRR${uid}` : randomPeerID();
-
-  if(doHost) doHost = `DRROOM${doHost}`
-  if(doJoin) doJoin = `DRROOM${doJoin}`
-
-  if(!name) name = uid.substr(4, 5);
-
-  $(`input[name="uname"]`).val(name)
-
+function set_login_ui(){
+  // toggle the setting
   $('#home-extra-toggle').click(function(){
     $('#home-extra').toggle();
   })
@@ -723,26 +703,74 @@ $(document).ready(function(){
   })
   // random avatar
   icons.get(Math.floor(Math.random()*icons.length)).click();
+}
 
-  if(doHost){
-    $('#video-div').show();
-    $('#host-setting').show();
-    $(`input[name="hid"]`).val(doHost).attr('required', true);
-    $(`input[name="hname"]`).val(room).attr('required', true);
-    // TODO: if require uid
+function set_login_default_fields(){
+  uid = findGetParameter('uid');
+  name = findGetParameter('name') || '';
+  doHost = findGetParameter('host');
+  doJoin = findGetParameter('join');
+  room = findGetParameter('room') || 'This is a Lambda Room';
+
+  if(doHost && doJoin) doHost = null;
+
+  uid = uid ? `DRRR${uid}` : randomPeerID();
+  if(doHost) doHost = `DRROOM${doHost}`
+  else if(doJoin) doJoin = `DRROOM${doJoin}`
+
+  // set default name
+  if(!name) name = uid.substr(4, 5);
+  roomID = doHost || doJoin || uid;
+
+  $(`input[name="uname"]`).val(name)
+
+  function switch_mode(mode){
+    if(mode === 'host') hostMode = true;
+    else if(mode === 'join') hostMode = false;
+    else return alert("invalid mode");
+    $(`input[name="hid"]`).attr('required', hostMode);
+    $(`input[name="hname"]`).attr('required', hostMode);
+    $(`input[name="uid"]`).attr('required', !hostMode)
+    $(`input[name="jid"]`).attr('required', !hostMode);
+    $('#host-setting')[hostMode ? 'show' : 'hide']();
+    $('#join-setting')[!hostMode ? 'show' : 'hide']();
+    $('#profile-setting-form').show();
+    $('#complete').val(mode);
   }
 
-  if(doJoin){
+  $('#host_mode').click(() => switch_mode('host'));
+  $('#join_mode').click(() => switch_mode('join'));
+
+  $(`input[name="hid"]`).val(roomID);
+  $(`input[name="uid"]`).val(uid);
+
+  if(doHost || doJoin){
+    $(`input[name="jid"]`).val(roomID);
+  }
+
+  if(doHost){
+    $(`input[name="hname"]`).val(room);
+    // TODO: if require uid
+    $('#host_mode').click();
+  }
+  else if(doJoin){
     $('#join-setting').show();
-    $(`input[name="uid"]`).val(uid).attr('required', true)
-    $(`input[name="jid"]`).val(doJoin).attr('required', true);
+    $(`input[name="jid"]`).val(doJoin);
+    $('#join_mode').click();
+  }
+  else{
+    $('#join-setting').show();
+    $(`input[name="uid"]`).val(uid);
+    $('#join_mode').click();
   }
 
   $('#profile-setting-form').submit(()=>{
     initialize();
     return false;
   });
+}
 
+function set_chat_ui(){
   $('#message').submit(function(){
     return false;
   });
@@ -805,7 +833,7 @@ $(document).ready(function(){
   $('#call').click(function(){
     if(!profile.streamConfig){
       window.tryCall = true;
-      swal("Setup your stream first!\n(need save)");
+      //swal("Setup your stream first!\n(need save)");
       $('#modal-settings').modal('show');
       $(`#settings-user-tab`).find('a').click();
       return;
@@ -922,4 +950,17 @@ $(document).ready(function(){
         console.log(e);
       });
   });
+
+  $('#set-mute').click(function(){
+    sound.volume($(this).is(":checked") ? 0 : 1);
+  });
+}
+
+$(document).ready(function(){
+  setMediaSources();
+  set_login_default_fields();
+  set_login_ui();
+  set_chat_ui();
 });
+
+// https://script.google.com/macros/s/AKfycbxySLiYn5fCBS8RPCe53fLNfeTUMPvNurKybe5UZMKj7bYDYzDOv0Fv2A/exec?id=19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0

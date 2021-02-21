@@ -39,3 +39,20 @@ Join our discord channel to have some discussion.
 - abuse room hiding
 - script binding on timer and event
 - peer chat
+
+### peer chat room login mechanism
+
+Tripcode
+
+input => output (peer id = output + [0-9])
+
+validation: input sign, (public key need to be generated) validation
+
+
+No Tripcode
+
+privateKey, publicKey
+
+peerID = {publicKey}[0-9]
+
+validation = validate publicKey (sign privateKey (otherPeerID))

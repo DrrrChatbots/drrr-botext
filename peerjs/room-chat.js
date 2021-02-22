@@ -1058,9 +1058,8 @@ $(document).ready(function(){
 function dropLounge(roomID, succ, err){
   if(!roomID) return;
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
   $.ajax({
-    url: `${loungeURL}?id=${sheet}&drop=${encodeURIComponent(roomID)}`,
+    url: `${loungeURL}?drop=${encodeURIComponent(roomID)}`,
     success: succ || console.log,
     error: err || console.log
   });
@@ -1069,10 +1068,9 @@ function dropLounge(roomID, succ, err){
 function keepRoom(roomID, succ, err){
   if(!roomID) return;
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
   let time =`${Math.floor(Date.now() / 1000)}`;
   $.ajax({
-    url: `${loungeURL}?id=${sheet}&keep=${encodeURIComponent(roomID)}&time=${time}`,
+    url: `${loungeURL}?keep=${encodeURIComponent(roomID)}&time=${time}`,
     success: succ || console.log,
     error: err || console.log
   });
@@ -1080,7 +1078,6 @@ function keepRoom(roomID, succ, err){
 
 function uploadLounge(data){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
   $.ajax({
     type: "POST",
     url: loungeURL,
@@ -1100,10 +1097,9 @@ function uploadLounge(data){
 
 function getLounge(succ, error){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
   $.ajax({
     type: "GET",
-    url: `${loungeURL}?id=${sheet}`,
+    url: `${loungeURL}`,
     success: succ,
     error: error
   });

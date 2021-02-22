@@ -546,7 +546,7 @@ function backToProfile(){
   $('#profile-ui').show();
 }
 
-function goToChat(){
+function goToChat(callback){
   $('.sweet-overlay').remove();
   $('.sweet-alert').remove()
   $('body').attr('class', ``);
@@ -555,16 +555,11 @@ function goToChat(){
   profile.where = 'room';
   $('#profile-ui').hide();
   $('#musicBox').show();
-  $('#chat-ui').show();
-  $('#settings-info-room-description').html(`<p>${profile.name}<p></p>${profile.id}</p>`);
-  $('#settings-info-room-uptime').html(`<p>Avatar: ${profile.avatar}</p>`);
-
-  $('.sharer').attr('data-url', `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.host}`)
-  $('.room-title-name').text(profile.room);
-  $('.sharer').attr('data-image', `https://drrr.com/banner/?t=${profile.room}`)
-  $('.sharer').attr('data-subject', `${profile.room}@DOLLARS Mirror（Durarara!! Mirror）`)
-  $('#settings-info-room-name').html(`<p>${profile.room}</p>`);
-  $('title').text(profile.room);
+  $('#chat-ui').html(roomUITmplt(profile)).show().promise().done(function(){
+    set_chat_ui();
+    $('title').text(profile.room);
+    renewUserList();
+  });
 }
 
 function goToHall(){
@@ -572,6 +567,7 @@ function goToHall(){
   $('body').attr('class', `scheme-${profile.avatar}`);
   $('body').attr('style', `overflow-x: visible;`);
   $('#profile-ui').hide();
+  $('#chat-ui').hide();
   $('title').text('部屋一覽 - DOLLARS Mirror');
   $('#hall-ui').html(hallTmplt(profile)).show().promise().done(function(){
     $('.lounge-refresh').click(function(){
@@ -898,7 +894,13 @@ function set_chat_ui(){
 
   $('#inviteURL').click(function(){
     copyToClipboard(`https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`)
-    swal("copied!");
+    swal({
+      title: "Copied!",
+      text: "share to your firend!",
+      type: "success",
+      showConfirmButton: !1,
+      timer: 1e3
+    });
   })
 
   $('.icon-list').click(function(){
@@ -918,7 +920,7 @@ function set_chat_ui(){
     if(profile.isHost()){
       dropLounge(profile.roomID);
     }
-    window.location.reload();
+    goToHall();
   });
 
   $('#call').click(function(){
@@ -1051,7 +1053,6 @@ $(document).ready(function(){
   setMediaSources();
   set_login_default_fields();
   set_login_ui();
-  set_chat_ui();
 });
 
 function dropLounge(roomID, succ, err){

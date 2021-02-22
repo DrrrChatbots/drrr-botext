@@ -57,7 +57,8 @@
         "https://api.tenor.com/*",
         "http://api.giphy.com/*",
         "https://github.com/*",
-        "https://gitee.com/*"
+        "https://gitee.com/*",
+        "https://script.google.com/*"
     ],
     "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [

@@ -1066,6 +1066,18 @@ function dropLounge(roomID, succ, err){
   });
 }
 
+function keepRoom(roomID, succ, err){
+  if(!roomID) return;
+  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
+  let time =`${Math.floor(Date.now() / 1000)}`;
+  $.ajax({
+    url: `${loungeURL}?id=${sheet}&keep=${encodeURIComponent(roomID)}&time=${time}`,
+    success: succ || console.log,
+    error: err || console.log
+  });
+}
+
 function uploadLounge(data){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
   let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
@@ -1103,6 +1115,9 @@ function roomInfo(cmd){
     window.onbeforeunload = function(){
       if(profile.isHost()) dropLounge(profile.roomID);
     }
+    setInterval(()=>{
+      keepRoom(profile.roomID);
+    }, 15 * 60 * 1000);
   }
   return [
     `${profile.roomID}`,

@@ -37,6 +37,9 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <label for="join_mode">join</label>
                 <input type="radio" name="mode" id="join_mode" value="join">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="hall_mode">hall</label>
+                <input type="radio" name="mode" id="hall_mode" value="hall">
               </div>
 
               <div class="home-name">
@@ -44,13 +47,13 @@
                 <input type="text" placeholder="Your UserName" id="form-name" name="uname" size="10" maxlength="40" class="home-name-input" required autocomplete="on">
               </div>
 
+              <div class="home-name">
+                <label for="form-name">Usercode:</label>
+                <input type="text" placeholder="UserCode = RoomCode" name="uid" size="10" maxlength="256" class="home-name-input" autocomplete="on" required>
+              </div>
+
 
               <div id="host-setting" style="display:none;">
-                <div class="home-name">
-                  <label for="form-name">Usercode:</label>
-                  <input type="text" placeholder="UserCode = RoomCode" name="hid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
-                </div>
-
                 <div class="home-name">
                   <label for="form-name">Roomname:</label>
                   <input type="text" placeholder="RoomName to create" name="hname" size="10" maxlength="40" class="home-name-input" autocomplete="on">
@@ -58,12 +61,6 @@
               </div>
 
               <div id="join-setting" style="display:none;">
-
-                <div class="home-name">
-                  <label for="form-name">UserCode:</label>
-                  <input type="text" placeholder="Your UserCode" name="uid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
-                </div>
-
                 <div class="home-name">
                   <label for="form-name">RoomCode:</label>
                   <input type="text" placeholder="RoomCode to join" name="jid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
@@ -232,6 +229,8 @@
         </div>
       </div>
 
+      <div id="hall-ui" style="display:none">
+      </div>
 
       <div id="chat-ui" style="display:none">
         <!-- -->
@@ -656,6 +655,7 @@
     <script src="/js/peerjs.min.js"></script>
     <script src="/js/adapter-latest.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
+    <script src="./hall.js"></script>
     <script src="./room-chat.js"></script>
   </body>
 </html>

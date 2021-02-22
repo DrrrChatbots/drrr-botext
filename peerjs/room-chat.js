@@ -177,17 +177,41 @@ function handlePeer(peer){
 
   peer.on('error', function (err) {
     if(err.type === 'peer-unavailable'){
-      alert("ROOM not existed");
+      if(profile.where === 'login'){
+        swal({
+          title: "Not Existed",
+          text: "Room Not Existed",
+          type: "warning",
+          showConfirmButton: !1,
+          timer: 1e3
+        });
+        dropLounge(profile.host);
+        setTimeout(() => window.location.reload(), 2e3);
+      }
+      else if(profile.where === 'hall'){
+        swal({
+          title: "Not Existed",
+          text: "Room Not Existed",
+          type: "warning",
+          showConfirmButton: !1,
+          timer: 4e3
+        });
+        return dropLounge($(`button[value="${profile.host}"]`).parent().attr('id'),
+          updateRoomList, updateRoomList);
+      }
+      else return;
+      // think
     }
     else if(err.type === 'unavailable-id'){
       alert("The ROOM ID is taken, close duplicated tab or rename");
     }
     else{
       console.log('peer error:' + err.type);
+      console.log(err);
       alert('peer error:' + err.type);
+      //Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable
     }
-    $('#profile-ui').show();
-    $('#chat-ui').hide();
+    backToProfile();
   });
 }
 
@@ -294,8 +318,9 @@ function UserHost(id, name, avatar, room, host){
 
   THIS.where = 'login';
 
-  THIS.host = host || id;
+  THIS.host = host;
   THIS.room = room || '';
+  THIS.roomID = room ? `${room}_${Math.floor(Date.now() / 1000)}` : '';
 
   THIS.conns = {};
 
@@ -341,6 +366,7 @@ function UserHost(id, name, avatar, room, host){
             fn: 'room',
             arg: {
               room: THIS.room,
+              roomID: THIS.roomID,
               host: THIS.host,
               users: THIS.users
             }
@@ -376,6 +402,7 @@ function UserHost(id, name, avatar, room, host){
       case 'room':
         if(conn.peer === THIS.host){
           THIS.room = data.arg.room;
+          THIS.roomID = data.arg.roomID;
           THIS.host = data.arg.host;
           THIS.users = data.arg.users;
           console.log('room command:', data);
@@ -460,8 +487,10 @@ function UserHost(id, name, avatar, room, host){
       if(THIS.isHost()){
         renewUserList();
         goToChat();
+        uploadLounge(roomInfo('create'));
       }
-      else THIS.connectToHost();
+      else if(THIS.host) THIS.connectToHost();
+      else goToHall();
     });
 
     // text connection
@@ -504,6 +533,9 @@ function UserHost(id, name, avatar, room, host){
 }
 
 function backToProfile(){
+  $('body').attr('class', ``);
+  $('body').attr('style', ``);
+  $('#hall-ui').hide();
   // TODO delete profile
   // consider more
   profile.peer.destroy();
@@ -515,27 +547,87 @@ function backToProfile(){
 }
 
 function goToChat(){
+  $('.sweet-overlay').remove();
+  $('.sweet-alert').remove()
+  $('body').attr('class', ``);
+  $('body').attr('style', ``);
+  $('#hall-ui').hide();
   profile.where = 'room';
-  $('.room-title-name').text(profile.room);
   $('#profile-ui').hide();
   $('#musicBox').show();
   $('#chat-ui').show();
-  $('.sharer').attr('data-url', `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`)
+  $('#settings-info-room-description').html(`<p>${profile.name}<p></p>${profile.id}</p>`);
+  $('#settings-info-room-uptime').html(`<p>Avatar: ${profile.avatar}</p>`);
+
+  $('.sharer').attr('data-url', `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.host}`)
+  $('.room-title-name').text(profile.room);
   $('.sharer').attr('data-image', `https://drrr.com/banner/?t=${profile.room}`)
   $('.sharer').attr('data-subject', `${profile.room}@DOLLARS Mirror（Durarara!! Mirror）`)
   $('#settings-info-room-name').html(`<p>${profile.room}</p>`);
-  $('#settings-info-room-description').html(`<p>${profile.name}<p></p>${profile.id}</p>`);
-  $('#settings-info-room-uptime').html(`<p>Avatar: ${profile.avatar}</p>`);
   $('title').text(profile.room);
+}
+
+function goToHall(){
+  profile.where = 'hall';
+  $('body').attr('class', `scheme-${profile.avatar}`);
+  $('body').attr('style', `overflow-x: visible;`);
+  $('#profile-ui').hide();
+  $('title').text('部屋一覽 - DOLLARS Mirror');
+  $('#hall-ui').html(hallTmplt(profile)).show().promise().done(function(){
+    $('.lounge-refresh').click(function(){
+      updateRoomList();
+    })
+    updateRoomList();
+    setInterval(updateRoomList, 6 * 60 * 1000);
+  });
+}
+
+function updateRoomList(){
+  $('.rooms-wrap').append($('<center><p>Loading...</p></center>'));
+  getLounge(function(hall){
+    $('.rooms-wrap').empty();
+    hall.data.forEach(r => {
+      $('.rooms-wrap').append(roomTmplt(r));
+      $('.lounge-room-name').click(function(){
+        swal({
+          title: "Wait...",
+          text: "Connecting to the room...",
+          //type: "success",
+          type: "warning",
+          showConfirmButton: !1,
+          timer: 10e5
+        })
+        profile.host = $(this).attr('value');
+        profile.connectToHost();
+      });
+    });
+  }, function(){
+    alert("Cannot get Lounge");
+    window.location.reload();
+  });
 }
 
 function initialize(){
   var get = name => $(`input[name="${name}"]`).val().trim()
   var avatar = $('.user-icon.active').attr('data-avatar');
-  if(doHost)
-    profile = new UserHost(get("hid"), get("uname"), avatar, get("hname"));
-  else if(doJoin)
+
+  let mode = $('input[name="mode"]:checked').val();
+  if(mode === 'host')
+    profile = new UserHost(get("uid"), get("uname"), avatar, get("hname"), get("uid"));
+  else if(mode === 'join'){
+    swal({
+      title: "Wait...",
+      text: "Connecting to the room...",
+      //type: "success",
+      type: "warning",
+      showConfirmButton: !1,
+      timer: 10e5
+    })
     profile = new UserHost(get("uid"), get("uname"), avatar, undefined, get("jid"))
+  }
+  else if(mode === 'hall')
+    profile = new UserHost(get("uid"), get("uname"), avatar)
+  else return alert(`invalid mode: ${mode}`);
   profile.run();
 };
 
@@ -725,28 +817,26 @@ function set_login_default_fields(){
   $(`input[name="uname"]`).val(name)
 
   function switch_mode(mode){
+    hostMode = false;
+    joinMode = false;
     if(mode === 'host') hostMode = true;
-    else if(mode === 'join') hostMode = false;
+    else if(mode === 'join') joinMode = true;
+    else if(mode === 'hall') ;
     else return alert("invalid mode");
-    $(`input[name="hid"]`).attr('required', hostMode);
+
     $(`input[name="hname"]`).attr('required', hostMode);
-    $(`input[name="uid"]`).attr('required', !hostMode)
-    $(`input[name="jid"]`).attr('required', !hostMode);
+    $(`input[name="jid"]`).attr('required', joinMode);
     $('#host-setting')[hostMode ? 'show' : 'hide']();
-    $('#join-setting')[!hostMode ? 'show' : 'hide']();
+    $('#join-setting')[joinMode ? 'show' : 'hide']();
     $('#profile-setting-form').show();
     $('#complete').val(mode);
   }
 
   $('#host_mode').click(() => switch_mode('host'));
   $('#join_mode').click(() => switch_mode('join'));
+  $('#hall_mode').click(() => switch_mode('hall'));
 
-  $(`input[name="hid"]`).val(roomID);
   $(`input[name="uid"]`).val(uid);
-
-  if(doHost || doJoin){
-    $(`input[name="jid"]`).val(roomID);
-  }
 
   if(doHost){
     $(`input[name="hname"]`).val(room);
@@ -754,14 +844,12 @@ function set_login_default_fields(){
     $('#host_mode').click();
   }
   else if(doJoin){
-    $('#join-setting').show();
     $(`input[name="jid"]`).val(doJoin);
     $('#join_mode').click();
   }
   else{
-    $('#join-setting').show();
     $(`input[name="uid"]`).val(uid);
-    $('#join_mode').click();
+    $('#hall_mode').click();
   }
 
   $('#profile-setting-form').submit(()=>{
@@ -827,6 +915,9 @@ function set_chat_ui(){
   })
 
   $('.logout').click(function(){
+    if(profile.isHost()){
+      dropLounge(profile.roomID);
+    }
     window.location.reload();
   });
 
@@ -963,4 +1054,76 @@ $(document).ready(function(){
   set_chat_ui();
 });
 
-// https://script.google.com/macros/s/AKfycbxySLiYn5fCBS8RPCe53fLNfeTUMPvNurKybe5UZMKj7bYDYzDOv0Fv2A/exec?id=19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0
+function dropLounge(roomID, succ, err){
+  if(!roomID) return;
+  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
+  $.ajax({
+    url: `${loungeURL}?id=${sheet}&drop=${encodeURIComponent(roomID)}`,
+    success: succ || console.log,
+    error: err || console.log
+  });
+}
+
+function uploadLounge(data){
+  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
+  $.ajax({
+    type: "POST",
+    url: loungeURL,
+    dataType: 'json',
+    data: {
+      id: sheet,
+      data: JSON.stringify(data),
+    },
+    success: function(data){
+      console.log('logged:', data);
+    },
+    error: function(data){
+      console.log('failed:', data);
+    }
+  });
+}
+
+function getLounge(succ, error){
+  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  let sheet = '19X4r9hY4WHFbx_fsARHmxPUyVIkI6ccV_u8Qhkic9q0'
+  $.ajax({
+    type: "GET",
+    url: `${loungeURL}?id=${sheet}`,
+    success: succ,
+    error: error
+  });
+}
+
+function roomInfo(cmd){
+  let time =`${Math.floor(Date.now() / 1000)}`;
+  if(cmd === 'create'){
+    window.onbeforeunload = function(){
+      if(profile.isHost()) dropLounge(profile.roomID);
+    }
+  }
+  return [
+    `${profile.roomID}`,
+    `${profile.room}`,
+    `${profile.id}`, `${profile.name}`, `${profile.avatar}`,
+    `${profile.id}`, `${profile.name}`, `${profile.avatar}`,
+    `${cmd}`, `${time}`];
+}
+
+function fakeRoomInfo(){
+  let peerID = randomPeerID(10);
+  let peerName = peerID.substr(0, 5);
+  let time =`${Math.floor(Date.now() / 1000)}`;
+  return [
+    `${peerID}_${time}`,
+    `${peerName}'s ROOM'`,
+    `${peerID}`, `${peerName}`, `bakyura-2x`,
+    `${peerID}`, `${peerName}`, `bakyura-2x`,
+    `create`, `${time}`];
+}
+
+
+function test(){
+  uploadLounge(fakeRoomInfo());
+}

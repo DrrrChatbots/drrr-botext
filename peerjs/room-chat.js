@@ -563,6 +563,8 @@ function goToChat(callback){
 }
 
 function goToHall(){
+  $('.sweet-overlay').remove();
+  $('.sweet-alert').remove()
   profile.where = 'hall';
   $('body').attr('class', `scheme-${profile.avatar}`);
   $('body').attr('style', `overflow-x: visible;`);
@@ -579,7 +581,7 @@ function goToHall(){
 }
 
 function updateRoomList(){
-  $('.rooms-wrap').append($('<center><p>Loading...</p></center>'));
+  $('.rooms-wrap').html($('<center><p>Loading...</p></center>'));
   getLounge(function(hall){
     $('.rooms-wrap').empty();
     hall.data.forEach(r => {
@@ -917,10 +919,15 @@ function set_chat_ui(){
   })
 
   $('.logout').click(function(){
+    swal({
+      title: "Leaving ...",
+      type: "warning",
+      showConfirmButton: !1
+    })
     if(profile.isHost()){
-      dropLounge(profile.roomID);
+      dropLounge(profile.roomID, goToHall, goToHall);
     }
-    goToHall();
+    else goToHall();
   });
 
   $('#call').click(function(){
@@ -1058,6 +1065,7 @@ $(document).ready(function(){
 function dropLounge(roomID, succ, err){
   if(!roomID) return;
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  // sheet ID
   $.ajax({
     url: `${loungeURL}?drop=${encodeURIComponent(roomID)}`,
     success: succ || console.log,
@@ -1069,6 +1077,7 @@ function keepRoom(roomID, succ, err){
   if(!roomID) return;
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
   let time =`${Math.floor(Date.now() / 1000)}`;
+  // sheet ID
   $.ajax({
     url: `${loungeURL}?keep=${encodeURIComponent(roomID)}&time=${time}`,
     success: succ || console.log,
@@ -1078,12 +1087,12 @@ function keepRoom(roomID, succ, err){
 
 function uploadLounge(data){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  // sheet ID
   $.ajax({
     type: "POST",
     url: loungeURL,
     dataType: 'json',
     data: {
-      id: sheet,
       data: JSON.stringify(data),
     },
     success: function(data){
@@ -1097,6 +1106,7 @@ function uploadLounge(data){
 
 function getLounge(succ, error){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  // sheet ID
   $.ajax({
     type: "GET",
     url: `${loungeURL}`,

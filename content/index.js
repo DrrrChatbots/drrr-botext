@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     ajaxProfile(function(p, err){
     if(p) location.reload()
     else{
-      alert(`Bio Expired ${JSON.stringify(err)}`);
+      //alert(`Bio Expired ${JSON.stringify(err)}`);
       chrome.storage.sync.remove(['profile', 'cookie']);
       chrome.runtime.sendMessage({expired_bio: true});
     }

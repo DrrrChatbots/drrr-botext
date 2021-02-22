@@ -28,37 +28,45 @@
             <div class="flip login-logo back"></div>
           </div>
 
-          <form id="profile-setting-form">
+          <form id="profile-setting-form"  style="display:none;">
             <div class="login-form field" id="t_form">
+
+              <div id="mode_form" style="padding-bottom: 14px;">
+                <label for="host_mode">host</label>
+                <input type="radio" name="mode" id="host_mode" value="host">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="join_mode">join</label>
+                <input type="radio" name="mode" id="join_mode" value="join">
+              </div>
 
               <div class="home-name">
                 <label for="form-name">Username:</label>
-                <input type="text" id="form-name" name="uname" size="10" maxlength="40" class="home-name-input" required autocomplete="on">
+                <input type="text" placeholder="Your UserName" id="form-name" name="uname" size="10" maxlength="40" class="home-name-input" required autocomplete="on">
               </div>
 
 
               <div id="host-setting" style="display:none;">
                 <div class="home-name">
-                  <label for="form-name">Roomname:</label>
-                  <input type="text" placeholder="Roomname to create" name="hname" size="10" maxlength="40" class="home-name-input" autocomplete="on">
+                  <label for="form-name">Usercode:</label>
+                  <input type="text" placeholder="UserCode = RoomCode" name="hid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
                 </div>
 
                 <div class="home-name">
-                  <label for="form-name">RoomToken:</label>
-                  <input type="text" placeholder="RoomID to create" name="hid" size="10" maxlength="40" class="home-name-input" autocomplete="on">
+                  <label for="form-name">Roomname:</label>
+                  <input type="text" placeholder="RoomName to create" name="hname" size="10" maxlength="40" class="home-name-input" autocomplete="on">
                 </div>
               </div>
 
               <div id="join-setting" style="display:none;">
 
                 <div class="home-name">
-                  <label for="form-name">UserToken:</label>
-                  <input type="text" name="uid" size="10" maxlength="40" class="home-name-input" autocomplete="on">
+                  <label for="form-name">UserCode:</label>
+                  <input type="text" placeholder="Your UserCode" name="uid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
                 </div>
 
                 <div class="home-name">
-                  <label for="form-name">RoomToken:</label>
-                  <input type="text" name="jid" size="10" maxlength="40" class="home-name-input" autocomplete="on">
+                  <label for="form-name">RoomCode:</label>
+                  <input type="text" placeholder="RoomCode to join" name="jid" size="10" maxlength="256" class="home-name-input" autocomplete="on">
                 </div>
               </div>
 
@@ -460,6 +468,10 @@
                       <div class="checkbox" id="settings-info-room-name"></div>
                       <div class="checkbox" id="settings-info-room-description"></div>
                       <div class="checkbox opacity-05" id="settings-info-room-uptime"></div>
+                      <div class="checkbox" id="settings-mute-div">
+                        <label>
+                          <input type="checkbox" id="set-mute">  Mute                </label>
+                      </div>
                     </div>
 
                     <!-- User settings -->

@@ -685,6 +685,14 @@ function playStream(id, stream) {
   $(`#${id}-video`).show();
 }
 
+function adjustTalk(){
+  setTimeout(() => {
+    if(document.getElementById("talks").style)
+      document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`
+    else adjustTalk();
+  }, 500);
+}
+
 // stopStream by
 // - stream terminated
 // - 'call' command
@@ -694,7 +702,7 @@ function stopStream(id){
   if($(`#${id}-video`).length)
     $(`#${id}-video`).remove();
   delete profile.streams[id]
-  setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+  adjustTalk();
 }
 
 function makeid(length) {
@@ -752,7 +760,7 @@ function renewUserList(){
   let hostinfo = `<li id="${theHost.id}" title="${theHost.name} (host)" class="${theHost.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${theHost.avatar} is-host" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${theHost.avatar}"></span><span class="select-text name">${theHost.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
   let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.host).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
   $('#user_list').html(`${hostinfo}${usersinfo}`);
-  setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+  adjustTalk();
 }
 
 function replaceStream(peerConnection, mediaStream) {
@@ -883,7 +891,7 @@ function set_chat_ui(){
 
   $('.icon-users').click(function(){
     $('#user_list').slideToggle();
-    setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+    adjustTalk();
   })
 
   $('#invite').click(function(){
@@ -915,7 +923,7 @@ function set_chat_ui(){
       else
         $('#setting_pannel').css('top',$('.message_box').height() + 'px');
     }, 500);
-    setTimeout(() => document.getElementById("talks").style.transform = `matrix(1, 0, 0, 1, 0, ${$('.message_box').height()})`, 500);
+    adjustTalk();
   })
 
   $('.logout').click(function(){

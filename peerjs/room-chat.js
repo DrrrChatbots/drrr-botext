@@ -268,7 +268,7 @@ function newHost(id){
   else{
     // auto selection first
     profile.host = Object.values(profile.users).reduce(function(prev, curr) {
-        return prev.timestamp < curr.timestamp ? prev : curr;
+      return prev.timestamp < curr.timestamp ? prev : curr;
     }).id;
     addHost(profile.host);
   }
@@ -297,15 +297,16 @@ function leftUser(id){
 }
 
 function sendCmd(cmd){
-  Object.values(profile.conns).forEach(c => {
-    if(c.peer != profile.id) c.send(cmd);
+  Object.values(profile.users).forEach(u => {
+    let c = profile.conns[u.id];
+    if(c && c.peer != profile.id) c.send(cmd);
   });
 }
 
 function sendHost(cmd){
-  Object.values(profile.conns).forEach(c => {
-    if(c.peer === profile.host) c.send(cmd);
-  });
+  if(profile.conns[profile.host]){
+    profile.conns[profile.host].send(cmd);
+  }
 }
 
 function handleCallCmd(arg){
@@ -386,6 +387,18 @@ function UserHost(id, name, avatar, room, host){
 
   THIS.isHost = function(){
     return THIS.host === THIS.id;
+  }
+
+  THIS.handleUser = function(conn){
+    conn.on('open', function() {
+      // ADD USER TO UI
+    });
+    conn.on('data', function(data) {
+      THIS.handleCommand(data, conn);
+    });
+    conn.on('close', function () {
+      leftUser(conn.peer);
+    });
   }
 
   THIS.handleCommand = function(data, conn){
@@ -552,7 +565,19 @@ function UserHost(id, name, avatar, room, host){
 
     // text connection
     THIS.peer.on('connection', function(conn) {
-      conn.on('open', function() { });
+      conn.on('open', function() {
+        THIS.conns[conn.peer] = conn;
+        if(conn.peer === THIS.id){
+          setTimeout(() => conn.close(), 3000);
+        }
+        // setTimeout check if remove
+        setTimeout(()=>{
+          if(!Object.keys(THIS.users).includes(conn.peer)){
+            conn.close();
+            delete THIS.conns[conn.peer];
+          }
+        }, 10 * 1000);
+      });
       conn.on('data', function(data) {
         THIS.handleCommand(data, conn);
       });
@@ -615,6 +640,7 @@ function goToChat(callback){
   $('#chat-ui').html(roomUITmplt(profile)).show().promise().done(function(){
     set_chat_ui();
     $('title').text(profile.room);
+    setMediaSources();
     renewUserList();
   });
 }
@@ -643,7 +669,9 @@ function updateRoomList(){
   getLounge(function(hall){
     $('.rooms-wrap').empty();
     hall.data.forEach(r => {
-      $('.rooms-wrap').append(roomTmplt(r));
+      if(r.hostID !== profile.id)
+        $('.rooms-wrap').append(roomTmplt(r));
+
       $('.lounge-room-name').click(function(){
         swal({
           title: "Wait...",
@@ -815,22 +843,22 @@ function renewUserList(){
   let theHost = profile.users[profile.host]
 
   let hostMenu = u =>
-  `<ul class="dropdown-menu" role="menu">
+    `<ul class="dropdown-menu" role="menu">
     <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
     <!-- <li class="divider" role="presentation"></li> -->
     <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
   </ul>`
   let userMenu = u =>
-  `<ul class="dropdown-menu" role="menu">
+    `<ul class="dropdown-menu" role="menu">
     <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
     <!-- <li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li> -->
     ${ profile.id === theHost.id ?
-      `<li class="divider" role="presentation"></li>
+        `<li class="divider" role="presentation"></li>
        <li><a tabindex="-1" class="dropdown-item-handover">更改管理人</a></li>
     <!-- <li><a tabindex="-1" class="dropdown-item-kick">踢出</a></li> -->
     <!-- <li><a tabindex="-1" class="dropdown-item-ban">封鎖</a> -->
     <!-- </li><li><a tabindex="-1" class="dropdown-item-report-user">報告並封鎖</a></li> -->`
-      : ''}
+        : ''}
     <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
   </ul>`
 
@@ -1167,7 +1195,6 @@ function set_chat_ui(){
 }
 
 $(document).ready(function(){
-  setMediaSources();
   set_login_default_fields();
   set_login_ui();
 });

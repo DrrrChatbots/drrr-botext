@@ -1031,7 +1031,7 @@ function set_chat_ui(){
     copyToClipboard(`https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`)
     swal({
       title: "Copied!",
-      text: "share to your firend!",
+      text: "share to your friend!",
       type: "success",
       showConfirmButton: !1,
       timer: 1e3

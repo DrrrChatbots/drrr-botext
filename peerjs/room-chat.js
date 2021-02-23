@@ -208,7 +208,7 @@ function handlePeer(peer){
     else{
       console.log('peer error:' + err.type);
       console.log(err);
-      alert('peer error:' + err.type);
+      //alert('peer error:' + err.type);
       //Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable
     }
     backToProfile();
@@ -256,21 +256,24 @@ function addHost(id){
   $('#talks').prepend(`<div class="talk join system" id="">
     ►► @<span class="dropdown user"><span data-toggle="dropdown" class="name">${user.name}</span><ul class="dropdown-menu" role="menu"></ul></span> 成為新房主</div>`);
   sound.play("userin");
+  renewUserList();
 }
 
 function newHost(id){
   if(id){
     // choose id
-    profile.host = Object.keys(profile.users);
+    profile.host = id;
     addHost(profile.host);
   }
   else{
     // auto selection first
-    profile.host = Object.values(profile.users)reduce(function(prev, curr) {
+    profile.host = Object.values(profile.users).reduce(function(prev, curr) {
         return prev.timestamp < curr.timestamp ? prev : curr;
-    });
+    }).id;
     addHost(profile.host);
   }
+  if(profile.host === profile.id)
+    uploadLounge(roomInfo('keep'));
 }
 
 function leftUser(id){
@@ -349,6 +352,9 @@ function UserHost(id, name, avatar, room, host){
   THIS.host = host;
   THIS.room = room || '';
   THIS.roomID = room ? `${room}_${Math.floor(Date.now() / 1000)}` : '';
+  THIS.rootID = room ? `${id}` : '';
+  THIS.rootName = room ? `${name}` : '';
+  THIS.rootAvatar = room ? `${avatar}` : '';
 
   THIS.conns = {};
 
@@ -396,6 +402,9 @@ function UserHost(id, name, avatar, room, host){
             arg: {
               room: THIS.room,
               roomID: THIS.roomID,
+              rootID: THIS.rootID,
+              rootName: THIS.rootName,
+              rootAvatar: THIS.rootAvatar,
               host: THIS.host,
               users: THIS.users
             }
@@ -443,15 +452,33 @@ function UserHost(id, name, avatar, room, host){
       case 'message':
         addMessage(conn.peer, data.arg)
         break;
-      case 'newhost':
+      case 'new-host':
         // TODO: complete UI control
         if(conn.peer === THIS.host){
-          THIS.host = data.arg;
+          THIS.host = data.arg.host;
+          newHost(THIS.host);
         }
         break;
       default:
         break;
     }
+  }
+
+  THIS.leaveRoom = function(){
+    Object.values(THIS.calls).forEach(c => c.close());
+    Object.values(THIS.conns).forEach(c => c.close());
+    THIS.host = null;
+    THIS.room = '';
+    THIS.roomID = ''
+    THIS.rootID = ''
+    THIS.rootName = ''
+    THIS.rootAvatar = ''
+    THIS.conns = {};
+    THIS.call = false;
+    // call object
+    THIS.calls = {}
+    // stream of each call object
+    THIS.streams = {}
   }
 
   THIS.connectToHost = function(){
@@ -474,9 +501,9 @@ function UserHost(id, name, avatar, room, host){
       if(profile.where === 'login')
         return;
       profile.where = 'login';
-      swal("Host Left!");
+      //swal("Host Left!");
       leftUser(THIS.conns[THIS.host].peer);
-      setTimeout(backToProfile, 3000);
+      //setTimeout(backToProfile, 3000);
     });
 
     THIS.conns[THIS.host].peerConnection.onconnectionstatechange = function(event){
@@ -488,9 +515,9 @@ function UserHost(id, name, avatar, room, host){
           if(profile.where === 'login')
             return;
           profile.where = 'login';
-          swal("Host Left!");
+          //swal("Host Left!");
           leftUser(THIS.conns[THIS.host].peer);
-          setTimeout(backToProfile, 3000);
+          //setTimeout(backToProfile, 3000);
           break;
         default:
           break;
@@ -502,8 +529,8 @@ function UserHost(id, name, avatar, room, host){
         alert("ROOM not existed");
       }
       else{
-        console.log('peer error:' + err.type);
-        alert('peer error:' + err.type);
+        console.log('peer error:' + err.type, err);
+        //alert('peer error:' + err.type);
       }
     });
   }
@@ -596,6 +623,7 @@ function goToHall(){
   $('.sweet-overlay').remove();
   $('.sweet-alert').remove()
   profile.where = 'hall';
+  $('#musicBox').hide();
   $('body').attr('class', `scheme-${profile.avatar}`);
   $('body').attr('style', `overflow-x: visible;`);
   $('#profile-ui').hide();
@@ -784,12 +812,46 @@ function setMediaSources(){
 }
 
 function renewUserList(){
-  //let clickMenu = `<ul class="dropdown-menu" role="menu"></ul>`;
-  let clickMenu = '';
   let theHost = profile.users[profile.host]
-  let hostinfo = `<li id="${theHost.id}" title="${theHost.name} (host)" class="${theHost.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${theHost.avatar} is-host" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${theHost.avatar}"></span><span class="select-text name">${theHost.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
-  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.host).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${clickMenu}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
-  $('#user_list').html(`${hostinfo}${usersinfo}`);
+
+  let hostMenu = u =>
+  `<ul class="dropdown-menu" role="menu">
+    <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
+    <!-- <li class="divider" role="presentation"></li> -->
+    <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
+  </ul>`
+  let userMenu = u =>
+  `<ul class="dropdown-menu" role="menu">
+    <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
+    <!-- <li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li> -->
+    ${ profile.id === theHost.id ?
+      `<li class="divider" role="presentation"></li>
+       <li><a tabindex="-1" class="dropdown-item-handover">更改管理人</a></li>
+    <!-- <li><a tabindex="-1" class="dropdown-item-kick">踢出</a></li> -->
+    <!-- <li><a tabindex="-1" class="dropdown-item-ban">封鎖</a> -->
+    <!-- </li><li><a tabindex="-1" class="dropdown-item-report-user">報告並封鎖</a></li> -->`
+      : ''}
+    <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
+  </ul>`
+
+  let hostinfo = `<li id="${theHost.id}" title="${theHost.name} (host)" class="${theHost.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${theHost.avatar} is-host" device="desktop">${hostMenu(theHost)}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${theHost.avatar}"></span><span class="select-text name">${theHost.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`
+  let usersinfo = Object.values(profile.users).filter(u => u.id !== profile.host).map(u => `<li id="${u.id}" title="${u.name}" class="${u.call ? 'is-tripcode' : ''} dropdown user clearfix symbol-wrap-${u.avatar}" device="desktop">${userMenu(u)}<div class="name-wrap" data-toggle="dropdown"><span class="symbol symbol-${u.avatar}"></span><span class="select-text name">${u.name}</span></div><span class="icon-display icon-device"></span> <span class="icon icon-users"></span></li>`).join('')
+  $('#user_list').html(`${hostinfo}${usersinfo}`).promise().done(function(){
+    $('.dropdown-item-reply').click(function(){
+      mbox = $('textarea[name="message"]')
+      mbox.val(`${mbox.val()} ${$(this).text()} `);
+    });
+
+    $('.dropdown-item-handover').click(function(){
+      profile.host = $('.dropdown-item-handover').parent().parent().parent().attr('id');
+      sendCmd({
+        fn: 'new-host',
+        arg: {'host': profile.host}
+      });
+      newHost(profile.host);
+    });
+  });
+
   adjustTalk();
 }
 
@@ -835,7 +897,7 @@ function set_login_ui(){
 
 function set_login_default_fields(){
   uid = findGetParameter('uid');
-  name = findGetParameter('name') || '';
+  name = decodeURIComponent(findGetParameter('name') || '');
   doHost = findGetParameter('host');
   doJoin = findGetParameter('join');
   room = findGetParameter('room') || 'This is a Lambda Room';
@@ -898,6 +960,11 @@ function set_chat_ui(){
   $('#message').submit(function(){
     return false;
   });
+
+  $(`#talks`).on('click', 'dt.dropdown.user', function(){
+    mbox = $('textarea[name="message"]')
+    mbox.val(`${mbox.val()} @${$(this).find('.select-text').text()} `);
+  })
 
   let post = $('input[name="post"]').click(function(){
     message = $('textarea[name="message"]').val();
@@ -962,12 +1029,15 @@ function set_chat_ui(){
       type: "warning",
       showConfirmButton: !1
     })
-    if(profile.isHost()){
-      Object.values(profile.calls).forEach(c => c.close());
-      Object.values(profile.conns).forEach(c => c.close());
+    if(profile.isHost() &&
+      Object.keys(profile.users).length === 1){
       dropLounge(profile.roomID, goToHall, goToHall);
+      profile.leaveRoom();
     }
-    else goToHall();
+    else{
+      profile.leaveRoom();
+      goToHall();
+    }
   });
 
   $('#call').click(function(){
@@ -1113,18 +1183,6 @@ function dropLounge(roomID, succ, err){
   });
 }
 
-function keepRoom(roomID, succ, err){
-  if(!roomID) return;
-  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  let time =`${Math.floor(Date.now() / 1000)}`;
-  // sheet ID
-  $.ajax({
-    url: `${loungeURL}?keep=${encodeURIComponent(roomID)}&time=${time}`,
-    success: succ || console.log,
-    error: err || console.log
-  });
-}
-
 function uploadLounge(data){
   let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
   // sheet ID
@@ -1159,16 +1217,19 @@ function roomInfo(cmd){
   let time =`${Math.floor(Date.now() / 1000)}`;
   if(cmd === 'create'){
     window.onbeforeunload = function(){
-      if(profile.isHost()) dropLounge(profile.roomID);
+      if(profile.isHost() &&
+        Object.keys(profile.users).length === 1){
+        dropLounge(profile.roomID);
+      }
     }
     setInterval(()=>{
-      keepRoom(profile.roomID);
+      uploadLounge(roomInfo('keep'));
     }, 15 * 60 * 1000);
   }
   return [
     `${profile.roomID}`,
     `${profile.room}`,
-    `${profile.id}`, `${profile.name}`, `${profile.avatar}`,
+    `${profile.rootID}`, `${profile.rootName}`, `${profile.rootAvatar}`,
     `${profile.id}`, `${profile.name}`, `${profile.avatar}`,
     `${cmd}`, `${time}`];
 }

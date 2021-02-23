@@ -127,8 +127,8 @@ let hallTmplt = profile =>
                 <div class="create-room pull-left" id="create_room">
                    <form action="?" method="get">
                       <input type="hidden" name="name" value="${encodeURIComponent(profile.name)}">
-                      <input type="hidden" name="uid" value="${encodeURIComponent(profile.id.replace('DRRR', ''))}">
-                      <input type="hidden" name="host" value="${encodeURIComponent(profile.id.replace('DRRR', ''))}">
+                      <input type="hidden" name="uid" value="${encodeURIComponent(profile.id)}">
+                      <input type="hidden" name="host" value="${encodeURIComponent(profile.id)}">
                       <input type="submit" class="btn btn-default" value="創立部屋">
                    </form>
                 </div>

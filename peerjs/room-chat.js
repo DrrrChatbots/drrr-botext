@@ -251,17 +251,45 @@ function addJoin(id){
   sound.play("userin");
 }
 
+function addHost(id){
+  let user = profile.users[id];
+  $('#talks').prepend(`<div class="talk join system" id="">
+    ►► @<span class="dropdown user"><span data-toggle="dropdown" class="name">${user.name}</span><ul class="dropdown-menu" role="menu"></ul></span> 成為新房主</div>`);
+  sound.play("userin");
+}
+
+function newHost(id){
+  if(id){
+    // choose id
+    profile.host = Object.keys(profile.users);
+    addHost(profile.host);
+  }
+  else{
+    // auto selection first
+    profile.host = Object.values(profile.users)reduce(function(prev, curr) {
+        return prev.timestamp < curr.timestamp ? prev : curr;
+    });
+    addHost(profile.host);
+  }
+}
+
 function leftUser(id){
   if(!profile.users[id]
     || !profile.users[id])
     return;
   addLeft(id);
+
   if(profile.calls[id]){
     stopStream(id)
     delete profile.calls[id];
   }
   delete profile.users[id];
   delete profile.conns[id];
+
+  if(id === profile.host){
+    newHost();
+  }
+
   renewUserList();
 }
 
@@ -360,6 +388,7 @@ function UserHost(id, name, avatar, room, host){
       case 'join':
         if(THIS.isHost()){
           data.arg.id = conn.peer;
+          data.arg.timestamp = Math.floor(Date.now() / 1000);
           THIS.users[conn.peer] = data.arg;
           THIS.conns[conn.peer] = conn;
           conn.send({
@@ -401,10 +430,9 @@ function UserHost(id, name, avatar, room, host){
         // user handle only
       case 'room':
         if(conn.peer === THIS.host){
-          THIS.room = data.arg.room;
-          THIS.roomID = data.arg.roomID;
-          THIS.host = data.arg.host;
-          THIS.users = data.arg.users;
+          Object.keys(data.arg).forEach(k => {
+            THIS[k] = data.arg[k];
+          });
           console.log('room command:', data);
           addJoin(THIS.id);
           renewUserList();
@@ -447,6 +475,7 @@ function UserHost(id, name, avatar, room, host){
         return;
       profile.where = 'login';
       swal("Host Left!");
+      leftUser(THIS.conns[THIS.host].peer);
       setTimeout(backToProfile, 3000);
     });
 
@@ -460,6 +489,7 @@ function UserHost(id, name, avatar, room, host){
             return;
           profile.where = 'login';
           swal("Host Left!");
+          leftUser(THIS.conns[THIS.host].peer);
           setTimeout(backToProfile, 3000);
           break;
         default:
@@ -812,9 +842,9 @@ function set_login_default_fields(){
 
   if(doHost && doJoin) doHost = null;
 
-  uid = uid ? `DRRR${uid}` : randomPeerID();
-  if(doHost) doHost = `DRROOM${doHost}`
-  else if(doJoin) doJoin = `DRROOM${doJoin}`
+  uid = uid ? uid : randomPeerID();
+  if(doHost) doHost = doHost;
+  else if(doJoin) doJoin = doJoin;
 
   // set default name
   if(!name) name = uid.substr(4, 5);
@@ -897,13 +927,13 @@ function set_chat_ui(){
   $('#invite').click(function(){
     ctrlRoom({
       'message': 'Click to join',
-      'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`,
+      'url': `https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`,
     })
     swal("shared!");
   })
 
   $('#inviteURL').click(function(){
-    copyToClipboard(`https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id.replace('DRROOM', '')}`)
+    copyToClipboard(`https://drrrchatbots.gitee.io${location.pathname}?join=${profile.id}`)
     swal({
       title: "Copied!",
       text: "share to your firend!",
@@ -933,6 +963,8 @@ function set_chat_ui(){
       showConfirmButton: !1
     })
     if(profile.isHost()){
+      Object.values(profile.calls).forEach(c => c.close());
+      Object.values(profile.conns).forEach(c => c.close());
       dropLounge(profile.roomID, goToHall, goToHall);
     }
     else goToHall();

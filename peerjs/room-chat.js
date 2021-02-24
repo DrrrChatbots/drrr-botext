@@ -272,8 +272,8 @@ function newHost(id){
     }).id;
     addHost(profile.host);
   }
-  if(profile.host === profile.id)
-    uploadLounge(roomInfo('keep'));
+  if(profile.isHost())
+    profile.keep();
 }
 
 function leftUser(id){
@@ -356,6 +356,8 @@ function UserHost(id, name, avatar, room, host){
   THIS.rootID = room ? `${id}` : '';
   THIS.rootName = room ? `${name}` : '';
   THIS.rootAvatar = room ? `${avatar}` : '';
+
+  THIS.loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
 
   THIS.conns = {};
 
@@ -492,6 +494,23 @@ function UserHost(id, name, avatar, room, host){
     THIS.calls = {}
     // stream of each call object
     THIS.streams = {}
+    THIS.unKeep();
+  }
+
+  THIS.keep = function(){
+    THIS.keepAction = setInterval(()=>{
+      if(THIS.isHost())
+        uploadLounge(roomInfo('keep'));
+      else
+        THIS.unKeep();
+    }, 15 * 60 * 1000);
+  }
+
+  THIS.unKeep = function(){
+    if(THIS.keepAction){
+      clearInterval(THIS.keepAction);
+      THIS.keepAction = null;
+    }
   }
 
   THIS.connectToHost = function(){
@@ -757,18 +776,17 @@ function playStream(id, stream) {
     setTimeout(() => $(`#${id}`).click(), 1000);
   })
 
-  $('#user_list').on("click", `#${id}`, function(event){
+  let select = function(event){
     if($(`#${id}`).hasClass('is-tripcode')){
       $('.user-audio').hide();
       $('.user-video').hide();
       $(`#${id}-audio`).show();
       $(`#${id}-video`).show();
     }
-  });
-  $('.user-audio').hide();
-  $('.user-video').hide();
-  $(`#${id}-audio`).show();
-  $(`#${id}-video`).show();
+    else swal("not on streaming");
+  }
+  $('#user_list').on("click", `#${id}-stream`, select);
+  select();
 }
 
 function adjustTalk(){
@@ -854,11 +872,13 @@ function renewUserList(){
     <!-- <li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li> -->
     ${ profile.id === theHost.id ?
         `<li class="divider" role="presentation"></li>
-       <li><a tabindex="-1" class="dropdown-item-handover">更改管理人</a></li>
+        <li><a tabindex="-1" class="dropdown-item-handover">更改管理人</a></li>
     <!-- <li><a tabindex="-1" class="dropdown-item-kick">踢出</a></li> -->
     <!-- <li><a tabindex="-1" class="dropdown-item-ban">封鎖</a> -->
     <!-- </li><li><a tabindex="-1" class="dropdown-item-report-user">報告並封鎖</a></li> -->`
         : ''}
+    <li class="divider" role="presentation"></li>
+    <li><a tabindex="-1" id="${u.id}-stream" class="dropdown-item-selectstream">選擇串流</a></li>
     <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
   </ul>`
 
@@ -877,6 +897,7 @@ function renewUserList(){
         arg: {'host': profile.host}
       });
       newHost(profile.host);
+      profile.unKeep();
     });
   });
 
@@ -1199,27 +1220,26 @@ $(document).ready(function(){
   set_login_ui();
 });
 
-function dropLounge(roomID, succ, err){
+function dropLounge(roomID, succ, err, sheetID){
   if(!roomID) return;
-  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  // sheet ID
+  var params = {drop: roomID};
+  if(sheetID) params.id = sheetID;
+  params = $.param(params)
   $.ajax({
-    url: `${loungeURL}?drop=${encodeURIComponent(roomID)}`,
+    url: `${profile.loungeURL}?${params}`,
     success: succ || console.log,
     error: err || console.log
   });
 }
 
-function uploadLounge(data){
-  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  // sheet ID
+function uploadLounge(data, sheetID){
+  var params = { data: JSON.stringify(data) };
+  if(sheetID) params.id = sheetID;
   $.ajax({
     type: "POST",
-    url: loungeURL,
+    url: profile.loungeURL,
     dataType: 'json',
-    data: {
-      data: JSON.stringify(data),
-    },
+    data: params,
     success: function(data){
       console.log('logged:', data);
     },
@@ -1229,12 +1249,13 @@ function uploadLounge(data){
   });
 }
 
-function getLounge(succ, error){
-  let loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
-  // sheet ID
+function getLounge(succ, error, sheetID){
+  var params = {}
+  if(sheetID) params.id = sheetID;
+  params = $.param(params)
   $.ajax({
     type: "GET",
-    url: `${loungeURL}`,
+    url: `${profile.loungeURL}?${params}`,
     success: succ,
     error: error
   });
@@ -1249,9 +1270,7 @@ function roomInfo(cmd){
         dropLounge(profile.roomID);
       }
     }
-    setInterval(()=>{
-      uploadLounge(roomInfo('keep'));
-    }, 15 * 60 * 1000);
+    profile.keep();
   }
   return [
     `${profile.roomID}`,
@@ -1272,7 +1291,6 @@ function fakeRoomInfo(){
     `${peerID}`, `${peerName}`, `bakyura-2x`,
     `create`, `${time}`];
 }
-
 
 function test(){
   uploadLounge(fakeRoomInfo());

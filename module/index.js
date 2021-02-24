@@ -8,6 +8,7 @@ var module_mapping = {
   //'Peer Call': 'peer_call.js', // original
   'Room Guard': 'room_guard.js',
   //'Hidden Room': 'hidden_room.js',
+  'Hidden Lounge': 'hidden_lounge.js',
   'Background Effect': 'bgeffect.js',
   'Guess The Number (NANB)': 'guess_number.js',
   //'Pokemon Master': 'pokemon.js',

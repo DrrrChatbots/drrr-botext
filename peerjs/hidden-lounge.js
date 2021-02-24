@@ -1,12 +1,10 @@
-let lange_zone_split = `<hr class="room-splitter" data-jets="">`
+let loungeURL = 'https://script.google.com/macros/s/AKfycbwaH1jCoYImuIxFaNqkrh5DcxoaAlL19V0WD_We8D4FA7OItepjCD9p/exec';
 
 let roomTmplt = (room) =>
-  `<ul class="rooms" lang="zh-TW" data-meta="${room.roomName} ${room.hostName}#${room.hostID}" data-description="" data-music="" data-jets="${room.roomName} ${room.hostName}#${room.hostID}">
+  `<ul class="rooms" lang="zh-TW" data-meta="${room.roomName} ${room.hostName}#${room.hostTC}" data-description="" data-music="" data-jets="${room.roomName} ${room.hostName}#${room.hostTC}">
       <li class="name" id="${room.roomID}">
          <!-- <form action="/room/" method="get"> -->
-          <button class="btn btn-link select-text lounge-room-name" type="submit" name="id" value="${room.hostID}">
-          <span class="room-badge room-badge-music"><i class="icon icon-music"></i></span>
-          <span class="room-badge room-badge-description"><i class="icon icon-note"></i></span>
+          <button class="btn btn-link select-text lounge-room-name" type="submit" name="id" value="${room.hostTC}">
           <span class="room-name" title="${room.roomName}">${room.roomName}</span>
           </button>
          <!-- </form> -->
@@ -14,15 +12,16 @@ let roomTmplt = (room) =>
       <li class="creator">
          <span class="symbol symbol-${room.hostAvatar}"></span>
          ${room.hostName}
+         <button class="remove-room btn btn-link select-text" type="submit" title="remove from lounge">🗑️</button>
       </li>
       <li class="status">
          <div class="progress-bar-label-wrap">
             <div class="progress-bar-label room-tooltip tooltipstered">
-               N/A / N/A
+               ${room.total} / ${room.limit}
             </div>
          </div>
          <div class="progress progress-desktop loaded" style="width: 30%;">
-            <div class="progress-bar " role="progressbar" style="width: 100%;"></div>
+            <div class="progress-bar " role="progressbar" style="width: ${room.total / room.limit * 100}%;"></div>
          </div>
       </li>
       <li class="members">
@@ -218,3 +217,112 @@ let hallTmplt = profile =>
     <!-- .row -->
   </div>
   <!-- .container -->`;
+
+let profile = {avatar: 'gaki-2x', name: '隱藏大廳'};
+
+function findGetParameter(parameterName, url) {
+  var search = url ? (new URL(url)).search : location.search;
+  var result = null,
+    tmp = [];
+  search
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      tmp = item.split("=");
+      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+  return result;
+}
+
+$(document).ready(function(){
+  window.sheetID = findGetParameter('id');
+  $('.sweet-overlay').remove();
+  $('.sweet-alert').remove()
+  $('body').attr('class', `scheme-${profile.avatar}`);
+  $('body').attr('style', `overflow-x: visible;`);
+  $('title').text('部屋一覽 - DOLLARS Mirror');
+  $('#hall-ui').html(hallTmplt(profile)).show().promise().done(function(){
+    $('.lounge-refresh').click(function(){
+      updateRoomList();
+    })
+    updateRoomList();
+    setInterval(updateRoomList, 6 * 60 * 1000);
+  });
+  $('#update-rooms').click(function(){
+    window.sheetID = $('#rooms-filter').val();
+    updateRoomList();
+  })
+});
+
+function updateRoomList(){
+  $('.rooms-wrap').html($('<center><p>Loading...</p></center>'));
+  getLounge(function(hall){
+    $('.rooms-wrap').empty();
+    hall.data.forEach(r => {
+
+      r = {
+        roomID: r[0],
+        roomName: r[1],
+        roomDesc: r[2],
+        limit: r[3],
+        total: r[4],
+        hostName: r[5],
+        hostAvatar: r[6],
+        hostTC: r[7],
+        update: r[8],
+      };
+
+      $('.rooms-wrap').append(roomTmplt(r)).promise().done(function(){
+        $('.lounge-room-name').click(function(){
+          window.location.href = `https://drrr.com/room/?id=${$(this).parent().attr('id')}`;
+        });
+
+        $('.remove-room').click(function(){
+          var params = { drop: $(this).parent().prev().attr('id') };
+          if(window.sheetID) params.id = window.sheetID;
+          params = $.param(params);
+          $.ajax({
+            type: "GET",
+            url: `${loungeURL}?${params}`,
+            success: function(){
+              swal({
+                title: "Ok!",
+                text: "room removed!",
+                type: "success",
+                showConfirmButton: !1,
+                timer: 1e3
+              });
+              setTimeout(() => {
+                updateRoomList();
+              }, 1e3);
+            },
+            error: function(){
+              swal({
+                title: "ERROR",
+                text: "removing failed",
+                type: "warning",
+                showConfirmButton: !1,
+                timer: 1e3
+              });
+            }
+          });
+        });
+
+      });
+    });
+  }, function(){
+    alert("Cannot get Lounge");
+    window.location.reload();
+  });
+}
+
+function getLounge(succ, error){
+  var url = loungeURL;
+  if(window.sheetID) url += `?id=${window.sheetID}`;
+  $.ajax({
+    type: "GET",
+    url: url,
+    success: succ,
+    error: error
+  });
+}

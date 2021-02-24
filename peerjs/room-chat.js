@@ -675,7 +675,12 @@ function goToHall(){
   $('#chat-ui').hide();
   $('title').text('部屋一覽 - DOLLARS Mirror');
   $('#hall-ui').html(hallTmplt(profile)).show().promise().done(function(){
+    $('#rooms-filter').val(window.sheetID);
     $('.lounge-refresh').click(function(){
+      updateRoomList();
+    })
+    $('#update-rooms').click(function(){
+      window.sheetID = $('#rooms-filter').val();
       updateRoomList();
     })
     updateRoomList();
@@ -865,6 +870,8 @@ function renewUserList(){
     <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
     <!-- <li class="divider" role="presentation"></li> -->
     <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
+    <li class="divider" role="presentation"></li>
+    <li><a tabindex="-1" id="${u.id}-stream" class="dropdown-item-selectstream">選擇串流</a></li>
   </ul>`
   let userMenu = u =>
     `<ul class="dropdown-menu" role="menu">
@@ -1000,6 +1007,9 @@ function set_login_default_fields(){
   }
 
   $('#profile-setting-form').submit(()=>{
+    if($(`input[name="lid"]`).val()){
+      window.sheetID = $(`input[name="lid"]`).val();
+    }
     initialize();
     return false;
   });
@@ -1216,14 +1226,15 @@ function set_chat_ui(){
 }
 
 $(document).ready(function(){
+  window.sheetID = null;
   set_login_default_fields();
   set_login_ui();
 });
 
-function dropLounge(roomID, succ, err, sheetID){
+function dropLounge(roomID, succ, err){
   if(!roomID) return;
   var params = {drop: roomID};
-  if(sheetID) params.id = sheetID;
+  if(window.sheetID) params.id = window.sheetID;
   params = $.param(params)
   $.ajax({
     url: `${profile.loungeURL}?${params}`,
@@ -1232,9 +1243,9 @@ function dropLounge(roomID, succ, err, sheetID){
   });
 }
 
-function uploadLounge(data, sheetID){
+function uploadLounge(data){
   var params = { data: JSON.stringify(data) };
-  if(sheetID) params.id = sheetID;
+  if(window.sheetID) params.id = window.sheetID;
   $.ajax({
     type: "POST",
     url: profile.loungeURL,
@@ -1249,9 +1260,9 @@ function uploadLounge(data, sheetID){
   });
 }
 
-function getLounge(succ, error, sheetID){
+function getLounge(succ, error){
   var params = {}
-  if(sheetID) params.id = sheetID;
+  if(window.sheetID) params.id = window.sheetID;
   params = $.param(params)
   $.ajax({
     type: "GET",

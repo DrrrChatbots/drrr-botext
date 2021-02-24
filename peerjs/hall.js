@@ -57,14 +57,9 @@ let hallTmplt = profile =>
              <a href="http://status.sparanoid.com/" target="_blank">Server maintenance notice - 2015-10-21 2:00:00 PM UTC</a>
              </div> -->
           <div class="sidebar-box note rooms-filter-wrap">
-             <input type="search" class="form-control rooms-filter" id="rooms-filter" placeholder="搜尋">
+             <input type="search" class="form-control rooms-filter" id="rooms-filter" placeholder="Google Sheet ID">
              <div class="checkbox">
-                <label>
-                <input id="toggle-adult-rooms" type="checkbox"> 顯示成人房間          </label>
-             </div>
-             <div class="checkbox">
-                <label>
-                <input class="toggle-members" type="checkbox"> 顯示房間成員          </label>
+                <input id="update-rooms" type="button" value="更新大廳">
              </div>
           </div>
           <div class="sidebar-box note highlight">

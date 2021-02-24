@@ -279,7 +279,7 @@ function updateRoomList(){
 
         $('.remove-room').click(function(){
           var params = { drop: $(this).parent().prev().attr('id') };
-          if(sheetID) params.id = sheetID;
+          if(window.sheetID) params.id = window.sheetID;
           params = $.param(params);
           $.ajax({
             type: "GET",
@@ -318,7 +318,7 @@ function updateRoomList(){
 
 function getLounge(succ, error){
   var url = loungeURL;
-  if(sheetID) url += `?id=${sheetID}`;
+  if(window.sheetID) url += `?id=${window.sheetID}`;
   $.ajax({
     type: "GET",
     url: url,

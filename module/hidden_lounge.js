@@ -73,7 +73,7 @@ function upload(succ, fail){
 
   getRoom(info => {
 
-    //if(!info.room.hiddenRoom) return;
+    if(!info.room.hiddenRoom) return;
 
     var host = info.room.users.filter(u => u.id === info.room.host)[0];
 

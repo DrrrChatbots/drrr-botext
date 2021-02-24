@@ -518,7 +518,7 @@ function UserHost(id, name, avatar, room, host){
     THIS.conns[THIS.host] = THIS.peer.connect(THIS.host);
 
     THIS.conns[THIS.host].on('open', function() {
-      THIS.conns[THIS.host].send({
+      THIS.conns[this.peer].send({
         fn: 'join',
         arg: THIS.toUser()
       })
@@ -534,7 +534,7 @@ function UserHost(id, name, avatar, room, host){
         return;
       profile.where = 'login';
       //swal("Host Left!");
-      leftUser(THIS.conns[THIS.host].peer);
+      leftUser(this.peer);
       //setTimeout(backToProfile, 3000);
     });
 
@@ -548,7 +548,7 @@ function UserHost(id, name, avatar, room, host){
             return;
           profile.where = 'login';
           //swal("Host Left!");
-          leftUser(THIS.conns[THIS.host].peer);
+          leftUser(this.peer);
           //setTimeout(backToProfile, 3000);
           break;
         default:

@@ -218,7 +218,66 @@ function handlePeer(peer){
 function addMessage(id, arg){
   let user = id === profile.id ?
     profile.toUser() : profile.users[id];
-  $('#talks').prepend(
+
+  var msg = null;
+
+  // TODO dropdown menu and fuctions on talks
+  if(arg.to && id == profile.id){
+  // dm to other
+    msg =
+    `<dl class="talk ${user.avatar} secret" id="">
+      <dt class="dropdown user">
+        <div class="avatar avatar-${user.avatar}"></div>
+        <div class="name" data-toggle="dropdown">
+        <span class="select-text">${user.name}</span>
+        </div><ul class="dropdown-menu" role="menu"></ul>
+      </dt>
+      <dd class="bounce">
+        <div class="bubble">
+          <div class="tail-wrap center" style="background-size: 65px;">
+            <div class="tail-mask"></div>
+          </div>
+          <p class="body select-text">${arg.message}</p>
+        </div>
+        <div class="secret-to-whom">
+          <span class="to"></span>
+          <div class="dropdown user">
+            <div data-toggle="dropdown" class="name"> <!--  aria-expanded="false" -->
+              <span class="symbol symbol-${profile.users[arg.to].avatar}"></span>
+              <span class="select-text">${profile.users[arg.to].name}</span>
+            </div>
+            <div role="menu" class="dropdown-menu">
+              <!-- menu here? -->
+            </div>
+          </div>
+        </div>
+      </dd>
+    </dl>`;
+  }
+  else if(arg.to){
+    // get dm from other
+    msg =
+    `<dl class="talk ${user.avatar} secret" id="">
+      <dt class="dropdown user">
+        <div class="avatar avatar-${user.avatar}"></div>
+        <div class="name" data-toggle="dropdown">
+          <span class="select-text">${user.name}</span>
+        </div>
+        <ul class="dropdown-menu" role="menu"></ul>
+      </dt>
+      <dd class="bounce">
+        <div class="bubble">
+        <div class="tail-wrap center" style="background-size: 65px;">
+          <div class="tail-mask"></div>
+        </div>
+        <p class="body select-text">${arg.message}</p>
+        </div>
+      </dd>
+    </dl>`;
+  }
+  else{
+    // message
+    msg =
     `<dl class="talk ${user.avatar}" id="">
       <dt class="dropdown user">
       <div class="avatar avatar-${user.avatar}"></div>
@@ -233,7 +292,10 @@ function addMessage(id, arg){
         <p class="body select-text">${arg.message}</p>
       </div>
       </dd>
-    </dl>`);
+    </dl>`;
+  }
+
+  $('#talks').prepend(msg);
   sound.play("bubble");
 }
 
@@ -297,7 +359,11 @@ function leftUser(id){
 }
 
 function sendCmd(cmd){
-  Object.values(profile.users).forEach(u => {
+  if(cmd.fn === 'message' && cmd.arg && cmd.arg.to){
+    let c = profile.conns[cmd.arg.to];
+    if(c) c.send(cmd);
+  }
+  else Object.values(profile.users).forEach(u => {
     let c = profile.conns[u.id];
     if(c && c.peer != profile.id) c.send(cmd);
   });
@@ -345,6 +411,7 @@ function UserHost(id, name, avatar, room, host){
   let THIS = this;
 
   THIS.id = id;
+  THIS.to = null;
   THIS.name = name;
   THIS.avatar = avatar;
 
@@ -468,7 +535,6 @@ function UserHost(id, name, avatar, room, host){
         addMessage(conn.peer, data.arg)
         break;
       case 'new-host':
-        // TODO: complete UI control
         if(conn.peer === THIS.host){
           THIS.host = data.arg.host;
           newHost(THIS.host);
@@ -862,6 +928,12 @@ function setMediaSources(){
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 }
 
+function clear_dm(){
+  $('.to-whom').removeClass('on').html(``);
+  $('textarea[name="message"]').removeClass('state-secret');
+  profile.to = null;
+}
+
 function renewUserList(){
   let theHost = profile.users[profile.host]
 
@@ -870,13 +942,14 @@ function renewUserList(){
     <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
     <!-- <li class="divider" role="presentation"></li> -->
     <!-- <li><a tabindex="-1" class="dropdown-item-tripcode" data-toggle="modal" data-target="#modal-tripcode-help" data-name="${u.name}" data-icon="eight">#RUpzBSY9YE</a></li> -->
+    ${ profile.id === u.id ? '' : '<li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li>' }
     <li class="divider" role="presentation"></li>
     <li><a tabindex="-1" id="${u.id}-stream" class="dropdown-item-selectstream">選擇串流</a></li>
   </ul>`
   let userMenu = u =>
     `<ul class="dropdown-menu" role="menu">
     <li><a tabindex="-1" class="dropdown-item-reply">@${u.name}</a></li>
-    <!-- <li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li> -->
+    ${ profile.id === u.id ? '' : '<li><a tabindex="-1" class="dropdown-item-secret">私信（DM）</a></li>' }
     ${ profile.id === theHost.id ?
         `<li class="divider" role="presentation"></li>
         <li><a tabindex="-1" class="dropdown-item-handover">更改管理人</a></li>
@@ -898,13 +971,26 @@ function renewUserList(){
     });
 
     $('.dropdown-item-handover').click(function(){
-      profile.host = $('.dropdown-item-handover').parent().parent().parent().attr('id');
+      profile.host = $(this).parent().parent().parent().attr('id');
       sendCmd({
         fn: 'new-host',
         arg: {'host': profile.host}
       });
       newHost(profile.host);
       profile.unKeep();
+    });
+
+    $('.dropdown-item-secret').click(function(){
+      clear_dm();
+      let who = $(this).parent().parent().parent().attr('id');
+      let cancel = $(`<a>(取消)</a>`);
+      profile.to = who;
+      $('.to-whom')
+        .addClass('on')
+        .html(`@<span class="symbol symbol-${profile.users[who].avatar}"></span>${profile.users[who].name} `)
+        .append(cancel);
+      $('textarea[name="message"]').addClass('state-secret');
+      cancel.click(clear_dm);
     });
   });
 
@@ -1028,11 +1114,18 @@ function set_chat_ui(){
   let post = $('input[name="post"]').click(function(){
     message = $('textarea[name="message"]').val();
     $('textarea[name="message"]').val('');
+
+    let arg = {'message': message}
+
+    if(profile.to){
+      arg.to = profile.to;
+      clear_dm();
+    }
     sendCmd({
       fn: 'message',
-      arg: {'message': message}
-    })
-    addMessage(profile.id, {'message': message})
+      arg: arg,
+    });
+    addMessage(profile.id, arg);
   })
 
   $('textarea[name="message"]').on('keydown', function(e){

@@ -375,7 +375,7 @@ function hide_annoying(dom){
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
       if((x.startsWith('#') && (eobj.trip || '').match(re))
-        || eobj.user.match(re)){
+        || (eobj.user && eobj.user.match(re))){
         dom.remove();
         $(`li[title=${eobj.user}]`).remove();
         eobj = null;

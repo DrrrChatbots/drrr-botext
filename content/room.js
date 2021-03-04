@@ -62,7 +62,8 @@ function lambda_oracle(type, user, text){
   }
 }
 
-var handle_talks = function(msg){
+
+function MsgDOM2EventObj(msg){
 
   var type = '', user = '',
     text = '', url = '', info = '';
@@ -142,29 +143,40 @@ var handle_talks = function(msg){
   }
   console.log(type, user, text, url);
 
+  u = findUser(user);
+
+  return {
+    type: type,
+    host: isHost(),
+    user: user,
+    trip: u ? u.tripcode : '',
+    text: text,
+    info: roomInfo,
+    url: url
+  };
   //if(text.startsWith('/replay')){
   //  console.log(roomInfo);
   //  console.log(roomInfo.room.np);
   //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
   //}
+}
 
+function handle_talks(msg){
 
-  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
+  eobj = MsgDOM2EventObj(msg);
+
+  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(eobj.type)){
     getRoom(
       function(info){
         prevRoomInfo = roomInfo;
         roomInfo = info;
-        u = findUser(user);
-        lambda_oracle(type, u, text);
-        chrome.runtime.sendMessage({
-          type: type,
-          host: isHost(),
-          user: user,
-          trip: u ? u.tripcode : '',
-          text: text,
-          info: info,
-          url: url
-        });
+        u = findUser(eobj.user);
+        lambda_oracle(eobj.type, u, eobj.text);
+
+        eobj.trip = u ? u.tripcode : '';
+        eobj.info = roomInfo;
+
+        chrome.runtime.sendMessage(eobj);
       },
       function(){
         console.log("room error on info");
@@ -172,17 +184,8 @@ var handle_talks = function(msg){
     );
   }
   else{
-    u = findUser(user);
-    lambda_oracle(type, u, text);
-    chrome.runtime.sendMessage({
-      type: type,
-      host: isHost(),
-      user: user,
-      trip: u ? u.tripcode : '',
-      text: text,
-      info: roomInfo,
-      url: url
-    });
+    lambda_oracle(eobj.type, u, eobj.text);
+    chrome.runtime.sendMessage(eobj);
   }
 }
 
@@ -357,6 +360,31 @@ function replace_youtube_talk(){
   })
 }
 
+var annoyingList = null;
+function hide_annoying(dom){
+  if(!annoyingList)
+    return chrome.storage.sync.get('annoyingList', cfg => {
+      annoyingList = cfg['annoyingList'] || [];
+      hide_annoying(dom);
+    });
+  else if(!dom)
+    return $('#talks').children().get().forEach(hide_annoying);
+  else {
+    var eobj = MsgDOM2EventObj(dom);
+    console.log(eobj);
+    annoyingList.forEach(x => {
+      let re = RegExp(x, 'i');
+      if((x.startsWith('#') && (eobj.trip || '').match(re))
+        || eobj.user.match(re)){
+        dom.remove();
+        $(`li[title=${eobj.user}]`).remove();
+        eobj = null;
+      }
+    })
+    return eobj;
+  }
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -369,6 +397,8 @@ $(document).ready(function(){
   enable_call_link();
 
   replace_youtube_talk();
+
+  hide_annoying();
 
   //$('#body').prepend(MacroModal);
 
@@ -414,8 +444,10 @@ $(document).ready(function(){
 
       $('#talks').bind('DOMNodeInserted', function(event) {
         var e = event.target;
-        if(e.parentElement.id == 'talks')
+        if(e.parentElement.id == 'talks'){
           handle_talks(e);
+          hide_annoying(e);
+        }
         var ue = $(e).find($('.bubble p a'));
         var ytid = youtube_parser(ue.attr('href'));
         if(ytid){

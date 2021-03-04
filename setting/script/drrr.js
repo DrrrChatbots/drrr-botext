@@ -42,7 +42,9 @@ function findUser(name, callback){
 }
 
 function renew_callback(msg, to){
-  if(to || msg.startsWith('/roll')
+  if(to
+    || !msg.startsWith
+    || msg.startsWith('/roll')
     || msg.startsWith('/share')
     || msg.startsWith('/leave')
     || msg.startsWith('/me'))

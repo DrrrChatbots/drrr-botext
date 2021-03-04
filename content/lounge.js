@@ -52,7 +52,6 @@ function clear_annoying(){
   if(annoyingList && rooms.length){
     rooms.map(room => {
       list = annoyingList.map(x => RegExp(x, 'i'))
-      console.log(list);
       console.log($(room).attr('data-meta'))
       if(list.some(reg => $(room).attr('data-meta').match(reg))){
         $(room).hide();

@@ -69,11 +69,11 @@ export const event_action = (req, config) => {
 }
 
 function upload(succ, fail){
-    let loungeURL = 'https://script.google.com/macros/s/AKfycbwaH1jCoYImuIxFaNqkrh5DcxoaAlL19V0WD_We8D4FA7OItepjCD9p/exec';
+  let loungeURL = 'https://script.google.com/macros/s/AKfycbwaH1jCoYImuIxFaNqkrh5DcxoaAlL19V0WD_We8D4FA7OItepjCD9p/exec';
 
   getRoom(info => {
 
-    if(!info.room.hiddenRoom) return;
+    if(!info.room || !info.room.hiddenRoom) return;
 
     var host = info.room.users.filter(u => u.id === info.room.host)[0];
 

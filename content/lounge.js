@@ -48,15 +48,53 @@ function clear_annoying(){
   if(!annoyingList) return;
   console.log("clear...")
   rooms = $('.rooms').get()
-  console.log(rooms);
-  if(annoyingList && rooms.length){
-    rooms.map(room => {
-      list = annoyingList.map(x => RegExp(x, 'i'))
-      console.log($(room).attr('data-meta'))
-      if(list.some(reg => $(room).attr('data-meta').match(reg))){
-        $(room).hide();
-      }
-    })
+
+  if(annoyingList){
+
+    let removeRoom = annoyingList.includes('##');
+
+    if(rooms.length){ // clear room
+      rooms.map(room => {
+        list = annoyingList.map(x => RegExp(x, 'i'))
+
+        var hit = 0;
+
+        let roomName = $(room).find('.room-name');
+        if(list.some(reg => roomName.text().trim().match(reg))){
+          hit = 1;
+          roomName.text('  ');
+        }
+
+        let ownerName = $(room).find('.creator');
+
+        $(room).find('.avatar-wrap').get().forEach(u => {
+          let user = $(u);
+          let name = user.text().trim().replace(/#.*/, '');
+          let trip = user.find('.tripcode').text();
+          annoyingList.forEach(x => {
+            let re = RegExp(x, 'i');
+            if((x.startsWith('#') && (trip || '').match(re))
+              || (name && name.match(re))){
+
+              if(ownerName.text().trim() === name.trim()){
+                hit = 1;
+                ownerName.text('  ');
+                roomName.text('  ');
+              }
+              else console.log(ownerName.text().trim(), name.trim())
+              user.remove();
+            }
+          })
+        });
+
+        // remove the entire room
+        if(removeRoom && hit) $(room).hide();
+        //if(list.some(reg => $(room).attr('data-meta').match(reg))){
+        //  console.log($(room).attr('data-meta'));
+        //  $(room).hide();
+        //}
+      })
+    }
   }
 }
 

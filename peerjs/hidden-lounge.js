@@ -290,11 +290,11 @@ function updateRoomList(){
                 text: "room removed!",
                 type: "success",
                 showConfirmButton: !1,
-                timer: 1e3
+                timer: 3e3
               });
               setTimeout(() => {
                 updateRoomList();
-              }, 1e3);
+              }, 3e3);
             },
             error: function(){
               swal({
@@ -302,7 +302,7 @@ function updateRoomList(){
                 text: "removing failed",
                 type: "warning",
                 showConfirmButton: !1,
-                timer: 1e3
+                timer: 3e3
               });
             }
           });

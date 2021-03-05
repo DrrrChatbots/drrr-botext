@@ -1167,7 +1167,7 @@ function friend_setup(config){
   $('#annoying-hidder').click(function(){
     chrome.storage.sync.get('annoyingList', config => {
       list = (config['annoyingList'] && JSON.stringify(config['annoyingList'])) || []
-      val = prompt(`Input Rule: ["銀蛇", "白.*术", "#pd4/u/MwnM"]`, list);
+      val = prompt(`Input Rule: ["银蛇", "白.*术", "#pd4/u/MwnM"]\n"##" to remove the room`, list);
       if(val !== null){
         if(val.trim()){
           try{

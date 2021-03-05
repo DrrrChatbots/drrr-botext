@@ -141,7 +141,6 @@ function MsgDOM2EventObj(msg){
     throw new Error("Stop execution");
     return;
   }
-  console.log(type, user, text, url);
 
   u = findUser(user);
 
@@ -164,6 +163,13 @@ function MsgDOM2EventObj(msg){
 function handle_talks(msg){
 
   eobj = MsgDOM2EventObj(msg);
+
+  console.log(
+    eobj.type,
+    eobj.user,
+    eobj.text,
+    eobj.url
+  );
 
   if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(eobj.type)){
     getRoom(
@@ -371,7 +377,6 @@ function hide_annoying(dom){
     return $('#talks').children().get().forEach(hide_annoying);
   else {
     var eobj = MsgDOM2EventObj(dom);
-    console.log(eobj);
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
       if((x.startsWith('#') && (eobj.trip || '').match(re))

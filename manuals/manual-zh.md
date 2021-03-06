@@ -792,7 +792,7 @@ Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會�
 :::warning
 #### 浪語
 
-細節請參考 [wiki](https://drrr.wiki/%E6%B5%AA%E8%AA%9E)。
+細節請參考 [語言介紹](./script-zh.html)。
 :::
 
 :::warning

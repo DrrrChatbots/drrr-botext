@@ -783,7 +783,7 @@ After running script, you can test it in the REPL with current environment.
 :::warning
 #### The BotScript
 
-More detail please refer [wiki](https://drrr.wiki/%E6%B5%AA%E8%AA%9E).
+More detail please refer the [language introduction](./script-en.html).
 :::
 
 :::warning

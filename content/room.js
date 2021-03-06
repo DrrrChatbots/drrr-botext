@@ -588,7 +588,7 @@ function emit_method(req, sender, callback){
   else{
     method_queue.push(
       ((r) => {
-        return ()=>methods[r.fn](r.args);
+        return ()=>methods[r.fn] && methods[r.fn](r.args);
       })(req)
     );
     do_method();

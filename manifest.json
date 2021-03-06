@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension (kiwi browser)",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.754",
+    "version": "1.755",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {

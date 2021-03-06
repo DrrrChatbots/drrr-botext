@@ -164,6 +164,8 @@ function handle_talks(msg){
 
   eobj = MsgDOM2EventObj(msg);
 
+  if(!eobj) return;
+
   console.log(
     eobj.type,
     eobj.user,
@@ -378,6 +380,7 @@ function hide_annoying(dom){
     return $('#talks').children().get().forEach(hide_annoying);
   else {
     var eobj = MsgDOM2EventObj(dom);
+    if(!eobj) return;
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
       if(!eobj) return;

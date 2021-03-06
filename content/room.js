@@ -371,6 +371,7 @@ function hide_annoying(dom){
   if(!annoyingList)
     return chrome.storage.sync.get('annoyingList', cfg => {
       annoyingList = cfg['annoyingList'] || [];
+      hide_annoying_namelist_pre();
       hide_annoying(dom);
     });
   else if(!dom)
@@ -379,6 +380,7 @@ function hide_annoying(dom){
     var eobj = MsgDOM2EventObj(dom);
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
+      if(!eobj) return;
       if((x.startsWith('#') && (eobj.trip || '').match(re))
         || (eobj.user && eobj.user.match(re))){
         dom.remove();
@@ -387,6 +389,32 @@ function hide_annoying(dom){
       }
     })
     return eobj;
+  }
+}
+
+function hide_annoying_namelist_pre(){
+  $('#user_list').find('li').get().forEach(li => {
+    annoyingList.forEach(x => {
+      let re = RegExp(x, 'i');
+      let name = $(li).attr('title');
+      if(!x.startsWith('#') && name.match(re)){
+        $(`li[title="${name}"]`).remove();
+      }
+    })
+  })
+}
+
+function hide_annoying_namelist_post(){
+  if(roomInfo){
+    roomInfo.room.users.forEach(u => {
+      annoyingList.forEach(x => {
+        let re = RegExp(x, 'i');
+        if((x.startsWith('#') && (u.tripcode || '').match(re))
+          || (u.name && u.name.match(re))){
+          $(`li[title="${u.name}"]`).remove();
+        }
+      })
+    });
   }
 }
 
@@ -404,7 +432,6 @@ $(document).ready(function(){
   replace_youtube_talk();
 
   hide_annoying();
-
   //$('#body').prepend(MacroModal);
 
   console.log($('#user_name').text());
@@ -509,6 +536,9 @@ $(document).ready(function(){
           }
           setTimeout(find, 5000);
           setInterval(find, 90000);
+
+          hide_annoying_namelist_post();
+
         },
         function(data){
           alert("roomInfo error", data);

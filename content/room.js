@@ -62,7 +62,8 @@ function lambda_oracle(type, user, text){
   }
 }
 
-var handle_talks = function(msg){
+
+function MsgDOM2EventObj(msg){
 
   var type = '', user = '',
     text = '', url = '', info = '';
@@ -140,31 +141,48 @@ var handle_talks = function(msg){
     throw new Error("Stop execution");
     return;
   }
-  console.log(type, user, text, url);
 
+  u = findUser(user);
+
+  return {
+    type: type,
+    host: isHost(),
+    user: user,
+    trip: u ? u.tripcode : '',
+    text: text,
+    info: roomInfo,
+    url: url
+  };
   //if(text.startsWith('/replay')){
   //  console.log(roomInfo);
   //  console.log(roomInfo.room.np);
   //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
   //}
+}
 
+function handle_talks(msg){
 
-  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(type)){
+  eobj = MsgDOM2EventObj(msg);
+
+  console.log(
+    eobj.type,
+    eobj.user,
+    eobj.text,
+    eobj.url
+  );
+
+  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(eobj.type)){
     getRoom(
       function(info){
         prevRoomInfo = roomInfo;
         roomInfo = info;
-        u = findUser(user);
-        lambda_oracle(type, u, text);
-        chrome.runtime.sendMessage({
-          type: type,
-          host: isHost(),
-          user: user,
-          trip: u ? u.tripcode : '',
-          text: text,
-          info: info,
-          url: url
-        });
+        u = findUser(eobj.user);
+        lambda_oracle(eobj.type, u, eobj.text);
+
+        eobj.trip = u ? u.tripcode : '';
+        eobj.info = roomInfo;
+
+        chrome.runtime.sendMessage(eobj);
       },
       function(){
         console.log("room error on info");
@@ -172,17 +190,8 @@ var handle_talks = function(msg){
     );
   }
   else{
-    u = findUser(user);
-    lambda_oracle(type, u, text);
-    chrome.runtime.sendMessage({
-      type: type,
-      host: isHost(),
-      user: user,
-      trip: u ? u.tripcode : '',
-      text: text,
-      info: roomInfo,
-      url: url
-    });
+    lambda_oracle(eobj.type, u, eobj.text);
+    chrome.runtime.sendMessage(eobj);
   }
 }
 
@@ -357,6 +366,58 @@ function replace_youtube_talk(){
   })
 }
 
+var annoyingList = null;
+function hide_annoying(dom){
+  if(!annoyingList)
+    return chrome.storage.sync.get('annoyingList', cfg => {
+      annoyingList = cfg['annoyingList'] || [];
+      hide_annoying_namelist_pre();
+      hide_annoying(dom);
+    });
+  else if(!dom)
+    return $('#talks').children().get().forEach(hide_annoying);
+  else {
+    var eobj = MsgDOM2EventObj(dom);
+    annoyingList.forEach(x => {
+      let re = RegExp(x, 'i');
+      if(!eobj) return;
+      if((x.startsWith('#') && (eobj.trip || '').match(re))
+        || (eobj.user && eobj.user.match(re))){
+        dom.remove();
+        $(`li[title=${eobj.user}]`).remove();
+        eobj = null;
+      }
+    })
+    return eobj;
+  }
+}
+
+function hide_annoying_namelist_pre(){
+  $('#user_list').find('li').get().forEach(li => {
+    annoyingList.forEach(x => {
+      let re = RegExp(x, 'i');
+      let name = $(li).attr('title');
+      if(!x.startsWith('#') && name.match(re)){
+        $(`li[title="${name}"]`).remove();
+      }
+    })
+  })
+}
+
+function hide_annoying_namelist_post(){
+  if(roomInfo){
+    roomInfo.room.users.forEach(u => {
+      annoyingList.forEach(x => {
+        let re = RegExp(x, 'i');
+        if((x.startsWith('#') && (u.tripcode || '').match(re))
+          || (u.name && u.name.match(re))){
+          $(`li[title="${u.name}"]`).remove();
+        }
+      })
+    });
+  }
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -370,6 +431,7 @@ $(document).ready(function(){
 
   replace_youtube_talk();
 
+  hide_annoying();
   //$('#body').prepend(MacroModal);
 
   console.log($('#user_name').text());
@@ -414,8 +476,10 @@ $(document).ready(function(){
 
       $('#talks').bind('DOMNodeInserted', function(event) {
         var e = event.target;
-        if(e.parentElement.id == 'talks')
+        if(e.parentElement.id == 'talks'){
           handle_talks(e);
+          hide_annoying(e);
+        }
         var ue = $(e).find($('.bubble p a'));
         var ytid = youtube_parser(ue.attr('href'));
         if(ytid){
@@ -472,6 +536,9 @@ $(document).ready(function(){
           }
           setTimeout(find, 5000);
           setInterval(find, 90000);
+
+          hide_annoying_namelist_post();
+
         },
         function(data){
           alert("roomInfo error", data);
@@ -521,7 +588,7 @@ function emit_method(req, sender, callback){
   else{
     method_queue.push(
       ((r) => {
-        return ()=>methods[r.fn](r.args);
+        return ()=>methods[r.fn] && methods[r.fn](r.args);
       })(req)
     );
     do_method();

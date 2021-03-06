@@ -22786,7 +22786,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 332, column 3 - line 336, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 327, column 3 - line 331, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -22894,28 +22894,28 @@ var PS = {};
   var parseArray = function (exprP) {
       return Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
           return brackets(Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))((function () {
-              var $76 = Data_Array.fromFoldable(Data_List_Types.foldableList);
-              return function ($77) {
-                  return BotScript.Arr.create($76($77));
+              var $75 = Data_Array.fromFoldable(Data_List_Types.foldableList);
+              return function ($76) {
+                  return BotScript.Arr.create($75($76));
               };
           })())(Text_Parsing_Parser_Combinators.sepEndBy(Data_Identity.monadIdentity)(exprP)(reservedOp(","))));
       });
   };
   var parseTerm = function (exprP) {
       return Text_Parsing_Parser_Combinators.choice(Data_Foldable.foldableArray)(Data_Identity.monadIdentity)([ parens(exprP), Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))((function () {
-          var $78 = BotScript.toTerm("String");
-          return function ($79) {
-              return BotScript.Trm.create($78($79));
+          var $77 = BotScript.toTerm("String");
+          return function ($78) {
+              return BotScript.Trm.create($77($78));
           };
       })())(parseStringLiteral), Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))((function () {
-          var $80 = BotScript.toTerm("Number");
-          return function ($81) {
-              return BotScript.Trm.create($80($81));
+          var $79 = BotScript.toTerm("Number");
+          return function ($80) {
+              return BotScript.Trm.create($79($80));
           };
       })())(parseNumber), Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))((function () {
-          var $82 = BotScript.toTerm("Boolean");
-          return function ($83) {
-              return BotScript.Trm.create($82($83));
+          var $81 = BotScript.toTerm("Boolean");
+          return function ($82) {
+              return BotScript.Trm.create($81($82));
           };
       })())(parseBoolean), Data_Functor.map(Text_Parsing_Parser.functorParserT(Data_Identity.functorIdentity))(BotScript.Var.create)(parseIdentifier), parseArray(exprP) ]);
   };
@@ -23018,13 +23018,6 @@ var PS = {};
   });
   var parseArgs$prime$prime = Control_Lazy.fix(Text_Parsing_Parser.lazyParserT)(function (self) {
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.lookAhead(Data_Identity.monadIdentity)(parsePmatch))(function (v) {
-          if (v.value0) {
-              return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parsePmatch)(function () {
-                  return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
-                      return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([ new Data_Tuple.Tuple(v.value1.value0, v.value1.value1) ]);
-                  });
-              });
-          };
           return Text_Parsing_Parser_Combinators["try"](Data_Identity.monadIdentity)(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parsePmatch)(function () {
               return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(symbol("=>"))(function () {
                   return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))([ new Data_Tuple.Tuple(v.value1.value0, v.value1.value1) ]);
@@ -23076,8 +23069,8 @@ var PS = {};
   }))(Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(false, [  ])));
   var parseScript$prime = Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(testParseStates)(function (v) {
       return Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(testParseExprs)(function (v1) {
-          var $68 = v.value0 || v1.value0;
-          if ($68) {
+          var $67 = v.value0 || v1.value0;
+          if ($67) {
               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(v.value1, v1.value1));
           };
           return Text_Parsing_Parser.fail(Data_Identity.monadIdentity)("Expected State or Expression");

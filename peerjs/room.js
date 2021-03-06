@@ -101,7 +101,7 @@ let roomUITmplt = (profile) =>
 
           </ul>
 
-          <span class="to-whom">To</span>
+          <span class="to-whom"></span>
         </div>
 
         <div class="room-input-wrap">

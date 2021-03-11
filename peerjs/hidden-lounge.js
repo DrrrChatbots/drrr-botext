@@ -272,44 +272,44 @@ function updateRoomList(){
         update: r[8],
       };
 
-      $('.rooms-wrap').append(roomTmplt(r)).promise().done(function(){
-        $('.lounge-room-name').click(function(){
-          window.location.href = `https://drrr.com/room/?id=${$(this).parent().attr('id')}`;
-        });
+      $('.rooms-wrap').append(roomTmplt(r));
+    });
 
-        $('.remove-room').click(function(){
-          var params = { drop: $(this).parent().prev().attr('id') };
-          if(window.sheetID) params.id = window.sheetID;
-          params = $.param(params);
-          $.ajax({
-            type: "GET",
-            url: `${loungeURL}?${params}`,
-            success: function(){
-              swal({
-                title: "Ok!",
-                text: "room removed!",
-                type: "success",
-                showConfirmButton: !1,
-                timer: 3e3
-              });
-              setTimeout(() => {
-                updateRoomList();
-              }, 3e3);
-            },
-            error: function(){
-              swal({
-                title: "ERROR",
-                text: "removing failed",
-                type: "warning",
-                showConfirmButton: !1,
-                timer: 3e3
-              });
-            }
+    $('.lounge-room-name').click(function(){
+      window.location.href = `https://drrr.com/room/?id=${$(this).parent().attr('id')}`;
+    });
+
+    $('.remove-room').click(function(){
+      var params = { drop: $(this).parent().prev().attr('id') };
+      if(window.sheetID) params.id = window.sheetID;
+      params = $.param(params);
+      $.ajax({
+        type: "GET",
+        url: `${loungeURL}?${params}`,
+        success: function(){
+          swal({
+            title: "Ok!",
+            text: "room removed!",
+            type: "success",
+            showConfirmButton: !1,
+            timer: 3e3
           });
-        });
-
+          setTimeout(() => {
+            updateRoomList();
+          }, 3e3);
+        },
+        error: function(){
+          swal({
+            title: "ERROR",
+            text: "removing failed",
+            type: "warning",
+            showConfirmButton: !1,
+            timer: 3e3
+          });
+        }
       });
     });
+
   }, function(){
     alert("Cannot get Lounge");
     window.location.reload();

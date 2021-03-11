@@ -102,6 +102,8 @@ Note: Yandex on iOS is not supported.
 
 ### Friends
 
+> TBC: Abuse room and blacklist hiding
+
 :::success
 
 ![](https://i.imgur.com/PKID7Ay.png)
@@ -160,8 +162,10 @@ Search mode:
 
 
 #### Play mode (click to switch)
-- <i class="glyphicon glyphicon-cd"></i> List mode: After the song ends, the song in the playlist is automatically played
 - <i class="glyphicon glyphicon-music"></i> Single song mode: Stop after every song
+- <i class="glyphicon glyphicon-cd"></i> Album mode: After the song ends, the song in the playlist is automatically played
+- <i class="glyphicon glyphicon-repeat"></i> SLoop mode: Loop the song
+- <i class="glyphicon glyphicon-refresh"></i> ALoop mode: Loop the playlist
 
 #### Sound source
 - **易** Netease Music
@@ -231,6 +235,8 @@ Search result：剛好遇見你
 :::
 
 ### Module
+
+> TBC: peerjs series module
 
 :::success
 ![](https://i.imgur.com/G5Vt5oC.png)
@@ -665,6 +671,8 @@ $[-]
 
 #### Function Manual
 
+> TBC: "script" method 
+
 :::warning
 
 Function ["parameter", ...] Description:
@@ -781,9 +789,9 @@ After running script, you can test it in the REPL with current environment.
 :::
 
 :::warning
-#### The BotScript
+#### The LambdaScript
 
-More detail please refer [wiki](https://drrr.wiki/%E6%B5%AA%E8%AA%9E).
+More detail please refer the [language introduction](./script-en.html).
 :::
 
 :::warning

@@ -204,7 +204,10 @@ function bind_imm_pldl(args){
       $(this).attr('data'),
       alert.bind(window)
     );
-    del_song(PLAYLIST, $(this).attr('data-idx'), (res) => res && show_playlist(), true);
+    let sel = $('#mode_type');
+    let mtype = mplay_modes.find(m => sel.hasClass(m)) || ALBUM_MODE;
+    if(mtype === ALBUM_MODE || mtype === SINGLE_MODE)
+      del_song(PLAYLIST, $(this).attr('data-idx'), (res) => res && show_playlist(), true);
   })
 }
 
@@ -641,26 +644,34 @@ function extractHostname(url) {
   return scheme + hostname;
 }
 
+const mplay_modes = [SINGLE_MODE, ALBUM_MODE, SLOOP_MODE, ALOOP_MODE];
 function music_bar_setup(config){
   /* music mode change */
-  function mode_switch(bool){
-    if(bool){
-      $('#mode_type').attr('class', 'glyphicon glyphicon-music');
+  function music_mode_switch(mode){
+    $('#mode_type').attr('class', `glyphicon ${mode}`);
+    if(mode === SINGLE_MODE){
       $('#music_mode').attr('title', 'single mode, play one song at a time')
     }
-    else{
-      $('#mode_type').attr('class', 'glyphicon glyphicon-cd');
+    else if (mode === ALBUM_MODE){
       $('#music_mode').attr('title', 'album mode, continue playing if any song in playlist')
+    }
+    else if(mode === SLOOP_MODE){
+      $('#music_mode').attr('title', 'loop mode, loop current song')
+    }
+    else if(mode === ALOOP_MODE){
+      $('#music_mode').attr('title', 'loop mode, loop all songs in playlist')
     }
   }
 
   /* handle config[MUSIC_MODE] be undefined slightly */
-  mode_switch(config[MUSIC_MODE] === SINGLE_MODE);
+  music_mode_switch(config[MUSIC_MODE] || ALBUM_MODE);
   $('#music_mode').click(()=>{
+    let sel = $('#mode_type');
+    let mtype = mplay_modes[(mplay_modes.findIndex(m => sel.hasClass(m)) + 1) % mplay_modes.length];
     chrome.storage.sync.set({
-      [MUSIC_MODE]: $('#mode_type').hasClass('glyphicon-cd') ? SINGLE_MODE : ALBUM_MODE
+      [MUSIC_MODE]: mtype
     });
-    mode_switch($('#mode_type').hasClass('glyphicon-cd'));
+    music_mode_switch(mtype);
   })
 
   /* keyword change icon setting */
@@ -761,8 +772,10 @@ function music_bar_setup(config){
       play_search(get_music, alert.bind(window));
     else{
       var tartype = $($(this).attr("data-target")).attr('data');
-      play_next(undefined, alert.bind(window),
-        tartype == 'playlist' ? show_playlist : undefined);
+      chrome.storage.sync.get(config => {
+        play_next(config, alert.bind(window),
+          tartype == 'playlist' ? show_playlist : undefined);
+      });
     }
   });
 

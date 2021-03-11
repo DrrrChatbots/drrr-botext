@@ -101,6 +101,8 @@
 
 ### Friends
 
+> TBC: Abuse room and blacklist hiding
+
 :::success
 
 ![](https://i.imgur.com/PKID7Ay.png)
@@ -161,8 +163,10 @@
 
 
 #### 播放模式（點擊切換）
-- <i class="glyphicon glyphicon-cd"></i>清單模式-歌曲結束後自動播放待播清單下一首
-- <i class="glyphicon glyphicon-music"></i>單曲模式-播完即停
+- <i class="glyphicon glyphicon-music"></i> 單曲模式：播完即停
+- <i class="glyphicon glyphicon-cd"></i> 唱片模式：歌曲結束後自動播放待播清單下一首
+- <i class="glyphicon glyphicon-repeat"></i> 單曲循環：循環播放單曲
+- <i class="glyphicon glyphicon-refresh"></i> 唱片循環：循環播放清單
 
 #### 音源
 - **易** 網易音樂
@@ -233,6 +237,8 @@
 
 ### Module
 
+> TBC: peerjs series module
+
 :::success
 ![](https://i.imgur.com/G5Vt5oC.png)
 
@@ -259,7 +265,7 @@
 `https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json`
 - 碧海航線 z16
 `https://unpkg.com/live2d-widget-model-z16@1.0.5/assets/z16.model.json`
-- Nito 二頭身 
+- Nito 二頭身
 `https://unpkg.com/live2d-widget-model-nico@1.0.5/assets/nico.model.json`
 `https://unpkg.com/live2d-widget-model-nipsilon@1.0.5/assets/nipsilon.model.json`
 `https://unpkg.com/live2d-widget-model-nito@1.0.5/assets/nito.model.json`
@@ -270,7 +276,7 @@
 `https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json`
 - 小可愛(女) 小春
 `https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json`
-- 春傘 TSUMIKI 
+- 春傘 TSUMIKI
 `https://unpkg.com/live2d-widget-model-tsumiki@1.0.5/assets/tsumiki.model.json`
 - unity 醬
 `https://unpkg.com/live2d-widget-model-unitychan@1.0.5/assets/unitychan.model.json`
@@ -674,8 +680,9 @@ $[-]
 
 #### 函數說明
 
-:::warning
+> TBC: "script" method
 
+:::warning
 函數 [參數列] 說明：
 
 - `msg` `["訊息", "訊息", ...]`
@@ -766,7 +773,7 @@ $[-]
 
 :::success
 
-對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑>◡<๑)۶ 
+對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑>◡<๑)۶
 
 ![](https://i.imgur.com/bmRYjbn.png)
 
@@ -792,7 +799,7 @@ Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會�
 :::warning
 #### 浪語
 
-細節請參考 [wiki](https://drrr.wiki/%E6%B5%AA%E8%AA%9E)。
+細節請參考 [語言介紹](./script-zh.html)。
 :::
 
 :::warning
@@ -839,7 +846,7 @@ Save, Clear, Pause, Execute 等快捷鍵只有游標在編輯器裡面時才會�
 :::success
 @LanCeLoT
 ~~這個人什麼都沒做~~ < 他自己寫的
-~~說明書編寫上幫了很大的忙~~。<其實並沒有_(:з」∠)_
+~~說明書編寫上幫了很大的忙~~。 < 其實並沒有_(:з」∠)_
 :::
 
 :::success

@@ -36,7 +36,7 @@ false
 obj = {x: 1.34, y: 4.5}
 obj.y = 4
 ```
-literal 基本上和 js 一樣，但沒有 `{[x]: 3}` 這種用法。
+literal 基本上和 JS 一樣，但沒有 `{[x]: 3}` 這種用法。
 基本上還是需要使用 `{}[x] = 3`。
 
 ### Function
@@ -45,7 +45,7 @@ a => a + 1
 (a, b) => a + b
 ```
 
-基本上用法和 js 一樣，不過在 event 關鍵字後，可以使用 pattern matching。
+基本上用法和 JS 一樣，不過在 event 關鍵字後，可以使用 pattern matching。
 
 ## 實作
 
@@ -155,7 +155,7 @@ g = { args[0] + args[1] };
 print(g(1, 2)) // 3
 ```
 
-跟 js 的 arguments 一樣，在 function 或是 lifted scope 中，浪語的 args 可以拿到參數列。
+跟 JS 的 arguments 一樣，在 function 或是 lifted scope 中，浪語的 args 可以拿到參數列。
 
 
 ### builtins
@@ -311,7 +311,7 @@ later 3000 {
 
 ### new/delete
 
-這兩個關鍵字用法和 js 相同。
+這兩個關鍵字用法和 JS 相同。
 
 ## 範例
 

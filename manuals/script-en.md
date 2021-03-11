@@ -33,13 +33,13 @@ single quote string is now allowed, like `'hello'`.
 [1,2,3,4]
 ```
 
-### Object
+### Object 
 ```javascript=
 obj = {x: 1.34, y: 4.5}
 obj.y = 4
 ```
 
-literal is same with js basically, but there's no usage such as `{[x]: 3}`.
+literal is same with JS basically, but there's no usage such as `{[x]: 3}`.
 You still need the assignment: `{}[x] = 3`.
 
 ### Function
@@ -48,7 +48,7 @@ a => a + 1
 (a, b) => a + b
 ```
 
-Basic usage is same as js, but you can use pattern matching after the keywork "event".
+Basic usage is same as JS, but you can use pattern matching after the keywork "event".
 
 ## Implementation
 
@@ -87,13 +87,13 @@ fetch("https://v1.hitokoto.cn")
 });
 ```
 
-※ 測試姬 /baka yande.re command recurrent（nsfw warning）
+※ 測試姬 (baka bot) /baka yande.re command recurrent（nsfw warning）
 
 ```javascript=
 event[me,msg](u,m:"^/baka yande.re")=>$.get("https://yande.re/post.json?limit=1&page="+Math.floor(Math.random()*1e4),d=>drrr.dm(u,".",d[0].preview_url))
 ```
 
-## 語法
+## Syntax
 
 `+`, `-`, `*`, `/` operators are supported，`+=`, `++`, `--`, too. But ternary if-else operator is not supported now.
 
@@ -123,7 +123,7 @@ for i = 0
     i < 10
     i++
     print(i)
-
+    
 j = 0
 while(j < 3){
   print(j);
@@ -249,7 +249,7 @@ print("done");
 // done.
 ```
 
-### event
+### event 
 
 To handle related events, the type of event is the same as the description in event action.
 
@@ -266,7 +266,7 @@ event join (user) => {
 }
 ```
 
-### timer
+### timer 
 
 It is used to execute the function regularly.
 
@@ -292,7 +292,7 @@ timer 10000 () => {
 }
 ```
 
-### later
+### later 
 
 Used to delay the execution of a function, which is similar to a timer, but only executes once.
 
@@ -312,7 +312,7 @@ later 3000 {
 ```
 
 
-※ Note "timer" and "later" will lift "non-lambda expression" to a "lambda expression", and eval it on the time point.
+※ Note "timer" and "later" will lift "non-lambda expression" to a "lambda expression", and eval it on the time point. 
 
 ### new/delete
 
@@ -379,4 +379,3 @@ event join (user) => {
 ```
 
 ![](https://i.imgur.com/qB8pRM5.png)
-

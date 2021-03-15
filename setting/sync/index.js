@@ -6,7 +6,7 @@ var examples = []
 import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 'en'}.js`).then((module)=>{
   var manual = module.manual;
   var infos = (url) => `
-<li><a href="https://nobodyzxc.github.io/drrr-botext-manual" target="_blank" title="online doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+<li><a href="https://hackmd.io/@nobodyzxc/SkoZau-Qd" target="_blank" title="online doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
 <li><a href="${url}" target="_blank" title="local doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
 <li><a data-toggle="modal" data-target="#info-modal" title="about developer"><i class="glyphicon glyphicon-info-sign"></i></a></li>
 <li><a id="reset" title="reset all setting"><i class="glyphicon glyphicon-refresh"></i></a></li>

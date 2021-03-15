@@ -1,21 +1,6 @@
 
 /* require global.js utility.js */
 
-function amazingTimeout(func, ms){
-  if(ms){
-    const at = 6000;
-    console.log('amazing ...')
-    period = ms <= at ? ms : at;
-    setTimeout(function(){
-      amazingTimeout(func, ms - period);
-    }, period);
-  }
-  else{
-    func();
-    console.log('amazing done.')
-  }
-}
-
 new Handler("music", [],
   {
     [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */

@@ -248,7 +248,7 @@ $(document).ready(()=>{
   updateLounge();
 });
 
-function botscript_event_action(event, config, req){
+function lambdascript_event_action(event, config, req){
   var rules = PS.DrrrBot.events[""] || []
 
   if(PS.DrrrBot.cur.length)

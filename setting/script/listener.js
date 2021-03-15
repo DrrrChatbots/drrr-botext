@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     }
     else{
       globalThis.lastReq = req;
-      botscript_event_action(req.type, {}, req);
+      lambdascript_event_action(req.type, {}, req);
     }
     //console.log(req);
     //console.log(JSON.stringify(sender))
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       req.text = '';
       req.url = '';
       globalThis.lastReq = req;
-      botscript_event_action(req.type, {}, req);
+      lambdascript_event_action(req.type, {}, req);
     })
     //console.log(req);
     //console.log(JSON.stringify(sender))

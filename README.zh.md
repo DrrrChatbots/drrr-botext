@@ -14,7 +14,7 @@
 
 ## 使用說明
 
-請參照[手冊](https://nobodyzxc.github.io/drrr-botext-manual/)。
+請參照[手冊](https://hackmd.io/@nobodyzxc/SkoZau-Qd)。
 
 ## Discord
 

@@ -14,7 +14,7 @@ The extension on Chrome App is not available, but you can use Yandex browser([An
 
 ## Manual
 
-Follow the [manual](https://nobodyzxc.github.io/drrr-botext-manual/)
+Follow the [manual](https://hackmd.io/@nobodyzxc/SkoZau-Qd)
 
 ## Discord
 

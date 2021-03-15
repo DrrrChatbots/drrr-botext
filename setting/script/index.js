@@ -528,8 +528,19 @@ function set_modules(config){
   load_local_modules(local_modules);
 }
 
+function bind_manual(){
+  $('#intro').click(() => {
+    var language = window.navigator.userLanguage || window.navigator.language;
+    if(language == 'zh-CN' || language == 'zh-TW')
+      chrome.tabs.create({url: chrome.extension.getURL('manuals/script-zh.html')});
+    else
+      chrome.tabs.create({url: chrome.extension.getURL('manuals/script-en.html')});
+  })
+}
+
 $(document).ready(function(event) {
 
+  bind_manual();
   bind_modal();
 
   chrome.storage.local.get(['botscript', 'bs-mirror', 'bs-mirrors', 'show-chatroom', 'bs-installed'], (config) => {

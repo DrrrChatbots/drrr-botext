@@ -12,6 +12,12 @@
 
 手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US), iOS 的 Yandex 不支援插件)，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
+Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做了一個定製版本（kiwi 分枝）給他。你可以用 .crx 檔案安裝他或者直接安裝[這個版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ki/ejklpmiadilgeabpklkickjghjegcblj)。
+
+即將上架：
+
+火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。
+
 ## 使用說明
 
 請參照[手冊](https://hackmd.io/@nobodyzxc/SkoZau-Qd)。

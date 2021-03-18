@@ -14,6 +14,10 @@
 
 Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做了一個定製版本（kiwi 分枝）給他。你可以用 .crx 檔案安裝他或者直接安裝[這個版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ki/ejklpmiadilgeabpklkickjghjegcblj)。
 
+背景版本：
+
+[背景版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm) 可以讓你在網站上更換圖示（例如機器人板手）。不過他必須常駐在背景執行，這可能會消耗更多的資源。
+
 即將上架：
 
 火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。

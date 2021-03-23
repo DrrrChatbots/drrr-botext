@@ -424,7 +424,7 @@ function UserHost(id, name, avatar, room, host){
   THIS.rootName = room ? `${name}` : '';
   THIS.rootAvatar = room ? `${avatar}` : '';
 
-  THIS.loungeURL = 'https://script.google.com/macros/s/AKfycbxsSLmCa1naF_FSnVd_AWmtfdsHW_FRD58X_S0AWxTnuK82jtXyQUyW/exec';
+  THIS.loungeURL = 'https://script.google.com/macros/s/AKfycbwhirBVhFFwBbiqZyhPPNS8Y9qMq6mTEEqo32uB-oL3tDkYVKef6NqW8NwRZ6X5iY8/exec';
 
   THIS.conns = {};
 

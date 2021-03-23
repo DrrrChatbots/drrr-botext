@@ -408,7 +408,7 @@ function hide_annoying_namelist_pre(){
 }
 
 function hide_annoying_namelist_post(){
-  if(roomInfo){
+  if(roomInfo && roomInfo.room){
     roomInfo.room.users.forEach(u => {
       annoyingList.forEach(x => {
         let re = RegExp(x, 'i');

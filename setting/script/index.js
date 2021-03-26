@@ -101,13 +101,13 @@ function execute(){
 }
 
 function save_script(){
-  chrome.storage.local.set({'botscript': globalThis.editor.getValue()},
+  chrome.storage.local.set({'lambdascript': globalThis.editor.getValue()},
     function(){
       chrome.notifications.create({
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: 'Your botscript are saved to local storage'
+        message: 'Your lambdascript are saved to local storage'
       });
     });
 }
@@ -119,7 +119,7 @@ function pause_script(){
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: 'Your botscript are terminated'
+    message: 'Your lambdascript are terminated'
   });
 }
 
@@ -543,12 +543,12 @@ $(document).ready(function(event) {
   bind_manual();
   bind_modal();
 
-  chrome.storage.local.get(['botscript', 'bs-mirror', 'bs-mirrors', 'show-chatroom', 'bs-installed'], (config) => {
+  chrome.storage.local.get(['lambdascript', 'bs-mirror', 'bs-mirrors', 'show-chatroom', 'bs-installed'], (config) => {
 
     set_modules(config);
 
     globalThis.editor = CodeMirror(document.body.getElementsByTagName("article")[0], {
-      value: config['botscript'] ? config['botscript'] : 'print("hello world")',
+      value: config['lambdascript'] ? config['lambdascript'] : 'print("hello world")',
       lineNumbers: true,
       mode: "javascript",
       keyMap: "sublime",

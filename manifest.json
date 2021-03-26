@@ -65,7 +65,6 @@
     "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [
          "images/*.png",
-         "live2d-widget/*",
          "fonts/*"
     ]
 }

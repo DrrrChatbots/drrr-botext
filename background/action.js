@@ -1,5 +1,19 @@
 
 actions = {
+  [action_name] : function(ctx){
+    setTimeout(
+      () => sendTab({
+        fn: change_room_title,
+        args: { ctx: ctx }
+      }), 500)
+  },
+  [action_desc] : function(ctx){
+    setTimeout(
+      () => sendTab({
+        fn: change_room_descr,
+        args: { ctx: ctx }
+      }), 500)
+  },
   [action_msg ] : function(...msgs){
     if(!msgs.length) msgs = [''];
     setTimeout(
@@ -58,6 +72,13 @@ actions = {
     setTimeout(
       () => sendTab({
         fn: kick_member,
+        args: { user: user }
+      }), 500)
+  },
+  [action_unban] : function(user){
+    setTimeout(
+      () => sendTab({
+        fn: unban_member,
         args: { user: user }
       }), 500)
   },
@@ -151,6 +172,27 @@ actions = {
           }
         );
       });
+  },
+  [action_func] : function(file){
+    chrome.storage.local.get(["bs-installed"], (config)=>{
+      code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
+      if(typeof(code) != "string"){
+        alert(`${file} not existed`);
+        return;
+      }
+      try{
+        let storage = {};
+        storage["evt"] = this.event;
+        machine = PS.Main.newMachine();
+        machine = PS.Main.interact(machine)(code)();
+        val = machine.val;
+        console.log(`action func val => ${stringify(val)}`);
+      }
+      catch(err){
+        alert(JSON.stringify(err));
+        console.log("error", err);
+      }
+    })
   },
   [action_script] : function(file){
     envName = `env-${file}`

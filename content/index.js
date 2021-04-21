@@ -41,7 +41,7 @@ $(document).ready(function(){
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(req.cookieDone){
     ajaxProfile(function(p, err){
-      if(p) location.reload()
+      if(p) window.location.href = "https://drrr.com/lounge/";
       else{
         //alert(`Bio Expired ${JSON.stringify(err)}`);
         chrome.storage.sync.remove(['profile', 'cookie']);

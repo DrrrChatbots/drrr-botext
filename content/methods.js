@@ -223,6 +223,7 @@ function removeMember(way){
 var kickMember = removeMember('kick');
 var banMember = removeMember('ban');
 var banReportMember = removeMember('report_and_ban_user');
+var unbanMember = removeMember('unban');
 
 //openFuncList(args, () => {
 //  if($('.dropdown-item-kick').length){
@@ -460,6 +461,14 @@ function changeNameBgClr(args){
   $("<style/>", {id:'cust-name-bg', text: `.select-text { background-color: ${args.color}; }`}).appendTo('head');
 }
 
+function changeRoomTitle(args){
+  ctrlRoom({'room_name': args.ctx});
+}
+
+function changeRoomDescr(args){
+  ctrlRoom({'room_description': args.ctx});
+}
+
 var setClock = function(args, callback){
   setTimeout(()=>{
     chrome.runtime.sendMessage({
@@ -511,6 +520,7 @@ methods[off_dm_member] = offDmMember;
 methods[dm_member] = dmMember;
 methods[kick_member] = kickMember;
 methods[ban_member] = banMember;
+methods[unban_member] = unbanMember;
 methods[ban_report_member] = banReportMember;
 methods[handover_room] = handOverRoom;
 methods[play_music] = playMusic;
@@ -522,6 +532,8 @@ methods[keep_room] = keepRoom;
 methods[bg_effect] = bgEffect;
 methods[change_bg_img_url] = changeBgImageURL;
 methods[change_name_clr] = changeNameClr;
+methods[change_room_title] = changeRoomTitle;
+methods[change_room_descr] = changeRoomDescr;
 methods[change_name_bg_clr] = changeNameBgClr;
 methods[set_clock] = setClock;
 methods[call_wizard] = callWizard;

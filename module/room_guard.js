@@ -179,7 +179,7 @@ export const event_action = (req, config) => {
       }
     }
   }
-  else if([event_kick, event_ban, event_banrpt].includes(type)){
+  else if([event_kick, event_ban].includes(type)){
     if(observe.includes(req.user)){
       observe.splice(observe.indexOf(req.user), 1);
       chrome.storage.sync.set({ [OBSERVE]: observe });

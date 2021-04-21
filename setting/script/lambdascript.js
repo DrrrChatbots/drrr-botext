@@ -24102,7 +24102,6 @@ var PS = {};
               if (v1 instanceof Data_Maybe.Just) {
                   return function __do() {
                       Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
-                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.clearTimer(v.cur))();
                       return Control_Monad_Rec_Class.Loop.create({
                           exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
                           cur: v.cur,

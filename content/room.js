@@ -161,7 +161,7 @@ function MsgDOM2EventObj(msg){
 
 function handle_talks(msg){
 
-  eobj = MsgDOM2EventObj(msg);
+  let eobj = MsgDOM2EventObj(msg);
 
   if(!eobj) return;
 

@@ -534,6 +534,10 @@ function callWizard(args, callback){
   plug_live2d();
 }
 
+function reloadRoom(args, callback){
+  window.location.reload();
+}
+
 
 var methods = {}
 methods[post_message] = postMessage;
@@ -561,9 +565,11 @@ methods[change_room_descr] = changeRoomDescr;
 methods[change_name_bg_clr] = changeNameBgClr;
 methods[set_clock] = setClock;
 methods[call_wizard] = callWizard;
+methods[reload_room] = reloadRoom;
 
 methods[set_timeout] = setTimeOut;
 
+// need callback
 methods[is_playing] = isPlaying;
 methods[get_members] = getMembers;
 methods[leave_room] = leaveRoom;

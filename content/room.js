@@ -122,7 +122,6 @@ function MsgDOM2EventObj(msg){
 
       var $user = $(msg).find('.name span');
       if($user.length > 1){ // send dm to someone
-        console.log($user);
         user = $user[2].textContent;
         type = event_dmto;
       }
@@ -136,7 +135,7 @@ function MsgDOM2EventObj(msg){
     }
   }
   catch(err){
-    alert('err from talks')
+    console.log('err from talks')
     console.log(err);
     throw new Error("Stop execution");
     return;
@@ -544,7 +543,7 @@ $(document).ready(function(){
 
         },
         function(data){
-          alert("roomInfo error", data);
+          console.log("roomInfo error", data);
         }
       )
     }

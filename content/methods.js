@@ -399,6 +399,35 @@ function monit_progressbar(){
   }
 }
 
+function monit_connection(){
+  var observer = new MutationObserver(function(mutations){
+    mutations.forEach(function(mutation) {
+      console.log(mutation)
+      if(mutation.target.style.display == 'block'){
+        $.ajax({
+          type: "GET",
+          url: `https://drrr.com/room/?ajax=1&api=json`,
+          //dataType: 'json',
+          success: function(data){
+            console.log(data);
+          },
+          error: function(jxhr){
+            //alert("connection lost, status: " + String(jxhr.status))
+            if(jxhr.status == 503){
+              console.log("wait 503 reload...")
+              reloadRoom();
+            }
+            else console.log(jxhr);
+          }
+        });
+      }
+    });
+  });
+  observer.observe($('#connection-indicator')[0], {
+    attributes: true //configure it to listen to attribute changes
+  });
+}
+
 function setTimeOut(args, callback){
   setTimeout(args.duration, function(){
     chrome.runtime.sendMessage({
@@ -534,6 +563,10 @@ function callWizard(args, callback){
   plug_live2d();
 }
 
+function reloadRoom(args, callback){
+  window.location.reload();
+}
+
 
 var methods = {}
 methods[post_message] = postMessage;
@@ -561,9 +594,11 @@ methods[change_room_descr] = changeRoomDescr;
 methods[change_name_bg_clr] = changeNameBgClr;
 methods[set_clock] = setClock;
 methods[call_wizard] = callWizard;
+methods[reload_room] = reloadRoom;
 
 methods[set_timeout] = setTimeOut;
 
+// need callback
 methods[is_playing] = isPlaying;
 methods[get_members] = getMembers;
 methods[leave_room] = leaveRoom;

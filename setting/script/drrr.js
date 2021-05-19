@@ -195,7 +195,18 @@ drrr_builtins = {
         if(fail) fail();
       }
     });
-  }
+  },
+  // for werewolf room on drrr.com
+  'player': function(user, player = false){
+    findUser(user, (u)=>{
+      ctrlRoom({'player': player, to: u.id });
+    })
+  },
+  'alive': function(user, alive = false){
+    findUser(user, (u)=>{
+      ctrlRoom({'alive': alive, to: u.id });
+    })
+  },
 }
 
 globalThis.drrr = {}

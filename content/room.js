@@ -492,6 +492,7 @@ $(document).ready(function(){
       //make_extinputs();
       wrap_post_form();
       monit_progressbar();
+      monit_connection();
       /* invoke newtab event */
       chrome.runtime.sendMessage({
         type: event_newtab,

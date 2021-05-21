@@ -250,6 +250,11 @@ function updateLoc(callback){
   getRoom((info)=>{
     updateInfo(info);
     if(callback) callback();
+  }, (jxhr) => {
+    if(jxhr.status == 503){
+      sendTab({ fn: reload_room, args: { } })
+      setTimeout(() =>  updateLoc(callback), 5 * 1000);
+    }
   })
 }
 

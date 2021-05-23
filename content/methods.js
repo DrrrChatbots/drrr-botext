@@ -564,7 +564,10 @@ function callWizard(args, callback){
 }
 
 function reloadRoom(args, callback){
-  window.location.reload();
+  //window.location.reload();
+  // redirect to index somethimes
+  //       -- suggested by shishiawase
+  window.location.replace(window.location.href);
 }
 
 

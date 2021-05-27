@@ -247,7 +247,7 @@ function wrap_post_form(){
     function rest(){
       if(!$('textarea[name="message"]').hasClass('state-secret') &&
         $('#url-icon').attr('data-status') !== 'filled' && enableMe &&
-        !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me ';
+        !$('textarea[name="message"]').val().match(/^\/\w/)) cmd = '/me';
 
       if(!$('textarea[name="message"]').val().match(/^\s*$/)){
         zh_conv((cvt)=>{

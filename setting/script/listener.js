@@ -1,11 +1,11 @@
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
     if(req && req.info)
-      updateInfo(req.info);
+      drrr.setInfo(req.info);
     if(req.start){
-      updateProfile();
-      updateLoc();
-      updateLounge();
+      drrr.getProfile();
+      drrr.getLoc();
+      drrr.getLounge();
     }
     else{
       globalThis.lastReq = req;
@@ -16,11 +16,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
     if(req.start){
-      updateProfile();
-      updateLoc();
-      updateLounge();
+      drrr.getProfile();
+      drrr.getLoc();
+      drrr.getLounge();
     }
-    updateProfile(()=>{
+    drrr.getProfile(()=>{
       req.type = event_lounge;
       req.host = false;
       req.user = profile.name;

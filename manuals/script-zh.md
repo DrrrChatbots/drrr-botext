@@ -189,17 +189,17 @@ drrr.create("房間名稱", "房間描述", 房間人數:數字, "語系")
 // 基本上都有預設參數，所以要傳幾個參數都行
 
 // 還有一些幫你抓好的變數
-loc // 現在位置（大廳或房間 "lounge" / "room"）
-profile // 個人訊息
-room // 房間訊息
-users // 房間成員
-info // 跟個人訊息有點像
-rooms // 所有房間，大廳狀態
+drrr.loc // 現在位置（大廳或房間 "lounge" / "room"）
+drrr.profile // 個人訊息
+drrr.room // 房間訊息
+drrr.users // 房間成員
+drrr.info // 跟個人訊息有點像
+drrr.rooms // 所有房間，大廳狀態
 
 // 有時你會需要更新，可以透過以下函數去更新他們
-updateLounge(callback);
-updateProfile(callback);
-updateLoc(callback);
+drrr.getLounge(callback);
+drrr.getProfile(callback);
+drrr.getLoc(callback);
 ```
 
 目前浪語裡，除了先前提到的保留字外，還有一些特殊的關鍵字：
@@ -320,7 +320,7 @@ later 3000 {
 歡迎回來功能：
 
 ```javascript=
-guests = users.map((x)=>x.name);
+guests = drrr.users.map((x)=>x.name);
 event join (user) => {
   if guests.includes(user)
   then drrr.print("welcome back, " + user)
@@ -367,9 +367,9 @@ event msg (user, cont: "^ans$") => drrr.print(theNumber)
 ```javascript=
 // 房間上限 9.0001 人
 event join (user) => {
-  if users.length == 10
+  if drrr.users.length == 10
   then drrr.print("/me恭喜成為 0.0001 人，你終於不做人類了嗎！");
-  else drrr.print("/me歡迎第 " + String(users.length) + " 個貴賓！");
+  else drrr.print("/me歡迎第 " + String(drrr.users.length) + " 個貴賓！");
 }
 ```
 

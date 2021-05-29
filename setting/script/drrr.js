@@ -34,8 +34,8 @@ function findUser(name, callback){
     for(u of info.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
-  if(prevInfo && prevInfo.room){
-    for(u of prevInfo.room.users){
+  if(drrr.prevInfo && drrr.prevInfo.room){
+    for(u of drrr.prevInfo.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
   }
@@ -214,54 +214,55 @@ for(key in drrr_builtins){
   globalThis.drrr[key] = drrr_builtins[key];
 }
 
-function updateInfo(info){
+drrr.setInfo = function(info){
   if(info){
-    globalThis.prevInfo = globalThis.info;
-    globalThis.info = info;
+    globalThis.drrr.prevInfo = globalThis.drrr.info;
+    globalThis.drrr.info = info;
     if(info.prfile)
-      globalThis.profile = info.profile;
+      globalThis.drrr.profile = info.profile;
     if(info.user)
-      globalThis.user = info.user;
+      globalThis.drrr.user = info.user;
     if(info.room){
-      globalThis.room = info.room;
-      globalThis.users = info.room.users;
+      globalThis.drrr.room = info.room;
+      globalThis.drrr.users = info.room.users;
     }
   }
-  if(info && info.redirect) globalThis.loc = info.redirect;
-  else globalThis.loc = "room";
+  if(info && info.redirect) globalThis.drrr.loc = info.redirect;
+  else globalThis.drrr.loc = "room";
 }
 
-function updateLounge(callback){
+drrr.getLounge = function(callback){
   ajaxRooms((data)=>{
-    globalThis.lounge = data.lounge;
-    globalThis.rooms = data.rooms;
+    globalThis.drrr.lounge = data.lounge;
+    globalThis.drrr.rooms = data.rooms;
     if(callback) callback(data);
   })
 }
 
-function updateProfile(callback){
+drrr.getProfile = function(callback){
   getProfile((profile)=>{
-    if(profile) globalThis.profile = profile;
+    if(profile) globalThis.drrr.profile = profile;
     if(callback) callback(profile);
   })
 }
 
-function updateLoc(callback){
+
+drrr.getLoc = function(callback){
   getRoom((info)=>{
-    updateInfo(info);
+    drrr.setInfo(info);
     if(callback) callback();
   }, (jxhr) => {
     if(jxhr.status == 503){
       sendTab({ fn: reload_room, args: { } })
-      setTimeout(() =>  updateLoc(callback), 5 * 1000);
+      setTimeout(() =>  drrr.getLoc(callback), 5 * 1000);
     }
   })
 }
 
 $(document).ready(()=>{
-  updateProfile();
-  updateLoc();
-  updateLounge();
+  drrr.getProfile();
+  drrr.getLoc();
+  drrr.getLounge();
 });
 
 function lambdascript_event_action(event, config, req){
@@ -272,18 +273,18 @@ function lambdascript_event_action(event, config, req){
 
   rules.map(([type, user_trip_regex, cont_regex, action])=> {
     if((Array.isArray(type) && type.includes(event)) || type == event){
-      log("event matched!");
+      //log("event matched!");
       if(match_user(req.user, req.trip, user_trip_regex)){
-        log("user matched!");
+        //log("user matched!");
         if((req.text === 'unknown' || req.text === undefined)
           || req.text.match(new RegExp(cont_regex))){
-          log("context matched!");
+          //log("context matched!");
           action(req.user, req.text, req.url, req.trip, req);
           //argfmt(arglist, req.user, req.text, req.url, (args)=>{
           //  return actions[action].apply(config, args);
           //});
-        } else log('content unmatched', req.text, cont_regex);
-      } else log('user unmatched', req.user, user_trip_regex);
-    } else log('event unmatched', event);
+        } //else log('content unmatched', req.text, cont_regex);
+      } //else log('user unmatched', req.user, user_trip_regex);
+    } //else log('event unmatched', event);
   });
 }

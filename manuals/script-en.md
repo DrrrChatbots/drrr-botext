@@ -193,17 +193,17 @@ drrr.create("room name", "room desc", room limit:number, "language")
 // Basically there are preset parameters, so you have to pass several parameters
 
 // some pre-defined variable
-loc // current location ("lounge" / "room")
-profile // your profile
-room // room info
-users // room member
-info // similar to profile api
-rooms // All rooms, lounge state
+drrr.loc // current location ("lounge" / "room")
+drrr.profile // your profile
+drrr.room // room info
+drrr.users // room member
+drrr.info // similar to profile api
+drrr.rooms // All rooms, lounge state
 
 // Sometimes you will need to update, you can update them through the following function
-updateLounge(callback);
-updateProfile(callback);
-updateLoc(callback);
+drrr.getLounge(callback);
+drrr.getProfile(callback);
+drrr.getLoc(callback);
 ```
 
 At present, in addition to the reserved words mentioned earlier, there are some special keywords in LambdaScript:
@@ -325,7 +325,7 @@ Some sample code:
 Welcome back:
 
 ```javascript=
-guests = users.map((x)=>x.name);
+guests = drrr.users.map((x)=>x.name);
 event join (user) => {
   if guests.includes(user)
   then drrr.print("welcome back, " + user)
@@ -372,9 +372,9 @@ Welcome the Guests:
 ```javascript=
 // room limit 9.0001 people
 event join (user) => {
-  if users.length == 10
+  if drrr.users.length == 10
   then drrr.print("/meWelcome to be the 0.0001 persion, have you finally stopped being a human?!");
-  else drrr.print("/meWelcome the " + String(users.length) + " Guest！");
+  else drrr.print("/meWelcome the " + String(drrr.users.length) + " Guest！");
 }
 ```
 

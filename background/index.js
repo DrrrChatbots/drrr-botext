@@ -179,7 +179,6 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     });
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
-
   }
   if(callback){
     //alert(JSON.stringify(req));

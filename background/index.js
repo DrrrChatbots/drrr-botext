@@ -149,13 +149,13 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     generate_notification(req);
   }
   else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
-    if(req && req.info) updateInfo(req.info);
+    if(req && req.info) drrr.setInfo(req.info);
     if(req.start){
-      updateProfile();
-      updateLoc();
-      updateLounge();
+      drrr.getProfile();
+      drrr.getLoc();
+      drrr.getLounge();
     }
-    updateProfile(()=>{
+    drrr.getProfile(()=>{
       console.log(req);
       console.log(JSON.stringify(sender))
       chrome.storage.sync.get((config) => {
@@ -188,11 +188,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
     if(req && req.start){
-      updateProfile();
-      updateLoc();
-      updateLounge();
+      drrr.getProfile();
+      drrr.getLoc();
+      drrr.getLounge();
     }
-    updateProfile(()=>{
+    drrr.getProfile(()=>{
       req.type = event_lounge;
       req.host = false;
       req.user = profile.name;

@@ -130,7 +130,9 @@ function MsgDOM2EventObj(msg){
         type = msg.classList.contains("secret") ? event_dm : event_msg;
       }
       if(type == event_dm || type == event_dmto){
-        if(user == roomProfile().name) return;
+        //if(user == roomProfile().name) return;
+        // allow event from me (dm to me, and would be dmto
+        if(user == roomProfile().name) type == event_dmto;
       }
     }
   }

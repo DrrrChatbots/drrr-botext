@@ -402,7 +402,6 @@ function monit_progressbar(){
 function monit_connection(){
   var observer = new MutationObserver(function(mutations){
     mutations.forEach(function(mutation) {
-      console.log(mutation)
       if(mutation.target.style.display == 'block'){
         $.ajax({
           type: "GET",

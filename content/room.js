@@ -422,6 +422,13 @@ function hide_annoying_namelist_post(){
   }
 }
 
+function plugTag(type, attr){
+  var tag = document.createElement(type);
+  for(at in attr)
+    tag[at] = attr[at];
+  document.getElementsByTagName('body')[0].appendChild(tag);
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -436,18 +443,10 @@ $(document).ready(function(){
   replace_youtube_talk();
 
   hide_annoying();
-  //$('#body').prepend(MacroModal);
-
-  console.log($('#user_name').text());
 
   chrome.storage.sync.get(
     [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile', '#bg-url-input', '#name-color-input', '#name-bg-color-input'],
     (config) => {
-      console.log(JSON.stringify(config));
-
-      //if(!config['profile'] ||
-      //    config['profile'].id !== roomProfile().id)
-      //    ajaxProfile(undefined, true, $('.room-title-name').text());
 
       chrome.storage.sync.set({'profile': roomProfile()});
 
@@ -499,6 +498,11 @@ $(document).ready(function(){
       chrome.runtime.sendMessage({
         type: event_newtab,
         host: isHost(),
+        user: "",
+        trip: "",
+        text: "",
+        info: "",
+        url: ""
       });
       console.log("start background moniter new");
       handle_exit();
@@ -526,7 +530,6 @@ $(document).ready(function(){
         function(RoomData){
           prevRoomInfo = roomInfo;
           roomInfo = RoomData; //roomInfo.profile
-          console.log('roomInfo', roomInfo);
 
           // v if enter error, escape
           if(roomInfo.redirect){
@@ -551,6 +554,55 @@ $(document).ready(function(){
       )
     }
   );
+
+  let code =
+    MsgDOM2EventObj.toString() + ' ' +
+    roomProfile.toString() + ' ' +
+    findUser.toString() + ' ' +
+    isHost.toString();
+
+  plugTag('script', {
+    textContent: `
+
+var prevRoomInfo = undefined;
+var roomInfo = undefined;
+
+var [event_me, event_music, event_leave, event_join, event_newhost, event_msg, event_dm, event_dmto, event_newtab, event_exittab, event_exitalarm, event_logout, event_musicbeg, event_musicend, event_timer, event_clock, event_kick, event_ban, event_unban, event_roll, event_roomprofile, event_roomdesc, event_timeout, event_lounge] = ["me", "music", "leave", "join", "new-host", "msg", "dm", "dmto", "newtab", "exittab", "exitalarm", "logout", "musicbeg", "musicend", "timer", "clock", "kick", "ban", "unban", "roll", "room-profile", "new-description", "timeout", "lounge"];
+event_events = [event_me      , event_music   , event_leave   , event_join    , event_newhost , event_msg     , event_dm      , event_dmto    ,/* event_logout  , */event_musicbeg , event_musicend, /*event_timer, event_clock, */event_kick, event_ban, event_unban, event_roll, event_roomprofile, event_roomdesc, event_lounge, event_newtab, "*"]
+
+var hooks = []
+
+${code}
+
+function handle_talks(msg){
+  let eobj = MsgDOM2EventObj(msg);
+  if(!eobj) return;
+  hooks.forEach(hook => hook(eobj))
+}
+
+$('#talks').bind('DOMNodeInserted', function(event) {
+  var e = event.target;
+  if(e.parentElement.id == 'talks'){
+    handle_talks(e);
+  }
+});
+`
+  })
+
+  chrome.storage.local.get('plugins', (config)=>{
+    if(config['plugins']){
+      Object.keys(config['plugins']).forEach(name => {
+        let [ctx, enable, loc, mode] = config['plugins'][name];
+        if(enable && loc == "room"){
+          //var actualCode = ``;
+          //script.textContent = actualCode;
+          if(mode == 'url') plugTag('script', { src: ctx, })
+          else plugTag('script', { textContent: ctx, })
+        }
+        else alert(enable, loc)
+      })
+    }
+  });
 });
 
 var exec_method = false;
@@ -571,21 +623,6 @@ function do_method(){
   if(!exec_method){ exec_method = true; _do_method(); }
 }
 
-/*
-function do_method(){
-  if(!exec_method && method_queue.length){
-    exec_method = true;
-    new Promise((res, rej)=>{
-      method_queue.shift()();
-      res();
-    }).then(()=>{
-      if(method_queue.length) do_method();
-      else exec_method = false;
-    });
-  }
-}
-*/
-
 function emit_method(req, sender, callback){
   if(req.fn && need_callback.includes(req.fn)){
     methods[req.fn](req.args, callback);
@@ -602,7 +639,6 @@ function emit_method(req, sender, callback){
 }
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
-  console.log(JSON.stringify(req), "comes the method from background");
-  console.log(req.fn, cache_profile);
+  console.log(JSON.stringify(req), " from bkg");
   emit_method(req, sender, callback);
 });

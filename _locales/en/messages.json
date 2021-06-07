@@ -1,5 +1,5 @@
 {
-    
+
     "fail_leave_title": {
         "message": "leave failed, will retry after 9 secs",
         "description": ""
@@ -156,6 +156,10 @@
     },
     "sticker": {
         "message": "sticker",
+        "description": ""
+    },
+    "plugin": {
+        "message": "plugin",
         "description": ""
     }
 }

@@ -150,14 +150,20 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
   }
   else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
     if(req && req.info) drrr.setInfo(req.info);
+
     if(req.start){
       drrr.getProfile();
       drrr.getLoc();
       drrr.getLounge();
     }
-    drrr.getProfile(()=>{
-      console.log(req);
-      console.log(JSON.stringify(sender))
+
+    console.log(req);
+
+    if(!event_events.includes(req.type)) return;
+
+    let get = drrr.profile ? () => {} : drrr.getProfile;
+
+    get(()=>{
       chrome.storage.sync.get((config) => {
         var reg_funcs = reg_table[req.type] || [];
         for(handle of reg_funcs)

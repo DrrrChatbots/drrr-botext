@@ -1377,7 +1377,7 @@ function sticker_setup(config){
     }
   })(false));
 
-  $stored.on('change', function (e) {
+  let sel_callback = function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
     var $target = $($(this).attr("data-target"));
@@ -1386,7 +1386,9 @@ function sticker_setup(config){
     $target.attr('data', this.id);
     show_stickergrid(valueSelected, ()=>$target.collapse('show'));
     chrome.storage.sync.set({ 'select_stickers': extract_sticker_data(valueSelected) });
-  });
+  }
+  $stored.on('change', sel_callback);
+  $stored.on('click', sel_callback);
 
   $('#reset-sticker').on('click', reset_stickers);
   $('#del_sticker').on('click', function(){
@@ -1506,6 +1508,13 @@ function module_setup(config){
   });
 }
 
+function plugin_edit_freeze(bool){
+  $('#plugin-select').attr('disabled', bool)
+  $('#add_plugin').attr('disabled', bool)
+  $('#del_plugin').attr('disabled', bool)
+  $('#plugin-code').attr('disabled', !bool);
+}
+
 function local_setup(config){
   Object.keys(local_functions).forEach((v)=>{
     $('#local-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
@@ -1548,6 +1557,182 @@ function local_setup(config){
         $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
       });
     });
+  });
+
+  if(config['plugins']){
+    Object.keys(config['plugins']).forEach((name)=>{
+      let [ctx, enable, loc, mode] = config['plugins'][name];
+      $('#plugin-select').append(
+        `<option style="text-align:center; text-align-last:center;"
+          title="${mode == 'url' ? ctx : 'code'}"
+          value="${name}">${name}/${loc}/${mode}</option>`);
+      if(mode !== 'url'){
+        $('#plugin-code').val(ctx);
+        $('#plugin-codeblock').show();
+      }
+    })
+
+    var select_plugin = config['select_plugin'];
+    if(!select_plugin) select_plugin = Object.keys(config['plugins'])[0];
+
+    if(config['plugins'][select_plugin]){
+      let [ctx, enable, loc, mode] = config['plugins'][select_plugin];
+      $('#plugin-select').val(select_plugin);
+      var plugin_switch = enable;
+      $('#plugin-switch').attr('class', `fa fa-toggle-${enable ? 'on' : 'off'}`);
+      if(mode !== 'url'){
+        $('#plugin-codeblock').show();
+        $('#plugin-code').val(ctx);
+        console.log(ctx);
+      }
+    }
+  }
+
+  $('#write_plugin').on('click', function(){
+    if(!$('#plugin-codeblock').is(":visible")) return;
+    if($('#save-plugin').is(":visible")){
+      var $stored = $('#plugin-select');
+      $stored.change();
+      plugin_edit_freeze(false);
+      $('#save-plugin').hide();
+    }
+    else{
+      plugin_edit_freeze(true);
+      $('#save-plugin').show();
+    }
+  });
+
+  $('#save-plugin').on('click', function(){
+
+    var $stored = $('#plugin-select');
+    var valueSelected = $stored.val();
+
+    if(!valueSelected){
+      name = prompt(chrome.i18n.getMessage("rename_as"),
+        name ? name : chrome.i18n.getMessage("plugin"));
+
+      if(name === null) return plugin_edit_freeze(false);
+
+      name = name ? name : chrome.i18n.getMessage("plugin");
+
+      loc = prompt("location (room/lounge/login)", "room");
+
+      if(loc === null) return plugin_edit_freeze(false);
+    }
+    else name = valueSelected;
+
+    chrome.storage.local.get("plugins", (config)=>{
+      config["plugins"] = config["plugins"] || {}
+      let $stored = $('#plugin-select');
+      if(!config["plugins"][name]){
+        config["plugins"][name] = [$('#plugin-code').val(), false, loc, 'code'];
+        let idx = $('option', $stored).length;
+        $stored.append(`<option style="text-align:center; text-align-last:center;" value="${name}" title="code">${name}/${loc}/code</option>`);
+        $stored[0].selectedIndex = idx;
+      }
+      else{
+        config["plugins"][name][0] = $('#plugin-code').val();
+      }
+      chrome.storage.local.set({ "plugins": config["plugins"] })
+      $stored.change();
+      $(this).hide();
+      plugin_edit_freeze(false)
+    });
+  });
+
+  $('#add_plugin').on('click', function(){
+    var error = () => alert(", you refer the 'goto store button'");
+    var url = prompt('input the plugin source code URL (empty for writing source):');
+    if(url === null) return;
+
+    let mode = url ? 'url' : 'code';
+    url = url || '// javascript here';
+
+    if(url.includes('gist.githubusercontent.com'))
+      return alert('Use https://raw.githack.com to convert gist URL');
+
+    var $stored = $('#plugin-select');
+
+    name = prompt(chrome.i18n.getMessage("rename_as"),
+      name ? name : chrome.i18n.getMessage("plugin"));
+
+    if(name === null) return;
+
+    name = name ? name : chrome.i18n.getMessage("plugin");
+
+    loc = prompt("location (room/lounge/login)", "room");
+
+    if(loc === null) return;
+
+    chrome.storage.local.get("plugins", (config)=>{
+      config["plugins"] = config["plugins"] || {}
+      config["plugins"][name] = [url, false, loc, mode];
+      chrome.storage.local.set({ "plugins": config["plugins"] })
+    });
+
+    var idx = $('option', $stored).length;
+    $stored.append(`<option style="text-align:center; text-align-last:center;" value="${name}" title="${url}">${name}/${loc}/${mode}</option>`);
+    $stored[0].selectedIndex = idx;
+    $stored.change();
+  });
+
+  $('#del_plugin').on('click', function(){
+    var $stored = $('#plugin-select');
+    var optionSelected = $("option:selected", $stored);
+    var valueSelected = $stored.val();
+    if(!valueSelected) return;
+    if($("option", $stored).length){
+      chrome.storage.local.get("plugins", (config)=>{
+        delete config["plugins"][valueSelected]
+        chrome.storage.local.set({ "plugins": config["plugins"] })
+      });
+      optionSelected.remove();
+      $stored.change();
+    }
+  });
+
+  $('#plugin-select').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    chrome.storage.local.set({
+      'select_plugin': valueSelected
+    }, function(){
+      chrome.storage.local.get((config)=>{
+        if(config['plugins'][valueSelected]){
+          let [ctx, enable, loc, mode] = config['plugins'][valueSelected]
+          $('#plugin-switch').attr('class', `fa fa-toggle-${enable ? 'on' : 'off'}`);
+          if(mode == 'url'){
+            $('#plugin-codeblock').hide();
+            $('#plugin-code').val('');
+          }
+          else {
+            $('#plugin-code').val(ctx);
+            $('#plugin-codeblock').show();
+          }
+        }
+        else{
+          $('#plugin-codeblock').hide();
+          $('#plugin-code').val('');
+          $('#plugin-switch').attr('class', `fa fa-toggle-off`);
+        }
+      });
+    });
+  });
+
+  $('#plugin-switch-btn').click(function(){
+    var v = !$('#plugin-switch').hasClass(`fa-toggle-on`);
+    var sel = $('#plugin-select')[0];
+    var optionSelected = $("option:selected", sel);
+    var valueSelected = sel.value;
+    if(!valueSelected) return;
+    //chrome.storage.plugin.set({
+    //  ['switch_' + valueSelected]: v
+    //});
+    chrome.storage.local.get("plugins", (config)=>{
+      config["plugins"][valueSelected][1] = v;
+      chrome.storage.local.set({ "plugins": config["plugins"] })
+    });
+    $('#plugin-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
   });
 }
 

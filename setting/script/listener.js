@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       drrr.getLoc();
       drrr.getLounge();
     }
-    drrr.getProfile(()=>{
+    getProfile(profile=>{
       req.type = event_lounge;
       req.host = false;
       req.user = profile.name;

@@ -471,7 +471,6 @@ var effects = {
 }
 
 function bgEffect(args){
-  //$('<script/>', {src: location.baseURL + "/js/extra.min.js"}).appendTo("head"); snowStorm.start();
   alert("bgEffect is not supported on firefox");
 }
 

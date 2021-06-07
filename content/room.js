@@ -422,13 +422,6 @@ function hide_annoying_namelist_post(){
   }
 }
 
-function plugTag(type, attr){
-  var tag = document.createElement(type);
-  for(at in attr)
-    tag[at] = attr[at];
-  document.getElementsByTagName('body')[0].appendChild(tag);
-}
-
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -594,8 +587,6 @@ $('#talks').bind('DOMNodeInserted', function(event) {
       Object.keys(config['plugins']).forEach(name => {
         let [ctx, enable, loc, mode] = config['plugins'][name];
         if(enable && loc == "room"){
-          //var actualCode = ``;
-          //script.textContent = actualCode;
           if(mode == 'url') plugTag('script', { src: ctx, })
           else plugTag('script', { textContent: ctx, })
         }

@@ -140,6 +140,19 @@ $(document).ready(function(){
       task();
     }
   });
+
+  chrome.storage.local.get('plugins', (config)=>{
+    if(config['plugins']){
+      Object.keys(config['plugins']).forEach(name => {
+        let [ctx, enable, loc, mode] = config['plugins'][name];
+        if(enable && loc == "lounge"){
+          if(mode == 'url') plugTag('script', { src: ctx, })
+          else plugTag('script', { textContent: ctx, })
+        }
+        else alert(enable, loc)
+      })
+    }
+  });
 })
 
 var hand = undefined;

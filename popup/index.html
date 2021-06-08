@@ -62,10 +62,10 @@
 
         <ul class="nav nav-tabs nav-justified">
           <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Bio</a></li>
-          <li id="tab5" class="pop-tab"><a data-toggle="tab" href="#tab5-cont">Local</a></li>
           <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">Friends</a></li>
           <li id="tab0" class="pop-tab"><a data-toggle="tab" href="#tab0-cont">Music</a></li>
-          <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">Module</a></li>
+          <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">Mod</a></li>
+          <li id="tab5" class="pop-tab"><a data-toggle="tab" href="#tab5-cont">Plug</a></li>
           <li id="tab4" class="pop-tab"><a data-toggle="tab" href="#tab4-cont">Sticker</a></li>
         </ul>
 
@@ -192,22 +192,24 @@
             <br>
             <div class="input-group">
 
+              <!--
               <div class="input-group-btn">
-                <button id="local-setting-btn" class="btn btn-default" type="button" title='GoTo Local Setting'>
-                  <i id="local-setting" class="glyphicon glyphicon-bookmark"></i>
-                </button>
               </div>
+              -->
 
               <select id="local-select"
                       class="form-control"
                       data-target="#local_list"
                       style="text-align:center; text-align-last:center;"
-                      title="select function">
+                      title="select local plugin">
               </select>
 
               <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
               <div class="input-group-btn">
+                <button id="local-setting-btn" class="btn btn-default" type="button" title='GoTo Local Setting'>
+                  <i id="local-setting" class="glyphicon glyphicon-bookmark"></i>
+                </button>
                 <button id="local-switch-btn" class="btn btn-default" title="Enable/Disable">
                   <i id="local-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
                 </button>
@@ -229,6 +231,49 @@
                 </div>
               </div>
             </div>
+
+            <div class="input-group">
+
+              <!--
+              <div class="input-group-btn">
+              </div>
+              -->
+
+              <select id="plugin-select"
+                      class="form-control"
+                      data-target=""
+                      style="text-align:center;"
+                      title="select plugins">
+              </select>
+
+              <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+
+              <div class="input-group-btn">
+                <button id="del_plugin" class="btn btn-default"
+                        type="submit" title="del the selected plugin">
+                  <i id="" class="glyphicon glyphicon-minus"></i>
+                </button>
+                <button id="write_plugin" class="btn btn-default"
+                        type="submit" title="add plugin by wrting script">
+                  <i id="" class="glyphicon glyphicon-pencil"></i>
+                </button>
+                <button id="add_plugin" class="btn btn-default"
+                        type="submit" title="add plugin by URL">
+                  <i id="" class="glyphicon glyphicon-plus"></i>
+                </button>
+                <button id="plugin-switch-btn" class="btn btn-default" title="Enable/Disable">
+                  <i id="plugin-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id='plugin-codeblock' style="display:none">
+              <hr>
+              <textarea id="plugin-code" style="width: 100%" rows="5" disabled></textarea>
+              <br>
+              <button id='save-plugin' style="float: right; display:none">save</button>
+            </div>
+
           </div>
 
           <div id="tab2-cont" class="tab-pane fade">
@@ -440,6 +485,7 @@
               </div>
             </div>
           </div>
+
           <div id="tab4-cont" class="tab-pane fade">
             <br>
             <div class="input-group">
@@ -459,19 +505,12 @@
               <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
               <div class="input-group-btn">
-                <button id="add_sticker" class="btn btn-default" type="submit" title="add sticker by URL">
-                  <i id="" class="glyphicon glyphicon-plus"></i>
-                </button>
                 <button id="del_sticker" class="btn btn-default" type="submit" title="del the selected sticker">
                   <i id="" class="glyphicon glyphicon-minus"></i>
                 </button>
-                <!--
-                  <button id="friend-opener" class="btn btn-default fb-opener" type="button"
-                  data-delayed-toggle="collapse" data-target="#sticker_list"
-                  title="show friend list">
-                  <i id="friend-list_type" class="glyphicon glyphicon-user"></i>
-                  </button>
-                -->
+                <button id="add_sticker" class="btn btn-default" type="submit" title="add sticker by URL">
+                  <i id="" class="glyphicon glyphicon-plus"></i>
+                </button>
                 <button id="sticker-store-opener" class="btn btn-default" type="submit" title="goto store">
                   <i class="glyphicon glyphicon-shopping-cart"></i>
                 </button>

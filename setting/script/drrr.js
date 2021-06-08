@@ -241,6 +241,7 @@ drrr.getLounge = function(callback){
 
 drrr.getProfile = function(callback){
   getProfile((profile)=>{
+    Profile = profile;
     if(profile) globalThis.drrr.profile = profile;
     if(callback) callback(profile);
   })
@@ -259,11 +260,15 @@ drrr.getLoc = function(callback){
   })
 }
 
-$(document).ready(()=>{
-  drrr.getProfile();
-  drrr.getLoc();
-  drrr.getLounge();
-});
+drrr.getReady = function(callback){
+  drrr.getProfile(() => {
+    drrr.getLoc(() => {
+      drrr.getLounge(() => {
+        callback();
+      });
+    });
+  });
+}
 
 function lambdascript_event_action(event, config, req){
   var rules = PS.DrrrBot.events[""] || []

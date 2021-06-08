@@ -149,6 +149,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     generate_notification(req);
   }
   else if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
+
     console.log(req);
     console.log(JSON.stringify(sender))
     chrome.storage.sync.get((config) => {

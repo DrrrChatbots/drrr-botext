@@ -15,6 +15,18 @@ $(document).ready(function(){
       }
     }
   );
+  chrome.storage.local.get('plugins', (config)=>{
+    if(config['plugins']){
+      Object.keys(config['plugins']).forEach(name => {
+        let [ctx, enable, loc, mode] = config['plugins'][name];
+        if(enable && loc == "login"){
+          if(mode == 'url') plugTag('script', { src: ctx, })
+          else plugTag('script', { textContent: ctx, })
+        }
+        else alert(enable, loc)
+      })
+    }
+  });
 });
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {

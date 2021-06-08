@@ -1,4 +1,43 @@
 
+function exec_lambda_script(pure){
+  return function(file){
+    function exec(){
+      envName = `env-${file}`
+      let entries = ["bs-installed"]
+      if(!pure) entries.push(envName)
+      chrome.storage.local.get(entries, (config)=>{
+        code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
+        if(typeof(code) != "string"){
+          alert(`${file} not existed`);
+          return;
+        }
+        if(pure) storage = {}
+        else storage = config[envName] || {}
+        try{
+          storage["evt"] = this.event;
+          machine = PS.Main.newMachine();
+          machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
+          machine = PS.Main.interact(machine)(code)();
+          val = machine.val;
+          console.log(`action script val => ${stringify(val)}`);
+          if(!pure){
+            config[envName] = storage;
+            chrome.storage.local.set({
+              [envName]: config[envName]
+            });
+          }
+        }
+        catch(err){
+          alert(JSON.stringify(err));
+          console.log("error", err);
+        }
+      })
+    }
+    if(!drrr.loc) drrr.getReady(exec);
+    else exec();
+  }
+}
+
 actions = {
   [action_name] : function(ctx){
     setTimeout(
@@ -173,54 +212,8 @@ actions = {
         );
       });
   },
-  [action_func] : function(file){
-    chrome.storage.local.get(["bs-installed"], (config)=>{
-      code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
-      if(typeof(code) != "string"){
-        alert(`${file} not existed`);
-        return;
-      }
-      try{
-        let storage = {};
-        storage["evt"] = this.event;
-        machine = PS.Main.newMachine();
-        machine = PS.Main.interact(machine)(code)();
-        val = machine.val;
-        console.log(`action func val => ${stringify(val)}`);
-      }
-      catch(err){
-        alert(JSON.stringify(err));
-        console.log("error", err);
-      }
-    })
-  },
-  [action_script] : function(file){
-    envName = `env-${file}`
-    chrome.storage.local.get(["bs-installed", envName], (config)=>{
-      code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
-      if(typeof(code) != "string"){
-        alert(`${file} not existed`);
-        return;
-      }
-      storage = config[envName] || {}
-      try{
-        storage["evt"] = this.event;
-        machine = PS.Main.newMachine();
-        machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
-        machine = PS.Main.interact(machine)(code)();
-        val = machine.val;
-        console.log(`action script val => ${stringify(val)}`);
-        config[envName] = storage;
-        chrome.storage.local.set({
-          [envName]: config[envName]
-        });
-      }
-      catch(err){
-        alert(JSON.stringify(err));
-        console.log("error", err);
-      }
-    })
-  },
+  [action_func] : exec_lambda_script(true),
+  [action_script] : exec_lambda_script(false),
   /* too quick leading play song failed in content script, so setTimeout */
 }
 

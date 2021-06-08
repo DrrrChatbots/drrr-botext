@@ -334,7 +334,7 @@ function bindAlarms(){
           });
         })(action, arglist), period * min)
       );
-      console.log('rule:', period, message);
+      console.log('rule:', period);
     });
   });
 }

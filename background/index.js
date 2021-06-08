@@ -155,19 +155,17 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       drrr.getProfile();
       drrr.getLoc();
       drrr.getLounge();
+      return;
     }
 
-    console.log(req);
-
-    if(!event_events.includes(req.type)) return;
-
-    let get = drrr.profile ? () => {} : drrr.getProfile;
+    let get = drrr.profile ? f => f() : drrr.getProfile;
 
     get(()=>{
       chrome.storage.sync.get((config) => {
         var reg_funcs = reg_table[req.type] || [];
         for(handle of reg_funcs)
           handle(req, config, sender)
+
         if(config['select_module'])
           import(`/module/${module_mapping[config['select_module']]}`).then(
             (module)=>{

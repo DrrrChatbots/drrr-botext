@@ -31,8 +31,6 @@ globalThis.pprint = function(){
   });
 }
 
-
-
 function show_bindings(){
   var value = "// The bindings defined specifically in the Sublime Text mode\nvar bindings = {\n";
   var map = CodeMirror.keyMap.sublime;

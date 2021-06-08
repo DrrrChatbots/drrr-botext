@@ -1,5 +1,5 @@
 {
-    
+
     "fail_leave_title": {
         "message": "離開失敗，九秒後為您重試",
         "description": ""
@@ -156,6 +156,10 @@
     },
     "sticker": {
         "message": "貼圖",
+        "description": ""
+    },
+    "plugin": {
+        "message": "擴展",
         "description": ""
     }
 }

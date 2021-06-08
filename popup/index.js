@@ -1589,7 +1589,8 @@ function local_setup(config){
   }
 
   $('#write_plugin').on('click', function(){
-    if(!$('#plugin-codeblock').is(":visible")) return;
+    if(!$('#plugin-codeblock').is(":visible"))
+      return alert("the plugin is not editable");
     if($('#save-plugin').is(":visible")){
       var $stored = $('#plugin-select');
       $stored.change();
@@ -1646,7 +1647,12 @@ function local_setup(config){
     if(url === null) return;
 
     let mode = url ? 'url' : 'code';
-    url = url || '// javascript here';
+    url = url ||
+      `// your javascript here ... example:
+/*
+function plugin_logger(event){ console.log(event); }
+hooks.push(plugin_logger);
+*/`;
 
     if(url.includes('gist.githubusercontent.com'))
       return alert('Use https://raw.githack.com to convert gist URL');

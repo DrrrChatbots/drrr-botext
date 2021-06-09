@@ -144,12 +144,11 @@ $(document).ready(function(){
   chrome.storage.local.get('plugins', (config)=>{
     if(config['plugins']){
       Object.keys(config['plugins']).forEach(name => {
-        let [ctx, enable, loc, mode] = config['plugins'][name];
+        let [mode, loc, enable, ctx] = config['plugins'][name];
         if(enable && loc == "lounge"){
           if(mode == 'url') plugTag('script', { src: ctx, })
           else plugTag('script', { textContent: ctx, })
         }
-        else alert(enable, loc)
       })
     }
   });
@@ -207,7 +206,8 @@ function blinkElt(sel, callback){
   } else callback && callback();
 }
 
-chrome.runtime.onMessage.addListener((req, sender, callback) => {
+chrome.runtime.onMessage.addListener(
+  (req, sender, callback) => {
   console.log(req);
   if(req){
     if(req.fn == leave_room)

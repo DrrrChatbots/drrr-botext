@@ -1,7 +1,7 @@
 var bkg = chrome.extension.getBackgroundPage;
 
 function open_manual(){
-  var language = window.navigator.userLanguage || window.navigator.language;
+  let language = window.navigator.userLanguage || window.navigator.language;
   if(language == 'zh-CN' || language == 'zh-TW')
     chrome.tabs.create({url: chrome.extension.getURL('manuals/manual-zh.html')});
   else
@@ -75,9 +75,9 @@ function open_tripgen(){
 }
 
 function get_music(callback){
-  var keyword = $('#keyword').val();
-  var source = $('#music_source').val();
-  if(keyword) {
+  let keyword = $('#keyword').val();
+  let source = $('#music_source').val();
+  if(keyword){
     music_api(keyword, callback, {
       log: alert.bind(window),
       ajax: (req) =>
@@ -213,8 +213,8 @@ function bind_imm_pldl(args){
 
 function bind_fav_song(args){
   $(`.fav-song[data="${fav_song_data(args)}"]`).click(function(){
-    var title = $(this).parent().prev().attr('title');
-    var idx = title.lastIndexOf(' - ');
+    let title = $(this).parent().prev().attr('title');
+    let idx = title.lastIndexOf(' - ');
     add_song(
       FAVLIST,
       title.substring(0, idx),
@@ -226,8 +226,8 @@ function bind_fav_song(args){
 
 function bind_add_song(args){
   $(`.add-song[data="${add_song_data(args)}"]`).click(function(){
-    var title = $(this).parent().prev().attr('title');
-    var idx = title.lastIndexOf(' - ');
+    let title = $(this).parent().prev().attr('title');
+    let idx = title.lastIndexOf(' - ');
     add_song(
       PLAYLIST,
       title.substring(0, idx),
@@ -251,7 +251,7 @@ function bind_vaf_song(args){
 
 function bind_goto_room(args){
   $(`.goto-room[data="${goto_room_data(args)}"]`).click(function(){
-    var toURL = $(this).attr('data');
+    let toURL = $(this).attr('data');
     if(toURL.startsWith('https'))
       chrome.storage.sync.set(
         {'jumpToRoom': toURL },
@@ -260,7 +260,7 @@ function bind_goto_room(args){
         })
       );
     else{
-      var type = 0;
+      let type = 0;
       chrome.storage.sync.set({
         'eager-type': type,
         'eager-input': toURL
@@ -305,9 +305,9 @@ btn_funcbind = {
 }
 
 function show_list(cont_name, entries, btns, callback, extend){
-  var cont = (!Array.isArray(entries) ? entries :
+  let cont = (!Array.isArray(entries) ? entries :
     entries.map((args)=> list_template(args, btns)).join(''))
-  var func = extend ? 'append' : 'html';
+  let func = extend ? 'append' : 'html';
   $(cont_name)[func](cont).promise().then(()=>{
     callback();
     Array.isArray(entries) && entries.forEach((args) => {
@@ -346,8 +346,8 @@ function show_searchlist(callback){
     show_list(
       '#list_container',
       Object.keys(api[source].songs(data)).map((idx)=>{
-        var name = api[source].name(data, idx);
-        var singer = api[source].singer(data, idx);
+        let name = api[source].name(data, idx);
+        let singer = api[source].singer(data, idx);
         return ({
           icon: 'glyphicon-search',
           title: `${name} - ${singer}`,
@@ -363,11 +363,11 @@ function maxFreqElt(array)
 {
   if(array.length == 0)
     return null;
-  var modeMap = {};
-  var maxEl = array[0], maxCount = 1;
-  for(var i = 0; i < array.length; i++)
+  let modeMap = {};
+  let maxEl = array[0], maxCount = 1;
+  for(let i = 0; i < array.length; i++)
   {
-    var el = array[i];
+    let el = array[i];
     if(modeMap[el] == null)
       modeMap[el] = 1;
     else
@@ -382,11 +382,11 @@ function maxFreqElt(array)
 }
 
 function extractImagesFromNodes(nodes){
-  var urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
+  let urls = Object.values(nodes.find('.FnStickerPreviewItem')).map(
     (node) => {
       if($(node).attr('data-preview')){
-        var attr = $(node).attr('data-preview');
-        var view = JSON.parse(attr);
+        let attr = $(node).attr('data-preview');
+        let view = JSON.parse(attr);
         if(view.animationUrl && view.animationUrl.length)
           return view.animationUrl;
         else return view.staticUrl;
@@ -396,14 +396,14 @@ function extractImagesFromNodes(nodes){
   ).filter((v)=>v.length);
   if(urls.length) return urls;
   urls = nodes.find('.FnImage').toArray().map(u=>{
-    var attr = $(u).css('background-image')
+    let attr = $(u).css('background-image')
     return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
   }).filter((v)=>v.length);
   if(urls.length) return urls;
 
-  var k = maxFreqElt(nodes.find('span').map(function(){ return this.className; }))
+  let k = maxFreqElt(nodes.find('span').map(function(){ return this.className; }))
   urls = nodes.find(`.${k}`).toArray().map(u=>{
-    var attr = $(u).css('background-image')
+    let attr = $(u).css('background-image')
     return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
   }).filter((v)=>v.length);
   return urls.unique();
@@ -417,9 +417,9 @@ function show_stickergrid(url, callback){
     dataType: 'html',
     success: function(data){
 
-      var nodes = $(data);
+      let nodes = $(data);
 
-      var urls = extractImagesFromNodes(nodes);
+      let urls = extractImagesFromNodes(nodes);
 
       show_grid(
         '#sticker_list_container',
@@ -471,8 +471,8 @@ function show_roomlist(callback){
 
 // ['glyphicon-lock', 'glyphicon-user', 'glyphicon-home'];
 function show_fbsearchlist(callback){
-  var option = {};
-  var type = cur_type('#fb_rule_type', fb_rule_types);
+  let option = {};
+  let type = cur_type('#fb_rule_type', fb_rule_types);
   rule = $('#fb-input').val();
   try{
     new RegExp(rule);
@@ -512,7 +512,7 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
   ajaxRooms(
     function(data){
       lounge = data.rooms.sort(
-        function(a,b) {return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);}
+        function(a,b){return (a.language > b.language) ? 1 : ((b.language > a.language) ? -1 : 0);}
       ).reverse();
       findGroups(lounge, undefined, (groups, config) =>{
         if(groups.length)
@@ -536,7 +536,7 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
 }
 
 function show_configlist(container, conf_type, callback, buttons, empty_name, attrs, default_config){
-  var load = default_config ?
+  let load = default_config ?
     (ct, cb) => cb(default_config) :
     (ct, cb) => chrome.storage.sync.get(ct, cb);
 
@@ -545,16 +545,16 @@ function show_configlist(container, conf_type, callback, buttons, empty_name, at
     function recursive(cfs, callback, ext){
       if(cfs.length){
         conf = cfs[0];
-        var list = config[conf];
+        let list = config[conf];
         if(list && list.length){
           show_list(
             container,
             Object.keys(list).map((idx) => {
-              var icon = attrs.icon;
+              let icon = attrs.icon;
               icon = typeof icon === 'string' ? icon : icon(conf, list[idx]);
-              var title = attrs.title(conf, list[idx]);
-              var content = attrs.content(conf, list[idx]);
-              var data = attrs.data(conf, list[idx]);
+              let title = attrs.title(conf, list[idx]);
+              let content = attrs.content(conf, list[idx]);
+              let data = attrs.data(conf, list[idx]);
               return ({
                 idx: idx,
                 conf: conf,
@@ -617,17 +617,17 @@ function emptyKeyword(){
 }
 
 function add_scheme(url, scheme){
-  if (url.indexOf("//") > -1) {
+  if (url.indexOf("//") > -1){
     return url;
   }
   return scheme + url;
 }
 
-function extractHostname(url) {
-  var hostname;
+function extractHostname(url){
+  let hostname;
   //find & remove protocol (http, ftp, etc.) and get hostname
 
-  if (url.indexOf("//") > -1) {
+  if (url.indexOf("//") > -1){
     scheme = url.substring(0, url.indexOf("://") + 3)
     hostname = url.split('/')[2];
   }
@@ -717,10 +717,10 @@ function music_bar_setup(config){
   /* when open the music_list */
   /* .collapse('hide') .collapse('show') */
 
-  $('#music_list_opener').on('click', function () {
-    var $target = $($(this).attr("data-target"));
-    var tartype = $target.attr('data');
-    var opening = $target.hasClass('in');
+  $('#music_list_opener').on('click', function (){
+    let $target = $($(this).attr("data-target"));
+    let tartype = $target.attr('data');
+    let opening = $target.hasClass('in');
 
     if($('#list_type').hasClass('glyphicon-list')){
       $target.attr('data', 'playlist');
@@ -728,7 +728,7 @@ function music_bar_setup(config){
       else if(tartype == 'playlist') $target.collapse('hide');
       else{
         //show playlist
-        callback = function () {
+        callback = function (){
           show_playlist(()=>$target.collapse('show'));
           $target.off('hidden.bs.collapse', callback);
         }
@@ -744,16 +744,16 @@ function music_bar_setup(config){
   });
 
   $('#fav_add_search').on('click', function(){
-    var $target = $($(this).attr("data-target"));
-    var tartype = $target.attr('data');
-    var opening = $target.hasClass('in');
+    let $target = $($(this).attr("data-target"));
+    let tartype = $target.attr('data');
+    let opening = $target.hasClass('in');
     if($('#fav_add_icon').hasClass('glyphicon-heart')){
       $target.attr('data', 'fav')
       if(!opening) show_favlist(()=>$target.collapse('show'));
       else if(tartype == 'fav') $target.collapse('hide');
       else{
         //show playlist
-        callback = function () {
+        callback = function (){
           show_favlist(()=>$target.collapse('show'));
           $target.off('hidden.bs.collapse', callback);
         }
@@ -771,7 +771,7 @@ function music_bar_setup(config){
     if($('#keyword').val().trim())
       play_search(get_music, alert.bind(window));
     else{
-      var tartype = $($(this).attr("data-target")).attr('data');
+      let tartype = $($(this).attr("data-target")).attr('data');
       chrome.storage.sync.get(config => {
         play_next(config, alert.bind(window),
           tartype == 'playlist' ? show_playlist : undefined);
@@ -780,16 +780,16 @@ function music_bar_setup(config){
   });
 
 
-  function bind_request(event) {
+  function bind_request(event){
     // Permissions must be requested from inside a user gesture, like a button's
     // click handler.
-    var url = $('#custom_api').attr('data');
+    let url = $('#custom_api').attr('data');
     chrome.permissions.request({
       //permissions: [extractHostname(url) + '/*'],
       origins: [extractHostname(url) + '/*'],
-    }, function(granted) {
-      if (granted) {
-        var save = ()=>{
+    }, function(granted){
+      if (granted){
+        let save = ()=>{
           chrome.storage.sync.set({
             "youtube-api-url": add_scheme(url, 'http://')
           });
@@ -799,8 +799,8 @@ function music_bar_setup(config){
           chrome.permissions.remove({
             //permissions: [extractHostname(url) + '/*'],
             origins: [extractHostname(config["youtube-api-url"]) + '/*'],
-          }, function(removed) {
-            if (removed) {
+          }, function(removed){
+            if (removed){
               // The permissions have been removed.
               alert(`remove ${extractHostname(config["youtube-api-url"]) + '/*'} success`);
               save();
@@ -824,14 +824,14 @@ function music_bar_setup(config){
 
   function bind_api_url(){
     chrome.storage.sync.get("youtube-api-url", (config)=>{
-      var url = prompt("Input Your YouTube API URL:", config["youtube-api-url"]);
+      let url = prompt("Input Your YouTube API URL:", config["youtube-api-url"]);
       if(url !== null){
         if(!url.length && config["youtube-api-url"] && config["youtube-api-url"].length){
           chrome.permissions.remove({
             //permissions: [extractHostname(url) + '/*'],
             origins: [extractHostname(config["youtube-api-url"]) + '/*'],
-          }, function(removed) {
-            if (removed) {
+          }, function(removed){
+            if (removed){
               // The permissions have been removed.
               alert(`remove ${extractHostname(config["youtube-api-url"]) + '/*'} success`);
               chrome.storage.sync.remove("youtube-api-url");
@@ -862,13 +862,13 @@ function music_bar_setup(config){
 }
 
 //var content = document.querySelector('#content');
-function setCookie(c, callback) {
+function setCookie(c, callback){
   c['url'] = 'https://drrr.com';
   chrome.cookies.set(c, callback);
 }
 
-function getCookie(callback, url) {
-  var output = [];
+function getCookie(callback, url){
+  let output = [];
   chrome.cookies.getAll({
     url : url || 'https://drrr.com'
   }, function(cookies){
@@ -876,7 +876,7 @@ function getCookie(callback, url) {
   });
 }
 
-function delCookie(name, url, callback) {
+function delCookie(name, url, callback){
   url = url || 'https://drrr.com'
   if(name) chrome.cookies.remove({
     url  : url,
@@ -884,11 +884,11 @@ function delCookie(name, url, callback) {
   }, callback);
 }
 
-function delCookies(list, callback, url) {
+function delCookies(list, callback, url){
   url = url || 'https://drrr.com';
   function recursive(list, cb){
     if(list.length){
-      var name = list[0];
+      let name = list[0];
       chrome.cookies.remove({
         url  : url,
         name : name
@@ -910,7 +910,7 @@ function store_bio(succ, fail){
 }
 
 function redraw_bios(bio_cookies, data){
-  var $stored = $('#bio_select');
+  let $stored = $('#bio_select');
 
   bio_cookies = bio_cookies || [];
 
@@ -920,25 +920,25 @@ function redraw_bios(bio_cookies, data){
       p = data.profile;
     }
     $stored.find('option').remove();
-    var add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
+    let add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
     if(p){
-      //var cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
-      var cont = HtmlUtil.htmlEncode(`🔖 ${p.name}@${p.loc}`);
+      //let cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
+      let cont = HtmlUtil.htmlEncode(`🔖 ${p.name}@${p.loc}`);
       $stored.append(`<option value="${p.id}">${cont}</option>`);
     }
     else{
       $stored.append(`<option value="">Not Logined</option>`);
     }
     bio_cookies.forEach(([pro, cookie])=>{
-      //var c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
-      var c = HtmlUtil.htmlEncode(`💾 ${pro.name}@${pro.loc}`);
+      //let c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
+      let c = HtmlUtil.htmlEncode(`💾 ${pro.name}@${pro.loc}`);
       $stored.append(`<option value="${pro.id}">${c}</option>`);
     });
   })
 }
 
 function bio_setup(config){
-  var $stored = $('#bio_select');
+  let $stored = $('#bio_select');
 
   redraw_bios(config['bio_cookies']);
 
@@ -947,9 +947,9 @@ function bio_setup(config){
   });
 
   $('#ch_bios').on('click', function(){
-    var $stored = $('#bio_select');
-    var optionSelected = $("option:selected", $stored);
-    var valueSelected = $stored.val();
+    let $stored = $('#bio_select');
+    let optionSelected = $("option:selected", $stored);
+    let valueSelected = $stored.val();
     getProfile(function(p){
       if(valueSelected){
         if(p){
@@ -958,12 +958,12 @@ function bio_setup(config){
           }
           else{
             cache(undefined, (config)=>{
-              var bios = config['bio_cookies']
-              var idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+              let bios = config['bio_cookies']
+              let idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
 
               getCookie((cs)=>{
-                var curbio = [p, cs];
-                var [nprofile, ncookies] = bios[idx];
+                let curbio = [p, cs];
+                let [nprofile, ncookies] = bios[idx];
                 setCookies(ncookies, ()=> {
                   console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
                   bios.splice(idx, 1);
@@ -983,9 +983,9 @@ function bio_setup(config){
         }
         else{
           cache(undefined, (config)=>{
-            var bios = config['bio_cookies']
-            var idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
-            var [nprofile, ncookies] = bios[idx];
+            let bios = config['bio_cookies']
+            let idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+            let [nprofile, ncookies] = bios[idx];
             setCookies(ncookies, ()=> {
               console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
               bios.splice(idx, 1);
@@ -1010,7 +1010,7 @@ function bio_setup(config){
     getProfile((p)=>{
       if(p){
         getCookie((cs)=>{
-          var curbio = [p, cs]
+          let curbio = [p, cs]
           delCookies(cs.map(c=>c.name), ()=>{
             push_value('bio_cookies', curbio, (list)=>{
               chrome.storage.sync.remove(
@@ -1030,9 +1030,9 @@ function bio_setup(config){
   });
 
   $('#del_bios').on('click', function(){
-    var $stored = $('#bio_select');
-    var optionSelected = $("option:selected", $stored);
-    var valueSelected = $stored.val();
+    let $stored = $('#bio_select');
+    let optionSelected = $("option:selected", $stored);
+    let valueSelected = $stored.val();
     getProfile(function(p){
       if(p && p.id == valueSelected){
         getCookie((cs)=> {
@@ -1125,7 +1125,7 @@ function friend_setup(config){
   if(config['eager-input']) $('#eager-input').val(config['eager-input']);
 
   $('#fb_rule_type_btn').click(()=>{
-    var type = next_type('#fb_rule_type', fb_rule_types);
+    let type = next_type('#fb_rule_type', fb_rule_types);
     chrome.storage.sync.set({
       'fb-rule-type': type
     });
@@ -1133,7 +1133,7 @@ function friend_setup(config){
   });
 
   $('#eager_type_btn').click(()=>{
-    var type = next_type('#eager_type', eager_types);
+    let type = next_type('#eager_type', eager_types);
     chrome.storage.sync.set({
       'eager-type': type
     });
@@ -1148,7 +1148,7 @@ function friend_setup(config){
   });
 
   $('#eager-set').click(()=>{
-    var input = $('#eager-input').val();
+    let input = $('#eager-input').val();
     if(cur_type('#eager_type', eager_types)){
       try{
         new RegExp(input);
@@ -1170,7 +1170,7 @@ function friend_setup(config){
   }
   eager_ask_mode_switch(config[EAGER_ASK]);
   $('#eager-ask').click(function(){
-    var v = !$('#eager-ask-icon').hasClass('glyphicon-comment');
+    let v = !$('#eager-ask-icon').hasClass('glyphicon-comment');
     chrome.storage.sync.set({
       [EAGER_ASK]: v
     });
@@ -1180,7 +1180,8 @@ function friend_setup(config){
   $('#annoying-hidder').click(function(){
     chrome.storage.sync.get('annoyingList', config => {
       list = (config['annoyingList'] && JSON.stringify(config['annoyingList'])) || []
-      val = prompt(`Input Rule: ["银蛇", "白.*术", "#pd4/u/MwnM"]\n"##" to remove the room`, list);
+      let val = prompt(
+        `Input Rule: ["银蛇", "白.*术", "#pd4/u/MwnM"]\n"##" to remove the room`, list);
       if(val !== null){
         if(val.trim()){
           try{
@@ -1201,18 +1202,18 @@ function friend_setup(config){
   }
   rule_note_mode_switch(config[RULE_NOTE_MUTE]);
   $('.rule-note').click(function(){
-    var v = !$('#rule-note-icon').hasClass('glyphicon-volume-off');
+    let v = !$('#rule-note-icon').hasClass('glyphicon-volume-off');
     chrome.storage.sync.set({
       [RULE_NOTE_MUTE]: v
     });
     rule_note_mode_switch(v);
   })
 
-  $('.fb-opener').on('click', function () {
-    var $target = $($(this).attr("data-target"));
-    var tartype = $target.attr('data');
-    var opening = $target.hasClass('in');
-    var opener = {
+  $('.fb-opener').on('click', function (){
+    let $target = $($(this).attr("data-target"));
+    let tartype = $target.attr('data');
+    let opening = $target.hasClass('in');
+    let opener = {
       'home-opener': show_homelist,
       'friend-opener': show_friendlist,
       'tripcode-opener': show_tripcodelist,
@@ -1227,7 +1228,7 @@ function friend_setup(config){
     else if(tartype == this.id) $target.collapse('hide');
     else{
       //show roomlist
-      callback = function () {
+      callback = function (){
         opener(()=>$target.collapse('show'));
         $target.off('hidden.bs.collapse', callback);
       }
@@ -1279,9 +1280,9 @@ function friend_setup(config){
   });
 
   $('#fb-add-rule').on('click', function(e){
-    var type = cur_type('#fb_rule_type', fb_rule_types);
-    var list = [TRIPCODES, FRIENDS, HOMES][type]
-    var rule = $('#fb-input').val();
+    let type = cur_type('#fb_rule_type', fb_rule_types);
+    let list = [TRIPCODES, FRIENDS, HOMES][type]
+    let rule = $('#fb-input').val();
     try{
       new RegExp(rule);
     }
@@ -1329,10 +1330,10 @@ function sticker_url(data){
 }
 
 function reset_stickers(){
-  var $stored = $('#store_stickers');
-  var stickers = default_stickers;
-  var select_data = stickers[0];
-  var select = sticker_url(select_data);
+  let $stored = $('#store_stickers');
+  let stickers = default_stickers;
+  let select_data = stickers[0];
+  let select = sticker_url(select_data);
   chrome.storage.sync.set({
     'stickers': default_stickers,
     'select_stickers': select_data
@@ -1350,12 +1351,12 @@ s = undefined;
 t = undefined;
 function sticker_setup(config){
 
-  var $stored = $('#store_stickers');
-  var $target = $($stored.attr("data-target"));
+  let $stored = $('#store_stickers');
+  let $target = $($stored.attr("data-target"));
 
-  var stickers = config['stickers'];
-  var select_data = config['select_stickers'];
-  var select = select_data && sticker_url(select_data);
+  let stickers = config['stickers'];
+  let select_data = config['select_stickers'];
+  let select = select_data && sticker_url(select_data);
   if(!stickers || !stickers.length) [stickers, select] = reset_stickers();
   else{
     if(!select){
@@ -1377,12 +1378,12 @@ function sticker_setup(config){
     }
   })(false));
 
-  let sel_callback = function (e) {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
-    var $target = $($(this).attr("data-target"));
-    var tartype = $target.attr('data');
-    var opening = $target.hasClass('in');
+  let sel_callback = function (e){
+    let optionSelected = $("option:selected", this);
+    let valueSelected = this.value;
+    let $target = $($(this).attr("data-target"));
+    let tartype = $target.attr('data');
+    let opening = $target.hasClass('in');
     $target.attr('data', this.id);
     show_stickergrid(valueSelected, ()=>$target.collapse('show'));
     chrome.storage.sync.set({ 'select_stickers': extract_sticker_data(valueSelected) });
@@ -1392,9 +1393,9 @@ function sticker_setup(config){
 
   $('#reset-sticker').on('click', reset_stickers);
   $('#del_sticker').on('click', function(){
-    var $stored = $('#store_stickers');
-    var optionSelected = $("option:selected", $stored);
-    var valueSelected = $stored.val();
+    let $stored = $('#store_stickers');
+    let optionSelected = $("option:selected", $stored);
+    let valueSelected = $stored.val();
     console.log('del', valueSelected);
     if($("option", $stored).length > 1){
       pop_value('stickers', ((data, idx, ary) => data[0] === optionSelected.text() && sticker_url(data) == valueSelected))
@@ -1407,8 +1408,8 @@ function sticker_setup(config){
   });
 
   $('#add_sticker').on('click', function(){
-    var error = () => alert(", you refer the 'goto store button'");
-    var url = prompt('input the Line sticker URL:');
+    let error = () => alert(", you refer the 'goto store button'");
+    let url = prompt('input the Line sticker URL:');
     sticker_data = extract_sticker_data(url);
     if(sticker_data){
       $.ajax({
@@ -1416,20 +1417,19 @@ function sticker_setup(config){
         url: url,
         dataType: 'html',
         success: function(data){
-          var nodes = $(data);
-          s = nodes;
-          var tidx = Object.values(nodes).findIndex((v)=>v.nodeName == 'TITLE')
-          var name = tidx >= 0 ? nodes[tidx].textContent : '';
-          var idx = name.indexOf(' – LINE貼圖 | LINE STORE')
-          var idx = idx < 0 ? name.indexOf(' – LINE表情貼 | LINE STORE') : idx;
+          let nodes = $(data);
+          let tidx = Object.values(nodes).findIndex((v)=>v.nodeName == 'TITLE')
+          let name = tidx >= 0 ? nodes[tidx].textContent : '';
+          let idx = name.indexOf(' – LINE貼圖 | LINE STORE')
+          idx = idx < 0 ? name.indexOf(' – LINE表情貼 | LINE STORE') : idx;
           name = name.substring(0, idx);
-          var urls = extractImagesFromNodes(nodes);
+          let urls = extractImagesFromNodes(nodes);
 
           if(!urls.length) return alert("cannot find any sticker in the page");
 
           if(!name){
-            //var i = Object.values(nodes).findIndex((v)=>v.nodeName == 'H3');
-            var tags = nodes.find('h3')
+            //let i = Object.values(nodes).findIndex((v)=>v.nodeName == 'H3');
+            let tags = nodes.find('h3')
             if(tags.length) name = tags[0].textContent;
           }
 
@@ -1438,8 +1438,8 @@ function sticker_setup(config){
           name = name ? name : chrome.i18n.getMessage("sticker");
 
           push_value('stickers', [name].concat(sticker_data));
-          var select = sticker_url(sticker_data);
-          var idx = $('option', $stored).length;
+          let select = sticker_url(sticker_data);
+          idx = $('option', $stored).length;
           $stored.append(`<option value="${select}">${name}</option>`);
           $stored[0].selectedIndex = idx;
           $stored.change();
@@ -1462,11 +1462,11 @@ function module_setup(config){
     $('#module-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
   })
 
-  var select_module = config['select_module'];
+  let select_module = config['select_module'];
   if(!select_module) select_module = 'none';
   $('#module-select').val(select_module);
 
-  var $target = $($('#module-select').attr("data-target"));
+  let $target = $($('#module-select').attr("data-target"));
   import(`/module/${module_mapping[select_module]}`).then(
     (module)=>{
       if(module.ui && module.ui_event){
@@ -1479,12 +1479,12 @@ function module_setup(config){
       } else $target.collapse('hide');
     });
 
-  $('#module-select').on('change', function (e) {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
-    var $target = $($(this).attr("data-target"));
-    var tartype = $target.attr('data');
-    var opening = $target.hasClass('in');
+  $('#module-select').on('change', function (e){
+    let optionSelected = $("option:selected", this);
+    let valueSelected = this.value;
+    let $target = $($(this).attr("data-target"));
+    let tartype = $target.attr('data');
+    let opening = $target.hasClass('in');
 
     $target.attr('data', this.id);
 
@@ -1515,53 +1515,25 @@ function plugin_edit_freeze(bool){
   $('#plugin-code').attr('disabled', !bool);
 }
 
-function local_setup(config){
-  Object.keys(local_functions).forEach((v)=>{
-    $('#local-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
-  })
+function set_builtin_plugins(reset){
+  let load = reset ? (set_plugin => {
+    chrome.storage.local.get("plugins", config => { set_plugin(config); });
+  }) : (set_plugin => set_plugin({}))
 
-  var select_local = config['select_local'];
-  if(!select_local) select_local = Object.keys(local_functions)[0];
-
-  $('#local-select').val(select_local);
-  var local_switch = config[`switch_${select_local}`];
-  $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
-
-  $('#local-switch-btn').click(function(){
-    var v = !$('#local-switch').hasClass(`fa-toggle-on`);
-    var sel = $('#local-select')[0];
-    var optionSelected = $("option:selected", sel);
-    var valueSelected = sel.value;
-    chrome.storage.local.set({
-      ['switch_' + valueSelected]: v
-    });
-    $('#local-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
+  load(config => {
+    config["plugins"] = config["plugins"] || {};
+    for(let plug_name in builtin_plugins)
+      config["plugins"][plug_name] = builtin_plugins[plug_name];
+    chrome.storage.local.set({ "plugins": config["plugins"] })
+    init_plugin(config);
   });
+}
 
-  $("#local-setting-btn").click(function(){
-    var sel = $('#local-select')[0];
-    var optionSelected = $("option:selected", sel);
-    var valueSelected = sel.value;
-    chrome.tabs.create({url: chrome.extension.getURL(`setting/local/index.html#menu${Object.keys(local_functions).indexOf(valueSelected)}`)});
-  });
-
-  $('#local-select').on('change', function (e) {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
-
-    chrome.storage.local.set({
-      'select_local': valueSelected
-    }, function(){
-      chrome.storage.local.get((config)=>{
-        var local_switch = config['switch_' + valueSelected];
-        $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
-      });
-    });
-  });
-
+function init_plugin(config){
   if(config['plugins']){
+    $('#plugin-select').empty();
     Object.keys(config['plugins']).forEach((name)=>{
-      let [ctx, enable, loc, mode] = config['plugins'][name];
+      let [mode, loc, enable, ctx] = config['plugins'][name];
       $('#plugin-select').append(
         `<option style="text-align:center; text-align-last:center;"
           title="${mode == 'url' ? ctx : 'code'}"
@@ -1572,13 +1544,13 @@ function local_setup(config){
       }
     })
 
-    var select_plugin = config['select_plugin'];
+    let select_plugin = config['select_plugin'];
     if(!select_plugin) select_plugin = Object.keys(config['plugins'])[0];
 
     if(config['plugins'][select_plugin]){
-      let [ctx, enable, loc, mode] = config['plugins'][select_plugin];
+      let [mode, loc, enable, ctx] = config['plugins'][select_plugin];
       $('#plugin-select').val(select_plugin);
-      var plugin_switch = enable;
+      let plugin_switch = enable;
       $('#plugin-switch').attr('class', `fa fa-toggle-${enable ? 'on' : 'off'}`);
       if(mode !== 'url'){
         $('#plugin-codeblock').show();
@@ -1587,12 +1559,80 @@ function local_setup(config){
       }
     }
   }
+  else set_builtin_plugins(false);
+}
+
+function local_setup(config){
+  Object.keys(local_functions).forEach((v)=>{
+    $('#local-select').append(`<option style="text-align:center; text-align-last:center;" value="${v}">${v}</option>`);
+  })
+
+  let select_local = config['select_local'];
+  if(!select_local) select_local = Object.keys(local_functions)[0];
+
+  $('#local-select').val(select_local);
+  let local_switch = config[`switch_${select_local}`];
+  $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
+
+  $('#local-switch-btn').click(function(){
+    let v = !$('#local-switch').hasClass(`fa-toggle-on`);
+    let sel = $('#local-select')[0];
+    let optionSelected = $("option:selected", sel);
+    let valueSelected = sel.value;
+    chrome.storage.local.set({
+      ['switch_' + valueSelected]: v
+    });
+    $('#local-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
+  });
+
+  $("#local-setting-btn").click(function(){
+    let sel = $('#local-select')[0];
+    let optionSelected = $("option:selected", sel);
+    let valueSelected = sel.value;
+    chrome.tabs.create({url: chrome.extension.getURL(`setting/local/index.html#menu${Object.keys(local_functions).indexOf(valueSelected)}`)});
+  });
+
+  $('#local-select').on('change', function (e){
+    let optionSelected = $("option:selected", this);
+    let valueSelected = this.value;
+
+    chrome.storage.local.set({
+      'select_local': valueSelected
+    }, function(){
+      chrome.storage.local.get((config)=>{
+        let local_switch = config['switch_' + valueSelected];
+        $('#local-switch').attr('class', `fa fa-toggle-${local_switch ? 'on' : 'off'}`);
+      });
+    });
+  });
+
+  init_plugin(config);
+
+  $('#reset_plugin').on('click', function(){
+    if(confirm("reset built-in plugins?"))
+      set_builtin_plugins(true);
+  });
 
   $('#write_plugin').on('click', function(){
-    if(!$('#plugin-codeblock').is(":visible"))
-      return alert("the plugin is not editable");
+    if(!$('#plugin-codeblock').is(":visible")){
+
+      let valueSelected = $('#plugin-select').val();
+
+      if(!valueSelected) return alert("the plugin is not editable");
+
+      let url = prompt('edit the src url:', $('#plugin-select option:selected').attr('title'));
+
+      if(url === null) return;
+
+      chrome.storage.local.get("plugins", (config)=>{
+        config["plugins"] = config["plugins"] || {}
+        config["plugins"][valueSelected][3] = url;
+        chrome.storage.local.set({ "plugins": config["plugins"] })
+      });
+    }
+
     if($('#save-plugin').is(":visible")){
-      var $stored = $('#plugin-select');
+      let $stored = $('#plugin-select');
       $stored.change();
       plugin_edit_freeze(false);
       $('#save-plugin').hide();
@@ -1605,18 +1645,18 @@ function local_setup(config){
 
   $('#save-plugin').on('click', function(){
 
-    var $stored = $('#plugin-select');
-    var valueSelected = $stored.val();
+    let $stored = $('#plugin-select');
+    let valueSelected = $stored.val();
 
     if(!valueSelected){
-      name = prompt(chrome.i18n.getMessage("rename_as"),
+      let name = prompt(chrome.i18n.getMessage("rename_as"),
         name ? name : chrome.i18n.getMessage("plugin"));
 
       if(name === null) return plugin_edit_freeze(false);
 
       name = name ? name : chrome.i18n.getMessage("plugin");
 
-      loc = prompt("location (room/lounge/login)", "room");
+      let loc = prompt("location (room/lounge/login)", "room");
 
       if(loc === null) return plugin_edit_freeze(false);
     }
@@ -1626,13 +1666,14 @@ function local_setup(config){
       config["plugins"] = config["plugins"] || {}
       let $stored = $('#plugin-select');
       if(!config["plugins"][name]){
-        config["plugins"][name] = [$('#plugin-code').val(), false, loc, 'code'];
+        config["plugins"][name] = ['code', loc, true, $('#plugin-code').val()];
         let idx = $('option', $stored).length;
-        $stored.append(`<option style="text-align:center; text-align-last:center;" value="${name}" title="code">${name}/${loc}/code</option>`);
+        $stored.append(`<option style="text-align:center; text-align-last:center;"
+                                value="${name}" title="code">${name}/${loc}/code</option>`);
         $stored[0].selectedIndex = idx;
       }
       else{
-        config["plugins"][name][0] = $('#plugin-code').val();
+        config["plugins"][name][3] = $('#plugin-code').val();
       }
       chrome.storage.local.set({ "plugins": config["plugins"] })
       $stored.change();
@@ -1642,51 +1683,63 @@ function local_setup(config){
   });
 
   $('#add_plugin').on('click', function(){
-    var error = () => alert(", you refer the 'goto store button'");
-    var url = prompt('input the plugin source code URL (empty for writing source):');
-    if(url === null) return;
+    let error = () => alert(", you refer the 'goto store button'");
+    let ctx = prompt('input the plugin source code URL (empty for writing source):');
+    if(ctx === null) return;
 
-    let mode = url ? 'url' : 'code';
-    url = url ||
+    let mode = ctx ? 'url' : 'code';
+    ctx = ctx ||
       `// your javascript here ... example:
 /*
 function plugin_logger(event){ console.log(event); }
-hooks.push(plugin_logger);
+plugin_hooks.push(plugin_logger);
 */`;
 
-    if(url.includes('gist.githubusercontent.com'))
+    if(ctx.includes('gist.githubusercontent.com')
+      || ctx.includes('raw.githubusercontent.com'))
       return alert('Use https://raw.githack.com to convert gist URL');
 
-    var $stored = $('#plugin-select');
+    let $stored = $('#plugin-select');
 
-    name = prompt(chrome.i18n.getMessage("rename_as"),
-      name ? name : chrome.i18n.getMessage("plugin"));
+    let name = prompt(chrome.i18n.getMessage("rename_as"), chrome.i18n.getMessage("plugin"));
 
     if(name === null) return;
 
     name = name ? name : chrome.i18n.getMessage("plugin");
 
-    loc = prompt("location (room/lounge/login)", "room");
+    let loc = prompt("location (room/lounge/login)", "room");
 
     if(loc === null) return;
 
     chrome.storage.local.get("plugins", (config)=>{
       config["plugins"] = config["plugins"] || {}
-      config["plugins"][name] = [url, false, loc, mode];
+
+      while(config["plugins"][name]){
+        if(confirm("overwrite existing plugin?")) break;
+        else {
+          name = prompt(chrome.i18n.getMessage("rename_as"),
+            chrome.i18n.getMessage("plugin") + '2')
+          if(name === null) return;
+          name = name ? name : chrome.i18n.getMessage("plugin");
+        }
+      }
+
+      config["plugins"][name] = [mode, loc, true, ctx];
       chrome.storage.local.set({ "plugins": config["plugins"] })
     });
 
-    var idx = $('option', $stored).length;
-    $stored.append(`<option style="text-align:center; text-align-last:center;" value="${name}" title="${url}">${name}/${loc}/${mode}</option>`);
+    let idx = $('option', $stored).length;
+    $stored.append(`<option style="text-align:center; text-align-last:center;"
+      value="${name}" title="${mode == 'url' ? ctx : 'code'}">${name}/${loc}/${mode}</option>`);
     $stored[0].selectedIndex = idx;
     $stored.change();
   });
 
   $('#del_plugin').on('click', function(){
-    var $stored = $('#plugin-select');
-    var optionSelected = $("option:selected", $stored);
-    var valueSelected = $stored.val();
-    if(!valueSelected) return;
+    let $stored = $('#plugin-select');
+    let optionSelected = $("option:selected", $stored);
+    let valueSelected = $stored.val();
+    if(!valueSelected) return alert("no plugin selected");
     if($("option", $stored).length){
       chrome.storage.local.get("plugins", (config)=>{
         delete config["plugins"][valueSelected]
@@ -1697,15 +1750,15 @@ hooks.push(plugin_logger);
     }
   });
 
-  $('#plugin-select').on('change', function (e) {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
+  $('#plugin-select').on('change', function (e){
+    let optionSelected = $("option:selected", this);
+    let valueSelected = this.value;
     chrome.storage.local.set({
       'select_plugin': valueSelected
     }, function(){
       chrome.storage.local.get((config)=>{
         if(config['plugins'][valueSelected]){
-          let [ctx, enable, loc, mode] = config['plugins'][valueSelected]
+          let [mode, loc, enable, ctx] = config['plugins'][valueSelected]
           $('#plugin-switch').attr('class', `fa fa-toggle-${enable ? 'on' : 'off'}`);
           if(mode == 'url'){
             $('#plugin-codeblock').hide();
@@ -1726,16 +1779,13 @@ hooks.push(plugin_logger);
   });
 
   $('#plugin-switch-btn').click(function(){
-    var v = !$('#plugin-switch').hasClass(`fa-toggle-on`);
-    var sel = $('#plugin-select')[0];
-    var optionSelected = $("option:selected", sel);
-    var valueSelected = sel.value;
+    let v = !$('#plugin-switch').hasClass(`fa-toggle-on`);
+    let sel = $('#plugin-select')[0];
+    let optionSelected = $("option:selected", sel);
+    let valueSelected = sel.value;
     if(!valueSelected) return;
-    //chrome.storage.plugin.set({
-    //  ['switch_' + valueSelected]: v
-    //});
     chrome.storage.local.get("plugins", (config)=>{
-      config["plugins"][valueSelected][1] = v;
+      config["plugins"][valueSelected][2] = v;
       chrome.storage.local.set({ "plugins": config["plugins"] })
     });
     $('#plugin-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
@@ -1743,7 +1793,7 @@ hooks.push(plugin_logger);
 }
 
 function plugTag(type, attr){
-  var tag = document.createElement(type);
+  let tag = document.createElement(type);
   for(at in attr)
     tag[at] = attr[at];
   document.getElementsByTagName('head')[0].appendChild(tag);
@@ -1772,7 +1822,7 @@ $(document).ready(function(){
   });
   $("#wizard-size").click(function(){
     chrome.storage.sync.get("live2d-size", (config)=>{
-      val = config["live2d-size"] || `300x300`;
+      let val = config["live2d-size"] || `300x300`;
       val = prompt("Set Live2D Size (700x300, 300) (height x width)", val);
       if(val){
         [h, w] = val.split('x')
@@ -1786,7 +1836,7 @@ $(document).ready(function(){
   });
   $("#live2d").click(function(){
     chrome.storage.sync.get("live2d", (config)=>{
-      val = config['live2d'] || `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`;
+      let val = config['live2d'] || `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`;
       val = prompt("Live2D unpkg json URL (Google or drrr.wiki):", val);
       if(val) chrome.storage.sync.set({"live2d": val});
     })
@@ -1805,7 +1855,7 @@ $(document).ready(function(){
     friend_bio_setup(config);
     module_setup(config);
     chrome.storage.local.get((config)=> local_setup(config));
-    var tab = config['pop-tab'] || 'tab0';
+    let tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();
     $('.pop-tab').on('click', function(){
       chrome.storage.sync.set({'pop-tab': this.id});
@@ -1816,8 +1866,8 @@ $(document).ready(function(){
 
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(req && req.expired_bio){
-    var $stored = $('#bio_select');
-    var optionSelected = $("option:selected", $stored);
+    let $stored = $('#bio_select');
+    let optionSelected = $("option:selected", $stored);
     optionSelected.replaceWith(`<option value="">Not Logined</option>`);
   }
   if(callback) callback();

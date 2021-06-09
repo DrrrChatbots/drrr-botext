@@ -30,8 +30,8 @@ function renew_chatroom(){
 }
 
 function findUser(name, callback){
-  if(info && info.room)
-    for(u of info.room.users){
+  if(drrr.info && drrr.info.room)
+    for(u of drrr.info.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
   if(drrr.prevInfo && drrr.prevInfo.room){
@@ -106,7 +106,7 @@ drrr_builtins = {
   },
   'kick': function(user){
     findUser(user, (u)=>{
-      if(u.tripcode === 'L/CaT//Hsk')
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
         ctrlRoom({'new_host': u.id});
       else
         ctrlRoom({'kick': u.id});
@@ -114,7 +114,7 @@ drrr_builtins = {
   },
   'ban': function(user){
     findUser(user, (u)=>{
-      if(u.tripcode === 'L/CaT//Hsk')
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
         ctrlRoom({'new_host': u.id});
       else
         ctrlRoom({'ban': u.id});
@@ -122,7 +122,7 @@ drrr_builtins = {
   },
   'report': function(user){
     findUser(user, (u)=>{
-      if(u.tripcode === 'L/CaT//Hsk')
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
         ctrlRoom({'new_host': u.id});
       else
         ctrlRoom({'report_and_ban_user': u.id});
@@ -149,7 +149,7 @@ drrr_builtins = {
   'join': function(room_id){
     $.ajax({
       type: "GET",
-      url: `https://drrr.com/room/?id=${room_id}`,
+      url: "https://drrr.com/room/?id=" + room_id,
       dataType: 'html',
       success: function(data){
         console.log("join successfully");
@@ -172,7 +172,7 @@ drrr_builtins = {
     if(hidden === undefined) hidden = false;
     $.ajax({
       type: "POST",
-      url: `https://drrr.com/create_room/?`,
+      url: "https://drrr.com/create_room/?",
       dataType: 'html',
       data: {
         name: name,
@@ -264,7 +264,7 @@ drrr.getReady = function(callback){
   drrr.getProfile(() => {
     drrr.getLoc(() => {
       drrr.getLounge(() => {
-        callback();
+        callback && callback();
       });
     });
   });

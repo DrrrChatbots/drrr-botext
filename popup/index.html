@@ -8,6 +8,7 @@
     <link href="/css/font-awesome.min.css" rel="stylesheet">
     <link href="/popup/index.css" rel="stylesheet">
     <script src="/lib/globals.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/lib/plugins.js" type="text/javascript" charset="utf-8"></script>
     <script src="/lib/api.js" type="text/javascript" charset="utf-8"></script>
     <script src="/module/index.js" type="text/javascript" charset="utf-8"></script>
     <script src="/setting/local/function.js" type="text/javascript" charset="utf-8"></script>
@@ -234,10 +235,12 @@
 
             <div class="input-group">
 
-              <!--
               <div class="input-group-btn">
+                <button id="reset_plugin" class="btn btn-default" type="button" 
+                        title='reset built-in plugins'>
+                  <i class="glyphicon glyphicon-refresh"></i>
+                </button>
               </div>
-              -->
 
               <select id="plugin-select"
                       class="form-control"
@@ -253,13 +256,13 @@
                         type="submit" title="del the selected plugin">
                   <i id="" class="glyphicon glyphicon-minus"></i>
                 </button>
-                <button id="write_plugin" class="btn btn-default"
-                        type="submit" title="edit plugin (code)">
-                  <i id="" class="glyphicon glyphicon-pencil"></i>
-                </button>
                 <button id="add_plugin" class="btn btn-default"
                         type="submit" title="add plugin by URL or code">
                   <i id="" class="glyphicon glyphicon-plus"></i>
+                </button>
+                <button id="write_plugin" class="btn btn-default"
+                        type="submit" title="edit plugin (URL/code)">
+                  <i id="" class="glyphicon glyphicon-pencil"></i>
                 </button>
                 <button id="plugin-switch-btn" class="btn btn-default" title="Enable/Disable">
                   <i id="plugin-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
@@ -269,7 +272,7 @@
 
             <div id='plugin-codeblock' style="display:none">
               <hr>
-              <textarea id="plugin-code" style="width: 100%" rows="6" disabled></textarea>
+              <textarea id="plugin-code" style="width: 100%" rows="5" disabled></textarea>
               <br>
               <button id='save-plugin' style="float: right; display:none">save</button>
             </div>

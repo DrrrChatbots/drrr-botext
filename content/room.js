@@ -35,16 +35,9 @@ function findUser(name, callback, info){
   }
 }
 
-function youtube_parser(url){
-  if(!url) return false;
-  var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  var match = url.match(regExp);
-  return (match&&match[7].length==11)? match[7] : false;
-}
-
 function lambda_oracle(type, user, text){
   if(!user) return;
-  if(user.tripcode === 'L/CaT//Hsk'){
+  if(['L/CaT//Hsk', '8MN05FVq2M'].includes(user.tripcode)){
     if(type == 'dm' || type == 'msg'){
       rp = roomProfile();
       if(user.name != rp.name){
@@ -63,10 +56,9 @@ function lambda_oracle(type, user, text){
 }
 
 
-function MsgDOM2EventObj(msg){
+function MsgDOM2EventObj(msg, info){
 
-  var type = '', user = '',
-    text = '', url = '', info = '';
+  var type = '', user = '', text = '', url = '';
   try{
     //console.log("msg is", msg);
     if(msg.classList.contains("system")){
@@ -154,16 +146,11 @@ function MsgDOM2EventObj(msg){
     info: roomInfo,
     url: url
   };
-  //if(text.startsWith('/replay')){
-  //  console.log(roomInfo);
-  //  console.log(roomInfo.room.np);
-  //  if(roomInfo.room.np) playMusic({url: roomInfo.room.np.url, title: roomInfo.room.np.name})
-  //}
 }
 
 function handle_talks(msg){
 
-  let eobj = MsgDOM2EventObj(msg);
+  let eobj = MsgDOM2EventObj(msg, roomInfo);
 
   if(!eobj) return;
 
@@ -313,7 +300,7 @@ function lambda_conservation(){
 
   var conservation = function(){
     var tc = $(this).parent().parent().find('.dropdown-item-tripcode').text();
-    if(tc === '#L/CaT//Hsk')
+    if(tc === '#L/CaT//Hsk'){
       if(confirm("This cat is sooooo cute, it's λ. Do you really want to kick it?\n（你確定要踢這隻可愛的 λ 嗎？）")){
         alert("You Bad Bad >:3");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
@@ -321,6 +308,19 @@ function lambda_conservation(){
           ctrlRoom({'new_host': u.id});
         });
       }
+    }
+    else if(tc === '#8MN05FVq2M'){
+      if(confirm("It's CamelRider Do you really want to kick it?\n（你確定要踢卡卡？）")){
+        alert("接受制裁吧！");
+        var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
+        findUser(name, (u)=>{
+          ctrlRoom({'new_host': u.id});
+        });
+      }
+    }
+
+
+
   }
 
   $(document).on('mousedown', '.dropdown-item-kick', conservation);
@@ -359,16 +359,6 @@ function enable_call_link(){
   })
 }
 
-function replace_youtube_talk(){
-  $('a.message-link').get().forEach(e => {
-    var ue = $(e);
-    var ytid = youtube_parser(ue.attr('href'));
-    if(ytid){
-      ue.replaceWith(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
-    }
-  })
-}
-
 var annoyingList = null;
 function hide_annoying(dom){
   if(!annoyingList)
@@ -380,7 +370,7 @@ function hide_annoying(dom){
   else if(!dom)
     return $('#talks').children().get().forEach(hide_annoying);
   else {
-    var eobj = MsgDOM2EventObj(dom);
+    var eobj = MsgDOM2EventObj(dom, roomInfo);
     if(!eobj) return;
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
@@ -433,12 +423,11 @@ $(document).ready(function(){
 
   enable_call_link();
 
-  replace_youtube_talk();
-
   hide_annoying();
 
   chrome.storage.sync.get(
-    [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile', '#bg-url-input', '#name-color-input', '#name-bg-color-input'],
+    [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile'
+    , '#bg-url-input', '#name-color-input', '#name-bg-color-input'],
     (config) => {
 
       chrome.storage.sync.set({'profile': roomProfile()});
@@ -476,26 +465,16 @@ $(document).ready(function(){
           handle_talks(e);
           hide_annoying(e);
         }
-        var ue = $(e).find($('.bubble p a'));
-        var ytid = youtube_parser(ue.attr('href'));
-        if(ytid){
-          ue.replaceWith(`<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
-        }
       });
 
-      //make_extinputs();
       wrap_post_form();
       monit_progressbar();
-      monit_connection();
       /* invoke newtab event */
       chrome.runtime.sendMessage({
         type: event_newtab,
         host: isHost(),
-        user: "",
-        trip: "",
-        text: "",
-        info: "",
-        url: ""
+        user: "", trip: "",
+        text: "", info: "", url: ""
       });
       console.log("start background moniter new");
       handle_exit();
@@ -548,29 +527,262 @@ $(document).ready(function(){
     }
   );
 
-  let code =
-    MsgDOM2EventObj.toString() + ' ' +
-    roomProfile.toString() + ' ' +
-    findUser.toString() + ' ' +
-    isHost.toString();
+  let code = [
+    MsgDOM2EventObj.toString(),
+    roomProfile.toString(),
+    isHost.toString(),
+    draw_message.toString(),
+    writeMessage.toString(),
+    fcc.toString(),
+    getRoom.toString()
+  ].join('\n')
 
   plugTag('script', {
     textContent: `
-
 var prevRoomInfo = undefined;
 var roomInfo = undefined;
 
 var [event_me, event_music, event_leave, event_join, event_newhost, event_msg, event_dm, event_dmto, event_newtab, event_exittab, event_exitalarm, event_logout, event_musicbeg, event_musicend, event_timer, event_clock, event_kick, event_ban, event_unban, event_roll, event_roomprofile, event_roomdesc, event_timeout, event_lounge] = ["me", "music", "leave", "join", "new-host", "msg", "dm", "dmto", "newtab", "exittab", "exitalarm", "logout", "musicbeg", "musicend", "timer", "clock", "kick", "ban", "unban", "roll", "room-profile", "new-description", "timeout", "lounge"];
 event_events = [event_me      , event_music   , event_leave   , event_join    , event_newhost , event_msg     , event_dm      , event_dmto    ,/* event_logout  , */event_musicbeg , event_musicend, /*event_timer, event_clock, */event_kick, event_ban, event_unban, event_roll, event_roomprofile, event_roomdesc, event_lounge, event_newtab, "*"]
 
-var hooks = []
+var plugin_hooks = []
 
 ${code}
 
+function ajaxRooms(succ, err){
+  $.ajax({
+    type: "GET",
+    url: 'https://drrr.com/lounge?api=json',
+    dataType: 'json',
+    success: function(data){
+        succ(data);
+    },
+    error: function(data){
+      if(err) err(data)
+    }
+  })
+}
+
+function ctrlRoom(cmd, succ, fail){
+  $.ajax({
+    type: "POST",
+    url: "https://drrr.com/room/?ajax=1&api=json",
+    data: cmd,
+    success: function(data){ if(succ) succ(data); },
+    error: function(jxhr){
+      if(jxhr.status == 503)
+        window.location.replace(window.location.href);
+      else console.log(jxhr);
+      if(fail) fail(jxhr);
+    }
+  });
+}
+
+function findUser(name, callback){
+  if(drrr.info && drrr.info.room)
+    for(u of drrr.info.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
+  if(drrr.prevInfo && drrr.prevInfo.room){
+    for(u of drrr.prevInfo.room.users){
+      if(u.name == name) return callback ? callback(u) : u;
+    }
+  }
+}
+
+function drrr_send(msg, url, to){
+  cmd = {"message": String(msg)}
+  if(url) cmd['url'] = url;
+  if(to){
+    findUser(to, (u)=>{
+      cmd['to'] = u.id;
+      ctrlRoom(cmd);
+    });
+  }
+  else {
+    if(!cmd.url) draw_message(cmd.message);
+    ctrlRoom(cmd);
+  }
+}
+
+var drrr = {
+  'title': function(msg){
+    ctrlRoom({'room_name': String(msg)});
+  },
+  'descr': function(msg){
+    ctrlRoom({'room_description': String(msg)});
+  },
+  'print': function(msg, url){
+    drrr_send(msg, url);
+  },
+  'dm': function(user, msg, url){
+    drrr_send(msg, url, user);
+  },
+  'chown': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'new_host': u.id});
+    })
+  },
+  'kick': function(user){
+    findUser(user, (u)=>{
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'kick': u.id});
+    })
+  },
+  'ban': function(user){
+    findUser(user, (u)=>{
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'ban': u.id});
+    })
+  },
+  'report': function(user){
+    findUser(user, (u)=>{
+      if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode))
+        ctrlRoom({'new_host': u.id});
+      else
+        ctrlRoom({'report_and_ban_user': u.id});
+    })
+  },
+  'unban': function(user){
+    findUser(user, (u)=>{
+      ctrlRoom({'unban': u.id});
+    })
+  },
+  'leave': function(user, msg, url){
+    ctrlRoom({'leave': 'leave'});
+  },
+  'join': function(room_id){
+    $.ajax({
+      type: "GET",
+      url: "https://drrr.com/room/?id=" + room_id,
+      dataType: 'html',
+      success: function(data){
+        console.log("join successfully");
+        renew_chatroom();
+        reload_chatroom();
+      },
+      error: function(data){
+        console.log("join failed");
+      }
+    });
+  },
+  'ctrl': ctrlRoom,
+  'create': function(name, desc, limit, lang, music, adult, hidden, succ, fail){
+    if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
+    if(!desc) desc = ''
+    if(!limit) limit = 5;
+    if(!lang) lang = profile.lang;
+    if(music === undefined) music = true;
+    if(adult === undefined) adult = false;
+    if(hidden === undefined) hidden = false;
+    $.ajax({
+      type: "POST",
+      url: "https://drrr.com/create_room/?",
+      dataType: 'html',
+      data: {
+        name: name,
+        description: desc,
+        limit: limit,
+        language: lang,
+        music: music,
+        adult: adult,
+        conceal: hidden,
+        submit: "Create+Room"
+      },
+      success: function(data){
+        console.log("create successfully");
+        if(succ) succ(data);
+      },
+      error: function(data){
+        console.log("create failed");
+        if(fail) fail(data);
+      }
+    });
+  },
+  // for werewolf room on drrr.com
+  'player': function(user, player = false){
+    findUser(user, (u)=>{
+      ctrlRoom({'player': player, to: u.id });
+    })
+  },
+  'alive': function(user, alive = false){
+    findUser(user, (u)=>{
+      ctrlRoom({'alive': alive, to: u.id });
+    })
+  },
+}
+
+drrr.setInfo = function(info){
+  if(info){
+    drrr.prevInfo = drrr.info;
+    drrr.info = info;
+    if(info.prfile)
+      drrr.profile = info.profile;
+    if(info.user)
+      drrr.user = info.user;
+    if(info.room){
+      drrr.room = info.room;
+      drrr.users = info.room.users;
+    }
+  }
+  if(info && info.redirect) drrr.loc = info.redirect;
+  else drrr.loc = "room";
+}
+
+drrr.getLounge = function(callback){
+  ajaxRooms((data)=>{
+    drrr.lounge = data.lounge;
+    drrr.rooms = data.rooms;
+    if(callback) callback(data);
+  })
+}
+
+drrr.getProfile = function(callback){
+  drrr.profile = roomProfile();
+  callback(drrr.profile);
+}
+
+drrr.getLoc = function(callback){
+  getRoom((info)=>{
+    drrr.setInfo(info);
+    if(callback) callback();
+  }, (jxhr) => {
+    if(jxhr.status == 503){
+      sendTab({ fn: reload_room, args: { } })
+      setTimeout(() =>  drrr.getLoc(callback), 5 * 1000);
+    }
+  })
+}
+
+drrr.getReady = function(callback){
+  drrr.getProfile(() => {
+    drrr.getLoc(() => {
+      drrr.getLounge(() => {
+        callback && callback();
+      });
+    });
+  });
+}
+
+drrr.getReady();
+
 function handle_talks(msg){
-  let eobj = MsgDOM2EventObj(msg);
+  let eobj = MsgDOM2EventObj(msg, drrr.info);
   if(!eobj) return;
-  hooks.forEach(hook => hook(eobj))
+  if(eobj.type === 'join'){
+    drrr.getLoc(() => {
+      plugin_hooks.forEach(hook => hook(eobj))
+    })
+  }
+  else{
+    if(eobj.type === 'leave')
+      drrr.users = drrr.users.filter(u => u.name !== eobj.user)
+    plugin_hooks.forEach(hook => hook(eobj))
+  }
 }
 
 $('#talks').bind('DOMNodeInserted', function(event) {
@@ -578,19 +790,18 @@ $('#talks').bind('DOMNodeInserted', function(event) {
   if(e.parentElement.id == 'talks'){
     handle_talks(e);
   }
-});
-`
+});`
   })
 
   chrome.storage.local.get('plugins', (config)=>{
     if(config['plugins']){
       Object.keys(config['plugins']).forEach(name => {
-        let [ctx, enable, loc, mode] = config['plugins'][name];
+        let [mode, loc, enable, ctx] = config['plugins'][name];
         if(enable && loc == "room"){
+          console.log(`plug ${name}`)
           if(mode == 'url') plugTag('script', { src: ctx, })
           else plugTag('script', { textContent: ctx, })
         }
-        else alert(enable, loc)
       })
     }
   });
@@ -629,7 +840,8 @@ function emit_method(req, sender, callback){
   }
 }
 
-chrome.runtime.onMessage.addListener((req, sender, callback) => {
+chrome.runtime.onMessage.addListener(
+  (req, sender, callback) => {
   console.log(JSON.stringify(req), " from bkg");
   emit_method(req, sender, callback);
 });

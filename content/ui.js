@@ -14,7 +14,7 @@ function escapeHtml(e) {
     })
 }
 
-fcc = function(e, t, n, i) {
+function fcc(e, t, n, i) {
   var o = (n.message || "").toString().split("\n").filter(function(e) {
     return "" !== e.trim()
   }),

@@ -203,7 +203,7 @@ function removeMember(way){
       kickFlag = true;
       new Promise((res, rej)=>{
         findUser(args.user, (u)=>{
-          if(u.tripcode === 'L/CaT//Hsk'){
+          if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode)){
             ctrlRoom({'new_host': u.id});
             // lambda reservation
           }
@@ -397,34 +397,6 @@ function monit_progressbar(){
       attributes: true //configure it to listen to attribute changes
     });
   }
-}
-
-function monit_connection(){
-  var observer = new MutationObserver(function(mutations){
-    mutations.forEach(function(mutation) {
-      if(mutation.target.style.display == 'block'){
-        $.ajax({
-          type: "GET",
-          url: `https://drrr.com/room/?ajax=1&api=json`,
-          //dataType: 'json',
-          success: function(data){
-            console.log(data);
-          },
-          error: function(jxhr){
-            //alert("connection lost, status: " + String(jxhr.status))
-            if(jxhr.status == 503){
-              console.log("wait 503 reload...")
-              reloadRoom();
-            }
-            else console.log(jxhr);
-          }
-        });
-      }
-    });
-  });
-  observer.observe($('#connection-indicator')[0], {
-    attributes: true //configure it to listen to attribute changes
-  });
 }
 
 function setTimeOut(args, callback){

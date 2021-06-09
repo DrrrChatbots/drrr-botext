@@ -1821,25 +1821,10 @@ $(document).ready(function(){
     sendTab({ fn: call_wizard, args: {} });
   });
   $("#wizard-size").click(function(){
-    chrome.storage.sync.get("live2d-size", (config)=>{
-      let val = config["live2d-size"] || `300x300`;
-      val = prompt("Set Live2D Size (700x300, 300) (height x width)", val);
-      if(val){
-        [h, w] = val.split('x')
-        h = Number(h)
-        w = Number(w)
-        if(isNaN(h) || !h) h = 300;
-        if(isNaN(w) || !w) w = 300;
-        chrome.storage.sync.set({"live2d-size": String(h) + 'x' + String(w)});
-      }
-    })
+    alert("live2d is not supported on firefox");
   });
   $("#live2d").click(function(){
-    chrome.storage.sync.get("live2d", (config)=>{
-      let val = config['live2d'] || `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`;
-      val = prompt("Live2D unpkg json URL (Google or drrr.wiki):", val);
-      if(val) chrome.storage.sync.set({"live2d": val});
-    })
+    alert("live2d is not supported on firefox");
   });
   $("#program").click(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});

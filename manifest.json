@@ -6,14 +6,18 @@
     "short_name": "drrrbot",
     "version": "1.766",
     "default_locale": "en",
-    "current_locale": "zh",
     "browser_action": {
         "default_icon": "icon.png",
         "default_popup": "/popup/index.html"
     },
+    "applications": {
+      "gecko": {
+        "id": "lambdacat.tw@gmail.com"
+      }
+    },
     "background": {
         "page": "/background/index.html",
-        "persistent": false
+        "persistent": true
     },
     "content_scripts": [
         {
@@ -61,8 +65,6 @@
     "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [
          "images/*.png",
-         "live2d-widget/*",
          "fonts/*"
-    ],
-    "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'"
+    ]
 }

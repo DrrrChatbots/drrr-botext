@@ -1555,7 +1555,6 @@ function init_plugin(config){
       if(mode !== 'url'){
         $('#plugin-codeblock').show();
         $('#plugin-code').val(ctx);
-        console.log(ctx);
       }
     }
   }

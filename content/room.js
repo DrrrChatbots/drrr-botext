@@ -154,6 +154,9 @@ function handle_talks(msg){
 
   if(!eobj) return;
 
+  if(['join', 'leave'].includes(eobj.type))
+    hide_annoying_namelist_post();
+
   console.log(
     eobj.type,
     eobj.user,

@@ -39,18 +39,18 @@ function exec_lambda_script(pure){
 }
 
 actions = {
-  [action_name] : function(ctx){
+  [action_name] : function(...names){
     setTimeout(
       () => sendTab({
         fn: change_room_title,
-        args: { ctx: ctx }
+        args: { ctx: names[Math.floor(Math.random() * names.length)] }
       }), 500)
   },
-  [action_desc] : function(ctx){
+  [action_desc] : function(...descs){
     setTimeout(
       () => sendTab({
         fn: change_room_descr,
-        args: { ctx: ctx }
+        args: { ctx: descs[Math.floor(Math.random() * descs.length)] }
       }), 500)
   },
   [action_msg ] : function(...msgs){

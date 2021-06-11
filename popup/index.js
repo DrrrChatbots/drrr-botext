@@ -1532,7 +1532,12 @@ function set_builtin_plugins(reset){
 function init_plugin(config){
   if(config['plugins']){
     $('#plugin-select').empty();
-    Object.keys(config['plugins']).forEach((name)=>{
+
+    let plugins = Object.keys(config['plugins'])
+      .filter(name => name !== 'chatroom_hooks');
+    plugins.unshift('chatroom_hooks');
+
+    plugins.forEach((name)=>{
       let [mode, loc, enable, ctx] = config['plugins'][name];
       $('#plugin-select').append(
         `<option style="text-align:center; text-align-last:center;"
@@ -1545,7 +1550,7 @@ function init_plugin(config){
     })
 
     let select_plugin = config['select_plugin'];
-    if(!select_plugin) select_plugin = Object.keys(config['plugins'])[0];
+    if(!select_plugin) select_plugin = 'chatroom_hooks';
 
     if(config['plugins'][select_plugin]){
       let [mode, loc, enable, ctx] = config['plugins'][select_plugin];
@@ -1739,6 +1744,8 @@ plugin_hooks.push(plugin_logger);
     let optionSelected = $("option:selected", $stored);
     let valueSelected = $stored.val();
     if(!valueSelected) return alert("no plugin selected");
+    if(valueSelected === 'chatroom_hooks')
+      return alert("You cannot delete chatroom_hooks");
     if($("option", $stored).length){
       chrome.storage.local.get("plugins", (config)=>{
         delete config["plugins"][valueSelected]

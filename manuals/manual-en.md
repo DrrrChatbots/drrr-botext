@@ -15,8 +15,21 @@ In addition, you can try to [Install Chrome Extensions](https://addons.opera.com
 The mobile version of Chrome does not provide plugin installation on the phone, but you can use the Yandex browser ([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hlen_US), it uses Chrome kernel, so it can also get the installation from [Google Web App Store](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm).
 
 Note: Yandex on iOS is not supported.
+
+Kiwi browser can also run the extenson, but for some unknown bugs, I make a custmized version for it(the kiwi branch). You can install it via the .crx or install [the version from WebStore](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ki/ejklpmiadilgeabpklkickjghjegcblj).
 :::
 
+### Background version
+
+:::success
+[The background version](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm) let you change the icon (i.e. Bot cog) on the site. But it may run in the background, which means it would cost more resources.
+:::
+
+### Incoming version
+
+:::warning
+Firefox add-ons is still under reviewing, and it may be both available on PC and Android.
+:::
 
 ## FrontEnd Control
 
@@ -102,11 +115,10 @@ Note: Yandex on iOS is not supported.
 
 ### Friends
 
-> TBC: Abuse room and blacklist hiding
-
 :::success
 
-![](https://i.imgur.com/PKID7Ay.png)
+![](https://i.imgur.com/BjCw2A4.png)
+
 :::
 
 :::warning
@@ -143,10 +155,12 @@ Search mode:
 :::
 
 :::warning
-![](https://i.imgur.com/l5p3yoj.png)
+![](https://i.imgur.com/GqNW6b4.png)
+
 
 #### Favorites notification / list
 
+<i class="glyphicon glyphicon-eye-close"></i> Annoying room/user hiding
 <i class="glyphicon glyphicon-volume-up"></i> Open favorites notice (someone goes online or creates a room)
 <i class="glyphicon glyphicon-list"></i> Show all favorites rules
 <i class="glyphicon glyphicon-lock"></i> Show all matching tripcode users online
@@ -159,7 +173,6 @@ Search mode:
 
 :::success
 ![](https://i.imgur.com/ZvV9Sun.png)
-
 
 #### Play mode (click to switch)
 - <i class="glyphicon glyphicon-music"></i> Single song mode: Stop after every song
@@ -235,8 +248,6 @@ Search result：剛好遇見你
 :::
 
 ### Module
-
-> TBC: peerjs series module
 
 :::success
 ![](https://i.imgur.com/G5Vt5oC.png)
@@ -337,6 +348,49 @@ B：The digit is correct but posistion is wrong
 Exmaple: The number is 1658 , if you send 2680, system will show 2680：1A1B
 :::
 
+:::warning
+##### Hidden Lounge 亞特蘭蒂斯
+
+![](https://i.imgur.com/BtJomuX.png)
+
+<i id="" class="glyphicon glyphicon-log-in"></i> Enter hidden lounge
+- Use public hidden lounge if no sheet ID
+- After entering the ID, click <i id="" class="glyphicon glyphicon-pencil"></i> to use private lounge
+
+![](https://i.imgur.com/WedLAo2.png)
+You can stuff different ID to switch different lounge
+
+注：[How to get the google ID](http://hk.uwenku.com/question/p-kjrgjrcw-gn.html)
+:::
+
+
+
+:::warning
+### Audio room
+
+##### P2P CHAT Double audio room
+![](https://i.imgur.com/7YWNfyA.png)
+
+
+
+##### ROOM CHAT Group audio room
+![](https://i.imgur.com/4c63kyl.png)
+###### function:
+- Audio system
+- Screen sharing
+##### 
+- <i class="glyphicon glyphicon-phone-alt"></i> Crete the audio room (group host only)
+- <i class="glyphicon glyphicon-earphone"></i> Join the audio room
+     * host  Room code would be generated automatically
+     * join  Enter the room code to enter audio room
+     * hall  Broken know
+     
+###### steps:
+1. Join audio room
+2. Mic/Screen Sharing setup
+3. <i class="icon icon-phone"></i> Click to join session
+4. <i class="icon icon-list"></i> Click to watch sharing
+:::
 
 ### Sticker
 
@@ -671,12 +725,13 @@ $[-]
 
 #### Function Manual
 
-> TBC: "script" method 
-
 :::warning
 
 Function ["parameter", ...] Description:
-
+- `name` `["room name", "room name", ...]`
+  Select a name as new room name.
+- `desc` `["room description", "room description", ...]`
+  Select a description as new room description.
 - `msg` `["message", "message", ...] `
   Select a message to publish.
 - `umsg` `["URL", "Message", ...] `
@@ -739,8 +794,15 @@ Function ["parameter", ...] Description:
   Leaving the room and entering the room again.
 - `gofr` `["Room Name (RegExp)"] `
   Go to the room that matches the room name. If it fails, return to the origin room.
+- `func` `["lambda script category and name"]`
+  execute lambda script purely (you cannot store variable)
+- `script` `["lambda script category and name"]`
+  provide the variable`env` for lambda script execution.
 
-> if you want to send `me` message, you can apply msg function with `/me + message` .
+> If you want to send `me` message, you can apply msg function with `/me + message` .
+
+> For lambda script binding,
+you can refer the `action/wb.js` in bs-pkgs(lambda script packages).
 :::
 
 ### Local

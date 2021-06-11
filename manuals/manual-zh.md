@@ -15,6 +15,20 @@
 手機版的 Chrome 並不提供在手機上的插件安裝，不過你可以使用 Yandex 瀏覽器 ([Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin&hl=en_US))，他用的是 Chrome 內核，所以一樣可以到 [Google 線上應用程式商店](https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm) 安裝。
 
 註：iOS 的 Yandex 並不支援插件功能。
+
+Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做了一個定製版本（kiwi 分枝）給他。你可以用 .crx 檔案安裝他或者直接安裝[這個版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ki/ejklpmiadilgeabpklkickjghjegcblj)。
+:::
+
+### 背景版本
+
+:::success
+[背景版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm)可以讓你在網站上更換圖示（例如機器人板手）。不過他必須常駐在背景執行，這可能會消耗更多的資源。
+:::
+
+### 即將上架
+
+:::warning
+火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。
 :::
 
 ## 前端控制
@@ -101,11 +115,10 @@
 
 ### Friends
 
-> TBC: Abuse room and blacklist hiding
-
 :::success
 
-![](https://i.imgur.com/PKID7Ay.png)
+![](https://i.imgur.com/BjCw2A4.png)
+
 :::
 
 :::warning
@@ -143,11 +156,11 @@
 :::
 
 :::warning
-![](https://i.imgur.com/l5p3yoj.png)
+![](https://i.imgur.com/GqNW6b4.png)
 
 #### 收藏通知/列表
 
-
+<i class="glyphicon glyphicon-eye-close"></i> 隱藏符合名稱/tripcode的人名/房間
 <i class="glyphicon glyphicon-volume-up"></i> 開啟收藏通知（有人上線或房間創立）
 <i class="glyphicon glyphicon-list"></i> 顯示所有收藏規則
 <i class="glyphicon glyphicon-lock"></i> 顯示線上所有符合的 tripcode 使用者
@@ -236,8 +249,6 @@
 :::
 
 ### Module
-
-> TBC: peerjs series module
 
 :::success
 ![](https://i.imgur.com/G5Vt5oC.png)
@@ -340,6 +351,51 @@ A：數字正確且位置正確
 B：數字正確但位置錯誤
 例子：隨機數為 1658 ，聊天室輸入 2680，系統會顯示 2680：1A1B
 :::
+
+:::warning
+##### Hidden Lounge 亞特蘭蒂斯
+
+![](https://i.imgur.com/pJbRvVN.png)
+
+<i id="" class="glyphicon glyphicon-log-in"></i> 進入隱藏房大廳
+- 不填 sheet ID 直接用公用的隱藏房大廳
+- 填 ID 後，按 <i id="" class="glyphicon glyphicon-pencil"></i> 使用私人大廳
+
+![](https://i.imgur.com/WedLAo2.png)
+進入大廳之後 可填入不同 ID 切換不同的大廳
+
+注：[如何找到 google ID](http://hk.uwenku.com/question/p-kjrgjrcw-gn.html)
+:::
+
+
+
+:::warning
+### 語音房
+
+##### P2P CHAT 兩個人的語音房
+![](https://i.imgur.com/7YWNfyA.png)
+
+
+
+##### ROOM CHAT 一群人的語音房
+![](https://i.imgur.com/4c63kyl.png)
+###### 功能：
+- 語音系統
+- 屏幕分享
+#####
+- <i class="glyphicon glyphicon-phone-alt"></i> 開啟語音房（群聊房主限定）
+- <i class="glyphicon glyphicon-earphone"></i> 加入語音房
+     * host  房間code會自動生成
+     * join  輸入房間code進入語音房
+     * hall  壞掉了
+
+###### 步驟：
+1. 加入語音房
+2. 設置麥克風/分享畫面
+3. <i class="icon icon-phone"></i> 點擊加入會話
+4. <i class="icon icon-list"></i> 點擊觀看分享
+:::
+
 
 
 ### Sticker
@@ -680,11 +736,12 @@ $[-]
 
 #### 函數說明
 
-> TBC: "script" method
-
 :::warning
 函數 [參數列] 說明：
-
+- `name` `["名稱", "名稱", ...]`
+  選擇一個名稱重新設定房間名稱。
+- `desc` `["描述", "描述", ...]`
+  選擇一個描述重新設定房間描述。
 - `msg` `["訊息", "訊息", ...]`
   從訊息中選擇一個推送。
 - `umsg` `["URL", "訊息", ...]`
@@ -747,8 +804,14 @@ $[-]
   離開房間又進入房間。
 - `gofr` `["房間名稱(RegExp)"]`
   前往符合房間名稱的房間。若失敗則回到原房間。
+- `func` `["浪語腳本分類和名稱"]`
+  純函數執行浪語腳本（執行存的變數沒有作用）
+- `script` `["浪語腳本分類和名稱"]`
+  提供 `env` 這個變數以執行浪語腳本。
 
 > `me` 可以用 `/me + 推送訊息` 以 msg 達成。
+
+> 浪語腳本綁定可以參考 bs-pkgs （浪語套件包）的 `action/wb.js`
 :::
 
 ### Local 本地設定

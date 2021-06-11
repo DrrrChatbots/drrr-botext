@@ -157,7 +157,7 @@ function draw_message(msg, to){
   };
   if(to) the_message.secret = true, the_message.to = to;
   the_message.element = writeMessage(the_message, roomProfile());
-  the_message.element.find(".bubble").prepend(`<div class="tail-wrap center" style="background-size: 65px;"><div class="tail-mask"></div></div>`);
+  the_message.element.find(".bubble").prepend('<div class="tail-wrap center" style="background-size: 65px;"><div class="tail-mask"></div></div>');
   console.log(the_message.element)
   $('#talks').prepend(the_message.element)
 }

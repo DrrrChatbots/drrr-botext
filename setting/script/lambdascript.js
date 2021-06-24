@@ -24304,7 +24304,7 @@ var PS = {};
                   return function __do() {
                       var obj$prime = evalExpr(v)(lval.value0)();
                       var sub$prime = evalExpr(v)(lval.value1)();
-                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.updMem(obj$prime)(lval.value1)(val))();
+                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)($foreign.updMem(obj$prime)(sub$prime)(val))();
                       return v.env;
                   };
               };

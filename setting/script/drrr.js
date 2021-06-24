@@ -133,8 +133,8 @@ drrr_builtins = {
       ctrlRoom({'unban': u.id});
     })
   },
-  'leave': function(user, msg, url){
-    ctrlRoom({'leave': 'leave'});
+  'leave': function(succ, fail){
+    ctrlRoom({'leave': 'leave'}, succ, fail);
   },
   'play': function(keyword, p1, p2){
     var idx = undefined, source = undefined;
@@ -251,7 +251,7 @@ drrr.getProfile = function(callback){
 drrr.getLoc = function(callback){
   getRoom((info)=>{
     drrr.setInfo(info);
-    if(callback) callback();
+    if(callback) callback(info);
   }, (jxhr) => {
     if(jxhr.status == 503){
       sendTab({ fn: reload_room, args: { } })

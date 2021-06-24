@@ -1389,7 +1389,7 @@ function sticker_setup(config){
     chrome.storage.sync.set({ 'select_stickers': extract_sticker_data(valueSelected) });
   }
   $stored.on('change', sel_callback);
-  $stored.on('click', sel_callback);
+  $stored.on('click', sel_callback).click();
 
   $('#reset-sticker').on('click', reset_stickers);
   $('#del_sticker').on('click', function(){

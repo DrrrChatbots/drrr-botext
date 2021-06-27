@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.768",
+    "version": "1.769",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {
@@ -21,7 +21,11 @@
             "css": ["/content/index.css"],
             "run_at": "document_start",
             "js": ["/js/jquery-3.4.1.min.js"
-                  , "/js/jquery.textcomplete.min.js" , "/js/tw_cn.js"
+                  , "/js/jquery.textcomplete.min.js"
+                  , "/js/data.min.js"
+                  , "/js/data.cn2t.min.js"
+                  , "/js/data.t2cn.min.js"
+                  , "/js/bundle-browser.min.js"
                   , "/lib/globals.js" , "/lib/format.js"
                   , "/content/ui.js" , "/content/methods.js", "/content/room.js"]
         },

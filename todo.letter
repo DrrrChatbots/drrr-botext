@@ -1,0 +1,49 @@
+Hello,
+
+
+Your add-on, drrr chatbot extension 1.764, has been reviewed and did not meet the criteria for being hosted in our gallery.
+
+Reviewer:
+Ultron
+
+Comments:
+This version didn&#39;t pass review because of the following problems:
+
+1) Your add-on includes a third-party library. Please provide the origin of the exact library version you were using and make sure you are using an exact copy of the original maintainer&#39;s release version. For more information, refer to https://extensionworkshop.com/documentation/publish/third-party-library-usage/
+Remind that established libraries must be included from their official source, in their original format without any modification (changing the file name does not matter). Please note that only stable releases are acceptable (not beta, pre, RC, dev etc) and that third party CDNs are not considered official sources.
+Please provide us with valid links to the third party library you are using.
+To determine what are valid third part library links follow this link: https://extensionworkshop.com/documentation/publish/third-party-library-usage/#how-to-determine-the-third-party-library-link
+
+Also please use only one file of jquery (done)
+
+2)  The user must be provided with an opportunity to refuse the storage of or access to cookies, and must be informed of the consequences of doing so (e.g., without a functional cookie, the add-on may not work).
+Installing cookies that are not explicitly required for the add-on’s functionality is prohibited.
+Please see https://extensionworkshop.com/documentation/develop/best-practices-for-collecting-user-data-consents/ for an example of how to present the consent.
+For more information, refer to https://extensionworkshop.com/documentation/publish/add-on-policies/#data-disclosure-collection-and-management
+
+3) This version contains minified, concatenated or otherwise machine-generated code. Please provide the original sources, together with instructions on how to generate the final XPI. Source code must be provided as an archive and uploaded using the source code upload field, which can be done during submission or on the version page in the developer hub.
+
+Please read through the instructions at https://extensionworkshop.com/documentation/publish/source-code-submission/ .
+
+content\ui.js
+
+
+
+This version of your add-on has been disabled. You may re-request review by addressing the reviewer's comments and uploading a new version at https://addons.mozilla.org/en-GB/developers/addon/drrr-chatbot-extension/versions
+
+
+********
+Developer Resources
+********
+
+To respond, please reply to this email or visit: https://addons.mozilla.org/en-GB/developers/addon/drrr-chatbot-extension/versions
+
+You can also get in touch with us using these channels: https://wiki.mozilla.org/Add-ons#Contact_us
+
+For tips on how to attract more users by updating your add-on’s listing, please visit: https://extensionworkshop.com/documentation/develop/create-an-appealing-listing
+
+To learn more about the review process, please visit: https://extensionworkshop.com/documentation/publish/add-on-policies/
+
+--
+Mozilla Add-ons Team
+https://addons.mozilla.org

@@ -22834,7 +22834,7 @@ var PS = {};
                           if (maybe instanceof Data_Maybe.Nothing) {
                               return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new BotScript.Ifels(prd, thn, new BotScript.Group(Data_List_Types.Nil.value)));
                           };
-                          throw new Error("Failed pattern match at BotScriptParser (line 328, column 3 - line 332, column 51): " + [ maybe.constructor.name ]);
+                          throw new Error("Failed pattern match at BotScriptParser (line 332, column 3 - line 336, column 51): " + [ maybe.constructor.name ]);
                       });
                   });
               });
@@ -23102,7 +23102,11 @@ var PS = {};
                   return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr$prime);
               });
           });
-      })))(parseObject(self)))(function (expr) {
+      })))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(parseObject(self))(function (expr) {
+          return Control_Bind.discard(Control_Bind.discardUnit)(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser_Combinators.optional(Data_Identity.monadIdentity)(reservedOp(";")))(function () {
+              return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr);
+          });
+      })))(function (expr) {
           return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(expr);
       });
   }))("Expression");
@@ -23161,7 +23165,7 @@ var PS = {};
       if (maybe instanceof Data_Maybe.Nothing) {
           return parseExpr;
       };
-      throw new Error("Failed pattern match at BotScriptParser (line 458, column 3 - line 460, column 28): " + [ maybe.constructor.name ]);
+      throw new Error("Failed pattern match at BotScriptParser (line 462, column 3 - line 464, column 28): " + [ maybe.constructor.name ]);
   });
   var testParseExprs = Control_Alt.alt(Text_Parsing_Parser.altParserT(Data_Identity.monadIdentity))(Control_Bind.bind(Text_Parsing_Parser.bindParserT(Data_Identity.monadIdentity))(Data_Array.some(Text_Parsing_Parser.alternativeParserT(Data_Identity.monadIdentity))(Text_Parsing_Parser.lazyParserT)(parseTopExpr))(function (exprs) {
       return Control_Applicative.pure(Text_Parsing_Parser.applicativeParserT(Data_Identity.monadIdentity))(new Data_Tuple.Tuple(true, exprs));

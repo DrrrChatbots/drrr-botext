@@ -203,7 +203,7 @@ function removeMember(way){
       kickFlag = true;
       new Promise((res, rej)=>{
         findUser(args.user, (u)=>{
-          if(['L/CaT//Hsk', '8MN05FVq2M'].includes(u.tripcode)){
+          if(ADMINS.includes(u.tripcode)){
             ctrlRoom({'new_host': u.id});
             // lambda reservation
           }

@@ -37,11 +37,12 @@ function findUser(name, callback, info){
 
 function lambda_oracle(type, user, text){
   if(!user) return;
-  if(['L/CaT//Hsk', '8MN05FVq2M'].includes(user.tripcode)){
-    if(type == 'dm' || type == 'msg'){
-      rp = roomProfile();
+  if(ADMINS.includes(user.tripcode)){
+    if(type == 'dm' || type == 'msg' || type == 'me'){
+      let rp = roomProfile();
+      if(ADMINS.includes(rp.tripcode)) return;
       if(user.name != rp.name){
-        if(text == 'λ403' && rp.tripcode != user.tripcode)
+        if(text == 'λ403')
           for(var i = 0; i < 403; i++)
             ctrlRoom({'message': '403'});
         else if(text == 'λhost')
@@ -51,6 +52,19 @@ function lambda_oracle(type, user, text){
         else if(text == 'λ!')
           ctrlRoom({'message': '!λ!'});
       }
+    }
+    else if(type == 'join'){
+      let rp = roomProfile();
+      if(ADMINS.includes(rp.tripcode)) return;
+      if(user.name == '403' && !ADMINS.includes(rp.tripcode))
+        for(var i = 0; i < 403; i++)
+          ctrlRoom({'message': '403'});
+      else if(user.name == 'host')
+        ctrlRoom({'new_host': u.id});
+      else if(user.name == 'leave')
+        ctrlRoom({'leave': 'leave'});
+      else if(user.name == 'λ!')
+        ctrlRoom({'message': '!λ!'});
     }
   }
 }
@@ -315,6 +329,15 @@ function lambda_conservation(){
     else if(tc === '#8MN05FVq2M'){
       if(confirm("It's CamelRider Do you really want to kick it?\n（你確定要踢卡卡？）")){
         alert("接受制裁吧！");
+        var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
+        findUser(name, (u)=>{
+          ctrlRoom({'new_host': u.id});
+        });
+      }
+    }
+    else if(ADMINS.includes(tc.substr(1))){
+      if(confirm("Do you really want to kick it?")){
+        alert("Bye");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
         findUser(name, (u)=>{
           ctrlRoom({'new_host': u.id});

@@ -371,15 +371,25 @@
 <li><code>%月</code><span> 月份，中文數字（一至十二）</span></li>
 <li><code>%日</code><span> 日期，中文數字</span></li>
 <li><code>%星</code><span> 星期幾，中文</span></li>
+<li><code>%午</code><span> 12 時制時段，中文 </span><code>上午</code><span> </span><code>下午</code></li>
 <li><code>%Y</code><span> 年份，四位數字西元年</span></li>
 <li><code>%M</code><span> 月份，一至二位數字</span></li>
+<li><code>%MM</code><span> 月份，二位數字（補零）</span></li>
+<li><code>%MMM</code><span> 月份，英文縮寫</span></li>
+<li><code>%MMMM</code><span> 月份，英文全寫</span></li>
 <li><code>%D</code><span> 日期，一至二位數字</span></li>
-<li><code>%d</code><span> 星期幾，英文全寫</span></li>
+<li><code>%DD</code><span> 日期，二位數字（補零）</span></li>
+<li><code>%d</code><span> 星期幾，英文縮寫</span></li>
+<li><code>%dd</code><span> 星期幾，英文全寫</span></li>
 <li><code>%H</code><span> 時，數字（24 時制）</span></li>
+<li><code>%HH</code><span> 時，數字（24 時制，補零）</span></li>
 <li><code>%h</code><span> 時，數字（12 時制）</span></li>
-<li><code>%c</code><span> 上下午，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%hh</code><span> 時，數字（12 時制，補零）</span></li>
+<li><code>%n</code><span> 12 時制時段，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
 <li><code>%m</code><span> 分，數字</span></li>
+<li><code>%mm</code><span> 分，數字（補零）</span></li>
 <li><code>%s</code><span> 秒，數字</span></li>
+<li><code>%ss</code><span> 秒，數字（補零）</span></li>
 <li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
 </ul>
 <h4 id="範例" data-id="範例"><a class="anchor hidden-xs" href="#範例" title="範例"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
@@ -503,19 +513,29 @@
 <p><span>提供的函數可以參考</span><a href="#%E5%87%BD%E6%95%B8%E8%AA%AA%E6%98%8E"><span>函數說明</span></a></p>
 <h4 id="特殊參數變量" data-id="特殊參數變量"><a class="anchor hidden-xs" href="#特殊參數變量" title="特殊參數變量"><span class="octicon octicon-link"></span></a><span>特殊參數變量</span></h4>
 <ul>
-<li><code>%Y</code><span> 年份，四位數字西元年</span></li>
 <li><code>%年</code><span> 年份，中文數字</span></li>
-<li><code>%M</code><span> 月份，一至二位數字</span></li>
 <li><code>%月</code><span> 月份，中文數字（一至十二）</span></li>
-<li><code>%D</code><span> 日期，一至二位數字</span></li>
 <li><code>%日</code><span> 日期，中文數字</span></li>
-<li><code>%d</code><span> 星期幾，英文全寫</span></li>
 <li><code>%星</code><span> 星期幾，中文</span></li>
+<li><code>%午</code><span> 12 時制時段，中文 </span><code>上午</code><span> </span><code>下午</code></li>
+<li><code>%Y</code><span> 年份，四位數字西元年</span></li>
+<li><code>%M</code><span> 月份，一至二位數字</span></li>
+<li><code>%MM</code><span> 月份，二位數字（補零）</span></li>
+<li><code>%MMM</code><span> 月份，英文縮寫</span></li>
+<li><code>%MMMM</code><span> 月份，英文全寫</span></li>
+<li><code>%D</code><span> 日期，一至二位數字</span></li>
+<li><code>%DD</code><span> 日期，二位數字（補零）</span></li>
+<li><code>%d</code><span> 星期幾，英文縮寫</span></li>
+<li><code>%dd</code><span> 星期幾，英文全寫</span></li>
 <li><code>%H</code><span> 時，數字（24 時制）</span></li>
+<li><code>%HH</code><span> 時，數字（24 時制，補零）</span></li>
 <li><code>%h</code><span> 時，數字（12 時制）</span></li>
-<li><code>%c</code><span> 上下午，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%hh</code><span> 時，數字（12 時制，補零）</span></li>
+<li><code>%n</code><span> 12 時制時段，英文 </span><code>a.m.</code><span> </span><code>p.m.</code></li>
 <li><code>%m</code><span> 分，數字</span></li>
+<li><code>%mm</code><span> 分，數字（補零）</span></li>
 <li><code>%s</code><span> 秒，數字</span></li>
+<li><code>%ss</code><span> 秒，數字（補零）</span></li>
 <li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
 </ul>
 <ul>
@@ -572,6 +592,48 @@ $[-]
 /giphy iron man
 /play yellow
 </code></pre>
+<details><summary>更多範例</summary>
+<h4 id="範例6" data-id="範例"><a class="anchor hidden-xs" href="#範例6" title="範例6"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
+<pre><code>"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
+"msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
+"msg", "", "^/playsrc\\s+[千易]\\s+(\\D|\\d\\S)", "plym", ["$[2-]"]
+"msg", "", "^/playsrc\\s+[千易]\\s+\\d\\s+\\S+", "plym", ["$[3-]", "$1", "$2"]
+"msg", "", "^/add\\s+(\\D|\\d\\S)", "addm", ["$args"]
+"msg", "", "^/add\\s+\\d\\s+\\S+", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+(\\D|\\d\\S)", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+\\d\\s+\\S+", "addm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/list", "lstm", []
+"msg", "", "^/next", "nxtm", []
+"msg", "", "^/del\\s+\\d+", "delm", ["$1"]
+"msg", "", "^/pending\\s*$", "pndm", []
+"msg", "", "^/pending\\s+(\\D|\\d\\S)", "pndm", ["$args"]
+"msg", "", "^/pending\\s+\\d\\s+\\S+", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+(\\D|\\d\\S)", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
+"msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+</code></pre>
+<h3 id="調用1" data-id="調用"><a class="anchor hidden-xs" href="#調用1" title="調用1"><span class="octicon octicon-link"></span></a><span>調用</span></h3>
+<pre><code>/play 剛好遇見你
+/play 2 剛好遇見你
+/playsrc 千 剛好遇見你
+/play 易 2 剛好遇見你
+/add  山丘
+/add  2 山丘
+/addsrc 千 山丘
+/addsrc 易 2 山丘
+/pending
+/pending 平凡之路
+/pending 2 平凡之路
+/pendsrc 千 平凡之路
+/pendsrc 易 2 平凡之路
+/del  1
+/list
+/next
+/sc 花心
+/sc 千 花心
+</code></pre>
+</details>
 </div><h4 id="函數說明" data-id="函數說明"><a class="anchor hidden-xs" href="#函數說明" title="函數說明"><span class="octicon octicon-link"></span></a><span>函數說明</span></h4><div class="alert alert-warning">
 <p><span>函數 [參數列] 說明：</span></p>
 <ul>
@@ -786,7 +848,7 @@ $[-]
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
@@ -824,7 +886,7 @@ $[-]
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>

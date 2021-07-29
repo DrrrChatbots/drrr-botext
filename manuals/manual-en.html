@@ -370,18 +370,28 @@
 <ul>
 <li><code>%Y</code><span> year, four-digit year</span></li>
 <li><code>%M</code><span> month, one or two digits</span></li>
+<li><code>%MM</code><span> month, two digits (pad with 0)</span></li>
+<li><code>%MMM</code><span> month, abbreviation in English</span></li>
+<li><code>%MMMM</code><span> month, full English</span></li>
 <li><code>%D</code><span> date, one or two digits</span></li>
-<li><code>%d</code><span> weekday, full English</span></li>
-<li><span>Number at </span><code>%H</code><span> (24 hour clock)</span></li>
-<li><span>number at </span><code>%h</code><span> (12 hours)</span></li>
-<li><code>%c</code><span> In the afternoon, English</span><code> a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%DD</code><span> date, two digits (pad with 0)</span></li>
+<li><code>%d</code><span> weekday, abbreviation in English</span></li>
+<li><code>%dd</code><span> weekday, full English</span></li>
+<li><code>%H</code><span> hour, (24 hour clock)</span></li>
+<li><code>%HH</code><span> hour, (24 hour clock, pad with 0)</span></li>
+<li><code>%h</code><span> hour, (12 hours)</span></li>
+<li><code>%hh</code><span> hour, (12 hours, pad with 0)</span></li>
+<li><code>%n</code><span> before/after midday, </span><code>a.m.</code><span>, </span><code>p.m.</code></li>
 <li><code>%m</code><span> minutes, numbers</span></li>
+<li><code>%mm</code><span> minutes, numbers (pad with 0)</span></li>
 <li><code>%s</code><span> seconds, numbers</span></li>
+<li><code>%ss</code><span> seconds, numbers (pad with 0)</span></li>
 <li><code>%%</code><span> escape character </span><code>%</code></li>
 <li><code>%年</code><span> year, Chinese numerals</span></li>
 <li><code>%月</code><span> month, Chinese numerals (one to twelve)</span></li>
 <li><code>%日</code><span> date, Chinese numerals</span></li>
 <li><code>%星</code><span> week, Chinese</span></li>
+<li><code>%午</code><span> before/after midday, </span><code>上午</code><span>, </span><code>下午</code></li>
 </ul>
 <h4 id="Example" data-id="Example"><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h4>
 <pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
@@ -389,7 +399,7 @@
 </code></pre>
 </div><div class="alert alert-warning">
 <h3 id="Welcome-Configuration" data-id="Welcome-Configuration"><a class="anchor hidden-xs" href="#Welcome-Configuration" title="Welcome-Configuration"><span class="octicon octicon-link"></span></a><span>Welcome Configuration</span></h3>
-<h4 id="Function1" data-id="Function"><a class="anchor hidden-xs" href="#Function2" title="Function2"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
+<h4 id="Function1" data-id="Function"><a class="anchor hidden-xs" href="#Function1" title="Function1"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
 <p><span>After someone enters the room, if the name matches </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expression</span></a><span>, the greeting will be sent out automatically .</span></p>
 <h4 id="Format1" data-id="Format"><a class="anchor hidden-xs" href="#Format1" title="Format1"><span class="octicon octicon-link"></span></a><span>Format</span></h4>
 <p><span>Two formats, multiple welcome words (choose randomly and send out)</span></p>
@@ -414,7 +424,7 @@
 </code></pre>
 </div><div class="alert alert-warning">
 <h3 id="WhiteList-Configuration" data-id="WhiteList-Configuration"><a class="anchor hidden-xs" href="#WhiteList-Configuration" title="WhiteList-Configuration"><span class="octicon octicon-link"></span></a><span>WhiteList Configuration</span></h3>
-<h4 id="Function2" data-id="Function"><a class="anchor hidden-xs" href="#Function3" title="Function3"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
+<h4 id="Function2" data-id="Function"><a class="anchor hidden-xs" href="#Function2" title="Function2"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
 <p><span>Use </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expressions</span></a><span> to automatically kick out specifics ** not in the list ** user.</span></p>
 <h4 id="Format2" data-id="Format"><a class="anchor hidden-xs" href="#Format2" title="Format2"><span class="octicon octicon-link"></span></a><span>Format</span></h4>
 <pre><code class="js hljs"><span class="hljs-attribute">Usermatching</span>
@@ -430,7 +440,7 @@
 </code></pre>
 </div><div class="alert alert-warning">
 <h3 id="BlackList-Configuration" data-id="BlackList-Configuration"><a class="anchor hidden-xs" href="#BlackList-Configuration" title="BlackList-Configuration"><span class="octicon octicon-link"></span></a><span>BlackList Configuration</span></h3>
-<h4 id="Function3" data-id="Function"><a class="anchor hidden-xs" href="#Function4" title="Function4"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
+<h4 id="Function3" data-id="Function"><a class="anchor hidden-xs" href="#Function3" title="Function3"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
 <p><span>Use </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expressions</span></a><span> to automatically kick out specific uses in list.</span></p>
 <h4 id="Format3" data-id="Format"><a class="anchor hidden-xs" href="#Format3" title="Format3"><span class="octicon octicon-link"></span></a><span>Format</span></h4>
 <pre><code class="js hljs"><span class="hljs-attribute">Usermatching</span>
@@ -446,7 +456,7 @@
 </code></pre>
 </div><div class="alert alert-warning">
 <h3 id="BanAbuse-Configuration" data-id="BanAbuse-Configuration"><a class="anchor hidden-xs" href="#BanAbuse-Configuration" title="BanAbuse-Configuration"><span class="octicon octicon-link"></span></a><span>BanAbuse Configuration</span></h3>
-<h4 id="Function4" data-id="Function"><a class="anchor hidden-xs" href="#Function5" title="Function5"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
+<h4 id="Function4" data-id="Function"><a class="anchor hidden-xs" href="#Function4" title="Function4"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
 <p><span>use </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expressions</span></a><span> to filter the chat content and automatically kick out </span><strong><span>speak prohibited words</span></strong><span> users.</span></p>
 <h4 id="Format4" data-id="Format"><a class="anchor hidden-xs" href="#Format4" title="Format4"><span class="octicon octicon-link"></span></a><span>Format</span></h4>
 <pre><code class="js hljs"><span class="hljs-attribute">Stop</span> word (regular expression)
@@ -505,18 +515,28 @@ foobar
 <ul>
 <li><code>%Y</code><span> year, four-digit year</span></li>
 <li><code>%M</code><span> month, one or two digits</span></li>
+<li><code>%MM</code><span> month, two digits (pad with 0)</span></li>
+<li><code>%MMM</code><span> month, abbreviation in English</span></li>
+<li><code>%MMMM</code><span> month, full English</span></li>
 <li><code>%D</code><span> date, one or two digits</span></li>
-<li><code>%d</code><span> weekday, full English</span></li>
-<li><span>Number at </span><code>%H</code><span> (24 hour clock)</span></li>
-<li><span>number at </span><code>%h</code><span> (12 hours)</span></li>
-<li><code>%c</code><span> In the afternoon, English</span><code> a.m.</code><span> </span><code>p.m.</code></li>
+<li><code>%DD</code><span> date, two digits (pad with 0)</span></li>
+<li><code>%d</code><span> weekday, abbreviation in English</span></li>
+<li><code>%dd</code><span> weekday, full English</span></li>
+<li><code>%H</code><span> hour, (24 hour clock)</span></li>
+<li><code>%HH</code><span> hour, (24 hour clock, pad with 0)</span></li>
+<li><code>%h</code><span> hour, (12 hours)</span></li>
+<li><code>%hh</code><span> hour, (12 hours, pad with 0)</span></li>
+<li><code>%n</code><span> before/after midday, </span><code>a.m.</code><span>, </span><code>p.m.</code></li>
 <li><code>%m</code><span> minutes, numbers</span></li>
+<li><code>%mm</code><span> minutes, numbers (pad with 0)</span></li>
 <li><code>%s</code><span> seconds, numbers</span></li>
+<li><code>%ss</code><span> seconds, numbers (pad with 0)</span></li>
 <li><code>%%</code><span> escape character </span><code>%</code></li>
 <li><code>%年</code><span> year, Chinese numerals</span></li>
 <li><code>%月</code><span> month, Chinese numerals (one to twelve)</span></li>
 <li><code>%日</code><span> date, Chinese numerals</span></li>
 <li><code>%星</code><span> week, Chinese</span></li>
+<li><code>%午</code><span> before/after midday, </span><code>上午</code><span>, </span><code>下午</code></li>
 </ul>
 <ul>
 <li><code>$user</code><span> username for sending message</span></li>
@@ -572,6 +592,48 @@ $[-]
 /giphy iron man
 /play yellow
 </code></pre>
+<details><summary>More Examples</summary>
+<h4 id="Example6" data-id="Example"><a class="anchor hidden-xs" href="#Example6" title="Example6"><span class="octicon octicon-link"></span></a><span>Example</span></h4>
+<pre><code>"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
+"msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
+"msg", "", "^/playsrc\\s+[千易]\\s+(\\D|\\d\\S)", "plym", ["$[2-]"]
+"msg", "", "^/playsrc\\s+[千易]\\s+\\d\\s+\\S+", "plym", ["$[3-]", "$1", "$2"]
+"msg", "", "^/add\\s+(\\D|\\d\\S)", "addm", ["$args"]
+"msg", "", "^/add\\s+\\d\\s+\\S+", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+(\\D|\\d\\S)", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+\\d\\s+\\S+", "addm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/list", "lstm", []
+"msg", "", "^/next", "nxtm", []
+"msg", "", "^/del\\s+\\d+", "delm", ["$1"]
+"msg", "", "^/pending\\s*$", "pndm", []
+"msg", "", "^/pending\\s+(\\D|\\d\\S)", "pndm", ["$args"]
+"msg", "", "^/pending\\s+\\d\\s+\\S+", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+(\\D|\\d\\S)", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
+"msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+</code></pre>
+<h3 id="Call1" data-id="Call"><a class="anchor hidden-xs" href="#Call1" title="Call1"><span class="octicon octicon-link"></span></a><span>Call</span></h3>
+<pre><code>/play yellow
+/play 2 yellow
+/playsrc 千 yellow
+/play 易 2 yellow
+/add  yellow
+/add  2 yellow
+/addsrc 千 yellow
+/addsrc 易 2 yellow
+/pending
+/pending yellow
+/pending 2 yellow
+/pendsrc 千 yellow
+/pendsrc 易 2 yellow
+/del  1
+/list
+/next
+/sc yellow
+/sc 千 yellow
+</code></pre>
+</details>
 </div><h4 id="Function-Manual" data-id="Function-Manual"><a class="anchor hidden-xs" href="#Function-Manual" title="Function-Manual"><span class="octicon octicon-link"></span></a><span>Function Manual</span></h4><div class="alert alert-warning">
 <p><span>Function [“parameter”, …] Description:</span></p>
 <ul>
@@ -747,14 +809,14 @@ $[-]
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
 <li><a href="#PC-version" title="PC version">PC version</a></li>
-<li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
+<li class=""><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-version" title="Incoming version">Incoming version</a></li>
 </ul>
 </li>
-<li class=""><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">
+<li><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">
 <li><a href="#Bio" title="Bio">Bio</a></li>
 <li><a href="#Local" title="Local">Local</a></li>
 <li><a href="#Friends" title="Friends">Friends</a></li>
@@ -781,14 +843,14 @@ $[-]
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
 <li><a href="#PC-version" title="PC version">PC version</a></li>
-<li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
+<li class=""><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-version" title="Incoming version">Incoming version</a></li>
 </ul>
 </li>
-<li class=""><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">
+<li><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">
 <li><a href="#Bio" title="Bio">Bio</a></li>
 <li><a href="#Local" title="Local">Local</a></li>
 <li><a href="#Friends" title="Friends">Friends</a></li>

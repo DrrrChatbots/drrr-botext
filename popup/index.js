@@ -1850,7 +1850,9 @@ $(document).ready(function(){
   $("#program").click(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
   });
-
+  $("#background").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/script/background.html')});
+  });
   /* ensure activate the background page */
   chrome.runtime.sendMessage({ type: 'popup' },
     () => bkg().make_switch_panel($, '#switch_panel'));

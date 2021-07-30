@@ -28,9 +28,7 @@
 <script src="/background/action.js" charset="utf-8"></script>
 <script src="/lib/format.js" charset="utf-8"></script>
 <script src="./lambdascript.js" charset="utf-8"></script>
-<script src="./drrr.js" charset="utf-8"></script>
-<script src="./listener.js" charset="utf-8"></script>
-<script src="done.js"></script>
+<script src="./drrr-bot.js" charset="utf-8"></script>
 <link rel="stylesheet" href="./modal.css">
 <style>
 .CodeMirror {
@@ -50,12 +48,12 @@
   }
 </style>
 <div id=nav style="">
-  <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>UserScript Console</h1><img id=logo src="../codemirror/doc/logo.png"></a>
+  <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>Background Console</h1><img id=logo src="../codemirror/doc/logo.png"></a>
 
   <ul>
     <li><a href="../sync/index.html">Sync</a></li>
     <li><a href="../local/index.html">Local</a></li>
-    <li class="active"><a href="./background.html">Background</a></li>
+    <li class="active"><a href="./index.html">UserScript</a></li>
     <!--
       <li><a href="../codemirror/index.html">Home</a>
       <li><a href="../codemirror/doc/manual.html">Manual</a>
@@ -64,7 +62,6 @@
   </ul>
   <ul>
     <li><a id="mirror-link" class=active href="void(0);">Packages</a></li><br>
-    <li><a id="show-room" class=active href="void(0);">ToggleRoom</a></li><br>
     <li><a id="show-bindings" class=active href="#">Sublime bindings</a></li><br>
     <li><a id='intro' target="_blank">Introduction</a></li>
     <li><a id='save' href="#">(ctrl + s) save</a></li>
@@ -107,8 +104,8 @@
 
     </div>
   </div>
-  <div id="iframe-container" style="position: relative; z-index: 0;">
-  </div>
+  <!-- <div id="iframe-container" style="position: relative; z-index: 0;">
+  </div>-->
 </article>
 
 

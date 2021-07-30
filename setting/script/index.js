@@ -1,3 +1,11 @@
+var intervals_remove_on_reExecute = [];
+
+function clear_intervals_on_reExecute(){
+  for(id of intervals_remove_on_reExecute)
+    clearInterval(id);
+  intervals_remove_on_reExecute = [];
+}
+
 function redef_log() {
   globalThis.log = console.log;
   var logger = document.getElementById('log');
@@ -74,6 +82,7 @@ function interact(){
 }
 
 function execute(){
+  clear_intervals_on_reExecute();
   code = globalThis.editor.getValue();
   code = preloaded_code(code);
   globalThis.machine = PS.Main.execute(code)();
@@ -111,6 +120,7 @@ function save_script(){
 }
 
 function pause_script(){
+  clear_intervals_on_reExecute();
   globalThis.machine = PS.Main.execute(';')();
   val = machine.val;
   chrome.notifications.create({

@@ -228,18 +228,88 @@ chrome.storage.onChanged.addListener(function(changes, area) {
     }
 });
 
+function isBot(headers){
+  for (var i = 0; i < headers.length; ++i)
+    if (headers[i].name === 'drrr-agent')
+      return headers[i].value || true;
+}
+
+const fromCookie = str =>
+  str
+    .split(';')
+    .map(v => v.split('='))
+    .reduce((acc, v) => {
+      acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+      return acc;
+    }, {});
+
+const toCookie = obj =>
+  Object.keys(obj)
+    .map(key => `${key}=${obj[key]}`)
+    .join(';');
+
+const botRequstIdSet = new Set();
+
+function modifyOnBot(requestId, headers){
+  let agent = isBot(headers);
+  if(!agent){ return false; }
+
+  botRequstIdSet.add(requestId);
+
+  var newHeaders = headers.map(header => Object.assign({}, header));
+
+  for (var i = 0; i < newHeaders.length; ++i) {
+    if (newHeaders[i].name.toLowerCase() === 'user-agent') {
+      newHeaders[i].value = agent;
+    }
+    if (newHeaders[i].name.toLowerCase() === 'cookie') {
+      let cookie = newHeaders.find(
+        header => header.name === 'drrr-cookie')
+      let cookieObj = fromCookie(newHeaders[i].value)
+      delete cookieObj['drrr-session-1']
+
+      newHeaders[i].value = `${cookie.value};${toCookie(cookieObj)}`
+
+      // TODO add cookie
+      //if(cookie) newHeaders[i].value =
+      //  cookie.value + newHeaders[i].name;
+    }
+  }
+  return newHeaders;
+}
+
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
-    for (var i = 0; i < details.requestHeaders.length; ++i) {
-      if (details.requestHeaders[i].name === 'User-Agent') {
-        details.requestHeaders[i].value = login_mode;
-        break;
+    let newHeaders = modifyOnBot(details.requestId, details.requestHeaders);
+    if(!newHeaders){
+      for (var i = 0; i < details.requestHeaders.length; ++i) {
+        if (details.requestHeaders[i].name.toLowerCase() === 'user-agent') {
+          details.requestHeaders[i].value = login_mode;
+          break;
+        }
       }
     }
-    return {requestHeaders: details.requestHeaders};
+    return {requestHeaders: newHeaders || details.requestHeaders};
   },
   {urls: ["*://drrr.com/*"]},
-  ["blocking", "requestHeaders"]);
+  ["blocking", "requestHeaders", "extraHeaders"]);
+
+chrome.webRequest.onHeadersReceived.addListener(
+  function(details) {
+    // console.log("on HeaderReceived", details);
+    if(botRequstIdSet.has(details.requestId)){
+      botRequstIdSet.delete(details.requestId);
+      let cookie = details.responseHeaders.find(
+          header => header.name.toLowerCase() === 'set-cookie')
+      if(cookie){
+        cookie.value.replace(/httponly/ig, '');
+        cookie.name = 'drrr-cookie'
+      }
+    }
+    return {responseHeaders: details.responseHeaders};
+  },
+  {urls: ["*://drrr.com/*"]},
+  ['blocking','responseHeaders', "extraHeaders"]);
 
 // Check whether new version is installed
 chrome.runtime.onInstalled.addListener(function(details){

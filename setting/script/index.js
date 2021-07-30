@@ -111,7 +111,7 @@ function execute(){
 }
 
 function save_script(){
-  chrome.storage.local.set({temp_save: globalThis.editor.getValue()},
+  chrome.storage.local.set({[temp_save]: globalThis.editor.getValue()},
     function(){
       chrome.notifications.create({
         type: "basic",

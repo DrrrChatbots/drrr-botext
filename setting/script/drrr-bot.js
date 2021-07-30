@@ -102,7 +102,7 @@ class Bot {
   method_queue = [];
   exec_time_gap = 1500;
 
-  do_method(){
+  do_method = (function(){
     let self = this;
     function _do_method(){
       if(self.method_queue.length){
@@ -115,24 +115,24 @@ class Bot {
       }
     }
     if(!self.exec_method){ self.exec_method = true; _do_method(); }
-  }
+  }).bind(this);
 
-  ctrlRoom(...args){
+  ctrlRoom = (function(...args){
     this.method_queue.push(((args) => {
       return ()=>ctrlRoom.apply(this, args);
     })(args));
     this.do_method();
-  }
+  }).bind(this);
 
   ctrl = this.ctrlRoom.bind(this);
 
   ajaxProfile = ajaxProfile.bind(this);
 
-  listen(e){
+  listen = (function(e){
     lambdascript_event_action(e.type, null, e);
-  }
+  }).bind(this);
 
-  handle(talk){
+  handle = (function(talk){
     // ignore room history
     if(!this.history) return;
 
@@ -141,9 +141,9 @@ class Bot {
       f => f(e.user, e.text, e.url, e.trip, e))
 
     if(this.listen) this.listen(e)
-  }
+  }).bind(this);
 
-  handleUser(talk){
+  handleUser = (function(talk){
     if(!talk.user) return;
     if(talk.type === 'join'){
       let users = this.room.users || []
@@ -155,9 +155,9 @@ class Bot {
       let index = users.findIndex(u => u.id == talk.user.id);
       if(index >= 0) this.room.users.splice(index, 1);;
     }
-  }
+  }).bind(this);
 
-  update(callback){
+  update = (function(callback){
     let self = this;
     let url = "/json.php";
     if(self.history) url += `?update=${self.history.update}`;
@@ -183,32 +183,32 @@ class Bot {
         callback(false);
       }
     });
-  }
+  }).bind(this);
 
-  event(type, callback){
+  event = (function(type, callback){
     this.events[type] = this.events || [];
     this.events.push(callback);
-  }
+  }).bind(this);
 
-  state(name, callback){
+  state = (function(name, callback){
     this.states[name] = callback;
-  }
+  }).bind(this);
 
-  going(name){
+  going = (function(name){
     let dest = this.states[name];
     if(!dest) return console.log("no such state");
     this.cur_st = name;
     dest();
-  }
+  }).bind(this);
 
-  visit(name){
+  visit = (function(name){
     let dest = this.states[name];
     if(!f) return console.log("no such state");
     this.cur_st = name;
     dest();
-  }
+  }).bind(this);
 
-  login(...args){
+  login = (function(...args){
     let self = this;
     let callback = args.find(v => typeof v === 'function');
     let ready = args.find(
@@ -279,23 +279,25 @@ class Bot {
         }
       });
     });
-  }
+  }).bind(this);
 
-  title(msg){
+  title = (function(msg){
     this.ctrlRoom({'room_name': String(msg)});
-  }
-  descr(msg){
+  }).bind(this);
+
+  descr = (function(msg){
     this.ctrlRoom({'room_description': String(msg)});
-  }
-  print(msg, url){
-    // TODO
+  }).bind(this);
+
+  print = (function(msg, url){
     this.drrr_send(msg, url);
-  }
-  dm(user, msg, url){
-    // TODO
+  }).bind(this);
+
+  dm = (function(user, msg, url){
     this.drrr_send(msg, url, user);
-  }
-  drrr_send(msg, url, to){
+  }).bind(this);
+
+  drrr_send = (function(msg, url, to){
     let callback = renew_callback(msg, to);
 
     let cmd = {"message": String(msg)}
@@ -319,45 +321,52 @@ class Bot {
       //  ()=>{ ctrlRoom(cmd, callback, callback) },
       //  callback);
     };
-  }
-  chown(user){
+  }).bind(this);
+
+  chown = (function(user){
     this.findUser(user, (u)=>{
       this.ctrlRoom({'new_host': u.id});
     })
-  }
-  kick(user){
+  }).bind(this);
+
+  kick = (function(user){
     this.findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
         this.ctrlRoom({'new_host': u.id});
       else
         this.ctrlRoom({'kick': u.id});
     })
-  }
-  ban(user){
+  }).bind(this);
+
+  ban = (function(user){
     this.findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
         this.ctrlRoom({'new_host': u.id});
       else
         this.ctrlRoom({'ban': u.id});
     })
-  }
-  report(user){
+  }).bind(this);
+
+  report = (function(user){
     this.findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
         this.ctrlRoom({'new_host': u.id});
       else
         this.ctrlRoom({'report_and_ban_user': u.id});
     })
-  }
-  unban(user){
+  }).bind(this);
+
+  unban = (function(user){
     this.findUser(user, (u)=>{
       this.ctrlRoom({'unban': u.id});
     })
-  }
-  leave(succ, fail){
+  }).bind(this);
+
+  leave = (function(succ, fail){
     this.ctrlRoom({'leave': 'leave'}, succ, fail);
-  }
-  play(keyword, p1, p2){
+  }).bind(this);
+
+  play = (function(keyword, p1, p2){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
@@ -367,8 +376,9 @@ class Bot {
       //TODO
       (msg) => this.drrr_send(msg), idx
     ), 1000);
-  }
-  join(room_id, callback){
+  }).bind(this);
+
+  join = (function(room_id, callback){
     let self = this;
     $.ajax({
       type: "GET",
@@ -411,8 +421,9 @@ class Bot {
         console.log("join failed");
       }
     });
-  }
-  create(name, desc, limit, lang, music, adult, hidden, succ, fail){
+  }).bind(this);
+
+  create = (function(name, desc, limit, lang, music, adult, hidden, succ, fail){
     let self = this;
     if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
     if(!desc) desc = ''
@@ -453,8 +464,9 @@ class Bot {
         if(fail) fail();
       }
     });
-  }
-  findUser(name, callback){
+  }).bind(this);
+
+  findUser = (function(name, callback){
     if(this.users)
       for(let u of this.users){
         if(u.name == name) return callback ? callback(u) : u;
@@ -468,19 +480,22 @@ class Bot {
         if(u.name == name) return callback ? callback(u) : u;
       }
     }
-  }
+  }).bind(this);
+
   // for werewolf room on drrr.com
-  player(user, player = false){
+  player = (function(user, player = false){
     this.findUser(user, (u)=>{
       this.ctrlRoom({'player': player, to: u.id });
     })
-  }
-  alive(user, alive = false){
+  }).bind(this);
+
+  alive = (function(user, alive = false){
     this.findUser(user, (u)=>{
       this.ctrlRoom({'alive': alive, to: u.id });
     })
-  }
-  setInfo(info){
+  }).bind(this);
+
+  setInfo = (function(info){
     if(info){
       this.prevInfo = this.info;
       this.info = info;
@@ -495,16 +510,17 @@ class Bot {
     }
     if(info && info.redirect) this.loc = info.redirect;
     else this.loc = "room";
-  }
-  getLounge(callback){
+  }).bind(this);
+
+  getLounge = (function(callback){
     ajaxRooms.bind(this)((data)=>{
       this.lounge = data.lounge;
       this.rooms = data.rooms;
       if(callback) callback(data);
     })
-  }
+  }).bind(this);
 
-  getProfile(callback){
+  getProfile = (function(callback){
     getProfile.bind(this)((profile)=>{
       this.profile = profile;
       this.name = profile.name;
@@ -513,9 +529,9 @@ class Bot {
       this.agent = profile.device;
       if(callback) callback(profile);
     })
-  }
+  }).bind(this);
 
-  getLoc(callback){
+  getLoc = (function(callback){
     getRoom.bind(this)((info)=>{
       this.setInfo(info);
       if(callback) callback(info);
@@ -526,8 +542,9 @@ class Bot {
         //setTimeout(() =>  this.getLoc(callback), 5 * 1000);
       }
     })
-  }
-  getReady(callback){
+  }).bind(this);
+
+  getReady = (function(callback){
     this.getProfile(() => {
       this.getLoc(() => {
         this.getLounge(() => {
@@ -535,7 +552,7 @@ class Bot {
         });
       });
     });
-  }
+  }).bind(this);
 }
 
 globalThis.Bot = Bot;

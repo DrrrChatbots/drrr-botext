@@ -432,7 +432,7 @@ function show_stickergrid(url, callback){
 
     },
     error: function(data){
-      alert("Error on get sticker images: " + JSON.stringify(data));
+      console.log("Error on get sticker images: " + JSON.stringify(data));
     }
   });
 }

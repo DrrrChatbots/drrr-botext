@@ -23668,7 +23668,9 @@ var PS = {};
     exports.cur = state;
   }
 
-  exports.listen = state => types => args => next => () => {
+  // exports.listen = state => types => args => next => () => {
+  exports.listen = types => args => next => () => {
+    let state = exports.cur;
     exports.events[state] = exports.events[state] || [];
 
     [user_regex, cont_regex] = padArray(args, 2, "");
@@ -24188,7 +24190,7 @@ var PS = {};
               var grds = Data_Functor.map(Data_Functor.functorArray)(Data_Tuple.snd)(v1.value0);
               return function __do() {
                   var guards = Data_Traversable.traverse(Data_Traversable.traversableArray)(Effect.applicativeEffect)(evalExpr(v))(grds)();
-                  Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.listen(v.cur)(v.exprs.value0.value0.value0)(guards)(make$primeevent$primeaction(syms)(v1.value1)(v)))();
+                  Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.listen(v.exprs.value0.value0.value0)(guards)(make$primeevent$primeaction(syms)(v1.value1)(v)))();
                   return Control_Monad_Rec_Class.Loop.create({
                       val: $foreign.none(Undefined["undefined"]),
                       cur: machine$prime.cur,

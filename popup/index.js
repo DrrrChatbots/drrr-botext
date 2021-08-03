@@ -432,7 +432,7 @@ function show_stickergrid(url, callback){
 
     },
     error: function(data){
-      alert("Error on get sticker images: " + JSON.stringify(data));
+      console.log("Error on get sticker images: " + JSON.stringify(data));
     }
   });
 }
@@ -1853,15 +1853,15 @@ $(document).ready(function(){
   $("#background").click(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/background.html')});
   });
-  /* ensure activate the background page */
+  // ensure activate the background page
   chrome.runtime.sendMessage({ type: 'popup' },
     () => bkg().make_switch_panel($, '#switch_panel'));
 
   chrome.storage.sync.get((config)=>{
     music_bar_setup(config);
-    sticker_setup(config);
     friend_bio_setup(config);
     module_setup(config);
+    sticker_setup(config);
     chrome.storage.local.get((config)=> local_setup(config));
     let tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();

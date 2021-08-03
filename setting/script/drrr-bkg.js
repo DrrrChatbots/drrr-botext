@@ -86,6 +86,7 @@ class Bot {
   cur_st = "";
   loopID = null;
   history = null;
+  lastTalk = null;
   cookie = '';
 
   constructor(...args){
@@ -157,10 +158,21 @@ class Bot {
     }
   }).bind(this);
 
+  goodUpdate = (function(){
+    let updateTime = this.lastTalk && this.lastTalk.time || null;
+    if(this.history && this.history.update){
+      let update = this.history.update;
+      updateTime = updateTime ?
+        (update > updateTime ? updateTime : update) : update;
+    }
+    return updateTime && updateTime - 60 * 1000;
+  }).bind(this);
+
   update = (function(callback){
     let self = this;
     let url = "/json.php";
-    if(self.history) url += `?update=${self.history.update}`;
+    let updateTime = self.goodUpdate();
+    if(updateTime) url += `?update=${updateTime}`;
     $.ajax({
       type: "GET",
       url: 'https://drrr.com' + url,
@@ -403,8 +415,12 @@ class Bot {
           self.update(json => {
             let room = json;
             if(room && room.talks){
-              room.talks.forEach(talk => self.handleUser(talk));
-              room.talks.forEach(talk => self.handle(talk));
+              let talks = room.talks.filter(
+                talk => !self.lastTalk || talk.time > self.lastTalk.time)
+              talks.forEach(talk => self.handleUser(talk));
+              talks.forEach(talk => self.handle(talk));
+              if(talks.length)
+                self.lastTalk = talks[talks.length - 1];
             }
             handle_count -= 1;
           });

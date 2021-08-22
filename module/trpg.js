@@ -51,8 +51,8 @@ export const ui_event = (config) => {
 
 export const event_action = (req, config) => {
   var type = req.type;
-  if(type == event_msg){
-    if(req.text.match(/^\d*[dD]\d*$/)){
+  if(type == event_msg || type == event_me){
+    if(req.text.match(/^\d+[dD]\d+$/)){
       setTimeout(()=>{ if(config['trpg_is_host']) sendTab({ fn: publish_message, args: { msg: dice(req.text) } }) }, 800);
     }
     else if(req.text == '[TRPG SCENE]'){
@@ -64,6 +64,14 @@ export const event_action = (req, config) => {
           host(false, true);
         }
       }), 500);
+    }
+  }
+  else if(type == event_dm){
+    if(req.text.match(/^\d+[dD]\d+$/)){
+      setTimeout(()=>{
+        if(config['trpg_is_host'])
+          sendTab({ fn: dm_member, args: { msg: dice(req.text), user: req.user } })
+      }, 800);
     }
   }
 }
@@ -85,7 +93,7 @@ function host(bool, set){
 }
 
 function dice(text){
-  var match = (/^(\d*)[dD](\d*)$/g).exec(text)
+  var match = (/^(\d+)[dD](\d+)$/g).exec(text)
   if(!match) return "wrong format, use [1-100]d[digits]"
   var ins = Number(match[1]);
   if(ins > 0 && ins <= 100){

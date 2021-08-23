@@ -25,10 +25,10 @@ Kiwi browser can also run the extenson, but for some unknown bugs, I make a cust
 [The background version](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm) let you change the icon (i.e. Bot cog) on the site. But it may run in the background, which means it would cost more resources.
 :::
 
-### Incoming version
+### ~~Incoming version~~(The review is hard to pass \_(:3)
 
 :::warning
-Firefox add-ons is still under reviewing, and it may be both available on PC and Android.
+~~Firefox add-ons is still under reviewing, and it may be both available on PC and Android.~~
 :::
 
 ## FrontEnd Control
@@ -454,7 +454,7 @@ Perform the defined action regularly.
 ```js
 Minutes, "function", ["parameter", ...]
 ```
-#### Function
+#### Functions
 Please refer to [Function Manual](#Function-Manual)
 
 #### Variable
@@ -462,18 +462,28 @@ You can use special time variables in parameters:
 
 - `%Y` year, four-digit year
 - `%M` month, one or two digits
+- `%MM` month, two digits (pad with 0)
+- `%MMM` month, abbreviation in English
+- `%MMMM` month, full English
 - `%D` date, one or two digits
-- `%d` weekday, full English
-- Number at `%H` (24 hour clock)
-- number at `%h` (12 hours)
-- `%c` In the afternoon, English` a.m.` `p.m.`
+- `%DD` date, two digits (pad with 0)
+- `%d` weekday, abbreviation in English
+- `%dd` weekday, full English
+- `%H` hour, (24 hour clock)
+- `%HH` hour, (24 hour clock, pad with 0)
+- `%h` hour, (12 hours)
+- `%hh` hour, (12 hours, pad with 0)
+- `%n` before/after midday, `a.m.`, `p.m.`
 - `%m` minutes, numbers
+- `%mm` minutes, numbers (pad with 0)
 - `%s` seconds, numbers
+- `%ss` seconds, numbers (pad with 0)
 - `%%` escape character `%`
 - `%年` year, Chinese numerals
 - `%月` month, Chinese numerals (one to twelve)
 - `%日` date, Chinese numerals
 - `%星` week, Chinese
+- `%午` before/after midday, `上午`, `下午`
 
 #### Example
 ```js
@@ -639,25 +649,35 @@ if both rule existed, then both must be satisfied.
 
 Content matching is simply a RegExp.
 
-#### Function
+#### Functions
 Please refer to [Function Manual](#Function-Manual)
 
 #### Special parameter variables
 
 - `%Y` year, four-digit year
 - `%M` month, one or two digits
+- `%MM` month, two digits (pad with 0)
+- `%MMM` month, abbreviation in English
+- `%MMMM` month, full English
 - `%D` date, one or two digits
-- `%d` weekday, full English
-- Number at `%H` (24 hour clock)
-- number at `%h` (12 hours)
-- `%c` In the afternoon, English` a.m.` `p.m.`
+- `%DD` date, two digits (pad with 0)
+- `%d` weekday, abbreviation in English
+- `%dd` weekday, full English
+- `%H` hour, (24 hour clock)
+- `%HH` hour, (24 hour clock, pad with 0)
+- `%h` hour, (12 hours)
+- `%hh` hour, (12 hours, pad with 0)
+- `%n` before/after midday, `a.m.`, `p.m.`
 - `%m` minutes, numbers
+- `%mm` minutes, numbers (pad with 0)
 - `%s` seconds, numbers
+- `%ss` seconds, numbers (pad with 0)
 - `%%` escape character `%`
 - `%年` year, Chinese numerals
 - `%月` month, Chinese numerals (one to twelve)
 - `%日` date, Chinese numerals
 - `%星` week, Chinese
+- `%午` before/after midday, `上午`, `下午`
 
 * `$user` username for sending message
 * `$cont` content sent by the user
@@ -721,6 +741,53 @@ $[-]
 /giphy iron man
 /play yellow
 ```
+
+:::spoiler More Examples
+
+#### Example
+
+```
+"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
+"msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
+"msg", "", "^/playsrc\\s+[千易]\\s+(\\D|\\d\\S)", "plym", ["$[2-]"]
+"msg", "", "^/playsrc\\s+[千易]\\s+\\d\\s+\\S+", "plym", ["$[3-]", "$1", "$2"]
+"msg", "", "^/add\\s+(\\D|\\d\\S)", "addm", ["$args"]
+"msg", "", "^/add\\s+\\d\\s+\\S+", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+(\\D|\\d\\S)", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+\\d\\s+\\S+", "addm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/list", "lstm", []
+"msg", "", "^/next", "nxtm", []
+"msg", "", "^/del\\s+\\d+", "delm", ["$1"]
+"msg", "", "^/pending\\s*$", "pndm", []
+"msg", "", "^/pending\\s+(\\D|\\d\\S)", "pndm", ["$args"]
+"msg", "", "^/pending\\s+\\d\\s+\\S+", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+(\\D|\\d\\S)", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
+"msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+```
+
+### Call
+```
+/play yellow
+/play 2 yellow
+/playsrc 千 yellow
+/play 易 2 yellow
+/add  yellow
+/add  2 yellow
+/addsrc 千 yellow
+/addsrc 易 2 yellow
+/pending
+/pending yellow
+/pending 2 yellow
+/pendsrc 千 yellow
+/pendsrc 易 2 yellow
+/del  1
+/list
+/next
+/sc yellow
+/sc 千 yellow
+```
 :::
 
 #### Function Manual
@@ -740,6 +807,8 @@ Function ["parameter", ...] Description:
   Select a message to dm the username.
 - `udm` `["username", "URL", "message", ...] `
   Private messaging users, with a URL and a randomly selected message.
+- `mus` `["URL", "song title"]`
+  Play the song by URL.
 - `kick` `["username"] `
   Kick out the user.
 - `ban` `["username"] `

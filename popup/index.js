@@ -1090,6 +1090,29 @@ function bio_setup(config){
     sendTab({ fn: change_name_bg_clr, args: { color: $('#name-bg-color-input').val() } });
   });
 
+  $('#room-msg-input').on('keypress', function(event){
+    if(!event.shiftKey && (event.key === 'Enter' || event.keyCode === 13)){
+      let text = $(this).val();
+      chrome.storage.sync.get(SWITCH_ME, config => {
+        if(config[SWITCH_ME] && !text.match(/^\/\w/)) text = '/me' + text;
+        console.log(config[SWITCH_ME])
+        console.log(text.match(/^\/\w/))
+        console.log(text);
+        sendTab({ fn: publish_message, args: { msg: text } })
+        $(this).val("");
+      })
+    }
+  })
+
+  $('#room-msg-send').on('click', function(){
+    let text = $('#room-msg-input').val()
+    chrome.storage.sync.get([SWITCH_ME], config => {
+      if(config[SWITCH_ME] && !text.match(/^\/\w/)) text = '/me' + text;
+      console.log(text);
+      sendTab({ fn: publish_message, args: { msg: text } })
+      $('#room-msg-input').val("");
+    })
+  });
 }
 
 // glyphicon-barcode glyphicon-qrcode
@@ -1805,6 +1828,15 @@ function plugTag(type, attr){
   document.getElementsByTagName('head')[0].appendChild(tag);
 }
 
+var tabInit = {
+  'tab1': () => { $("#room-msg-input").focus(); },
+  'tab2': () => {},
+  'tab0': () => {},
+  'tab3': () => {},
+  'tab5': () => {},
+  'tab4': () => {},
+}
+
 $(document).ready(function(){
 
   plugTag('link', {
@@ -1848,6 +1880,7 @@ $(document).ready(function(){
     chrome.storage.local.get((config)=> local_setup(config));
     let tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();
+    tabInit[tab] && tabInit[tab]();
     $('.pop-tab').on('click', function(){
       chrome.storage.sync.set({'pop-tab': this.id});
     })

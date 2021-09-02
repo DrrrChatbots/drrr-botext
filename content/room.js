@@ -198,7 +198,7 @@ function handle_talks(msg){
   }
   else{
     lambda_oracle(eobj.type, u, eobj.text);
-    chrome.runtime.sendMessage(eobj);
+    if(chrome.runtime) chrome.runtime.sendMessage(eobj);
   }
 }
 
@@ -595,12 +595,13 @@ function emit_method(req, sender, callback){
     methods[req.fn](req.args, callback);
   }
   else{
-    method_queue.push(
-      ((r) => {
-        return ()=>methods[r.fn] && methods[r.fn](r.args);
-      })(req)
-    );
-    do_method();
+    //method_queue.push(
+    //  ((r) => {
+    //    return ()=>methods[r.fn] && methods[r.fn](r.args);
+    //  })(req)
+    //);
+    //do_method();
+    methods[req.fn] && methods[req.fn](req.args)
     if(callback) callback();
   }
 }

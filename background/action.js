@@ -107,6 +107,18 @@ actions = {
         }), 1000);
     }
   },
+  [action_mus ] : function(url, title){
+    if(url){
+      setTimeout(
+        () => sendTab({
+          fn: play_music,
+          args: {
+            title: title || '',
+            url: url
+          }
+        }), 1000);
+    }
+  },
   [action_kick] : function(user){
     setTimeout(
       () => sendTab({

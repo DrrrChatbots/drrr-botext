@@ -25,10 +25,10 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 [背景版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm)可以讓你在網站上更換圖示（例如機器人板手）。不過他必須常駐在背景執行，這可能會消耗更多的資源。
 :::
 
-### 即將上架
+### ~~即將上架~~(審核好難通過 \_(:3)
 
 :::warning
-火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。
+~~火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。~~
 :::
 
 ## 前端控制
@@ -276,7 +276,7 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 `https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json`
 - 碧海航線 z16
 `https://unpkg.com/live2d-widget-model-z16@1.0.5/assets/z16.model.json`
-- Nito 二頭身
+- Nito 二頭身 
 `https://unpkg.com/live2d-widget-model-nico@1.0.5/assets/nico.model.json`
 `https://unpkg.com/live2d-widget-model-nipsilon@1.0.5/assets/nipsilon.model.json`
 `https://unpkg.com/live2d-widget-model-nito@1.0.5/assets/nito.model.json`
@@ -287,7 +287,7 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 `https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json`
 - 小可愛(女) 小春
 `https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json`
-- 春傘 TSUMIKI
+- 春傘 TSUMIKI 
 `https://unpkg.com/live2d-widget-model-tsumiki@1.0.5/assets/tsumiki.model.json`
 - unity 醬
 `https://unpkg.com/live2d-widget-model-unitychan@1.0.5/assets/unitychan.model.json`
@@ -357,7 +357,7 @@ B：數字正確但位置錯誤
 
 ![](https://i.imgur.com/pJbRvVN.png)
 
-<i id="" class="glyphicon glyphicon-log-in"></i> 進入隱藏房大廳
+<i id="" class="glyphicon glyphicon-log-in"></i> 進入隱藏房大廳 
 - 不填 sheet ID 直接用公用的隱藏房大廳
 - 填 ID 後，按 <i id="" class="glyphicon glyphicon-pencil"></i> 使用私人大廳
 
@@ -382,13 +382,13 @@ B：數字正確但位置錯誤
 ###### 功能：
 - 語音系統
 - 屏幕分享
-#####
+##### 
 - <i class="glyphicon glyphicon-phone-alt"></i> 開啟語音房（群聊房主限定）
 - <i class="glyphicon glyphicon-earphone"></i> 加入語音房
      * host  房間code會自動生成
      * join  輸入房間code進入語音房
      * hall  壞掉了
-
+     
 ###### 步驟：
 1. 加入語音房
 2. 設置麥克風/分享畫面
@@ -472,15 +472,25 @@ B：數字正確但位置錯誤
 - `%月` 月份，中文數字（一至十二）
 - `%日` 日期，中文數字
 - `%星` 星期幾，中文
+- `%午` 12 時制時段，中文 `上午` `下午`
 - `%Y` 年份，四位數字西元年
 - `%M` 月份，一至二位數字
+- `%MM` 月份，二位數字（補零）
+- `%MMM` 月份，英文縮寫
+- `%MMMM` 月份，英文全寫
 - `%D` 日期，一至二位數字
-- `%d` 星期幾，英文全寫
+- `%DD` 日期，二位數字（補零）
+- `%d` 星期幾，英文縮寫
+- `%dd` 星期幾，英文全寫
 - `%H` 時，數字（24 時制）
+- `%HH` 時，數字（24 時制，補零）
 - `%h` 時，數字（12 時制）
-- `%c` 上下午，英文 `a.m.` `p.m.`
+- `%hh` 時，數字（12 時制，補零）
+- `%n` 12 時制時段，英文 `a.m.` `p.m.`
 - `%m` 分，數字
+- `%mm` 分，數字（補零）
 - `%s` 秒，數字
+- `%ss` 秒，數字（補零）
 - `%%` 轉義字符 `%`
 
 #### 範例
@@ -655,19 +665,29 @@ otoko
 
 #### 特殊參數變量
 
-- `%Y` 年份，四位數字西元年
 - `%年` 年份，中文數字
-- `%M` 月份，一至二位數字
 - `%月` 月份，中文數字（一至十二）
-- `%D` 日期，一至二位數字
 - `%日` 日期，中文數字
-- `%d` 星期幾，英文全寫
 - `%星` 星期幾，中文
+- `%午` 12 時制時段，中文 `上午` `下午`
+- `%Y` 年份，四位數字西元年
+- `%M` 月份，一至二位數字
+- `%MM` 月份，二位數字（補零）
+- `%MMM` 月份，英文縮寫
+- `%MMMM` 月份，英文全寫
+- `%D` 日期，一至二位數字
+- `%DD` 日期，二位數字（補零）
+- `%d` 星期幾，英文縮寫
+- `%dd` 星期幾，英文全寫
 - `%H` 時，數字（24 時制）
+- `%HH` 時，數字（24 時制，補零）
 - `%h` 時，數字（12 時制）
-- `%c` 上下午，英文 `a.m.` `p.m.`
+- `%hh` 時，數字（12 時制，補零）
+- `%n` 12 時制時段，英文 `a.m.` `p.m.`
 - `%m` 分，數字
+- `%mm` 分，數字（補零）
 - `%s` 秒，數字
+- `%ss` 秒，數字（補零）
 - `%%` 轉義字符 `%`
 
 * `$user` 發送訊息的使用者名稱
@@ -732,6 +752,53 @@ $[-]
 /giphy iron man
 /play yellow
 ```
+
+:::spoiler 更多範例
+
+#### 範例
+
+```
+"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
+"msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
+"msg", "", "^/playsrc\\s+[千易]\\s+(\\D|\\d\\S)", "plym", ["$[2-]"]
+"msg", "", "^/playsrc\\s+[千易]\\s+\\d\\s+\\S+", "plym", ["$[3-]", "$1", "$2"]
+"msg", "", "^/add\\s+(\\D|\\d\\S)", "addm", ["$args"]
+"msg", "", "^/add\\s+\\d\\s+\\S+", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+(\\D|\\d\\S)", "addm", ["$[2-]", "$1"]
+"msg", "", "^/addsrc\\s+[千易]\\s+\\d\\s+\\S+", "addm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/list", "lstm", []
+"msg", "", "^/next", "nxtm", []
+"msg", "", "^/del\\s+\\d+", "delm", ["$1"]
+"msg", "", "^/pending\\s*$", "pndm", []
+"msg", "", "^/pending\\s+(\\D|\\d\\S)", "pndm", ["$args"]
+"msg", "", "^/pending\\s+\\d\\s+\\S+", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+(\\D|\\d\\S)", "pndm", ["$[2-]", "$1"]
+"msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
+"msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
+"msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+```
+
+### 調用
+```
+/play 剛好遇見你
+/play 2 剛好遇見你
+/playsrc 千 剛好遇見你
+/play 易 2 剛好遇見你
+/add  山丘
+/add  2 山丘
+/addsrc 千 山丘
+/addsrc 易 2 山丘
+/pending
+/pending 平凡之路
+/pending 2 平凡之路
+/pendsrc 千 平凡之路
+/pendsrc 易 2 平凡之路
+/del  1
+/list
+/next
+/sc 花心
+/sc 千 花心
+```
 :::
 
 #### 函數說明
@@ -750,6 +817,8 @@ $[-]
   私訊使用者，選擇一個訊息私訊。
 - `udm` `["使用者名稱", "URL", "訊息", ...]`
   私訊使用者，夾帶 URL 並隨機選擇一個訊息私訊。
+- `mus` `["URL", "曲名"]`
+  使用外鏈播放音樂。
 - `kick` `["使用者名稱"]`
   踢出使用者。
 - `ban` `["使用者名稱"]`
@@ -836,7 +905,7 @@ $[-]
 
 :::success
 
-對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑>◡<๑)۶
+對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑>◡<๑)۶ 
 
 ![](https://i.imgur.com/bmRYjbn.png)
 

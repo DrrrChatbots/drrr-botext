@@ -599,17 +599,17 @@ var EventActionH = new Handler("event action",
 function log2note(type, e){
   //type, user, text, url
   if(type === event_msg)
-    return [`[PUBLIC]`, `${e.user}: ${e.text}${URL_TYPE(e.url)}`]
+    return [`[PUBLIC] ${e.user}`, `${e.text}${URL_TYPE(e.url)}`]
   if(type === event_me)
-    return [`[MOTION]`, `${e.user}: /me ${e.text}${URL_TYPE(e.url)}`]
+    return [`[MOTION] ${e.user}`, `${e.text}${URL_TYPE(e.url)}`]
   if(type === event_dm)
-    return [`[DIRECT]`, `${e.user}... ${e.text}${URL_TYPE(e.url)}`]
+    return [`[DIRECT] ${e.user}`, `${e.text}${URL_TYPE(e.url)}`]
   if(type === event_join)
-    return [`[ JOIN ]`, `${e.user} join the room`]
+    return [`[ JOIN ] ${e.user}`, `${e.user} join the room`]
   if(type === event_leave)
-    return [`[ WENT ]`, `${e.user} leave the room`]
+    return [`[ WENT ] ${e.user}`, `${e.user} leave the room`]
   if(type === event_newhost)
-    return [`[ HOST ]`, `${e.user} become the room owner`]
+    return [`[ HOST ] ${e.user}`, `${e.user} become the room owner`]
 }
 
 function isImageURL(url) {
@@ -627,7 +627,7 @@ function sendNoti(config, type, e){
     {
       type: "basic",
       iconUrl: '/icon.png',
-      title: `ROOM ${title}`,
+      title: `${title}`,
       message: content
     });
   if(e.url){

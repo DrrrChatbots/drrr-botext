@@ -134,6 +134,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     chrome.cookies.getAll({
       url : 'https://drrr.com'
     }, function(cookies){
+      cookies = cookies.filter(c => c.name === "drrr-session-1")
       chrome.storage.sync.set({
         'profile': req.profile,
         'cookie':cookies

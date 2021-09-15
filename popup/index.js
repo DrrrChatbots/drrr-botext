@@ -414,7 +414,7 @@ function show_stickergrid(url, callback){
   $.ajax({
     type: "GET",
     url: url,
-    dataType: 'html',
+    dataType: 'text',
     success: function(data){
 
       let nodes = $(data);
@@ -898,16 +898,16 @@ function delCookies(list, callback, url){
   recursive(list, callback);
 }
 
-function store_bio(succ, fail){
-  getProfile(function(p){
-    if(p){
-      getCookie((cs)=>{
-        push_value('bio_cookies', [p, cs], (bios) => succ(bios[bios.length - 1]));
-      });
-    }
-    else fail();
-  })
-}
+//function store_bio(succ, fail){
+//  getProfile(function(p){
+//    if(p){
+//      getCookie((cs)=>{
+//        push_value('bio_cookies', [p, cs], (bios) => succ(bios[bios.length - 1]));
+//      });
+//    }
+//    else fail();
+//  })
+//}
 
 function redraw_bios(bio_cookies, data){
   let $stored = $('#bio_select');
@@ -962,6 +962,7 @@ function bio_setup(config){
               let idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
 
               getCookie((cs)=>{
+                cs = cs.filter(c => c.name === "drrr-session-1")
                 let curbio = [p, cs];
                 let [nprofile, ncookies] = bios[idx];
                 setCookies(ncookies, ()=> {
@@ -1010,6 +1011,7 @@ function bio_setup(config){
     getProfile((p)=>{
       if(p){
         getCookie((cs)=>{
+          cs = cs.filter(c => c.name === "drrr-session-1")
           let curbio = [p, cs]
           delCookies(cs.map(c=>c.name), ()=>{
             push_value('bio_cookies', curbio, (list)=>{
@@ -1053,6 +1055,94 @@ function bio_setup(config){
       }
     })
   });
+
+  $('#imp_session').on('click', function(){
+    let session = prompt(
+      `Input session token:`);
+    if(session !== null && session.trim()){
+      let sessionCookie = {
+        "domain": ".drrr.com",
+        "hostOnly": false,
+        "httpOnly": true,
+        "name": "drrr-session-1",
+        "path": "/",
+        "sameSite": "unspecified",
+        "secure": false,
+        "session": true,
+        "storeId": "0",
+        "value": session
+      };
+
+      getProfile(function(p){
+        if(p){
+          cache(undefined, (config)=>{
+            let bios = config['bio_cookies']
+            getCookie((cs)=>{
+              cs = cs.filter(c => c.name === "drrr-session-1")
+              let curbio = [p, cs];
+              let [nprofile, ncookies] = [null, [sessionCookie]]
+              setCookies(ncookies, ()=> {
+                bios.unshift(curbio);
+                console.log(JSON.stringify(bios));
+                chrome.storage.sync.set({
+                  'bio_cookies': bios,
+                  'profile': nprofile,
+                  'cookie': ncookies
+                }, ()=> chrome.tabs.update(
+                  { url: "https://drrr.com" },
+                  ()=> {
+                    ajaxProfile(p => {
+                      redraw_bios(bios, {profile: p})
+                    }, true, 'ImportSession')
+                  }
+                ));
+              });
+            });
+          }, 'bio_cookies')
+        }
+        else{
+          cache(undefined, (config)=>{
+            let bios = config['bio_cookies']
+            let [nprofile, ncookies] = [null, [sessionCookie]]
+            setCookies(ncookies, ()=> {
+              console.log(JSON.stringify(bios));
+              chrome.storage.sync.set({
+                'bio_cookies': bios,
+                'profile': nprofile,
+                'cookie': ncookies
+              }, ()=> chrome.tabs.update(
+                { url: "https://drrr.com" },
+                ()=> {
+                    ajaxProfile(p => {
+                      redraw_bios(bios, {profile: p})
+                    }, true, 'ImportSession')
+                  }
+              ));
+            });
+          }, 'bio_cookies')
+
+        }
+      })
+    }
+  })
+
+  $('#exp_session').on('click', function(){
+    cache(undefined, (config)=>{
+      let copied = false;
+      config['cookie'].forEach(c => {
+        if(c.name == 'drrr-session-1'){
+          copyToClipboard(c.value);
+          copied = true;
+        }
+      })
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: '/icon.png',
+        title: copied ? `SESSION COPIED` : `NO SESSION`,
+        message: copied ? `Your session was copied to clipboard` : `Please login first`
+      });
+    });
+  })
 
   if(config['zh_conv']){
     $('#zh_conv').val(config['zh_conv']);
@@ -1438,7 +1528,7 @@ function sticker_setup(config){
       $.ajax({
         type: "GET",
         url: url,
-        dataType: 'html',
+        dataType: 'text',
         success: function(data){
           let nodes = $(data);
           let tidx = Object.values(nodes).findIndex((v)=>v.nodeName == 'TITLE')

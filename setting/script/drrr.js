@@ -130,7 +130,7 @@ drrr_builtins = {
   },
   'unban': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'unban': u.id});
+      ctrlRoom({'unban': u.id, 'userName': u.name});
     })
   },
   'leave': function(succ, fail){

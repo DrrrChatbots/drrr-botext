@@ -25,7 +25,7 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 [背景版本](https://chrome.google.com/webstore/detail/drrr-chatbot-extension-ba/iafmncflgcckjejinbaneekanabjnodm)可以讓你在網站上更換圖示（例如機器人板手）。不過他必須常駐在背景執行，這可能會消耗更多的資源。
 :::
 
-### ~~即將上架~~(審核好難通過 \_(:3)
+### ~~即將上架~~（審核好難通過 \_(:3)
 
 :::warning
 ~~火狐瀏覽器插件還在審核，他之後應該可以在 Android 和電腦上運行。~~
@@ -72,22 +72,16 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 ### Bio
 
 :::success
-![](https://i.imgur.com/6nhuHtc.png)
+![](https://i.imgur.com/fE3T04X.png)
 
-#### 聊天訊息簡繁互轉
-- Ｘ 不轉換
-- 簡 轉成簡體
-- 繁 轉成繁體
 
 #### 功能鍵
-
-<i class="glyphicon glyphicon glyphicon-text-color"></i> 改變聊天室人名顏色
-<i class="glyphicon glyphicon glyphicon-text-background"></i> 改變聊天室人名背景顏色
-（顏色採用[網頁顏色](https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2)，e.g. `black`, `#000000`）
-<i class="glyphicon glyphicon glyphicon-picture"></i> 使用圖片鏈結當作背景
 <i class="glyphicon glyphicon-transfer"></i> 切換選中的帳號
 <i class="glyphicon glyphicon-floppy-save"></i> 儲存當前帳號
 <i class="glyphicon glyphicon-floppy-remove"></i> 刪除選中的帳號
+<i class="glyphicon glyphicon-import"></i> 匯入 session cookie
+<i class="glyphicon glyphicon-export"></i> 匯出 session cookie
+<i class="glyphicon glyphicon-send"></i> 送出訊息
 
 #### 帳號圖示
 - 🔖 當前登入帳號
@@ -95,29 +89,10 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 
 :::
 
-### Local
-
-:::success
-![](https://i.imgur.com/QytKsjo.png)
-
-#### 功能鍵
-<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> 前往本地設定
-<i id="local-switch" class="fa fa-toggle-off"></i> 本地模組開關
-
-#### 本地端訊息模組
-- Hashtag ~~小周讚美功能~~ inspired by [@塵塵](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
-  紀錄有 `#` 的訊息，在訊息欄以 `#` + tag 將會隨機選取紀錄過的訊息送出。
-  ![](https://i.imgur.com/ayuUGAL.png)
-
-- CahtLog
-  紀錄聊天室訊息
-:::
-
 ### Friends
 
 :::success
-
-![](https://i.imgur.com/BjCw2A4.png)
+![](https://i.imgur.com/Ewb1tH1.png)
 
 :::
 
@@ -172,7 +147,8 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 ### Music
 
 :::success
-![](https://i.imgur.com/ZvV9Sun.png)
+![](https://i.imgur.com/KK4lyqW.png)
+
 
 
 #### 播放模式（點擊切換）
@@ -182,11 +158,12 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 - <i class="glyphicon glyphicon-refresh"></i> 唱片循環：循環播放清單
 
 #### 音源
-- **易** 網易音樂
-- **千** 千千音樂盒
+- **網** 網易音樂
+- **易** 網易音樂（無法使用）
+- **千** 千千音樂盒（無法使用）
 - **Ｙ** YouTube
-- **狗** 酷狗音樂
-- **我** 酷我音樂
+- **狗** 酷狗音樂（無法使用）
+- **我** 酷我音樂（無法使用）
 
 #### Search Keyword and Play（搜尋列）
 
@@ -232,7 +209,8 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 :::warning
 當搜尋欄有關鍵字時
 
-![](https://i.imgur.com/gJeqaLs.png)
+![](https://i.imgur.com/uDyoabR.png)
+
 
 #### 功能鍵
 
@@ -251,9 +229,21 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 ### Module
 
 :::success
-![](https://i.imgur.com/G5Vt5oC.png)
+![](https://i.imgur.com/U6zfVSy.png)
+
+#### 聊天訊息簡繁互轉
+- Ｘ 不轉換
+- 簡 轉成簡體
+- 繁 轉成繁體
 
 #### 功能鍵
+
+<i class="glyphicon glyphicon glyphicon-text-color"></i> 改變聊天室人名顏色
+<i class="glyphicon glyphicon glyphicon-text-background"></i> 改變聊天室人名背景顏色
+（顏色採用[網頁顏色](https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2)，e.g. `black`, `#000000`）
+<i class="glyphicon glyphicon glyphicon-picture"></i> 使用圖片鏈結當作背景
+
+---
 
 <i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA 群
 <i class="glyphicon glyphicon-qrcode"></i> tripcode 探索器
@@ -396,12 +386,41 @@ B：數字正確但位置錯誤
 4. <i class="icon icon-list"></i> 點擊觀看分享
 :::
 
+### Plugin
+:::success
+![](https://i.imgur.com/AZVe2fm.png)
+
+#### 功能鍵
+
+<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> 前往本地設定
+<i id="local-switch" class="fa fa-toggle-off"></i> 本地模組開關
+
+---
+
+<i class="fa fa-refresh"></i> 重置預設腳本
+<i class="fa fa-minus"></i> 刪除腳本
+<i class="fa fa-plus"></i> 新增腳本
+<i class="fa fa-pencil"></i> 編輯腳本
+<i class="fa fa-toggle-off"></i> 腳本開關
+
+#### 本地端訊息模組
+- Hashtag ~~小周讚美功能~~ inspired by [@塵塵](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
+  紀錄有 `#` 的訊息，在訊息欄以 `#` + tag 將會隨機選取紀錄過的訊息送出。
+  ![](https://i.imgur.com/ayuUGAL.png)
+
+- CahtLog
+  紀錄聊天室訊息
+  
+- EventAction
+  本地 EventAction
+:::
+
 
 
 ### Sticker
 
 :::success
-![](https://i.imgur.com/jbrZK9G.png)
+![](https://i.imgur.com/OZ8nM2k.png)
 
 #### 功能鍵
 <i class="glyphicon glyphicon-refresh"></i> 還原最初預設的十個貼圖

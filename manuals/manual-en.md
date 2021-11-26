@@ -72,52 +72,25 @@ Kiwi browser can also run the extenson, but for some unknown bugs, I make a cust
 ### Bio
 
 :::success
-![](https://i.imgur.com/6nhuHtc.png)
-
-#### ChatMessage Chinese simplified-traditional converter
-- Ｘ no convert
-- 簡 to simpilifed
-- 繁 to traditional
+![](https://i.imgur.com/fE3T04X.png)
 
 #### Button
-
-<i class="glyphicon glyphicon glyphicon-text-color"></i> Change character color
-<i class="glyphicon glyphicon glyphicon-text-background"></i> Change bkg-color
-（the [color format](https://en.wikipedia.org/wiki/Web_colors), e.g. `black`, `#000000`）
-<i class="glyphicon glyphicon glyphicon-picture"></i> Use image URL as background
 <i class="glyphicon glyphicon-transfer"></i> Switch to selected account
 <i class="glyphicon glyphicon-floppy-save"></i> Save the current account
 <i class="glyphicon glyphicon-floppy-remove"></i> Delete the selected account
+<i class="glyphicon glyphicon-import"></i> Import session cookie
+<i class="glyphicon glyphicon-export"></i> Export session cookie
+<i class="glyphicon glyphicon-send"></i> Send message
 
 #### Account Icon
 - 🔖 Current login account
 - 💾 Saved account
 :::
 
-### Local
-
-:::success
-![](https://i.imgur.com/QytKsjo.png)
-
-#### Button
-<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> Goto local setting
-<i id="local-switch" class="fa fa-toggle-off"></i> Local module switch
-
-#### Local message module
-- Hashtag ~~Chou praising tool~~ inspired by [@Dust](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
-  Record message contains `#`, if your message start with `#` + tag, the extension will send recorded message randomly.
-  ![](https://i.imgur.com/ayuUGAL.png)
-
-- CahtLog
-  Record chatroom message
-:::
-
-
 ### Friends
 
 :::success
-
-![](https://i.imgur.com/BjCw2A4.png)
+![](https://i.imgur.com/Ewb1tH1.png)
 
 :::
 
@@ -172,7 +145,7 @@ Search mode:
 ### Music
 
 :::success
-![](https://i.imgur.com/ZvV9Sun.png)
+![](https://i.imgur.com/KK4lyqW.png)
 
 #### Play mode (click to switch)
 - <i class="glyphicon glyphicon-music"></i> Single song mode: Stop after every song
@@ -181,11 +154,12 @@ Search mode:
 - <i class="glyphicon glyphicon-refresh"></i> ALoop mode: Loop the playlist
 
 #### Sound source
-- **易** Netease Music
-- **千** Baidu Music Boxes
+- **網** Netease Music
+- **易** Netease Music (not work now)
+- **千** Baidu Music Boxes (not work now)
 - **Ｙ** YouTube
-- **狗** Kugou
-- **我** Kuwu
+- **狗** Kugou (not work now)
+- **我** Kuwu (not work now)
 
 #### Search Keyword and Play
 
@@ -231,7 +205,7 @@ Click the button and stuff `http://127.0.0.1:5000/`, and follow the prompt.
 :::warning
 When there are some keywords in search field
 
-![](https://i.imgur.com/gJeqaLs.png)
+![](https://i.imgur.com/uDyoabR.png)
 
 #### Button
 
@@ -250,9 +224,21 @@ Search result：剛好遇見你
 ### Module
 
 :::success
-![](https://i.imgur.com/G5Vt5oC.png)
+![](https://i.imgur.com/U6zfVSy.png)
+
+#### ChatMessage Chinese simplified-traditional converter
+- Ｘ no convert
+- 簡 to simpilifed
+- 繁 to traditional
 
 #### Button
+
+<i class="glyphicon glyphicon glyphicon-text-color"></i> Change character color
+<i class="glyphicon glyphicon glyphicon-text-background"></i> Change bkg-color
+（the [color format](https://en.wikipedia.org/wiki/Web_colors), e.g. `black`, `#000000`）
+<i class="glyphicon glyphicon glyphicon-picture"></i> Use image URL as background
+
+---
 
 <i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA group
 <i class="glyphicon glyphicon-qrcode"></i> Tripcode explorer
@@ -392,10 +378,43 @@ You can stuff different ID to switch different lounge
 4. <i class="icon icon-list"></i> Click to watch sharing
 :::
 
+
+### Plugin
+
+:::success
+![](https://i.imgur.com/AZVe2fm.png)
+
+
+#### Button
+
+<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> Goto local setting
+<i id="local-switch" class="fa fa-toggle-off"></i> Local module switch
+
+---
+
+<i class="fa fa-refresh"></i> reset default script
+<i class="fa fa-minus"></i> delete script
+<i class="fa fa-plus"></i> add script
+<i class="fa fa-pencil"></i> edit script
+<i class="fa fa-toggle-off"></i> on/off script
+
+#### Local message module
+- Hashtag ~~Chou praising tool~~ inspired by [@Dust](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
+  Record message contains `#`, if your message start with `#` + tag, the extension will send recorded message randomly.
+  ![](https://i.imgur.com/ayuUGAL.png)
+
+- CahtLog
+  Record chatroom message
+  
+- EventAction
+  Local EventAction
+:::
+
+
 ### Sticker
 
 :::success
-![](https://i.imgur.com/jbrZK9G.png)
+![](https://i.imgur.com/OZ8nM2k.png)
 
 #### Button
 <i class="glyphicon glyphicon-refresh"></i> Restore the ten preset stickers

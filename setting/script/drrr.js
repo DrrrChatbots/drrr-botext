@@ -31,11 +31,11 @@ function renew_chatroom(){
 
 function findUser(name, callback){
   if(drrr.info && drrr.info.room)
-    for(u of drrr.info.room.users){
+    for(let u of drrr.info.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
   if(drrr.prevInfo && drrr.prevInfo.room){
-    for(u of drrr.prevInfo.room.users){
+    for(let u of drrr.prevInfo.room.users){
       if(u.name == name) return callback ? callback(u) : u;
     }
   }
@@ -210,7 +210,7 @@ drrr_builtins = {
 }
 
 globalThis.drrr = {}
-for(key in drrr_builtins){
+for(let key in drrr_builtins){
   globalThis.drrr[key] = drrr_builtins[key];
 }
 

@@ -23321,8 +23321,8 @@ var PS = {};
   }
 
   exports.clearAllTimer = () => {
-    for(s in exports.timers){
-      for(id of exports.timers[s]){
+    for(let s in exports.timers){
+      for(let id of exports.timers[s]){
         clearInterval(id);
       }
     }
@@ -23331,7 +23331,7 @@ var PS = {};
 
   exports.clearTimer = state => () => {
     if(exports.timers[state])
-      for(id of exports.timers[state])
+      for(let id of exports.timers[state])
         clearInterval(id);
     exports.timers[state] = [];
   }                        
@@ -23645,7 +23645,7 @@ var PS = {};
     }
   }
 
-  for(key in botlang_builtins){
+  for(let key in botlang_builtins){
     globalThis[key] = botlang_builtins[key];
   }
 

@@ -282,7 +282,7 @@ timer 10000 {
   print("hello world");
 }
 
-// 等價於第一個範例
+// parse error, 10000() is not a function call
 timer 10000 () => {
   print("hello world");
 }

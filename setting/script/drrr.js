@@ -93,6 +93,12 @@ drrr_builtins = {
   'descr': function(msg){
     ctrlRoom({'room_description': String(msg)});
   },
+  'music': function(url, name){
+    ctrlRoom({'music': 'music', 'name': name, 'url': url});
+  },
+  'dj': function(enable){
+    ctrlRoom({'dj_mode': enable});
+  },
   'print': function(msg, url){
     drrr_send(msg, url);
   },

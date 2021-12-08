@@ -286,7 +286,7 @@ timer 10000 {
   print("hello world");
 }
 
-// Equal to first example
+// parse error, 10000() is not a function call
 timer 10000 () => {
   print("hello world");
 }

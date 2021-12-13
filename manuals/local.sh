@@ -1,3 +1,5 @@
-python localize.py $1 > tmp.html
-python locimg.py tmp.html > $1
-rm tmp.html
+for fn in $*;do
+  python localize.py $fn > tmp.html
+  python locimg.py tmp.html > $fn
+  rm tmp.html
+done

@@ -8,7 +8,8 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 <li><a href="https://hackmd.io/@nobodyzxc/SkoZau-Qd" target="_blank" title="online doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
 <li><a href="${url}" target="_blank" title="local doc"><i class="glyphicon glyphicon-question-sign"></i></a></li>
 <li><a data-toggle="modal" data-target="#info-modal" title="about developer"><i class="glyphicon glyphicon-info-sign"></i></a></li>
-<li><a id="reset" title="reset all setting"><i class="glyphicon glyphicon-refresh"></i></a></li>
+<li><a id="discard_settings" title="discard all setting"><i class="glyphicon glyphicon-refresh"></i></a></li>
+<li><a id="discard_envvars" title="discard all environment variables"><i class="glyphicon glyphicon-floppy-remove"></i></a></li>
 <li><a id="export" title="export setting"><i class="glyphicon glyphicon-export"></i></a></li>
 <li><a><input title="import setting" type="file" id="file-input" /></a></li>
 `
@@ -150,9 +151,24 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     }
   }
 
-  function refresh_local_functions(){
-    chrome.storage.local.clear();
-    location.reload();
+  function discard_settings(){
+    if(confirm("Discard Settings?")){
+      chrome.storage.local.get(config => {
+        let names = Object.keys(config).filter(k => k.endsWith("-setting"))
+        chrome.storage.local.remove(names, () => { alert("ok") });
+      });
+      location.reload();
+    }
+  }
+
+  function discard_envvars(){
+    if(confirm("Discard Environment Variables?")){
+      chrome.storage.local.get(config => {
+        let names = Object.keys(config).filter(k => k.startsWith("env-"))
+        names.push('inline-env')
+        chrome.storage.local.remove(names, () => { alert("ok") });
+      });
+    }
   }
 
   setting_cache = {};
@@ -163,7 +179,9 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     if(!index) index = 'menu0';
     $('#nav_pills').append(make_pills(Object.keys(local_functions), index));
     $('#tab_conts').append(make_tabs(local_functions, index));
-    $("#reset").click(refresh_local_functions);
+
+    $("#discard_settings").click(discard_settings);
+    $("#discard_envvars").click(discard_envvars);
 
     document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 

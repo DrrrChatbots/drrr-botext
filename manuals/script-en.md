@@ -24,6 +24,7 @@ false
 ### String
 ```javascript=
 "hello, lambda!"
+'hello, lambda' // since version 1.783
 ```
 
 single quote string is now allowed, like `'hello'`.

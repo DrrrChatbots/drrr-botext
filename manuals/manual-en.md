@@ -438,13 +438,15 @@ The settings would be syncronized, so you can use same Google account to login d
 ### Sync
 
 :::success
-![](https://i.imgur.com/qMorC1g.png)
+![](https://i.imgur.com/tVYNlnt.png)
+
 
 #### Button
 
 <i class="glyphicon glyphicon-question-sign"></i> Manual
 <i class="glyphicon glyphicon-info-sign"></i> About me
-<i class="glyphicon glyphicon-refresh"></i> reset/default setting
+<i class="glyphicon glyphicon-refresh"></i> reset default settings
+<i class="glyphicon glyphicon-floppy-remove"></i> reset all environment variables
 <i class="glyphicon glyphicon-export"></i> Export settings
 choose file：import settings
 
@@ -886,6 +888,10 @@ Function ["parameter", ...] Description:
   Leaving the room and entering the room again.
 - `gofr` `["Room Name (RegExp)"] `
   Go to the room that matches the room name. If it fails, return to the origin room.
+- `eval` `["lambda script code"]`
+  execute lambda script code purely (you cannot store variable)
+- `exec` `["lambda script code"]`
+  provide the variable`env` for lambda script code execution.
 - `func` `["lambda script category and name"]`
   execute lambda script purely (you cannot store variable)
 - `script` `["lambda script category and name"]`
@@ -900,13 +906,14 @@ you can refer the `action/wb.js` in bs-pkgs(lambda script packages).
 ### Local
 
 :::success
-![](https://i.imgur.com/NMY9ZAx.png)
+![](https://i.imgur.com/ERTb6xS.png)
 
 #### Button
 
 <i class="glyphicon glyphicon-question-sign"></i> Manual
 <i class="glyphicon glyphicon-info-sign"></i> About me
-<i class="glyphicon glyphicon-refresh"></i> reset/default setting
+<i class="glyphicon glyphicon-refresh"></i> reset default setting
+<i class="glyphicon glyphicon-floppy-remove"></i> reset all environment variables
 <i class="glyphicon glyphicon-export"></i> Export settings
 choose file：import settings
 

@@ -38,6 +38,30 @@ function exec_lambda_script(pure){
   }
 }
 
+function eval_lambda_script(code){
+  function exec(){
+    if(typeof(code) != "string"){
+      alert(`code is not a string`);
+      return;
+    }
+    storage = {}
+    try{
+      storage["evt"] = this.event;
+      machine = PS.Main.newMachine();
+      machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
+      machine = PS.Main.interact(machine)(code)();
+      val = machine.val;
+      console.log(`action script val => ${stringify(val)}`);
+    }
+    catch(err){
+      alert(JSON.stringify(err));
+      console.log("error", err);
+    }
+  }
+  if(!drrr.loc) drrr.getReady(exec);
+  else exec();
+}
+
 actions = {
   [action_name] : function(...names){
     setTimeout(
@@ -224,6 +248,7 @@ actions = {
         );
       });
   },
+  [action_eval] : eval_lambda_script,
   [action_func] : exec_lambda_script(true),
   [action_script] : exec_lambda_script(false),
   /* too quick leading play song failed in content script, so setTimeout */

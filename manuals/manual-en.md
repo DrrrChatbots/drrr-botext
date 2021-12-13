@@ -504,6 +504,8 @@ You can use special time variables in parameters:
 - `%星` week, Chinese
 - `%午` before/after midday, `上午`, `下午`
 
+(you can specify the timezone for hour relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, but not support date currently)
+
 #### Example
 ```js
 10, "msg", ["every 10 mins report once!"]
@@ -697,6 +699,8 @@ Please refer to [Function Manual](#Function-Manual)
 - `%日` date, Chinese numerals
 - `%星` week, Chinese
 - `%午` before/after midday, `上午`, `下午`
+
+(you can specify the timezone for hour relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, but not support date currently)
 
 * `$user` username for sending message
 * `$cont` content sent by the user

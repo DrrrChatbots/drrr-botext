@@ -23,6 +23,7 @@ false
 ### String
 ```javascript=
 "hello, lambda!"
+'hello, lambda!' // 從 1.783 開始支援
 ```
 目前不允許單引號字串，如 `'hello'`。
 

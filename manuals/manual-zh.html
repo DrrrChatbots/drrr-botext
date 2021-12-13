@@ -357,11 +357,12 @@
 </div><h2 id="後台設定" data-id="後台設定" style=""><a class="anchor hidden-xs" href="#後台設定" title="後台設定"><span class="octicon octicon-link"></span></a><span>後台設定</span></h2><p><span>根據設定儲存的位置，分作同步和本地。</span></p><p><span>同步設定的空間上限：8,192 bytes</span><br>
 <span>（所以小心 event action 不要塞爆了）</span></p><p><span>本地設定的空間上限：5,242,880 bytes</span></p><p><span>同步的設定（包括你的 cookie）會同步，</span><br>
 <span>所以可以同一個 Google 帳號在不同電腦之間共享同步設定。</span></p><h3 id="Sync-同步設定" data-id="Sync-同步設定" style=""><a class="anchor hidden-xs" href="#Sync-同步設定" title="Sync-同步設定"><span class="octicon octicon-link"></span></a><span>Sync 同步設定</span></h3><div class="alert alert-success">
-<p><img src="/manuals/img/qMorC1g.png" alt="" loading="lazy"></p>
+<p><img src="/manuals/img/tVYNlnt.png" alt="" loading="lazy"></p>
 <h4 id="功能鍵8" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵8" title="功能鍵8"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
 <p><i class="glyphicon glyphicon-question-sign"></i><span> 前往說明頁面</span><br>
 <i class="glyphicon glyphicon-info-sign"></i><span> 關於作者</span><br>
-<i class="glyphicon glyphicon-refresh"></i><span> 重製所有設定</span><br>
+<i class="glyphicon glyphicon-refresh"></i><span> 重置所有設定</span><br>
+<i class="glyphicon glyphicon-floppy-remove"></i><span> 重置所有環境變數</span><br>
 <i class="glyphicon glyphicon-export"></i><span> 匯出設定</span><br>
 <span>選擇檔案：匯入設定</span></p>
 <p><span>點擊 </span><code>HELP</code><span> 可以開啟該設定的介紹頁面。</span></p>
@@ -734,6 +735,10 @@ $[-]
 <span>離開房間又進入房間。</span></li>
 <li><code>gofr</code><span> </span><code>["房間名稱(RegExp)"]</code><br>
 <span>前往符合房間名稱的房間。若失敗則回到原房間。</span></li>
+<li><code>eval</code><span> </span><code>["浪語代碼"]</code><br>
+<span>純函數執行浪語代碼（執行存的變數沒有作用）</span></li>
+<li><code>exec</code><span> </span><code>["浪語代碼"]</code><br>
+<span>提供 </span><code>env</code><span> 這個變數以執行浪語代碼。</span></li>
 <li><code>func</code><span> </span><code>["浪語腳本分類和名稱"]</code><br>
 <span>純函數執行浪語腳本（執行存的變數沒有作用）</span></li>
 <li><code>script</code><span> </span><code>["浪語腳本分類和名稱"]</code><br>
@@ -746,11 +751,12 @@ $[-]
 <p><span>浪語腳本綁定可以參考 bs-pkgs （浪語套件包）的 </span><code>action/wb.js</code></p>
 </blockquote>
 </div><h3 id="Local-本地設定" data-id="Local-本地設定" style=""><a class="anchor hidden-xs" href="#Local-本地設定" title="Local-本地設定"><span class="octicon octicon-link"></span></a><span>Local 本地設定</span></h3><div class="alert alert-success">
-<p><img src="/manuals/img/NMY9ZAx.png" alt="" loading="lazy"></p>
+<p><img src="/manuals/img/ERTb6xS.png" alt="" loading="lazy"></p>
 <h4 id="功能鍵9" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵9" title="功能鍵9"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
 <p><i class="glyphicon glyphicon-question-sign"></i><span> 前往說明頁面</span><br>
 <i class="glyphicon glyphicon-info-sign"></i><span> 關於作者</span><br>
-<i class="glyphicon glyphicon-refresh"></i><span> 重製所有設定</span><br>
+<i class="glyphicon glyphicon-refresh"></i><span> 重置所有設定</span><br>
+<i class="glyphicon glyphicon-floppy-remove"></i><span> 重置所有環境變數</span><br>
 <i class="glyphicon glyphicon-export"></i><span> 匯出設定</span><br>
 <span>選擇檔案：匯入設定</span></p>
 <h4 id="模組資料" data-id="模組資料"><a class="anchor hidden-xs" href="#模組資料" title="模組資料"><span class="octicon octicon-link"></span></a><span>模組資料</span></h4>

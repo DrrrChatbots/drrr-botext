@@ -287,6 +287,7 @@ timer 10000 {
 }
 
 // parse error, 10000() is not a function call
+// works after 1.783
 timer 10000 () => {
   print("hello world");
 }
@@ -302,7 +303,7 @@ later 10000 print("hello world")
 f = () => console.log("hello world")
 later 3000 f // wouldn't be called, because f will be lifted, it return a function instead of a function call on the time point.
 later 3000 f() // print "hello world" after 3 secs
-later 3000 () => console.log("hello world") // parse error, 3000() is not a function call
+later 3000 () => console.log("hello world") // parse error, 3000() is not a function call, works after 1.783
 later 3000; () => console.log("hello world") // works, good
 later 3000; (a, b) => console.log("hello world") // fine, too
 later 3000 console.log("hello world") // works

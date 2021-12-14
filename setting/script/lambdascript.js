@@ -23808,8 +23808,8 @@ var PS = {};
   var bind$primeevent$primevars = function (syms) {
       return function (args) {
           return function (enviorn) {
-              return Data_Foldable.foldr(Data_Foldable.foldableArray)(function (v) {
-                  return function (acc) {
+              return Data_Foldable.foldl(Data_Foldable.foldableArray)(function (acc) {
+                  return function (v) {
                       return BotScriptEnv.insert(acc)(v.value0)(BotScript.toTerm("")(v.value1));
                   };
               })(enviorn)(Data_Array.zip(syms)(args));

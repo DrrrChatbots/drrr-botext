@@ -23232,12 +23232,22 @@ var PS = {};
 })(PS);
 (function(exports) {
   
-  unit = () => false
+  let unit = () => false
   //unit = () => Object()
 
+  function valueOf(v){
+    if(v === undefined
+    || v === null)
+      return false.valueOf();
+    if(v.valueOf)
+      return v.valueOf();
+    else
+      return v;
+  }
+
   exports.evalBin = op => lval => rval => {
-    lval = lval.valueOf();
-    rval = rval.valueOf();
+    lval = valueOf(lval);
+    rval = valueOf(rval);
     if(op == "%")
       return (lval % rval);
     else if(op == "/")
@@ -23273,7 +23283,7 @@ var PS = {};
   }
 
   exports.evalUna = op => val => {
-    val = val.valueOf();
+    val = valueOf(val);
     if(op == "!")
       return (!val);
     else if(op == '-')
@@ -23287,7 +23297,7 @@ var PS = {};
   exports.evalApp = objm => obj => name => args => {
 
     //console.log("call => ", obj, name, args);
-    args = args.map((x)=> x && x.valueOf ? x.valueOf() : x);
+    args = args.map((x)=> x && x.valueOf ? x.valueOf() : (x === undefined || x === null ? false : x));
 
     val = undefined;
     try{

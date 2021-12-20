@@ -432,14 +432,23 @@ function set_modules(config){
 
   if(show_chatroom)
     $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
+  $('#iframe-room').toggle(show_chatroom);
 
-  $('#show-room').click(function(e){
+  $('.toggle-room').click(function(e){
     e.preventDefault();
     if(show_chatroom)
       $('#iframe-container').empty();
     else
       $('#iframe-container').append('<iframe class="drrr" src="https://drrr.com/"></iframe>');
     show_chatroom = !show_chatroom;
+    $('#iframe-room').toggle(show_chatroom);
+    if(show_chatroom){
+      $('#iframe-room').css({
+        'top': '0%',
+        'left': '',
+        'right': '0px',
+      });
+    }
     chrome.storage.local.set({ 'show-chatroom': show_chatroom })
   })
 
@@ -538,6 +547,19 @@ function bind_manual(){
 
 $(document).ready(function(event) {
 
+
+  $(".draggable").draggable({
+    iframeFix: true,
+    start: function(event, ui) {
+       $('.frameOverlay').show();
+     },
+     stop: function(event, ui) {
+      $(".frameOverlay").hide();
+     }
+  });
+
+  $( "#iframe-room" ).resizable();
+
   bind_manual();
   bind_modal();
 
@@ -545,7 +567,7 @@ $(document).ready(function(event) {
 
     set_modules(config);
 
-    globalThis.editor = CodeMirror(document.body.getElementsByTagName("article")[0], {
+    globalThis.editor = CodeMirror(document.getElementById("code-editor"), {
       value: config['lambdascript'] ? config['lambdascript'] : 'print("hello world")',
       lineNumbers: true,
       mode: "javascript",
@@ -582,7 +604,6 @@ $(document).ready(function(event) {
     document.getElementById("show-bindings").addEventListener("click",function(e){
       show_bindings();
     },false);
-    $('#script').append('<span id="step" style="padding: 1px 1px 1px 1px;" class="textarea log" role="textbox" contenteditable></span>');
     $("#step").on("keydown", function(e){
       if(e.which == 13 && e.ctrlKey){
         interact();
@@ -601,7 +622,6 @@ $(document).ready(function(event) {
         return false;
       }
     });
-    $('#script').append('<pre id="log" class="log"></pre>');
     redef_log();
   });
 });

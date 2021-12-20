@@ -1,166 +1,341 @@
 <!doctype html>
+<html>
+  <head>
+    <title>DRRR BOTEXT SETTING</title>
+    <meta charset="utf-8"/>
+    <link rel=stylesheet href="../codemirror/doc/docs.css">
+    <link rel="stylesheet" href="../codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="../codemirror/addon/fold/foldgutter.css">
+    <link rel="stylesheet" href="../codemirror/addon/dialog/dialog.css">
+    <link rel="stylesheet" href="../codemirror/theme/monokai.css">
+    <link rel="stylesheet" href="/css/jquery-ui.css">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="../codemirror/lib/codemirror.js"></script>
+    <script src="../codemirror/addon/search/searchcursor.js"></script>
+    <script src="../codemirror/addon/search/search.js"></script>
+    <script src="../codemirror/addon/dialog/dialog.js"></script>
+    <script src="../codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="../codemirror/addon/edit/closebrackets.js"></script>
+    <script src="../codemirror/addon/comment/comment.js"></script>
+    <script src="../codemirror/addon/wrap/hardwrap.js"></script>
+    <script src="../codemirror/addon/fold/foldcode.js"></script>
+    <script src="../codemirror/addon/fold/brace-fold.js"></script>
+    <script src="../codemirror/mode/javascript/javascript.js"></script>
+    <script src="../codemirror/keymap/sublime.js"></script>
+    <script src="index.js"></script>
+    <script src="layout.js"></script>
+    <script src="/lib/globals.js" charset="utf-8"></script>
+    <script src="/lib/api.js" charset="utf-8"></script>
+    <script src="/background/utility.js" charset="utf-8"></script>
+    <script src="/background/music.js" charset="utf-8"></script>
+    <script src="/background/action.js" charset="utf-8"></script>
+    <script src="/lib/format.js" charset="utf-8"></script>
+    <script src="./lambdascript.js" charset="utf-8"></script>
+    <script src="./drrr.js" charset="utf-8"></script>
+    <script src="./listener.js" charset="utf-8"></script>
+    <script src="done.js"></script>
+    <link rel="stylesheet" href="./modal.css">
+    <style>
 
-<title>DRRR BOTEXT SETTING</title>
-<meta charset="utf-8"/>
-<link rel=stylesheet href="../codemirror/doc/docs.css">
-<link rel="stylesheet" href="../codemirror/lib/codemirror.css">
-<link rel="stylesheet" href="../codemirror/addon/fold/foldgutter.css">
-<link rel="stylesheet" href="../codemirror/addon/dialog/dialog.css">
-<link rel="stylesheet" href="../codemirror/theme/monokai.css">
-<script src="/js/jquery-3.4.1.min.js"></script>
-<script src="../codemirror/lib/codemirror.js"></script>
-<script src="../codemirror/addon/search/searchcursor.js"></script>
-<script src="../codemirror/addon/search/search.js"></script>
-<script src="../codemirror/addon/dialog/dialog.js"></script>
-<script src="../codemirror/addon/edit/matchbrackets.js"></script>
-<script src="../codemirror/addon/edit/closebrackets.js"></script>
-<script src="../codemirror/addon/comment/comment.js"></script>
-<script src="../codemirror/addon/wrap/hardwrap.js"></script>
-<script src="../codemirror/addon/fold/foldcode.js"></script>
-<script src="../codemirror/addon/fold/brace-fold.js"></script>
-<script src="../codemirror/mode/javascript/javascript.js"></script>
-<script src="../codemirror/keymap/sublime.js"></script>
-<script src="index.js"></script>
-<script src="/lib/globals.js" charset="utf-8"></script>
-<script src="/lib/api.js" charset="utf-8"></script>
-<script src="/background/utility.js" charset="utf-8"></script>
-<script src="/background/music.js" charset="utf-8"></script>
-<script src="/background/action.js" charset="utf-8"></script>
-<script src="/lib/format.js" charset="utf-8"></script>
-<script src="./lambdascript.js" charset="utf-8"></script>
-<script src="./drrr.js" charset="utf-8"></script>
-<script src="./listener.js" charset="utf-8"></script>
-<script src="done.js"></script>
-<link rel="stylesheet" href="./modal.css">
-<style>
-.CodeMirror {
-  font-size: 16px;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  line-height: 1.3;
-  height: 350px;
-}
-  .CodeMirror-linenumbers { padding: 0 8px; }
-  #nav{
-    top:0px;
-    left:0px;
-    border-right-width: 0px;
-    z-index:999;
-    right:90%;
-  }
-</style>
-<div id=nav style="">
-  <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>UserScript Console</h1><img id=logo src="../codemirror/doc/logo.png"></a>
+    #code-editor {
+      height: 100%;
+    }
+    .CodeMirror {
+      font-size: 16px;
+      line-height: 1.3;
+      height: 100%;
+    }
+    .CodeMirror-linenumbers { padding: 0 8px; }
+    #nav{
+      top:0px;
+      left:0px;
+      border-right-width: 0px;
+      z-index:999;
+      right:90%;
+    }
+    #script {
+      padding: 0 0 0 0;
+      width: 100%;
+      height: 100%;
+    }
 
-  <ul>
-    <li><a href="../sync/index.html">Sync</a></li>
-    <li><a href="../local/index.html">Local</a></li>
-    <li class="active"><a href="./background.html">Background</a></li>
-    <!--
-      <li><a href="../codemirror/index.html">Home</a>
-      <li><a href="../codemirror/doc/manual.html">Manual</a>
-      <li><a href="https://github.com/codemirror/codemirror">Code</a>
-    -->
-  </ul>
-  <ul>
-    <li><a id="mirror-link" class=active href="void(0);">Packages</a></li><br>
-    <li><a id="show-room" class=active href="void(0);">ToggleRoom</a></li><br>
-    <li><a id="show-bindings" class=active href="#">Sublime bindings</a></li><br>
-    <li><a id='intro' target="_blank">Introduction</a></li>
-    <li><a id='save' href="#">(ctrl + s) save</a></li>
-    <li><a id='clear' href="#">(ctrl + l) Clear</a></li>
-    <li><a id='stop' href="#">(ctrl + p) Pause</a></li>
-    <li><a id='execute' href="#">(ctrl + ⏎) Execute</a></li>
-  </ul>
-</div>
+    .textarea {
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 1px 6px;
+    }
+    .textarea {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      /* resize: both; */
+      line-height: 20px;
+    }
 
-<article id='script' style="margin: 0 0 0 10%;">
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
+    .textarea[contenteditable]:empty::before {
+      content: "interpret with current environment";
+      color: gray;
+    }
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close" style="line-height: 0.7;">&times;</span>
-      <select id="mirror" title="select mirror">
-      </select>
-      <button id="mirror-update">update</button>
-      <select id="category" title="select module">
-      </select>
-      <select id="module" title="select module">
-      </select>
-      <button id="module-load">load to editor</button>
-      <button id="module-install">install to local</button>
-      <button id="module-save" style="display:none">save</button>
-      <button id="module-new" style="display:none">new</button>
-      <button id="module-clear-env" style="display:none">clear env</button>
-
-      <br>
-      <br>
-      <p>Choose local modules to preload:</p>
-
-      <div id="local-modules">
-      </div>
-
-      <br>
-      <button id="module-remove">remove checked</button>
-      <button id="module-preload">preload checked</button>
-
-    </div>
-  </div>
-  <div id="iframe-container" style="position: relative; z-index: 0;">
-  </div>
-</article>
-
-
-<style>
-.textarea {
-  border: 1px solid #ccc;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 1px 6px;
-}
-.textarea {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  resize: both;
-  line-height: 20px;
-}
-
-.textarea[contenteditable]:empty::before {
-  content: "interpret with current environment";
-  color: gray;
-}
-
-.log{
-  font-size: 16px;
-  top: 0px;
-  padding-top: 15px;
-  max-height: 200px;
-  box-sizing: -moz-border-box;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: auto;
-  /*position: fixed;
+    .log{
+      font-size: 16px;
+      top: 0px;
+      padding-top: 15px;
+      box-sizing: -moz-border-box;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overflow-x: auto;
+      /*position: fixed;
 left: 65%;
 width: 30%;*/
-  text-align: left;
-  z-index: 999;
+      text-align: left;
+    }
+
+    .draggable{
+      position: fixed;
+      top: 0%;
+      right: 0%;
+      width: 30%;
+      height: 100%;
+      z-index: 100;
+    }
+
+    #iframe-container {
+      width: 100%;
+      height: 90%;
+    }
+
+    iframe {
+      border-width: 0px;
+    }
+
+    .drrr{
+      font-size: 16px;
+      max-height: 95%;
+      box-sizing: -moz-border-box;
+      box-sizing: border-box;
+      overflow-y: auto;
+      overflow-x: auto;
+      width: 100%;
+      height: 100%;
+      text-align: left;
+      z-index: 999;
+    }
+    </style>
+  </head>
+  <body>
+    <!--
+    <div id="nav" style="">
+      <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>DuRaRaRa ChatBot Extension</h1><img id="logo" src="../codemirror/doc/logo.png"></a>
+
+      <ul>
+        <li><a href="../sync/index.html">Sync</a></li>
+        <li><a href="../local/index.html">Local</a></li>
+        <li class="active"><a href="#">Script</a></li>
+          <li><a href="../codemirror/index.html">Home</a>
+          <li><a href="../codemirror/doc/manual.html">Manual</a>
+          <li><a href="https://github.com/codemirror/codemirror">Code</a>
+      </ul>
+      <ul>
+        <li><a id="mirror-link" class=active href="void(0);">Packages</a></li><br>
+        <li><a id="show-room" class=active href="void(0);">ToggleRoom</a></li><br>
+        <li><a id="show-bindings" class=active href="#">Sublime bindings</a></li><br>
+        <li><a id='intro' target="_blank">Introduction</a></li>
+        <li><a id='save' href="#">(ctrl + s) save</a></li>
+        <li><a id='clear' href="#">(ctrl + l) Clear</a></li>
+        <li><a id='stop' href="#">(ctrl + p) Pause</a></li>
+        <li><a id='execute' href="#">(ctrl + ⏎) Execute</a></li>
+      </ul>
+    </div>
+    -->
+
+    <style>
+        .container {
+          display: flex;
+
+          /* Misc */
+          /* border: 1px solid #cbd5e0; */
+          height: 100%;
+          /* width: 100%; */
+        }
+            .container__left {
+              /* Initially, the left takes 3/4 width */
+              width: 40%;
+
+              /* Misc */
+              align-items: center;
+              display: flex;
+              justify-content: center;
+            }
+            .resizer {
+              background-color: #cbd5e0;
+              cursor: ew-resize;
+              height: 100%;
+              width: 2px;
+            }
+            .container__right {
+              /* Take the remaining width */
+              flex: 1;
+
+              /* Misc */
+            }
+    </style>
+
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
 }
-.drrr{
-  font-size: 16px;
-  position: fixed;
-  top: 5%;
-  padding-top: 0px;
-  max-height: 95%;
-  box-sizing: -moz-border-box;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: auto;
-  left: 65%;
-  width: 30%;
-  height: 90%;
+
+li {
+  float: left;
+}
+
+a {
+  color: white !important;
+}
+
+li a, .dropbtn {
+  display: inline-block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdownitem {
+  color: black !important;
+}
+
+li a:hover, .dropdown:hover .dropbtn {
+  background-color: green;
+}
+
+li.dropdown {
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
   text-align: left;
-  z-index: 999;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1;}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 </style>
+
+    <div class="container" style="margin: 0 0 0 0;">
+      <div class="container__left">
+        <div id='script'>
+          <div id="myModal" class="modal">
+            <div class="modal-content">
+              <span class="close" style="line-height: 0.7;">&times;</span>
+              <select id="mirror" title="select mirror">
+              </select>
+              <button id="mirror-update">update</button>
+              <select id="category" title="select module">
+              </select>
+              <select id="module" title="select module">
+              </select>
+              <button id="module-load">load to editor</button>
+              <button id="module-install">install to local</button>
+              <button id="module-save" style="display:none">save</button>
+              <button id="module-new" style="display:none">new</button>
+              <button id="module-clear-env" style="display:none">clear env</button>
+
+              <br>
+              <br>
+              <p>Choose local modules to preload:</p>
+
+              <div id="local-modules">
+              </div>
+
+              <br>
+              <button id="module-remove">remove checked</button>
+              <button id="module-preload">preload checked</button>
+
+            </div>
+          </div>
+
+          <div id="iframe-room" class="draggable resizeable" style="background: #333; display:none;">
+            <ul style="width:100%">
+              <!--
+              <li><a id='intro' target="_blank">Script</a></li>
+              <li><a id="mirror-link" class=active href="void(0);">Packages</a></li>
+              -->
+              <!--
+              <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">Action</a>
+                <div class="dropdown-content">
+                  <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
+                  <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
+                  <a class="dropdownitem" id='clear' href="#">(ctrl + l) Clear</a>
+                  <a class="dropdownitem" id='stop' href="#">(ctrl + p) Pause</a>
+                  <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>
+                </div>
+                </li>
+              -->
+              <li style="float:right"><a class="toggle-room" href="void(0);">X</a></li>
+            </ul>
+            <div id="iframe-container">
+
+            </div>
+          </div>
+
+          <div id="code-editor">
+          </div>
+
+        </div>
+      </div>
+      <div class="resizer" id="dragMe"></div>
+      <div class="container__right">
+        <!-- <img src="lambda.png"> -->
+        <div style="height: 20%;display: flex; flex-direction: column; max-height: 100%;">
+          <ul style="width:100%">
+            <li><a href="../sync/index.html">Sync</a></li>
+            <li><a href="../local/index.html">Local</a></li>
+            <li><a id='intro' target="_blank">Script</a></li>
+            <li><a href="./background.html">Background</a></li>
+            <li><a id="mirror-link" href="void(0);">Packages</a></li>
+            <li class="dropdown">
+              <a href="javascript:void(0)" class="dropbtn">Action</a>
+              <div class="dropdown-content">
+                <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
+                <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
+                <a class="dropdownitem" id='clear' href="#">(ctrl + l) Clear</a>
+                <a class="dropdownitem" id='stop' href="#">(ctrl + p) Pause</a>
+                <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>
+              </div>
+            </li>
+            <li><a class="toggle-room" href="void(0);">Room</a></li>
+          </ul>
+          <span id="step" style="padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
+        </div>
+        <div style="height: 80%">
+          <div style="display: flex; flex-direction: column; max-height: 100%;">
+            <pre id="log" class="log"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

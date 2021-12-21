@@ -78,7 +78,12 @@ function interact(){
     globalThis.machine = PS.Main.newMachine();
   }
   code = $('#step').text();
-  globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
+  try {
+    globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
+  }
+  catch(err){
+    return console.log("Uncatchable parsing error");
+  }
   val = machine.val;
   console.log(`=> ${stringify(val)}`);
 }
@@ -88,7 +93,12 @@ function execute(){
   clear_intervals_on_reExecute();
   code = globalThis.editor.getValue();
   code = preloaded_code(code);
-  globalThis.machine = PS.Main.execute(code)();
+  try {
+    globalThis.machine = PS.Main.execute(code)();
+  }
+  catch(err){
+    return console.log("Uncatchable parsing error");
+  }
   val = machine.val;
   console.log(`=> ${stringify(val)}`);
   if(!notify_web){

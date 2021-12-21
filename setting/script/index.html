@@ -37,7 +37,6 @@
     <script src="done.js"></script>
     <link rel="stylesheet" href="./modal.css">
     <style>
-
     #code-editor {
       height: 100%;
     }
@@ -126,31 +125,6 @@ width: 30%;*/
     </style>
   </head>
   <body>
-    <!--
-    <div id="nav" style="">
-      <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>DuRaRaRa ChatBot Extension</h1><img id="logo" src="../codemirror/doc/logo.png"></a>
-
-      <ul>
-        <li><a href="../sync/index.html">Sync</a></li>
-        <li><a href="../local/index.html">Local</a></li>
-        <li class="active"><a href="#">Script</a></li>
-          <li><a href="../codemirror/index.html">Home</a>
-          <li><a href="../codemirror/doc/manual.html">Manual</a>
-          <li><a href="https://github.com/codemirror/codemirror">Code</a>
-      </ul>
-      <ul>
-        <li><a id="mirror-link" class=active href="void(0);">Packages</a></li><br>
-        <li><a id="show-room" class=active href="void(0);">ToggleRoom</a></li><br>
-        <li><a id="show-bindings" class=active href="#">Sublime bindings</a></li><br>
-        <li><a id='intro' target="_blank">Introduction</a></li>
-        <li><a id='save' href="#">(ctrl + s) save</a></li>
-        <li><a id='clear' href="#">(ctrl + l) Clear</a></li>
-        <li><a id='stop' href="#">(ctrl + p) Pause</a></li>
-        <li><a id='execute' href="#">(ctrl + ⏎) Execute</a></li>
-      </ul>
-    </div>
-    -->
-
     <style>
         .container {
           display: flex;
@@ -313,11 +287,11 @@ li.dropdown {
           <ul style="width:100%">
             <li><a href="../sync/index.html">Sync</a></li>
             <li><a href="../local/index.html">Local</a></li>
-            <li><a id='intro' target="_blank">Language</a></li>
+            <li><a id='intro' href="#">Language</a></li>
             <li><a href="./background.html">Background</a></li>
-            <li><a id="mirror-link" href="void(0);">Packages</a></li>
+            <li><a id="mirror-link" href="#">Packages</a></li>
             <li class="dropdown">
-              <a href="javascript:void(0)" class="dropbtn">Action</a>
+              <a href="#" class="dropbtn">Action</a>
               <div class="dropdown-content">
                 <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
                 <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
@@ -326,7 +300,7 @@ li.dropdown {
                 <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>
               </div>
             </li>
-            <li><a class="toggle-room" href="void(0);">Room</a></li>
+            <li><a class="toggle-room" href="#">Room</a></li>
           </ul>
           <span id="step" style="padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
         </div>

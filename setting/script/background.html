@@ -35,7 +35,6 @@
     <script src="./drrr-bkg.js" charset="utf-8"></script>
     <link rel="stylesheet" href="./modal.css">
     <style>
-
     #code-editor {
       height: 100%;
     }
@@ -78,13 +77,15 @@
     }
 
     .log{
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-width:60vw;
       font-size: 16px;
       top: 0px;
-      padding-top: 15px;
       box-sizing: -moz-border-box;
       box-sizing: border-box;
       overflow-y: auto;
-      overflow-x: auto;
+      /* overflow-x: auto; */
       /*position: fixed;
 left: 65%;
 width: 30%;*/
@@ -124,31 +125,6 @@ width: 30%;*/
     </style>
   </head>
   <body>
-    <!--
-    <div id="nav" style="">
-      <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext"><h1>DuRaRaRa ChatBot Extension</h1><img id="logo" src="../codemirror/doc/logo.png"></a>
-
-      <ul>
-        <li><a href="../sync/index.html">Sync</a></li>
-        <li><a href="../local/index.html">Local</a></li>
-        <li class="active"><a href="#">Script</a></li>
-          <li><a href="../codemirror/index.html">Home</a>
-          <li><a href="../codemirror/doc/manual.html">Manual</a>
-          <li><a href="https://github.com/codemirror/codemirror">Code</a>
-      </ul>
-      <ul>
-        <li><a id="mirror-link" class=active href="void(0);">Packages</a></li><br>
-        <li><a id="show-room" class=active href="void(0);">ToggleRoom</a></li><br>
-        <li><a id="show-bindings" class=active href="#">Sublime bindings</a></li><br>
-        <li><a id='intro' target="_blank">Introduction</a></li>
-        <li><a id='save' href="#">(ctrl + s) save</a></li>
-        <li><a id='clear' href="#">(ctrl + l) Clear</a></li>
-        <li><a id='stop' href="#">(ctrl + p) Pause</a></li>
-        <li><a id='execute' href="#">(ctrl + ⏎) Execute</a></li>
-      </ul>
-    </div>
-    -->
-
     <style>
         .container {
           display: flex;
@@ -171,7 +147,8 @@ width: 30%;*/
               background-color: #cbd5e0;
               cursor: ew-resize;
               height: 100%;
-              width: 2px;
+              width: 5px;
+              min-width: 5px;
             }
             .container__right {
               /* Take the remaining width */
@@ -292,14 +269,14 @@ li.dropdown {
       <div class="container__right">
         <!-- <img src="lambda.png"> -->
         <div style="height: 20%;display: flex; flex-direction: column; max-height: 100%;">
-          <ul style="width:100%">
+          <ul style="overflow-y: auto;width:100%">
             <li><a href="../sync/index.html">Sync</a></li>
             <li><a href="../local/index.html">Local</a></li>
-            <li><a id='intro' target="_blank">Language</a></li>
+            <li><a id='intro' href="#">Language</a></li>
             <li><a href="./index.html">UserScript</a></li>
-            <li><a id="mirror-link" href="void(0);">Packages</a></li>
+            <li><a id="mirror-link" href="#">Packages</a></li>
             <li class="dropdown">
-              <a href="javascript:void(0)" class="dropbtn">Action</a>
+              <a href="#" class="dropbtn">Action</a>
               <div class="dropdown-content">
                 <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
                 <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
@@ -309,7 +286,7 @@ li.dropdown {
               </div>
             </li>
           </ul>
-          <span id="step" style="padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
+          <span id="step" style="width: 100%; min-height: 30%; padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
         </div>
         <div style="height: 80%">
           <div style="display: flex; flex-direction: column; max-height: 100%;">

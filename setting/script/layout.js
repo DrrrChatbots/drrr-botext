@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     rightSide.style.userSelect = 'none';
     rightSide.style.pointerEvents = 'none';
+
+    $('.log').css('max-width', $('.container__right').css('width'))
   };
 
   const mouseUpHandler = function () {

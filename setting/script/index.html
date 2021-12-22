@@ -79,13 +79,15 @@
     }
 
     .log{
+      white-space: initial;
+      word-wrap: break-word;
+      max-width:60vw;
       font-size: 16px;
       top: 0px;
-      padding-top: 15px;
       box-sizing: -moz-border-box;
       box-sizing: border-box;
       overflow-y: auto;
-      overflow-x: auto;
+      /* overflow-x: auto; */
       /*position: fixed;
 left: 65%;
 width: 30%;*/
@@ -147,7 +149,8 @@ width: 30%;*/
               background-color: #cbd5e0;
               cursor: ew-resize;
               height: 100%;
-              width: 2px;
+              width: 5px;
+              min-width: 5px;
             }
             .container__right {
               /* Take the remaining width */
@@ -284,7 +287,7 @@ li.dropdown {
       <div class="container__right">
         <!-- <img src="lambda.png"> -->
         <div style="height: 20%;display: flex; flex-direction: column; max-height: 100%;">
-          <ul style="width:100%">
+          <ul style="overflow-y: auto;width:100%">
             <li><a href="../sync/index.html">Sync</a></li>
             <li><a href="../local/index.html">Local</a></li>
             <li><a id='intro' href="#">Language</a></li>
@@ -302,7 +305,7 @@ li.dropdown {
             </li>
             <li><a class="toggle-room" href="#">Room</a></li>
           </ul>
-          <span id="step" style="padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
+          <span id="step" style="width: 100%; min-height: 30%; padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
         </div>
         <div style="height: 80%">
           <div style="display: flex; flex-direction: column; max-height: 100%;">

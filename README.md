@@ -66,3 +66,40 @@ privateKey, publicKey
 peerID = {publicKey}[0-9]
 
 validation = validate publicKey (sign privateKey (otherPeerID))
+
+### Advanced Background Setting
+
+
+```
+[key], events, users, conts, func, params
+
+key: string, [string], bool, [bool], [string, bool]
+events: #string, [#string...]
+
+// design: not self, neg
+users: string, [string...]
+
+// design: multiple keyword
+conts: string, [string...]
+
+func: #string
+
+// design: consider more complex function params,
+// qualified by conts matching
+params: [string...]
+
+"事件類型", "用戶匹配", "內容匹配", "函數", ["參數", ...]
+["事件類型", ...], "用戶匹配", "內容匹配", "函數", ["參數", ...]
+```
+
+- add rule key, ["key", true]
+- add rule key control function (toggle, enable, disable, new, delete)
+
+- seq msg (use first argument as array)
+
+- timer offset
+
+- top to down stop or continue
+- avoid self (rule or switcher), pattern list, false
+- multiple user pattern
+- multiple keyword pattern (<= advanced argument matching)

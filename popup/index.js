@@ -585,7 +585,7 @@ function show_playlist(callback){
     'EMPTY PLAYLIST', {
       title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
-      data: (c, l) => l.link,
+      data: (c, l) => JSON.stringify(l),
       icon: 'glyphicon-list'
     });
 }
@@ -598,7 +598,7 @@ function show_favlist(callback){
     'EMPTY FAVLIST', {
       title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
-      data: (c, l) => l.link,
+      data: (c, l) => JSON.stringify(l),
       icon: 'glyphicon-heart'
     });
 }

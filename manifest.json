@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.791",
+    "version": "1.793",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {
@@ -61,7 +61,8 @@
         "http://api.giphy.com/*",
         "https://github.com/*",
         "https://gitee.com/*",
-        "https://script.google.com/*"
+        "https://script.google.com/*",
+        "https://music.liuzhijin.cn/*"
     ],
     "optional_permissions": [ "http://*/*", "https://*/*" ],
     "web_accessible_resources": [

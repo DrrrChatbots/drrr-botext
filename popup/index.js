@@ -121,49 +121,49 @@ var sticker_btn = (args) =>
 var imm_play_data = (args) => `${args.data}`
 var imm_play_btn = (args) =>
 `<button class="btn btn-default imm-play" type="submit"
-         data="${imm_play_data(args)}"     title="play the song immediately">
+         data='${imm_play_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
 var imm_pldl_data = (args) => `${args.data}`
 var imm_pldl_btn = (args) =>
 `<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
-         data="${imm_pldl_data(args)}"     title="play the song immediately">
+         data='${imm_pldl_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
 var add_song_data = (args) => `${args.data}`
 var add_song_btn = (args) =>
 `<button class="btn btn-default add-song" type="submit"
-         data="${add_song_data(args)}"     title="add the song the playlist">
+         data='${add_song_data(args)}'     title="add the song the playlist">
      <i class="glyphicon glyphicon-plus"></i>
  </button>`
 
 var fav_song_data = (args) => `${args.data}`
 var fav_song_btn = (args) =>
 `<button class="btn btn-default fav-song" type="submit"
-         data="${fav_song_data(args)}"     title="add the song the favlist">
+         data='${fav_song_data(args)}'     title="add the song the favlist">
      <i class="glyphicon glyphicon-heart"></i>
  </button>`
 
 var del_song_data = (args) => `${args.idx}`
 var del_song_btn = (args) =>
   `<button class="btn btn-default del-song" type="submit"
-         data="${del_song_data(args)}"   title="remove the song from playlist">
+         data='${del_song_data(args)}'   title="remove the song from playlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
 var vaf_song_data = (args) => `${args.idx}`
 var vaf_song_btn = (args) =>
   `<button class="btn btn-default vaf-song" type="submit"
-         data="${vaf_song_data(args)}"   title="remove the song from favlist">
+         data='${vaf_song_data(args)}'   title="remove the song from favlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
 var goto_room_data = (args) => `${args.can ? args.url : args.roomId}`
 var goto_room_btn = (args) =>
   `<button class="btn btn-default goto-room" type="submit"
-         data="${goto_room_data(args)}"   title="${args.can ? 'goto the room' : 'wait to join'}">
+         data='${goto_room_data(args)}'   title="${args.can ? 'goto the room' : 'wait to join'}">
      <i class="glyphicon  ${args.can ? 'glyphicon-plane' : 'glyphicon-tag'}"></i>
   </button>`
 
@@ -171,7 +171,7 @@ var goto_room_btn = (args) =>
 var del_fbrule_data = (args) => `${args.data}-${args.idx}`
 var del_fbrule_btn = (args) =>
   `<button class="btn btn-default del-fbrule" type="submit"
-         data="${del_fbrule_data(args)}"   title="remove the rule">
+         data='${del_fbrule_data(args)}'   title="remove the rule">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
@@ -188,7 +188,7 @@ function bind_sticker(args){
 }
 
 function bind_imm_play(args){
-  $(`.imm-play[data="${imm_play_data(args)}"]`).click(function(){
+  $(`.imm-play[data='${imm_play_data(args)}']`).click(function(){
     let song = JSON.parse($(this).attr('data'));
     playMusic(
       song_title(song),
@@ -199,7 +199,7 @@ function bind_imm_play(args){
 }
 
 function bind_imm_pldl(args){
-  $(`.imm-pldl[data="${imm_pldl_data(args)}"]`).click(function(){
+  $(`.imm-pldl[data='${imm_pldl_data(args)}']`).click(function(){
     let song = JSON.parse($(this).attr('data'));
     playMusic(
       song_title(song),
@@ -214,7 +214,7 @@ function bind_imm_pldl(args){
 }
 
 function bind_fav_song(args){
-  $(`.fav-song[data="${fav_song_data(args)}"]`).click(function(){
+  $(`.fav-song[data='${fav_song_data(args)}']`).click(function(){
     let song = JSON.parse($(this).attr('data'));
     add_song(
       FAVLIST,
@@ -224,7 +224,7 @@ function bind_fav_song(args){
 }
 
 function bind_add_song(args){
-  $(`.add-song[data="${add_song_data(args)}"]`).click(function(){
+  $(`.add-song[data='${add_song_data(args)}']`).click(function(){
     let song = JSON.parse($(this).attr('data'));
     add_song(
       PLAYLIST,
@@ -234,19 +234,19 @@ function bind_add_song(args){
 }
 
 function bind_del_song(args){
-  $(`.del-song[data="${del_song_data(args)}"]`).click(function(){
+  $(`.del-song[data='${del_song_data(args)}']`).click(function(){
     del_song(PLAYLIST, $(this).attr('data'), (res) => res && show_playlist(), false);
   });
 }
 
 function bind_vaf_song(args){
-  $(`.vaf-song[data="${vaf_song_data(args)}"]`).click(function(){
+  $(`.vaf-song[data='${vaf_song_data(args)}']`).click(function(){
     del_song(FAVLIST, $(this).attr('data'), (res) => res && show_favlist(), false);
   });
 }
 
 function bind_goto_room(args){
-  $(`.goto-room[data="${goto_room_data(args)}"]`).click(function(){
+  $(`.goto-room[data='${goto_room_data(args)}']`).click(function(){
     let toURL = $(this).attr('data');
     if(toURL.startsWith('https'))
       chrome.storage.sync.set(
@@ -268,7 +268,7 @@ function bind_goto_room(args){
 }
 
 function bind_del_fbrule(args){
-  $(`.del-fbrule[data="${del_fbrule_data(args)}"]`).click(function(){
+  $(`.del-fbrule[data='${del_fbrule_data(args)}']`).click(function(){
     [conf, idx] = $(this).attr('data').split('-');
     console.log(conf, idx);
     del_value(conf, idx, (v) => v && show_fbrulelist(),

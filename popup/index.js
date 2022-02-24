@@ -189,9 +189,10 @@ function bind_sticker(args){
 
 function bind_imm_play(args){
   $(`.imm-play[data="${imm_play_data(args)}"]`).click(function(){
+    let song = JSON.parse($(this).attr('data'));
     playMusic(
-      $(this).parent().prev().attr('title').replace(/ *- *$/, ''),
-      $(this).attr('data'),
+      song_title(song),
+      song.link,
       alert.bind(window)
     );
   })
@@ -199,9 +200,10 @@ function bind_imm_play(args){
 
 function bind_imm_pldl(args){
   $(`.imm-pldl[data="${imm_pldl_data(args)}"]`).click(function(){
+    let song = JSON.parse($(this).attr('data'));
     playMusic(
-      $(this).parent().prev().attr('title').replace(/ *- *$/, ''),
-      $(this).attr('data'),
+      song_title(song),
+      song.link,
       alert.bind(window)
     );
     let sel = $('#mode_type');
@@ -213,26 +215,20 @@ function bind_imm_pldl(args){
 
 function bind_fav_song(args){
   $(`.fav-song[data="${fav_song_data(args)}"]`).click(function(){
-    let title = $(this).parent().prev().attr('title');
-    let idx = title.lastIndexOf(' - ');
+    let song = JSON.parse($(this).attr('data'));
     add_song(
       FAVLIST,
-      title.substring(0, idx),
-      $(this).attr('data'),
-      title.substring(idx + 3)
+      song,
     );
   })
 }
 
 function bind_add_song(args){
   $(`.add-song[data="${add_song_data(args)}"]`).click(function(){
-    let title = $(this).parent().prev().attr('title');
-    let idx = title.lastIndexOf(' - ');
+    let song = JSON.parse($(this).attr('data'));
     add_song(
       PLAYLIST,
-      title.substring(0, idx),
-      $(this).attr('data'),
-      title.substring(idx + 3)
+      song,
     );
   })
 }
@@ -346,13 +342,12 @@ function show_searchlist(callback){
     show_list(
       '#list_container',
       Object.keys(api[source].songs(data)).map((idx)=>{
-        let name = api[source].name(data, idx);
-        let singer = api[source].singer(data, idx);
+        let song = data2info(data, source, idx);
         return ({
           icon: 'glyphicon-search',
-          title: `${name} - ${singer}`,
-          content: ommited_name(name, singer),
-          data: api[source].link(data, idx)
+          title: song_title(song),
+          content: ommited_name(song.name, song.singer),
+          data: JSON.stringify(song)
         });
       }), [add_song_btn, imm_play_btn, fav_song_btn], callback
     )
@@ -588,7 +583,7 @@ function show_playlist(callback){
     PLAYLIST, callback,
     [del_song_btn, imm_pldl_btn, fav_song_btn],
     'EMPTY PLAYLIST', {
-      title: (c, l) => `${l.name} - ${l.singer}`,
+      title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
       data: (c, l) => l.link,
       icon: 'glyphicon-list'
@@ -601,7 +596,7 @@ function show_favlist(callback){
     FAVLIST, callback,
     [add_song_btn, imm_play_btn, vaf_song_btn],
     'EMPTY FAVLIST', {
-      title: (c, l) => `${l.name} - ${l.singer}`,
+      title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
       data: (c, l) => l.link,
       icon: 'glyphicon-heart'

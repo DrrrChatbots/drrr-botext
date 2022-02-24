@@ -154,12 +154,13 @@ Search mode:
 - <i class="glyphicon glyphicon-refresh"></i> ALoop mode: Loop the playlist
 
 #### Sound source
-- **網** Netease Music
-- **易** Netease Music (not work now)
-- **千** Baidu Music Boxes (not work now)
-- **Ｙ** YouTube
-- **狗** Kugou (not work now)
-- **我** Kuwu (not work now)
+- **Q** QQ Music
+- **網** Netease Music (banned by GFW)
+- **易** Netease Music (not work for chatroom now)
+- **千** Baidu Music Boxes
+- **Y** YouTube (banned by GFW)
+- **狗** Kugou
+- **我** Kuwu
 
 #### Search Keyword and Play
 
@@ -848,7 +849,7 @@ Function ["parameter", ...] Description:
   play music.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
 - `addm` `["Song Keywords"] `
   `addm` `["Song Keywords", "Number"] `
   `addm` `["Song Keyword", "Sound Source"] `
@@ -857,7 +858,7 @@ Function ["parameter", ...] Description:
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -876,12 +877,12 @@ Function ["parameter", ...] Description:
   If the keyword is an empty string, list it for play.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "易", "我", "狗" and "Ｙ" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results.
   1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "易", "我", "狗" and "Ｙ" available.
+  2. "Sound Source": There are currently "千", "網", "易", "Q", "我", "狗" and "Y" available.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

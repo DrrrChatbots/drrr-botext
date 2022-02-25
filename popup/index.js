@@ -79,7 +79,8 @@ function get_music(callback){
   let source = $('#music_source').val();
   if(keyword){
     music_api(keyword, callback, {
-      log: alert.bind(window),
+      // log: alert.bind(window),
+      log: notification_alert,
       ajax: (req) =>
       chrome.runtime.sendMessage(
         { type: 'ajax' },
@@ -91,8 +92,7 @@ function get_music(callback){
   } else alert("please input keyword");
 }
 
-var list_template = (args, btns) =>
-`<div class="input-group">
+var list_template = (args, btns) => `<div class="input-group">
      <span class="input-group-addon"><i class="glyphicon ${args.icon || 'glyphicon-music'}"></i></span>
      <span class="input-group-addon form-control panel-footer text-center"
             title="${args.title}">${args.content}</span>
@@ -101,68 +101,57 @@ var list_template = (args, btns) =>
      </div>
  </div>`;
 
-var grid_row_template = (ctx) =>
-`<div class="row" style="display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; padding: 0 4px;">${ctx}</div>`
+var grid_row_template = (ctx) => `<div class="row" style="display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; padding: 0 4px;">${ctx}</div>`
 
-var grid_col_template = (args, btns) =>
-`<div class="column hover09" style="${args.colstyle}">${btns.map((b) => b(args)).join('')} </div>`
+var grid_col_template = (args, btns) => `<div class="column hover09" style="${args.colstyle}">${btns.map((b) => b(args)).join('')} </div>`
 
 
-var empty_template = (name, icon) =>
-`<div class="input-group">
+var empty_template = (name, icon) => `<div class="input-group">
      <span class="input-group-addon"><i class="glyphicon ${icon || 'glyphicon-music'}"></i></span>
      <span class="input-group-addon form-control panel-footer text-center">${name}</span>
  </div>`;
 
 var sticker_src = (args) => `${args.url}`
-var sticker_btn = (args) =>
-  `<figure><img src="${sticker_src(args)}" class="sticker-btn" style="${args.imgstyle}"></figure>`
+var sticker_btn = (args) => `<figure><img src="${sticker_src(args)}" class="sticker-btn" style="${args.imgstyle}"></figure>`
 
 var imm_play_data = (args) => `${args.data}`
-var imm_play_btn = (args) =>
-`<button class="btn btn-default imm-play" type="submit"
+var imm_play_btn = (args) => `<button class="btn btn-default imm-play" type="submit"
          data='${imm_play_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
 var imm_pldl_data = (args) => `${args.data}`
-var imm_pldl_btn = (args) =>
-`<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
+var imm_pldl_btn = (args) => `<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
          data='${imm_pldl_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
 var add_song_data = (args) => `${args.data}`
-var add_song_btn = (args) =>
-`<button class="btn btn-default add-song" type="submit"
+var add_song_btn = (args) => `<button class="btn btn-default add-song" type="submit"
          data='${add_song_data(args)}'     title="add the song the playlist">
      <i class="glyphicon glyphicon-plus"></i>
  </button>`
 
 var fav_song_data = (args) => `${args.data}`
-var fav_song_btn = (args) =>
-`<button class="btn btn-default fav-song" type="submit"
+var fav_song_btn = (args) => `<button class="btn btn-default fav-song" type="submit"
          data='${fav_song_data(args)}'     title="add the song the favlist">
      <i class="glyphicon glyphicon-heart"></i>
  </button>`
 
 var del_song_data = (args) => `${args.idx}`
-var del_song_btn = (args) =>
-  `<button class="btn btn-default del-song" type="submit"
+var del_song_btn = (args) => `<button class="btn btn-default del-song" type="submit"
          data='${del_song_data(args)}'   title="remove the song from playlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
 var vaf_song_data = (args) => `${args.idx}`
-var vaf_song_btn = (args) =>
-  `<button class="btn btn-default vaf-song" type="submit"
+var vaf_song_btn = (args) => `<button class="btn btn-default vaf-song" type="submit"
          data='${vaf_song_data(args)}'   title="remove the song from favlist">
      <i class="glyphicon glyphicon-remove"></i>
   </button>`
 
 var goto_room_data = (args) => `${args.can ? args.url : args.roomId}`
-var goto_room_btn = (args) =>
-  `<button class="btn btn-default goto-room" type="submit"
+var goto_room_btn = (args) => `<button class="btn btn-default goto-room" type="submit"
          data='${goto_room_data(args)}'   title="${args.can ? 'goto the room' : 'wait to join'}">
      <i class="glyphicon  ${args.can ? 'glyphicon-plane' : 'glyphicon-tag'}"></i>
   </button>`

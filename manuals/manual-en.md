@@ -160,7 +160,7 @@ Search mode:
 - **千** Baidu Music Boxes
 - **Y** YouTube (banned by GFW)
 - **狗** Kugou
-- **我** Kuwu
+- ~~**我** Kuwo~~
 
 #### Search Keyword and Play
 
@@ -849,7 +849,7 @@ Function ["parameter", ...] Description:
   play music.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
 - `addm` `["Song Keywords"] `
   `addm` `["Song Keywords", "Number"] `
   `addm` `["Song Keyword", "Sound Source"] `
@@ -858,7 +858,7 @@ Function ["parameter", ...] Description:
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -877,12 +877,12 @@ Function ["parameter", ...] Description:
   If the keyword is an empty string, list it for play.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "我", "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results.
   1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "網", "易", "Q", "我", "狗" and "Y" available.
+  2. "Sound Source": There are currently "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

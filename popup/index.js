@@ -70,6 +70,18 @@ function set_hidden_room(){
   //})
 }
 
+function c2sess(cookies){
+  let session = '';
+  if(cookies && cookies.forEach){
+   cookies.forEach(c => {
+     if(c.name == 'drrr-session-1'){
+       session = c.value;
+     }
+   })
+  }
+  return session;
+}
+
 function open_tripgen(){
   chrome.tabs.create({url: chrome.extension.getURL('setting/tripcode.html')});
 }
@@ -898,27 +910,34 @@ function redraw_bios(bio_cookies, data){
 
   bio_cookies = bio_cookies || [];
 
-  getProfile(function(p, err){
-    if(data){
-      Profile = data.profile;
-      p = data.profile;
-    }
-    $stored.find('option').remove();
-    let add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
-    if(p){
-      //let cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
-      let cont = HtmlUtil.htmlEncode(`🔖 ${p.name}@${p.loc}`);
-      $stored.append(`<option value="${p.id}">${cont}</option>`);
-    }
-    else{
-      $stored.append(`<option value="">Not Logined</option>`);
-    }
-    bio_cookies.forEach(([pro, cookie])=>{
-      //let c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
-      let c = HtmlUtil.htmlEncode(`💾 ${pro.name}@${pro.loc}`);
-      $stored.append(`<option value="${pro.id}">${c}</option>`);
+  cache(undefined, (config)=>{
+    let session = c2sess(config['cookie']);
+    getProfile(function(p, err){
+      if(data){
+        Profile = data.profile;
+        p = data.profile;
+      }
+      $stored.find('option').remove();
+      let add_trip = (p => p && p.tripcode ? `#${p.tripcode}` : '')
+      if(p){
+        //let cont = `🔖 ${p.name}${add_trip(p)}@${p.icon}`;
+        let c = HtmlUtil.htmlEncode(`🔖 ${p.name}@${p.loc}`);
+        $stored.append(`<option value="${session}">${c}</option>`);
+      }
+      else{
+        $stored.append(`<option value="">Not Logined</option>`);
+      }
+
+      bio_cookies.forEach(([pro, cookie])=>{
+        //let c = `💾 ${pro.name}${add_trip(p)}@${pro.icon}`;
+        let c = HtmlUtil.htmlEncode(`💾 ${pro.name || 'somebody' }@${pro.loc || 'somewhere'}`);
+        $stored.append(`<option value="${c2sess(cookie)}">${c}</option>`);
     });
-  })
+   })
+
+
+  });
+
 }
 
 function bio_setup(config){
@@ -934,42 +953,44 @@ function bio_setup(config){
     let $stored = $('#bio_select');
     let optionSelected = $("option:selected", $stored);
     let valueSelected = $stored.val();
-    getProfile(function(p){
-      if(valueSelected){
+    if(!valueSelected)
+      return alert("cannot change to not logined bio");
+
+    cache(undefined, (config)=>{
+      let session = c2sess(config['cookie']);
+      getProfile(function(p){
         if(p){
-          if(p.id == valueSelected){
+          if(session == valueSelected){
             chrome.tabs.create({url: 'https://drrr.com'});
           }
           else{
-            cache(undefined, (config)=>{
-              let bios = config['bio_cookies']
-              let idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+            let bios = config['bio_cookies']
+            let idx = bios.findIndex(([pro, cookies]) => c2sess(cookies) === valueSelected);
 
-              getCookie((cs)=>{
-                cs = cs.filter(c => c.name === "drrr-session-1")
-                let curbio = [p, cs];
-                let [nprofile, ncookies] = bios[idx];
-                setCookies(ncookies, ()=> {
-                  console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
-                  bios.splice(idx, 1);
-                  bios.unshift(curbio);
-                  console.log(JSON.stringify(bios));
-                  chrome.storage.sync.set({
-                    'bio_cookies': bios,
-                    'profile': nprofile,
-                    'cookie': ncookies
-                  }, ()=> chrome.tabs.update(
-                    { url: "https://drrr.com" },
-                    ()=>redraw_bios(bios, {profile: nprofile})));
-                });
+            getCookie((cs)=>{
+              cs = cs.filter(c => c.name === "drrr-session-1")
+              let curbio = [p, cs];
+              let [nprofile, ncookies] = bios[idx];
+              setCookies(ncookies, ()=> {
+                console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
+                bios.splice(idx, 1);
+                bios.unshift(curbio);
+                console.log(JSON.stringify(bios));
+                chrome.storage.sync.set({
+                  'bio_cookies': bios,
+                  'profile': nprofile,
+                  'cookie': ncookies
+                }, ()=> chrome.tabs.update(
+                  { url: "https://drrr.com" },
+                  ()=>redraw_bios(bios, {profile: nprofile})));
               });
-            }, 'bio_cookies')
+            });
           }
         }
         else{
           cache(undefined, (config)=>{
             let bios = config['bio_cookies']
-            let idx = bios.findIndex(([pro, cookies]) => pro.id === valueSelected);
+            let idx = bios.findIndex(([pro, cookies]) => c2sess(cookies) === valueSelected);
             let [nprofile, ncookies] = bios[idx];
             setCookies(ncookies, ()=> {
               console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
@@ -984,11 +1005,9 @@ function bio_setup(config){
                 ()=>redraw_bios(bios, {profile: nprofile})));
             });
           }, 'bio_cookies')
-
         }
-      }
-      else alert("cannot change to not logined bio");
-    })
+      })
+    });
   });
 
   $('#new_bios').on('click', function(){
@@ -1019,25 +1038,29 @@ function bio_setup(config){
     let $stored = $('#bio_select');
     let optionSelected = $("option:selected", $stored);
     let valueSelected = $stored.val();
-    getProfile(function(p){
-      if(p && p.id == valueSelected){
-        getCookie((cs)=> {
-          delCookies(cs.map(c=>c.name), ()=>{
-            chrome.storage.sync.remove(
-              ['profile', 'cookie'],
-              ()=>chrome.tabs.update({ url: "https://drrr.com" },
-                ()=> optionSelected.replaceWith(`<option value="">Not Logined</option>`)));
+
+    cache(undefined, (config)=>{
+      let session = c2sess(config['cookie']);
+      getProfile(function(p){
+        if(p && session == valueSelected){
+          getCookie((cs)=> {
+            delCookies(cs.map(c=>c.name), ()=>{
+              chrome.storage.sync.remove(
+                ['profile', 'cookie'],
+                ()=>chrome.tabs.update({ url: "https://drrr.com" },
+                  ()=> optionSelected.replaceWith(`<option value="">Not Logined</option>`)));
+            });
           });
-        });
-      }
-      else{
-        pop_value(
-          'bio_cookies',
-          (([pro, cookies], idx, ary) => pro.id == valueSelected),
-          (res, cookies) => redraw_bios(cookies)
-        )
-      }
-    })
+        }
+        else{
+          pop_value(
+            'bio_cookies',
+            (([pro, cookies], idx, ary) => c2sess(cookies) == valueSelected),
+            (res, cookies) => redraw_bios(cookies)
+          )
+        }
+      })
+    });
   });
 
   $('#imp_session').on('click', function(){
@@ -1113,12 +1136,11 @@ function bio_setup(config){
   $('#exp_session').on('click', function(){
     cache(undefined, (config)=>{
       let copied = false;
-      config['cookie'].forEach(c => {
-        if(c.name == 'drrr-session-1'){
-          copyToClipboard(c.value);
-          copied = true;
-        }
-      })
+      let session = c2sess(config['cookie']);
+      if(session.length){
+        copyToClipboard(session);
+        copied = true;
+      }
       chrome.notifications.create({
         type: "basic",
         iconUrl: '/icon.png',

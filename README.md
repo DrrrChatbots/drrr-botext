@@ -103,3 +103,5 @@ params: [string...]
 - avoid self (rule or switcher), pattern list, false
 - multiple user pattern
 - multiple keyword pattern (<= advanced argument matching)
+
+- multiple keyword intent matching, set([people, something]), seq(people, something, time)

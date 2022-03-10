@@ -98,6 +98,11 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
                                     data-toggle="modal" data-target="#${keys[idx]}-modal">
                                          HELP
                                 </button>
+                                <button id="default-${keys[idx]}" type="button"
+                                        data="${keys[idx]}"
+                                        class="btn btn-secondary btn-sm default-button">
+                                         DEFAULT
+                                </button>
                                 <button type="button" id="reset-${keys[idx]}"
                                 class="btn btn-success btn-sm reset-button"
                                 data="${keys[idx]}"
@@ -271,6 +276,11 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
             setting_cache[`${sid(e)}`] = '';
           }
         })
+      });
+
+      $('.default-button').click(function(){
+        var val = $(`#${sid($(this).attr('data'))}`).attr('placeholder');
+        $(`#${sid($(this).attr('data'))}`).val(val.trim()).keydown();
       });
 
       /* save function */

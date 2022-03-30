@@ -181,10 +181,20 @@
             <br>
             <div class="input-group">
 
-              <!--
               <div class="input-group-btn">
+                <form>
+                  <!--
+                  <input type="file" id="img_file_input"
+                         style="display:none;" name="file-main">
+                  -->
+                  <button id="upload_img" class="btn btn-default" type="button"
+                          title='upload a image'>
+                    <!-- <label style="margin-bottom:0px;" for="file-main"> -->
+                      <i class="glyphicon glyphicon-cloud-upload"></i>
+                    <!-- </label> -->
+                  </button>
+                </form>
               </div>
-              -->
 
               <select id="local-select"
                       class="form-control"
@@ -208,8 +218,12 @@
                   </button>
                 -->
               </div>
-
             </div>
+
+            <!--
+              <img id="myImg" src="#" alt="your image" height=200 width=100>
+            -->
+
             <div id="local_list" class="collapse">
               <div class="row" style="height:100%">
                 <div class="col-md-4">

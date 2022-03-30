@@ -249,6 +249,12 @@ function wrap_post_form(){
     //  $('#myModal').modal('show');
     //  return;
     //}
+    const reverse = str => Array.from(str).reverse().join('');
+    function process_string_input(val){
+      // return [...val].sort(function(){return 0.5-Math.random()}).join('');
+      // return reverse(val);
+      return val;
+    }
 
     function rest(){
       if(!$('textarea[name="message"]').hasClass('state-secret') &&
@@ -258,7 +264,7 @@ function wrap_post_form(){
       if(!$('textarea[name="message"]').val().match(/^\s*$/)){
         zh_conv((cvt)=>{
           $('textarea[name="message"]').val(
-            cvt(cmd + $('textarea[name="message"]').val()));
+            cvt(cmd + process_string_input($('textarea[name="message"]').val())));
           callback();
         });
       }

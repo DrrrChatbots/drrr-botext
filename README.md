@@ -97,7 +97,7 @@ params: [string...]
 
 - seq msg (use first argument as array)
 
-- timer offset
+- timer offset (done, not handle date yet)
 
 - top to down stop or continue
 - avoid self (rule or switcher), pattern list, false
@@ -105,3 +105,5 @@ params: [string...]
 - multiple keyword pattern (<= advanced argument matching)
 
 - multiple keyword intent matching, set([people, something]), seq(people, something, time)
+
+- custom room input (add some special command, input, something...)

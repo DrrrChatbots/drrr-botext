@@ -22808,7 +22808,7 @@ var PS = {};
           });
       };
   };
-  var event$primetypes = [ "me", "music", "leave", "join", "new-host", "msg", "dm", "dmto", "newtab", "exittab", "exitalarm", "musicbeg", "musicend", "kick", "ban", "unban", "roll", "room-profile", "new-description", "lounge", "*" ];
+  var event$primetypes = [ "me", "leave", "join", "new-host", "newtab", "new-description", "msg", "dmto", "dm", "exittab", "exitalarm", "musicbeg", "musicend", "music", "kick", "ban", "unban", "roll", "room-profile", "lounge", "*" ];
   var customStyle = (function () {
       var v = CustomToken.unGenLanguageDef(CustomToken.emptyDef);
       return {

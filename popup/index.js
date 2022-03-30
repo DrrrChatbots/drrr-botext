@@ -413,6 +413,10 @@ function show_stickergrid(url, callback){
     dataType: 'text',
     success: function(data){
 
+      // data = data.replaceAll("(?i)<link[^>]*>", "").replaceAll("(?i)<script[^>]*>", "");
+      data = data.replaceAll("<p", "<meta").replaceAll("<p", "<meta")
+      // console.log(data);
+
       let nodes = $(data);
 
       let urls = extractImagesFromNodes(nodes);
@@ -1730,6 +1734,10 @@ function local_setup(config){
   });
 
   init_plugin(config);
+
+  $('#upload_img').on('click', function(){
+     chrome.tabs.create({url: 'https://imgtu.com/'});
+  });
 
   $('#reset_plugin').on('click', function(){
     if(confirm("reset built-in plugins?"))

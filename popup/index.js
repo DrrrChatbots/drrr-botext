@@ -126,25 +126,25 @@ var empty_template = (name, icon) => `<div class="input-group">
 var sticker_src = (args) => `${args.url}`
 var sticker_btn = (args) => `<figure><img src="${sticker_src(args)}" class="sticker-btn" style="${args.imgstyle}"></figure>`
 
-var imm_play_data = (args) => `${args.data}`
+var imm_play_data = (args) => `${args.type} ${args.idx}`
 var imm_play_btn = (args) => `<button class="btn btn-default imm-play" type="submit"
          data='${imm_play_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
-var imm_pldl_data = (args) => `${args.data}`
+var imm_pldl_data = (args) => `${args.type} ${args.idx}`
 var imm_pldl_btn = (args) => `<button class="btn btn-default imm-pldl" type="submit" data-idx="${args.idx}"
          data='${imm_pldl_data(args)}'     title="play the song immediately">
      <i class="glyphicon glyphicon-play"></i>
   </button>`
 
-var add_song_data = (args) => `${args.data}`
+var add_song_data = (args) => `${args.type} ${args.idx}`
 var add_song_btn = (args) => `<button class="btn btn-default add-song" type="submit"
          data='${add_song_data(args)}'     title="add the song the playlist">
      <i class="glyphicon glyphicon-plus"></i>
  </button>`
 
-var fav_song_data = (args) => `${args.data}`
+var fav_song_data = (args) => `${args.type} ${args.idx}`
 var fav_song_btn = (args) => `<button class="btn btn-default fav-song" type="submit"
          data='${fav_song_data(args)}'     title="add the song the favlist">
      <i class="glyphicon glyphicon-heart"></i>
@@ -178,6 +178,7 @@ var del_fbrule_btn = (args) =>
 
 function bind_sticker(args){
   $(`img[src="${sticker_src(args)}"]`).click(function(){
+  // $(`.sticker-btn`).click(function(){
     sendTab({
       fn: publish_message,
       args: {
@@ -190,7 +191,10 @@ function bind_sticker(args){
 
 function bind_imm_play(args){
   $(`.imm-play[data='${imm_play_data(args)}']`).click(function(){
-    let song = JSON.parse($(this).attr('data'));
+  // $(`.imm-play`).click(function(){
+    // let song = JSON.parse($(this).attr('data'));
+    let [type, idx] = $(this).attr('data').split(' ');
+    let song = window.datalist[type][Number(idx)].data;
     playMusic(
       song_title(song),
       song.link,
@@ -201,7 +205,10 @@ function bind_imm_play(args){
 
 function bind_imm_pldl(args){
   $(`.imm-pldl[data='${imm_pldl_data(args)}']`).click(function(){
-    let song = JSON.parse($(this).attr('data'));
+  // $(`.imm-pldl`).click(function(){
+    // let song = JSON.parse($(this).attr('data'));
+    let [type, idx] = $(this).attr('data').split(' ');
+    let song = window.datalist[type][Number(idx)].data;
     playMusic(
       song_title(song),
       song.link,
@@ -216,7 +223,14 @@ function bind_imm_pldl(args){
 
 function bind_fav_song(args){
   $(`.fav-song[data='${fav_song_data(args)}']`).click(function(){
-    let song = JSON.parse($(this).attr('data'));
+  // $(`.fav-song`).click(function(){
+    // let song = JSON.parse($(this).attr('data'));
+    let [type, idx] = $(this).attr('data').split(' ');
+    let song = window.datalist[type][Number(idx)].data;
+    if(song.songid) {
+      song.link = song.songid;
+      delete song.songid;
+    }
     add_song(
       FAVLIST,
       song,
@@ -226,7 +240,10 @@ function bind_fav_song(args){
 
 function bind_add_song(args){
   $(`.add-song[data='${add_song_data(args)}']`).click(function(){
-    let song = JSON.parse($(this).attr('data'));
+  // $(`.add-song`).click(function(){
+    // let song = JSON.parse($(this).attr('data'));
+    let [type, idx] = $(this).attr('data').split(' ');
+    let song = window.datalist[type][Number(idx)].data;
     add_song(
       PLAYLIST,
       song,
@@ -236,18 +253,21 @@ function bind_add_song(args){
 
 function bind_del_song(args){
   $(`.del-song[data='${del_song_data(args)}']`).click(function(){
+  // $(`.del-song`).click(function(){
     del_song(PLAYLIST, $(this).attr('data'), (res) => res && show_playlist(), false);
   });
 }
 
 function bind_vaf_song(args){
   $(`.vaf-song[data='${vaf_song_data(args)}']`).click(function(){
+  // $(`.vaf-song`).click(function(){
     del_song(FAVLIST, $(this).attr('data'), (res) => res && show_favlist(), false);
   });
 }
 
 function bind_goto_room(args){
   $(`.goto-room[data='${goto_room_data(args)}']`).click(function(){
+  // $(`.goto-room`).click(function(){
     let toURL = $(this).attr('data');
     if(toURL.startsWith('https'))
       chrome.storage.sync.set(
@@ -270,6 +290,7 @@ function bind_goto_room(args){
 
 function bind_del_fbrule(args){
   $(`.del-fbrule[data='${del_fbrule_data(args)}']`).click(function(){
+  // $(`.del-fbrule`).click(function(){
     [conf, idx] = $(this).attr('data').split('-');
     console.log(conf, idx);
     del_value(conf, idx, (v) => v && show_fbrulelist(),
@@ -338,21 +359,27 @@ function show_grid(cont_name, entries, btns, callback){
   });
 }
 
+window.datalist = {};
 function show_searchlist(callback){
-  get_music((keyword, source, data) =>
+  get_music((keyword, source, data) => {
+    window.datalist[SCHLIST] = Object.keys(api[source].songs(data)).map((idx)=>{
+      let song = data2info(data, source, idx);
+      return ({
+        idx: idx,
+        type: SCHLIST,
+        icon: 'glyphicon-search',
+        title: song_title(song),
+        content: ommited_name(song.name, song.singer),
+        data: song
+      });
+    });
+
     show_list(
       '#list_container',
-      Object.keys(api[source].songs(data)).map((idx)=>{
-        let song = data2info(data, source, idx);
-        return ({
-          icon: 'glyphicon-search',
-          title: song_title(song),
-          content: ommited_name(song.name, song.singer),
-          data: JSON.stringify(song)
-        });
-      }), [add_song_btn, imm_play_btn, fav_song_btn], callback
+      window.datalist[SCHLIST],
+     [add_song_btn, imm_play_btn, fav_song_btn], callback
     )
-  );
+  });
 }
 
 function maxFreqElt(array)
@@ -535,7 +562,9 @@ function show_findlist(findGroups, getTitle, getContent, callback, empty, icon){
   );
 }
 
-function show_configlist(container, conf_type, callback, buttons, empty_name, attrs, default_config){
+function show_configlist(
+ container, conf_type, callback,
+ buttons, empty_name, attrs, default_config){
   let load = default_config ?
     (ct, cb) => cb(default_config) :
     (ct, cb) => chrome.storage.sync.get(ct, cb);
@@ -547,26 +576,31 @@ function show_configlist(container, conf_type, callback, buttons, empty_name, at
         conf = cfs[0];
         let list = config[conf];
         if(list && list.length){
+         window.datalist[conf_type] =
+          Object.keys(list).map((idx) => {
+            let icon = attrs.icon;
+            icon = typeof icon === 'string' ? icon : icon(conf, list[idx]);
+            let title = attrs.title(conf, list[idx]);
+            let content = attrs.content(conf, list[idx]);
+            let data = attrs.data(conf, list[idx]);
+            return ({
+              idx: idx,
+              type: conf_type,
+              conf: conf,
+              icon: icon,
+              title: title,
+              content: content,
+              data: data,
+            });
+          });
           show_list(
             container,
-            Object.keys(list).map((idx) => {
-              let icon = attrs.icon;
-              icon = typeof icon === 'string' ? icon : icon(conf, list[idx]);
-              let title = attrs.title(conf, list[idx]);
-              let content = attrs.content(conf, list[idx]);
-              let data = attrs.data(conf, list[idx]);
-              return ({
-                idx: idx,
-                conf: conf,
-                icon: icon,
-                title: title,
-                content: content,
-                data: data,
-              });
-            }), buttons, ()=>recursive(cfs.slice(1), callback, true), ext
+            window.datalist[conf_type],
+            buttons, ()=>recursive(cfs.slice(1), callback, true), ext
           )
         }
         else{
+          window.datalist[conf_type] = [];
           show_list(
             container,
             empty_template(
@@ -590,7 +624,7 @@ function show_playlist(callback){
     'EMPTY PLAYLIST', {
       title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
-      data: (c, l) => JSON.stringify(l),
+      data: (c, l) => (l),
       icon: 'glyphicon-list'
     });
 }
@@ -603,7 +637,7 @@ function show_favlist(callback){
     'EMPTY FAVLIST', {
       title: (c, l) => song_title(l),
       content: (c, l) => ommited_name(l.name, l.singer),
-      data: (c, l) => JSON.stringify(l),
+      data: (c, l) => (l),
       icon: 'glyphicon-heart'
     });
 }
@@ -976,10 +1010,8 @@ function bio_setup(config){
               let curbio = [p, cs];
               let [nprofile, ncookies] = bios[idx];
               setCookies(ncookies, ()=> {
-                console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
                 bios.splice(idx, 1);
                 bios.unshift(curbio);
-                console.log(JSON.stringify(bios));
                 chrome.storage.sync.set({
                   'bio_cookies': bios,
                   'profile': nprofile,
@@ -997,9 +1029,7 @@ function bio_setup(config){
             let idx = bios.findIndex(([pro, cookies]) => c2sess(cookies) === valueSelected);
             let [nprofile, ncookies] = bios[idx];
             setCookies(ncookies, ()=> {
-              console.log(`${JSON.stringify(bios)}.space(${idx}, 1)`);
               bios.splice(idx, 1);
-              console.log(JSON.stringify(bios));
               chrome.storage.sync.set({
                 'bio_cookies': bios,
                 'profile': nprofile,
@@ -1094,7 +1124,6 @@ function bio_setup(config){
               let [nprofile, ncookies] = [null, [sessionCookie]]
               setCookies(ncookies, ()=> {
                 bios.unshift(curbio);
-                console.log(JSON.stringify(bios));
                 chrome.storage.sync.set({
                   'bio_cookies': bios,
                   'profile': nprofile,
@@ -1116,7 +1145,6 @@ function bio_setup(config){
             let bios = config['bio_cookies']
             let [nprofile, ncookies] = [null, [sessionCookie]]
             setCookies(ncookies, ()=> {
-              console.log(JSON.stringify(bios));
               chrome.storage.sync.set({
                 'bio_cookies': bios,
                 'profile': nprofile,
@@ -1195,9 +1223,6 @@ function bio_setup(config){
       let text = $(this).val();
       chrome.storage.sync.get(SWITCH_ME, config => {
         if(config[SWITCH_ME] && !text.match(/^\/\w/)) text = '/me' + text;
-        console.log(config[SWITCH_ME])
-        console.log(text.match(/^\/\w/))
-        console.log(text);
         sendTab({ fn: publish_message, args: { msg: text } })
         $(this).val("");
       })
@@ -1208,7 +1233,6 @@ function bio_setup(config){
     let text = $('#room-msg-input').val()
     chrome.storage.sync.get([SWITCH_ME], config => {
       if(config[SWITCH_ME] && !text.match(/^\/\w/)) text = '/me' + text;
-      console.log(text);
       sendTab({ fn: publish_message, args: { msg: text } })
       $('#room-msg-input').val("");
     })
@@ -1519,7 +1543,6 @@ function sticker_setup(config){
     let $stored = $('#store_stickers');
     let optionSelected = $("option:selected", $stored);
     let valueSelected = $stored.val();
-    console.log('del', valueSelected);
     if($("option", $stored).length > 1){
       pop_value('stickers', ((data, idx, ary) => data[0] === optionSelected.text() && sticker_url(data) == valueSelected))
       optionSelected.remove();

@@ -2091,14 +2091,23 @@ $(document).ready(function(){
   });
 
   /* ensure activate the background page */
+
+  $("#program").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
+  });
+  $("#background").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/script/background.html')});
+  });
+  // ensure activate the background page
+
   chrome.runtime.sendMessage({ type: 'popup' },
     () => bkg().make_switch_panel($, '#switch_panel'));
 
   chrome.storage.sync.get((config)=>{
     header_setup(config);
     music_bar_setup(config);
-    sticker_setup(config);
     friend_bio_setup(config);
+    sticker_setup(config);
     chrome.storage.local.get((config)=>{
      local_setup(config)
      module_setup(config);

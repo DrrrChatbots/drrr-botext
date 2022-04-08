@@ -35,13 +35,15 @@ Kiwi browser can also run the extenson, but for some unknown bugs, I make a cust
 
 > Click the extension icon to open the popup window.
 
-![](https://i.imgur.com/wGUTTot.png)
+![](https://i.imgur.com/8PhiP0a.png)
 
 :::success
 **Button**
 <i class="glyphicon glyphicon-question-sign"></i> Go to this manual page
 <i class="fa fa-youtube-play"></i> YouTube Tutorial
+<i class="fa fa-cloud"></i>/<i class="fa fa-hdd-o"></i> Select storage type
 <i class="glyphicon glyphicon-console"></i> Script Console
+<i class="fa fa-plug"></i> Go to plugin settings
 <i class="glyphicon glyphicon-cog"></i> Go to background settings
 :::
 
@@ -222,10 +224,11 @@ Search result：剛好遇見你
 <i class="glyphicon glyphicon-plus"></i> Add to playlist <i class="glyphicon glyphicon-play"></i> Play now <i class="glyphicon glyphicon-heart"></i> Add to favorites
 :::
 
-### Module
+### Room
 
 :::success
-![](https://i.imgur.com/U6zfVSy.png)
+![](https://i.imgur.com/mqkGRJK.png)
+
 
 #### ChatMessage Chinese simplified-traditional converter
 - Ｘ no convert
@@ -241,12 +244,50 @@ Search result：剛好遇見你
 
 ---
 
-<i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA group
+<i class="fa fa-refresh"></i> reset default script
+<i class="fa fa-minus"></i> delete script
+<i class="fa fa-plus"></i> add script
+<i class="fa fa-pencil"></i> edit script
+<i class="fa fa-toggle-off"></i> on/off script
+:::
+
+### Plugin
+
+:::success
+![](https://i.imgur.com/yVbU8l2.png)
+
+
+
+#### Button
+
+<i id="local-switch" class="glyphicon glyphicon-cloud-upload"></i> Upload image
+
+<i id="local-switch" class="fa fa-toggle-off"></i> Local module switch
+<i id="local-setting" class="fa fa-plug"></i> Goto plugin setting
 <i class="glyphicon glyphicon-qrcode"></i> Tripcode explorer
+
+---
+
+<i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA group
+
 
 <i class="fa fa-paw" aria-hidden="true"></i> Live2d(defualt: tororo)
 <i class="glyphicon glyphicon-resize-full"></i> Adjust the showcase size
 <i class="glyphicon glyphicon-link"></i> Change to another figure（input the [link](https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6)）
+
+---
+
+
+#### Local message module
+- Hashtag ~~Chou praising tool~~ inspired by [@Dust](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
+  Record message contains `#`, if your message start with `#` + tag, the extension will send recorded message randomly.
+  ![](https://i.imgur.com/ayuUGAL.png)
+
+- CahtLog
+  Record chatroom message
+
+---
+
 
 ####  Live2D links
 
@@ -380,37 +421,6 @@ You can stuff different ID to switch different lounge
 :::
 
 
-### Plugin
-
-:::success
-![](https://i.imgur.com/AZVe2fm.png)
-
-
-#### Button
-
-<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> Goto local setting
-<i id="local-switch" class="fa fa-toggle-off"></i> Local module switch
-
----
-
-<i class="fa fa-refresh"></i> reset default script
-<i class="fa fa-minus"></i> delete script
-<i class="fa fa-plus"></i> add script
-<i class="fa fa-pencil"></i> edit script
-<i class="fa fa-toggle-off"></i> on/off script
-
-#### Local message module
-- Hashtag ~~Chou praising tool~~ inspired by [@Dust](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
-  Record message contains `#`, if your message start with `#` + tag, the extension will send recorded message randomly.
-  ![](https://i.imgur.com/ayuUGAL.png)
-
-- CahtLog
-  Record chatroom message
-  
-- EventAction
-  Local EventAction
-:::
-
 
 ### Sticker
 
@@ -436,11 +446,13 @@ The memory quote for local setting:5,242,880 bytes
 Sync setting (including your cookie) is syncronized.
 The settings would be syncronized, so you can use same Google account to login different PCs to share the sync settings.
 
-### Sync
+### Sync <i class="fa fa-cloud"></i> / Local <i class="fa fa-hdd-o"></i>
 
 :::success
-![](https://i.imgur.com/tVYNlnt.png)
+![](https://i.imgur.com/hEozM1t.png)
 
+
+![](https://i.imgur.com/rE3MU5e.png)
 
 #### Button
 
@@ -904,10 +916,12 @@ Function ["parameter", ...] Description:
 you can refer the `action/wb.js` in bs-pkgs(lambda script packages).
 :::
 
-### Local
+### Plugin <i class="fa fa-plug"></i>
 
 :::success
-![](https://i.imgur.com/ERTb6xS.png)
+![](https://i.imgur.com/P1gv1su.png)
+
+
 
 #### Button
 
@@ -923,13 +937,14 @@ choose file：import settings
 You can edit them according the format.
 :::
 
-### Script Console
+### Script Console <i class="fa fa-terminal"></i>
 
 :::success
 
 Yes, you are right, the extension have a built-in langauge! ٩(๑>◡<๑)۶ 
 
-![](https://i.imgur.com/bmRYjbn.png)
+![](https://i.imgur.com/AMWa4d2.png)
+
 
 #### Side bar button
 

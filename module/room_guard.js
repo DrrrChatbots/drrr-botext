@@ -72,10 +72,10 @@ var del_enemy_btn = (args) =>
 
 function bind_del_enemy(args){
   $(`.del-enemy[data="${args.data}"]`).click(function(){
-    chrome.storage.sync.get([ENEMY], (config) =>{
+    chrome.storage.local.get([ENEMY], (config) =>{
       var enemy = config[ENEMY]
       enemy.splice(enemy.indexOf($(this).attr('data')), 1);
-      chrome.storage.sync.set({ [ENEMY]: enemy });
+      chrome.storage.local.set({ [ENEMY]: enemy });
       show_enemy_list(config);
     });
   });
@@ -89,17 +89,17 @@ export const ui_event = (config) => {
   var ktime = config['#rgktime'] || 120000;
   $('#rgmode').val(mode);
   $('#rgmode').on('change', function() {
-    chrome.storage.sync.set({'#rgmode': this.value});
+    chrome.storage.local.set({'#rgmode': this.value});
     mode = this.value;
   });
   $('#rgkmode').val(kmode);
   $('#rgkmode').on('change', function() {
-    chrome.storage.sync.set({'#rgkmode': this.value});
+    chrome.storage.local.set({'#rgkmode': this.value});
     kmode = this.value;
   });
   $('#rgktime').val(ktime);
   $('#rgktime').on('change', function() {
-    chrome.storage.sync.set({'#rgktime': this.value});
+    chrome.storage.local.set({'#rgktime': this.value});
     ktime = this.value;
   });
 
@@ -129,7 +129,7 @@ export const event_action = (req, config) => {
 
   if(!req.host){
     if(observe.length || enemy.length)
-      chrome.storage.sync.set({ [ENEMY]: [], [OBSERVE]: [] });
+      chrome.storage.local.set({ [ENEMY]: [], [OBSERVE]: [] });
     return;
   }
 
@@ -142,7 +142,7 @@ export const event_action = (req, config) => {
       sendTab({fn: set_clock, args: {ms: Number(ktime), from: ROOM_GUARD, user: req.user}});
       if(!observe.includes(req.user)){
         observe.push(req.user);
-        chrome.storage.sync.set({ [OBSERVE]: observe });
+        chrome.storage.local.set({ [OBSERVE]: observe });
         chrome.runtime.sendMessage({show_observe_list: true, config: config});
       }
     }
@@ -151,7 +151,7 @@ export const event_action = (req, config) => {
     if(observe.includes(req.user)){
       observe.splice(observe.indexOf(req.user), 1);
       enemy.push(req.user);
-      chrome.storage.sync.set({
+      chrome.storage.local.set({
         [OBSERVE]: observe,
         [ENEMY]: enemy
       });
@@ -182,13 +182,13 @@ export const event_action = (req, config) => {
   else if([event_kick, event_ban].includes(type)){
     if(observe.includes(req.user)){
       observe.splice(observe.indexOf(req.user), 1);
-      chrome.storage.sync.set({ [OBSERVE]: observe });
+      chrome.storage.local.set({ [OBSERVE]: observe });
     }
   }
   else{
     if(observe && observe.includes(req.user)){
       observe.splice(observe.indexOf(req.user), 1);
-      chrome.storage.sync.set({ [OBSERVE]: observe });
+      chrome.storage.local.set({ [OBSERVE]: observe });
       chrome.runtime.sendMessage({show_observe_list: true, config: config});
     }
   }

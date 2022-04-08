@@ -8,8 +8,10 @@ export const event_action = (req, config) => {
     var pure = req.text.replace(reg, '').trim();
     if(!pure.length) return;
     while((result = reg.exec(req.text)) !== null) {
-      chrome.storage.local.get(MODULE_SETTING, ((r)=>
-        (config)=>{
+      // chrome.storage.local.get(MODULE_SETTING,
+      ((r)=>
+        // (config)=>
+        {
           if(!config[MODULE_SETTING])
             config[MODULE_SETTING] = {};
           var list = config[MODULE_SETTING][r] || [];
@@ -21,7 +23,9 @@ export const event_action = (req, config) => {
             if(chrome.runtime.lastError)
               alert("HashTag is full!");
           });
-        })(result));
+        }
+      )(result)
+      // );
     }
   }
 };

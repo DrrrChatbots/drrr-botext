@@ -88,17 +88,17 @@ function gnset(digits, callback){
   if(!digits){
     do{ digits = String(Math.floor(1000 + Math.random() * 9000));
     } while(!valid(digits));
-    chrome.storage.sync.set({ [GAME_GUESS_NUMBER]: digits });
+    chrome.storage.local.set({ [GAME_GUESS_NUMBER]: digits });
     callback && callback(digits, "random number set, game start");
     return "random number set, game start";
   }
   else if(valid(digits)){
-    chrome.storage.sync.set({ [GAME_GUESS_NUMBER]: digits });
+    chrome.storage.local.set({ [GAME_GUESS_NUMBER]: digits });
     callback && callback(digits, "number set, game start")
     return "number set, game start";
   }
   else{
-    chrome.storage.sync.remove(GAME_GUESS_NUMBER);
+    chrome.storage.local.remove(GAME_GUESS_NUMBER);
     callback && callback('', `give me 4 different digits, you give me ${digits}`)
     return `give me 4 digits, you give me ${digits}`;
   }

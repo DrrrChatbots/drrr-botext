@@ -11,7 +11,7 @@
     <script src="/lib/plugins.js" type="text/javascript" charset="utf-8"></script>
     <script src="/lib/api.js" type="text/javascript" charset="utf-8"></script>
     <script src="/module/index.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/setting/local/function.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/setting/plugin/function.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap-switch.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -31,6 +31,11 @@
                                                                     title="GoTo Video Guide">
               <i class="fa fa-youtube-play" aria-hidden="true"></i>
             </button>
+            <button style="width: 38.99px;" id="storage-toggle" class="btn btn-default manual panel-heading-button" type="submit"
+                                                                    title="Switch Setting Storage Type">
+              <i id="storage-type" class="fa fa-cloud" aria-hidden="true"></i>
+              <!-- <i class="fa fa-hdd-o" aria-hidden="true"></i> -->
+            </button>
           </div>
 
           <p style="text-align:center;margin-bottom: 0px; display: table-cell; vertical-align: middle;"> durarara chatbot control panel </p>
@@ -48,8 +53,12 @@
               <i class="glyphicon glyphicon-console"></i>
               <!-- <i class="fa fa-terminal" aria-hidden="true"></i> -->
             </button>
+            <button id="plug" class="btn btn-default cog panel-heading-button" type="submit"
+                                                         title="GoTo Plugin">
+              <i class="fa fa-plug"></i>
+            </button>
             <button id="cog" class="btn btn-default cog panel-heading-button" type="submit"
-                                                         title="GoTo Sync Setting">
+                                                         title="GoTo Setting">
               <i class="glyphicon glyphicon-cog"></i>
             </button>
           </div>
@@ -65,8 +74,8 @@
           <li id="tab1" class="pop-tab"><a data-toggle="tab" href="#tab1-cont">Bio</a></li>
           <li id="tab2" class="pop-tab"><a data-toggle="tab" href="#tab2-cont">Friends</a></li>
           <li id="tab0" class="pop-tab"><a data-toggle="tab" href="#tab0-cont">Music</a></li>
-          <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">Mod</a></li>
-          <li id="tab5" class="pop-tab"><a data-toggle="tab" href="#tab5-cont">Plug</a></li>
+          <li id="tab5" class="pop-tab"><a data-toggle="tab" href="#tab5-cont">Room</a></li>
+          <li id="tab3" class="pop-tab"><a data-toggle="tab" href="#tab3-cont">Plug</a></li>
           <li id="tab4" class="pop-tab"><a data-toggle="tab" href="#tab4-cont">Sticker</a></li>
         </ul>
 
@@ -174,61 +183,43 @@
 
           <div id="tab5-cont" class="tab-pane fade">
             <br>
+
             <div class="input-group">
 
-              <div class="input-group-btn">
-                <form>
-                  <!--
-                  <input type="file" id="img_file_input"
-                         style="display:none;" name="file-main">
-                  -->
-                  <button id="upload_img" class="btn btn-default" type="button"
-                          title='upload a image'>
-                    <!-- <label style="margin-bottom:0px;" for="file-main"> -->
-                      <i class="glyphicon glyphicon-cloud-upload"></i>
-                    <!-- </label> -->
-                  </button>
-                </form>
-              </div>
-
-              <select id="local-select"
-                      class="form-control"
-                      data-target="#local_list"
-                      style="text-align:center; text-align-last:center;"
-                      title="select local plugin">
+              <select id="zh_conv" name="conv_mode" class="form-control" style="text-align:center;padding-left: 4px;padding-right: 0px;padding-top: 4px;width: 41px;" title="traditional simplified chinese converter">
+                <option value="Ｘ">Ｘ</option>
+                <option value="简">简</option>
+                <option value="繁">繁</option>
               </select>
 
               <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
+              <input id="name-color-input" type="text" class="form-control" placeholder="name color">
               <div class="input-group-btn">
-                <button id="local-setting-btn" class="btn btn-default" type="button" title='GoTo Local Setting'>
-                  <i id="local-setting" class="glyphicon glyphicon-bookmark"></i>
+                <button id="name-color-set" class="btn btn-default" type="button" title="set the color code">
+                  <i class="glyphicon glyphicon glyphicon-text-color"></i>
                 </button>
-                <button id="local-switch-btn" class="btn btn-default" title="Enable/Disable">
-                  <i id="local-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
+              </div>
+              <input id="name-bg-color-input" type="text" class="form-control" placeholder="name bg color">
+              <div class="input-group-btn">
+                <button id="name-bg-color-set" class="btn btn-default" type="button" title="set the color code">
+                  <i class="glyphicon glyphicon glyphicon-text-background"></i>
                 </button>
-                <!--
-                  <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
-                  <i class="glyphicon glyphicon-cog"></i>
-                  </button>
-                -->
+              </div>
+            </div>
+
+            <div class="input-group">
+              <input id="bg-url-input" type="text" class="form-control" placeholder="background URL here">
+              <div class="input-group-btn">
+                <button id="bg-url-set" class="btn btn-default" type="button" title="set the URL">
+                  <i class="glyphicon glyphicon glyphicon-picture"></i>
+                </button>
               </div>
             </div>
 
             <!--
               <img id="myImg" src="#" alt="your image" height=200 width=100>
             -->
-
-            <div id="local_list" class="collapse">
-              <div class="row" style="height:100%">
-                <div class="col-md-4">
-                  <div class="list-group" style="margin-bottom: 0px;">
-                    <hr>
-                    <div id='local_list_container'></div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <div class="input-group">
               <div class="input-group-btn">
@@ -434,46 +425,51 @@
 
             <div class="input-group">
 
-              <select id="zh_conv" name="conv_mode" class="form-control" style="text-align:center;padding-left: 4px;padding-right: 0px;padding-top: 4px;width: 41px;" title="traditional simplified chinese converter">
-                <option value="Ｘ">Ｘ</option>
-                <option value="简">简</option>
-                <option value="繁">繁</option>
+              <div class="input-group-btn">
+                  <!--
+                  <input type="file" id="img_file_input"
+                         style="display:none;" name="file-main">
+                  -->
+                <button id="upload_img" class="btn btn-default" type="button"
+                        title='upload a image'>
+                  <!-- <label style="margin-bottom:0px;" for="file-main"> -->
+                    <i class="glyphicon glyphicon-cloud-upload"></i>
+                  <!-- </label> -->
+                </button>
+              </div>
+
+              <!-- data-target="#local_list" -->
+              <select id="local-select"
+                      class="form-control"
+                      style="text-align:center; text-align-last:center;"
+                      title="select local plugin">
               </select>
 
               <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
 
-              <input id="name-color-input" type="text" class="form-control" placeholder="name color">
               <div class="input-group-btn">
-                <button id="name-color-set" class="btn btn-default" type="button" title="set the color code">
-                  <i class="glyphicon glyphicon glyphicon-text-color"></i>
+                <button id="local-switch-btn" style="width: 38.99px;" class="btn btn-default" title="Enable/Disable">
+                  <i id="local-switch" class="fa fa-toggle-off" aria-hidden="true"></i>
                 </button>
-              </div>
-              <input id="name-bg-color-input" type="text" class="form-control" placeholder="name bg color">
-              <div class="input-group-btn">
-                <button id="name-bg-color-set" class="btn btn-default" type="button" title="set the color code">
-                  <i class="glyphicon glyphicon glyphicon-text-background"></i>
+                <button id="local-setting-btn" class="btn btn-default" type="button" title='GoTo Plugin Setting'>
+                  <i id="local-setting" class="fa fa-plug"></i>
                 </button>
-              </div>
-            </div>
-
-            <div class="input-group">
-              <input id="bg-url-input" type="text" class="form-control" placeholder="background URL here">
-              <div class="input-group-btn">
-                <button id="bg-url-set" class="btn btn-default" type="button" title="set the URL">
-                  <i class="glyphicon glyphicon glyphicon-picture"></i>
+                <button id="tripgen" class="btn btn-default" title="tripcode generator">
+                  <i class="glyphicon glyphicon-qrcode"></i>
                 </button>
+                <!--
+                  <button id="game-cog" class="btn btn-default" type="button" title='nothing'>
+                  <i class="glyphicon glyphicon-cog"></i>
+                  </button>
+                -->
               </div>
             </div>
-
 
             <div class="input-group">
 
               <div class="input-group-btn">
                 <button id="goto-dc" class="btn btn-default" type="button" title='GoTo our Discord Server'>
                   <i id="game-tent" class="glyphicon glyphicon-tent"></i>
-                </button>
-                <button id="tripgen" class="btn btn-default" title="tripcode generator">
-                  <i class="glyphicon glyphicon-qrcode"></i>
                 </button>
               </div>
 
@@ -518,6 +514,18 @@
                 </div>
               </div>
             </div>
+            <!--
+            <div id="local_list" class="collapse">
+              <div class="row" style="height:100%">
+                <div class="col-md-4">
+                  <div class="list-group" style="margin-bottom: 0px;">
+                    <hr>
+                    <div id='local_list_container'></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            -->
           </div>
 
           <div id="tab4-cont" class="tab-pane fade">

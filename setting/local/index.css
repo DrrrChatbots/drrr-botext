@@ -1,0 +1,11 @@
+.setting-input {
+    width: 100%;
+}
+
+.test-input {
+    width: 200px !important;
+}
+
+textarea {
+  font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}

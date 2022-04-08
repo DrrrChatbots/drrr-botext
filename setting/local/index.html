@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/setting/tripcode.css">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
-    <script src="./function.js" charset="utf-8"></script>
     <script src="./index.js" charset="utf-8"></script>
   </head>
   <body>
@@ -18,9 +18,16 @@
           <a target="_blank" rel="noopener noreferrer" class="navbar-brand" href="https://github.com/nobodyzxc/drrr-botext">DRRR ChatBot Extension</a>
         </div>
         <ul class="nav navbar-nav">
-          <li><a href="../sync/index.html">Sync</a></li>
-          <li class="active"><a href="#">Local</a></li>
-          <li><a href="../script/index.html">Script</a></li>
+          <li>
+            <a href="../sync/index.html">Sync <i class="fa fa-cloud" aria-hidden="true"></i></a>
+          </li>
+          <li class="active">
+            <a href="#">Local <i class="fa fa-hdd-o" aria-hidden="true"></i></a>
+          </li>
+          <li>
+            <a href="../plugin/index.html">Plugin <i class="fa fa-plug" aria-hidden="true"></i></a>
+          </li>
+          <li><a href="../script/index.html">Script <i class="fa fa-terminal" aria-hidden="true"></i></a></li>
         </ul>
       </div>
     </nav>
@@ -31,6 +38,39 @@
       <div id="nav_pills"></div>
       <div id="tab_conts"></div>
 
+      <p> RegExp: use <code>\\</code> to escape <code>\</code> ex:<code>\\d</code> to match digit</p>
+
+      <hr style="clear:both;"/>
+
+      <h3 style="float:left;margin-top: 0px;margin-right: 20px;margin-bottom: 15px;">Quick Regex Tester</h3>
+      <form style="float:left;" class="form-inline">
+
+        <div id="test-string-status" class="form-group has-success has-feedback">
+          <label for="inputSuccess2">"</label>
+          <input type="text" class="form-control test-input" id="test-string">
+          <span id="test-string-icon" class="glyphicon glyphicon-ok form-control-feedback"></span>
+        </div>
+
+        <div id="test-regex-status" class="form-group has-success has-feedback">
+          <label for="focusedInput">".match(new RegExp("</label>
+          <input type="text" class="form-control test-input" id="test-regex">
+          <span id="test-regex-icon" class="glyphicon glyphicon-ok form-control-feedback"></span>
+        </div>
+        <div class="form-group has-success has-feedback">
+          <label for="focusedInput">")</label>
+        </div>
+
+      </form>
+      <hr style="clear:both;"/>
+      <h3 style="float:left;margin-top: 0px;margin-right: 20px;margin-bottom: 15px;">Music Delay in Album Mode</h3>
+      <form style="float:left;" class="form-inline">
+        <div class="form-group has-success has-feedback">
+          <input type="text" class="test-input form-control" id="music_delay" style="width: 46px; padding-right: 12px;">
+          <!--<input type="number" class="test-input form-control" min="0" max="120" id="music_delay" style="width: 70px; padding-right: 12px;">-->
+          <label for="inputSuccess2"> seconds</label>
+        </div>
+      </form>
+      <hr style="clear:both;"/>
     </div>
   </body>
 </html>

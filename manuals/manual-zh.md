@@ -35,13 +35,15 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 
 > 點選插件圖示，開啟彈出式視窗。
 
-![](https://i.imgur.com/wGUTTot.png)
+![](https://i.imgur.com/8PhiP0a.png)
 
 :::success
 **功能鍵**
 <i class="glyphicon glyphicon-question-sign"></i> 前往本說明頁面
 <i class="fa fa-youtube-play"></i> YouTube 教學
+<i class="fa fa-cloud"></i>/<i class="fa fa-hdd-o"></i> 選擇設定位置
 <i class="glyphicon glyphicon-console"></i> 浪語開發界面
+<i class="fa fa-plug"></i> 前往外掛設定
 <i class="glyphicon glyphicon-cog"></i> 前往後台設定
 :::
 
@@ -229,10 +231,10 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 <i class="glyphicon glyphicon-plus"></i> 加入待播 <i class="glyphicon glyphicon-play"></i> 立即播放 <i class="glyphicon glyphicon-heart"></i> 收藏樂曲
 :::
 
-### Module
+### Room
 
 :::success
-![](https://i.imgur.com/U6zfVSy.png)
+![](https://i.imgur.com/mqkGRJK.png)
 
 #### 聊天訊息簡繁互轉
 - Ｘ 不轉換
@@ -248,12 +250,46 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
 
 ---
 
-<i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA 群
+<i class="fa fa-refresh"></i> 重置預設腳本
+<i class="fa fa-minus"></i> 刪除腳本
+<i class="fa fa-plus"></i> 新增腳本
+<i class="fa fa-pencil"></i> 編輯腳本
+<i class="fa fa-toggle-off"></i> 腳本開關
+
+:::
+
+### Plugin
+:::success
+![](https://i.imgur.com/yVbU8l2.png)
+
+#### 功能鍵
+
+<i id="local-switch" class="glyphicon glyphicon-cloud-upload"></i> 上傳圖片
+
+<i id="local-switch" class="fa fa-toggle-off"></i> 本地模組開關
+<i id="local-setting" class="fa fa-plug"></i> 前往外掛設定
 <i class="glyphicon glyphicon-qrcode"></i> tripcode 探索器
+
+---
+  
+<i id="game-tent" class="glyphicon glyphicon-tent"></i> Discord QA 群
 
 <i class="fa fa-paw" aria-hidden="true"></i> 召喚寵物（預設白貓）
 <i class="glyphicon glyphicon-resize-full"></i> 調整寵物邊框大小
 <i class="glyphicon glyphicon-link"></i> 更換寵物（輸入[鏈結](https://drrr.wiki/%E6%B5%AA%E6%89%93%E8%81%8A%E5%A4%A9%E6%8F%92%E4%BB%B6)）
+
+
+---
+
+
+#### 本地端訊息模組
+- Hashtag ~~小周讚美功能~~ inspired by [@塵塵](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
+  紀錄有 `#` 的訊息，在訊息欄以 `#` + tag 將會隨機選取紀錄過的訊息送出。
+  ![](https://i.imgur.com/ayuUGAL.png)
+
+- CahtLog
+  紀錄聊天室訊息
+  
 
 #### 目前已知的 Live2D 鏈結
 
@@ -389,35 +425,6 @@ B：數字正確但位置錯誤
 4. <i class="icon icon-list"></i> 點擊觀看分享
 :::
 
-### Plugin
-:::success
-![](https://i.imgur.com/AZVe2fm.png)
-
-#### 功能鍵
-
-<i id="local-setting" class="glyphicon glyphicon-bookmark"></i> 前往本地設定
-<i id="local-switch" class="fa fa-toggle-off"></i> 本地模組開關
-
----
-
-<i class="fa fa-refresh"></i> 重置預設腳本
-<i class="fa fa-minus"></i> 刪除腳本
-<i class="fa fa-plus"></i> 新增腳本
-<i class="fa fa-pencil"></i> 編輯腳本
-<i class="fa fa-toggle-off"></i> 腳本開關
-
-#### 本地端訊息模組
-- Hashtag ~~小周讚美功能~~ inspired by [@塵塵](https://drrr.wiki/index.php?title=@%E8%88%87%E5%85%89%E5%90%8C%E5%A1%B5&redirect=no)
-  紀錄有 `#` 的訊息，在訊息欄以 `#` + tag 將會隨機選取紀錄過的訊息送出。
-  ![](https://i.imgur.com/ayuUGAL.png)
-
-- CahtLog
-  紀錄聊天室訊息
-  
-- EventAction
-  本地 EventAction
-:::
-
 
 
 ### Sticker
@@ -444,10 +451,12 @@ B：數字正確但位置錯誤
 同步的設定（包括你的 cookie）會同步，
 所以可以同一個 Google 帳號在不同電腦之間共享同步設定。
 
-### Sync 同步設定
+### Sync <i class="fa fa-cloud"></i> 同步設定 / Local <i class="fa fa-hdd-o"></i> 本地設定 
 
 :::success
-![](https://i.imgur.com/tVYNlnt.png)
+![](https://i.imgur.com/hEozM1t.png)
+
+![](https://i.imgur.com/rE3MU5e.png)
 
 #### 功能鍵
 
@@ -914,10 +923,10 @@ $[-]
 > 浪語腳本綁定可以參考 bs-pkgs （浪語套件包）的 `action/wb.js`
 :::
 
-### Local 本地設定
+### Plugin <i class="fa fa-plug"></i> 外掛設定
 
 :::success
-![](https://i.imgur.com/ERTb6xS.png)
+![](https://i.imgur.com/P1gv1su.png)
 
 #### 功能鍵
 
@@ -933,13 +942,13 @@ $[-]
 你可以照著格式編輯他。
 :::
 
-### Script 浪語終端
+### Script 浪語終端 <i class="fa fa-terminal"></i>
 
 :::success
 
 對，你沒看錯，這插件內建了一個小小的程式語言。 ٩(๑>◡<๑)۶ 
 
-![](https://i.imgur.com/bmRYjbn.png)
+![](https://i.imgur.com/AMWa4d2.png)
 
 #### 側欄按鍵
 

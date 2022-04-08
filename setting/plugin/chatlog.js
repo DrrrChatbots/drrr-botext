@@ -21,7 +21,7 @@ export const event_action = (req, config) => {
   const MODULE_SETTING = sid(MODULE_NAME);
   if(ts.indexOf(req.type) >= 0){
     //alert(log2mkd(event_msg, req));
-    chrome.storage.local.get(MODULE_SETTING, (config)=>{
+    // chrome.storage.local.get(MODULE_SETTING, (config)=>{
       if(!config[MODULE_SETTING])
         config[MODULE_SETTING] = [];
       config[MODULE_SETTING].push([req.type, req.user, req.text, req.url]);
@@ -31,6 +31,6 @@ export const event_action = (req, config) => {
         if(chrome.runtime.lastError)
           alert("ChatLog is full!");
       });
-    });
+    // });
   }
 };

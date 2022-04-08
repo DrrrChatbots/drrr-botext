@@ -59,10 +59,10 @@ var goto_hidden_btn = (args) =>
 function bind_del_enemy(args){
   $(`.goto-hidden[data="${args.data}"]`).click(function(){
     alert("gogogo");
-    //chrome.storage.sync.get([ENEMY], (config) =>{
+    //chrome.storage.local.get([ENEMY], (config) =>{
     //  var enemy = config[ENEMY]
     //  enemy.splice(enemy.indexOf($(this).attr('data')), 1);
-    //  chrome.storage.sync.set({ [ENEMY]: enemy });
+    //  chrome.storage.local.set({ [ENEMY]: enemy });
     //  show_hidden_list(config);
     //});
   });
@@ -116,7 +116,7 @@ export const event_action = (req, config) => {
   //  else{
   //    if(!observe.includes(req.user)){
   //      observe.push(req.user);
-  //      chrome.storage.sync.set({ [OBSERVE]: observe });
+  //      chrome.storage.local.set({ [OBSERVE]: observe });
   //      chrome.runtime.sendMessage({show_observe_list: true, config: config});
   //    }
   //  }
@@ -125,7 +125,7 @@ export const event_action = (req, config) => {
   //  if(observe.includes(req.user)){
   //    observe.splice(observe.indexOf(req.user), 1);
   //    enemy.push(req.user);
-  //    chrome.storage.sync.set({
+  //    chrome.storage.local.set({
   //      [OBSERVE]: observe,
   //      [ENEMY]: enemy
   //    });
@@ -135,7 +135,7 @@ export const event_action = (req, config) => {
   //else{
   //  if(observe && observe.includes(req.user)){
   //    observe.splice(observe.indexOf(req.user), 1);
-  //    chrome.storage.sync.set({ [OBSERVE]: observe });
+  //    chrome.storage.local.set({ [OBSERVE]: observe });
   //    chrome.runtime.sendMessage({show_observe_list: true, config: config});
   //  }
   //}

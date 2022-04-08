@@ -63,14 +63,36 @@ function merge_ui(uis, config){
 }
 
 var label_ui = ui_object(LABEL,
-  (attrs, content, uis, config) => `<label ${attrs}">${content}${merge_ui(uis, config)}</label>`,
+  (attrs, content, uis, config) =>
+  `<label ${attrs}">${content}${merge_ui(uis, config)}</label>`,
   {
     "class": "ui-unit"
   });
 
-var switch_change = (callback) =>
+var sync_switch_change = (callback) =>
   function(event, state){
     chrome.storage.sync.set(
+      { [this.id]: state },
+      () => callback && callback(state, event)
+    );
+  }
+
+var storageType = event =>
+  event.data.$("#storage-type")
+       .hasClass('fa-hdd-o')
+       ? "local" : "sync";
+
+var typedStorage = event => {
+  if(!event) return chrome.storage.sync;
+  let type = event.data.$("#storage-type")
+                       .hasClass('fa-hdd-o')
+                       ? "local" : "sync";
+  return chrome.storage[type];
+}
+
+var switch_change = (callback) =>
+  function(event, state){
+    typedStorage(event).set(
       { [this.id]: state },
       () => callback && callback(state, event)
     );
@@ -210,13 +232,14 @@ function assocTrip(key, res, comp_name, trip){
 }
 
 function noteEmptySetting(state, event, switch_id, func_name, callback){
-  if(state) chrome.storage.sync.get((config) => {
+  let type = storageType(event);
+  if(state) typedStorage(event).get((config) => {
     var the_sid = sid(func_name, config);
     if(!config[the_sid]){
       var setting_name = unsid(the_sid);
       event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
       chrome.notifications.create(
-        chrome.extension.getURL('setting/sync/index.html')
+        chrome.extension.getURL(`setting/${type}/index.html`)
         + `#menu${Object.keys(settings).indexOf(setting_name)}`,
         {
           type: "basic",
@@ -225,7 +248,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
           message: `To enable ${setting_name.toLowerCase()}, make some rules`
         });
 
-      chrome.tabs.create({url: chrome.extension.getURL('setting/sync/index.html')
+      chrome.tabs.create({url: chrome.extension.getURL(`setting/${type}/index.html`)
         + `#menu${Object.keys(settings).indexOf(setting_name)}`});
 
       chrome.notifications.onClicked.addListener(function(notificationId) {
@@ -234,7 +257,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
           chrome.tabs.create({url: notificationId});
         chrome.notifications.clear(notificationId);
       });
-      chrome.storage.sync.set({
+      typedStorage(event).set({
         [switch_id]: false
       });
     }
@@ -244,7 +267,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
 }
 
 function noteEmptyPrompt(state, event, switch_id, func_name, question, validate, callback){
-  if(state) chrome.storage.sync.get((config) => {
+  if(state) typedStorage().get((config) => {
     if(!config[func_name]){
       var answer = '';
       while(answer !== null && !answer){
@@ -252,7 +275,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
       }
       if(!validate){
         alert("Please Give The Validator");
-        chrome.storage.sync.set({
+        typedStorage().set({
           [switch_id]: false
         });
       }
@@ -260,7 +283,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
         validate(answer, (v, code, desc)=>{
           if(v){
             event.data.$(`#${switch_id}`).bootstrapSwitch('state', true, true);
-            return chrome.storage.sync.set({
+            return typedStorage().set({
               [func_name]: answer
             }, callback);
           }
@@ -268,7 +291,7 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
             if(answer === null);
             else if(code == 88) alert(desc);
             else alert(`Invalid Value ${code}: ${desc}`);
-            chrome.storage.sync.set({
+            typedStorage().set({
               [switch_id]: false
             });
           }
@@ -281,6 +304,45 @@ function noteEmptyPrompt(state, event, switch_id, func_name, question, validate,
   event.data.$(`#${switch_id}`).bootstrapSwitch('state', false, true);
 }
 
+var BanListEvents = {
+  [event_join]: {
+    precond: (config, uis) => config[SWITCH_BANLIST],
+    onevent: (req, config, uis) => {
+      var banm = {
+        [action_kick]: kick_member,
+        [action_ban]: ban_member,
+        [action_banrpt]: ban_report_member
+      }
+      var ban_way = banm[config[BANTYPE] || action_kick];
+
+      trip = undefined;
+      for(e of req.info.room.users){
+        if(e.name == req.user && 'tripcode' in e){
+          trip = e.tripcode;
+          break;
+        }
+      }
+      if(config[BANLIST] === BLACKLIST){
+        if(assocTrip(req.user, config, BLACKLIST, trip)){
+          console.log("kick");
+          sendTab({
+            fn: ban_way,
+            args: { user: req.user }
+          })
+        }
+      }
+      else if(config[BANLIST] === WHITELIST){
+        if(!assocTrip(req.user, config, WHITELIST, trip)){
+          sendTab({
+            fn: ban_way,
+            args: { user: req.user }
+          })
+        }
+      }
+    }
+  }
+};
+
 var BanListH = new Handler("banlist",
   [
     new pack_ui({}, '', [
@@ -290,12 +352,12 @@ var BanListH = new Handler("banlist",
       }, '', [], {id: SWITCH_BANLIST}),
       new button_ui({
         'click': function(event, state){
-          chrome.storage.sync.get((config) => {
+          typedStorage(event).get((config) => {
             var types = [BLACKLIST, WHITELIST];
             var list = config[BANLIST] || BLACKLIST;
             list = types[Math.abs(types.indexOf(list) - 1)];
             event.data.$('#banlist_type').text(list);
-            chrome.storage.sync.set({
+            typedStorage(event).set({
               [BANLIST]: list
             });
             if(config[SWITCH_BANLIST])
@@ -305,59 +367,94 @@ var BanListH = new Handler("banlist",
       }, ((config) => config[BANLIST] || BLACKLIST), [], {id:'banlist_type', style:"width:72px;"}),
       new button_ui({
         'click': function(event, state){
-          chrome.storage.sync.get((config) => {
+          typedStorage(event).get((config) => {
             var types = [action_kick, action_ban, action_banrpt];
             var bt = config[BANTYPE] || action_kick;
             bt = types[(types.indexOf(bt) + 1) % 3];
             event.data.$('#ban_type').text(bt);
-            chrome.storage.sync.set({
+            typedStorage(event).set({
               [BANTYPE]: bt
             });
           });
         }
       }, ((config) => config[BANTYPE] || action_kick), [], {id:'ban_type', style:"width:50px;"}),
-    ], {title: 'kick all the guests in the list (⚙ setting)'})
+    ], {'class': 'setting',
+        title: 'kick all the guests in the list\n(⚙ setting)'})
   ],
-  {
-    [event_join]: {
-      precond: (config, uis) => config[SWITCH_BANLIST],
-      onevent: (req, config, uis) => {
-        var banm = {
-          [action_kick]: kick_member,
-          [action_ban]: ban_member,
-          [action_banrpt]: ban_report_member
-        }
-        var ban_way = banm[config[BANTYPE] || action_kick];
-
-        trip = undefined;
-        for(e of req.info.room.users){
-          if(e.name == req.user && 'tripcode' in e){
-            trip = e.tripcode;
-            break;
-          }
-        }
-        if(config[BANLIST] === BLACKLIST){
-          if(assocTrip(req.user, config, BLACKLIST, trip)){
-            console.log("kick");
-            sendTab({
-              fn: ban_way,
-              args: { user: req.user }
-            })
-          }
-        }
-        else if(config[BANLIST] === WHITELIST){
-          if(!assocTrip(req.user, config, WHITELIST, trip)){
-            sendTab({
-              fn: ban_way,
-              args: { user: req.user }
-            })
-          }
-        }
-      }
-    }
-  }
+  { sync: BanListEvents, local: BanListEvents }
 );
 
+var TimerEvents = {
+  [event_newtab]: {
+    precond: (config, uis) => config[SWITCH_TIMER],
+    onevent: (req, config, uis, sender) => {
+      //check the chrome.alarm.api
+      roomTabs((tabs)=>{
+        if(tabs.length == 1){
+          chrome.tabs.sendMessage(tabs[0].id, {
+            fn: bind_alarms
+          })
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: '/icon.png',
+            title: 'START TIMER',
+            message: 'Timer will be started on this tab'
+          });
+        }
+      })
+    }
+  },
+  [event_logout]: {
+    precond: (config, uis) => config[SWITCH_TIMER],
+    onevent: (req, config, uis, sender) => {
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: '/icon.png',
+        title: 'STOP TIMER (LOGOUT)',
+        message: 'Logout, Timer will be disabled'
+      });
+    }
+  },
+  [event_timer]: {
+    precond: (config, uis) => true,
+    onevent: (req, config, uis, sender) => {
+      argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
+        return actions[req.action].apply(config, args.map(timefmt));
+      });
+    }
+  },
+  [event_exitalarm]: {
+    precond: (config, uis) => config[SWITCH_TIMER],
+    onevent: (req, config, uis, sender) => {
+      roomTabs((tabs)=>{
+        if(tabs.length < 2){
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: '/icon.png',
+            title: 'WILL STOP TIMER (IF LAST TAB CLOSED)',
+            message: 'If you close last tab, timer will be disabled'
+          });
+        }
+        else{
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: '/icon.png',
+            title: 'TRANSFER TIMER',
+            message: 'Active tab closed, Timer will be restart on other tab'
+          });
+          for(tab of tabs){
+            if(tab.id !== sender.tab.id){
+              chrome.tabs.sendMessage(tab.id, {
+                fn: bind_alarms
+              })
+              break;
+            }
+          }
+        }
+      })
+    }
+  },
+};
 
 var TimerH = new Handler("timer",
   [
@@ -393,80 +490,52 @@ var TimerH = new Handler("timer",
         })
       }, '', [], {id: SWITCH_TIMER}),
       new label_ui({}, 'Timer')
-    ], {title: 'send some custom messages periodically (⚙ setting)'})
+    ], {'class': 'setting',
+        title: 'send some custom messages periodically\n(⚙ setting)'})
   ],
-  {
-    [event_newtab]: {
-      precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, config, uis, sender) => {
-        //check the chrome.alarm.api
-        roomTabs((tabs)=>{
-          if(tabs.length == 1){
-            chrome.tabs.sendMessage(tabs[0].id, {
-              fn: bind_alarms
-            })
-            chrome.notifications.create({
-              type: "basic",
-              iconUrl: '/icon.png',
-              title: 'START TIMER',
-              message: 'Timer will be started on this tab'
-            });
-          }
-        })
-      }
-    },
-    [event_logout]: {
-      precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, config, uis, sender) => {
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: '/icon.png',
-          title: 'STOP TIMER (LOGOUT)',
-          message: 'Logout, Timer will be disabled'
-        });
-      }
-    },
-    [event_timer]: {
-      precond: (config, uis) => true,
-      onevent: (req, config, uis, sender) => {
-        argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
-          return actions[req.action].apply(config, args.map(timefmt));
-        });
-      }
-    },
-    [event_exitalarm]: {
-      precond: (config, uis) => config[SWITCH_TIMER],
-      onevent: (req, config, uis, sender) => {
-        roomTabs((tabs)=>{
-          if(tabs.length < 2){
-            chrome.notifications.create({
-              type: "basic",
-              iconUrl: '/icon.png',
-              title: 'WILL STOP TIMER (IF LAST TAB CLOSED)',
-              message: 'If you close last tab, timer will be disabled'
-            });
-          }
-          else{
-            chrome.notifications.create({
-              type: "basic",
-              iconUrl: '/icon.png',
-              title: 'TRANSFER TIMER',
-              message: 'Active tab closed, Timer will be restart on other tab'
-            });
-            for(tab of tabs){
-              if(tab.id !== sender.tab.id){
-                chrome.tabs.sendMessage(tab.id, {
-                  fn: bind_alarms
-                })
-                break;
-              }
-            }
-          }
-        })
-      }
-    },
-  }
+  { sync: TimerEvents, local: TimerEvents }
 );
+
+var BanAbuseEvents = {
+  [event_msg]: {
+    precond: (config, uis) => config[SWITCH_BANABUSE],
+    onevent: (req, config, uis) => {
+      if(assoc(req.text, config, BANABUSE)){
+        console.log("abuse kick");
+        sendTab({
+          fn: kick_member,
+          args: { user: req.user }
+        })
+      }
+    }
+  },
+
+  [event_me]: {
+    precond: (config, uis) => config[SWITCH_BANABUSE],
+    onevent: (req, config, uis) => {
+      if(assoc(req.text, config, BANABUSE)){
+        console.log("abuse kick");
+        sendTab({
+          fn: kick_member,
+          args: { user: req.user }
+        })
+      }
+    }
+  },
+
+  [event_dm]: {
+    precond: (config, uis) => config[SWITCH_BANABUSE],
+    onevent: (req, config, uis) => {
+      if(assoc(req.text, config, BANABUSE)){
+        console.log("abuse kick");
+        sendTab({
+          fn: kick_member,
+          args: { user: req.user }
+        })
+      }
+    }
+  }
+};
 
 var BanAbuseH = new Handler("BanAbuse",
   [
@@ -476,49 +545,54 @@ var BanAbuseH = new Handler("BanAbuse",
           noteEmptySetting(state, event, SWITCH_BANABUSE, BANABUSE))
       }, '', [], {id: SWITCH_BANABUSE}),
       new label_ui({}, 'BanAbuse')
-    ], {title: 'kick member who send some abuse terms in the list (⚙ setting)'})
+    ], {'class': 'setting',
+        title: 'kick member who send some abuse terms in the list\n(⚙ setting)'})
   ],
-  {
-    [event_msg]: {
-      precond: (config, uis) => config[SWITCH_BANABUSE],
-      onevent: (req, config, uis) => {
-        if(assoc(req.text, config, BANABUSE)){
-          console.log("abuse kick");
-          sendTab({
-            fn: kick_member,
-            args: { user: req.user }
-          })
-        }
-      }
-    },
+  { sync: BanAbuseEvents, local: BanAbuseEvents }
+);
 
-    [event_me]: {
-      precond: (config, uis) => config[SWITCH_BANABUSE],
-      onevent: (req, config, uis) => {
-        if(assoc(req.text, config, BANABUSE)){
-          console.log("abuse kick");
-          sendTab({
-            fn: kick_member,
-            args: { user: req.user }
-          })
+var WelcomeEvents = {
+  [event_join]: {
+    precond: (config, uis) => config[SWITCH_WELCOME],
+    onevent: (req, config, uis) => {
+      // avoid welcome banlist user
+      trip = undefined;
+      for(e of req.info.room.users){
+        if(e.name == req.user && 'tripcode' in e){
+          trip = e.tripcode;
+          break;
         }
       }
-    },
-
-    [event_dm]: {
-      precond: (config, uis) => config[SWITCH_BANABUSE],
-      onevent: (req, config, uis) => {
-        if(assoc(req.text, config, BANABUSE)){
-          console.log("abuse kick");
-          sendTab({
-            fn: kick_member,
-            args: { user: req.user }
-          })
+      if(config[SWITCH_BANLIST]){
+        if(config[BANLIST] === BLACKLIST){
+          if(assocTrip(req.user, config, BLACKLIST, trip)){
+            return;
+          }
+        }
+        else if(config[BANLIST] === WHITELIST){
+          if(!assocTrip(req.user, config, WHITELIST, trip)){
+            return;
+          }
         }
       }
+      // welcome user
+      ((wmsg) => {
+        if(wmsg){
+          if(Array.isArray(wmsg))
+            wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
+          sendTab({
+            fn: publish_message,
+            args: {
+              msg: wmsg
+              .replace(/(^|[^\$])\$user/g, `$1${req.user}`)
+              .replace(/(^|[^\$])\$/g, `$1$`)
+            }
+          });
+        }
+      })(assocTrip(req.user, config, WELCOME, trip));
     }
   }
-);
+};
 
 var WelcomeH = new Handler("welcome",
   [
@@ -529,52 +603,19 @@ var WelcomeH = new Handler("welcome",
 
       }, '', [], {id: SWITCH_WELCOME}),
       new label_ui({}, 'Welcome')
-    ], {title: 'send some custom messages to welcome someone (⚙ setting)'})
+    ], {'class': 'setting',
+        title: 'send some custom messages to welcome someone\n(⚙ setting)'})
   ],
-  {
-    [event_join]: {
-      precond: (config, uis) => config[SWITCH_WELCOME],
-      onevent: (req, config, uis) => {
-        // avoid welcome banlist user
-        trip = undefined;
-        for(e of req.info.room.users){
-          if(e.name == req.user && 'tripcode' in e){
-            trip = e.tripcode;
-            break;
-          }
-        }
-        if(config[SWITCH_BANLIST]){
-          if(config[BANLIST] === BLACKLIST){
-            if(assocTrip(req.user, config, BLACKLIST, trip)){
-              return;
-            }
-          }
-          else if(config[BANLIST] === WHITELIST){
-            if(!assocTrip(req.user, config, WHITELIST, trip)){
-              return;
-            }
-          }
-        }
-        // welcome user
-        ((wmsg) => {
-          if(wmsg){
-            if(Array.isArray(wmsg))
-              wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
-            sendTab({
-              fn: publish_message,
-              args: {
-                msg: wmsg
-                .replace(/(^|[^\$])\$user/g, `$1${req.user}`)
-                .replace(/(^|[^\$])\$/g, `$1$`)
-              }
-            });
-          }
-        })(assocTrip(req.user, config, WELCOME, trip));
-        //})(assoc(req.user, config, WELCOME));
-      }
-    }
-  }
+  { sync: WelcomeEvents, local: WelcomeEvents }
 );
+
+var EventActionEvents = event_events.reduce(function(obj, x){
+  obj[x] = {
+    precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
+    onevent: (req, config, uis, sender) => event_action(x, config, req)
+  };
+  return obj;
+}, {});
 
 var EventActionH = new Handler("event action",
   [
@@ -585,15 +626,10 @@ var EventActionH = new Handler("event action",
 
       }, '', [], {id: SWITCH_EVENTACT}),
       new label_ui({}, 'EventAction')
-    ], {title: 'custom your actions on specific events (⚙ setting)'})
+    ], {'class': 'setting',
+        title: 'custom your actions on specific events\n(⚙ setting)'})
   ],
-  event_events.reduce(function(obj, x){
-    obj[x] = {
-      precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-      onevent: (req, config, uis, sender) => event_action(x, config, req)
-    };
-    return obj;
-  }, {})
+  { sync: EventActionEvents, local: EventActionEvents }
 );
 
 function log2note(type, e){
@@ -661,12 +697,11 @@ var NotifH = new Handler("notfi",
   [
     new pack_ui({}, '', [
       new switch_ui({
-        'switchChange.bootstrapSwitch': switch_change()
+        'switchChange.bootstrapSwitch': sync_switch_change()
       }, '', [], {id: SWITCH_NOTIF}),
-      new label_ui({}, 'RoomNotification')
-    ], {title: 'custom your actions on specific events (⚙ setting)'})
-  ], NotiEvents()
-
+      new label_ui({}, 'RoomStatus')
+    ], {title: 'enable popup notification for chatroom'})
+  ], { sync: NotiEvents() }
 );
 
 
@@ -674,7 +709,7 @@ var AlwaysMeH = new Handler("always me",
   [
     new pack_ui({}, '', [
       new switch_ui({
-        'switchChange.bootstrapSwitch': switch_change(
+        'switchChange.bootstrapSwitch': sync_switch_change(
           (state) => {
             chrome.tabs.query({
               url: 'https://drrr.com/room/*'
@@ -691,20 +726,17 @@ var AlwaysMeH = new Handler("always me",
       }, '', [], {id: SWITCH_ME}),
       new label_ui({}, 'Always/me')
     ], {title: 'add /me automatically after sending message'})
-  ],
-  {
-
-  }
+  ], {}
 );
 
 var AutoDMH = new Handler("AutoDM",
   [
     new pack_ui({}, '', [
       new switch_ui({
-        'switchChange.bootstrapSwitch': switch_change((state) =>
+        'switchChange.bootstrapSwitch': sync_switch_change((state) =>
           {
             if(state){
-              chrome.storage.sync.get((config) => {
+              typedStorage().get((config) => {
                 if(config[DM_USERNAME]){
                   bcastTabs({
                     fn: on_dm_member,
@@ -720,23 +752,25 @@ var AutoDMH = new Handler("AutoDM",
     ], {title: 'change to direct message automatically after sending message'})
   ],
   {
-    [event_dmto]: {
-      precond: (config, uis) => config[SWITCH_DM],
-      onevent: (req, config, uis) => {
-        console.log("save the dm username");
-        chrome.storage.sync.set({
-          [DM_USERNAME]: req.user
-        });
-        if(config[DM_USERNAME]){
-          console.log("there");
+    sync: {
+      [event_dmto]: {
+        precond: (config, uis) => config[SWITCH_DM],
+        onevent: (req, config, uis) => {
+          console.log("save the dm username");
+          typedStorage().set({
+            [DM_USERNAME]: req.user
+          });
+          if(config[DM_USERNAME]){
+            console.log("there");
 
-          sendTab({
-            fn: on_dm_member,
-            args: { user: config[DM_USERNAME] }
-          })
+            sendTab({
+              fn: on_dm_member,
+              args: { user: config[DM_USERNAME] }
+            })
+          }
         }
-      }
-    },
+      },
+    }
   }
 );
 
@@ -744,7 +778,7 @@ var RoomKeeperH = new Handler("RoomKeeper",
   [
     new pack_ui({}, '', [
       new switch_ui({
-        'switchChange.bootstrapSwitch': switch_change((state, event) =>
+        'switchChange.bootstrapSwitch': sync_switch_change((state, event) =>
           {
             sendTab({
               fn: keep_room,
@@ -756,17 +790,19 @@ var RoomKeeperH = new Handler("RoomKeeper",
     ], {title: 'keep the room automatically'})
   ],
   {
-    [event_newtab]: {
-      precond: (config, uis) => config[SWITCH_KEEPER],
-      onevent: (req, config, uis) => {
-        roomTabs((tabs)=>{
-          if(tabs.length == 1){
-            sendTab({
-              fn: keep_room,
-              args: { state: true  }
-            });
-          }
-        })
+    sync: {
+      [event_newtab]: {
+        precond: (config, uis) => config[SWITCH_KEEPER],
+        onevent: (req, config, uis) => {
+          roomTabs((tabs)=>{
+            if(tabs.length == 1){
+              sendTab({
+                fn: keep_room,
+                args: { state: true  }
+              });
+            }
+          })
+        }
       }
     }
   }
@@ -816,7 +852,7 @@ function validateTgToken(token, callback){
             if(id === null) return callback(false, 88, 'Cancel the Setting Process');
           }
           if(options[id]){
-            chrome.storage.sync.set({
+            typedStorage().set({
               [TGBOTCHATID]: id
             }, ()=>callback(data.ok, 200, 'done'));
           }
@@ -891,24 +927,30 @@ var TgBotH = new Handler("TgBot",
   [
     new pack_ui({}, '', [
       new switch_ui({
-        'switchChange.bootstrapSwitch': switch_change((state, event) =>
+        'switchChange.bootstrapSwitch': sync_switch_change((state, event) =>
           noteEmptyPrompt(state, event, SWITCH_TGBOT, TGBOTTOKEN, 'please input the telegram bot ID:', validateTgToken))
       }, '', [], {id: SWITCH_TGBOT}),
       new button_ui({
         'click': function(event, state){
-          chrome.storage.sync.get([TGBOTTOKEN], (config)=>{
+          typedStorage().get([TGBOTTOKEN], (config)=>{
             if(config[TGBOTTOKEN] && confirm('clear exist bot settings?')){
               event.data.$(`#${SWITCH_TGBOT}`).bootstrapSwitch('state', false, true);
-              chrome.storage.sync.remove([TGBOTTOKEN, TGBOTCHATID]);
+              typedStorage().remove([TGBOTTOKEN, TGBOTCHATID]);
             }
           });
         }
-      }, 'TgBotLogger', [], {id:'tgbot-setting', title:"clear exist bot setting"})
+      }, 'TgBotForwarder', [], {id:'tgbot-setting', title:"clear exist bot setting"})
     ], {title: 'store the log by telegram bot'})
-  ], TgEvents()
+  ], { sync: TgEvents() }
 );
 
-var switches = [AutoDMH, TimerH, BanListH, WelcomeH, BanAbuseH, AlwaysMeH, EventActionH, RoomKeeperH, TgBotH, NotifH];
+var switches = [
+  TimerH, AutoDMH,
+  WelcomeH, AlwaysMeH,
+  BanAbuseH, NotifH,
+  EventActionH, RoomKeeperH,
+  BanListH, TgBotH,
+];
 
 function unit_layout(units){
   return `<div class='one-side-container'>
@@ -923,10 +965,10 @@ function pair_layout(units){
             </div>`;
 }
 
-function init_switches($, defaults, config){
-  var state = {};
-  Object.assign(state, JSON.parse(JSON.stringify(
-    !Object.keys(config).length ? defaults : config)));
+function init_switches($, state){
+  // var state = {};
+  // Object.assign(state, JSON.parse(JSON.stringify(
+  //   !Object.keys(config).length ? defaults : config)));
   $(`.${class_map[SWITCH]}`).each(function(){
     $(this).bootstrapSwitch('state', state[this.id], true);
   })
@@ -940,6 +982,16 @@ function template_setting($){
   return template;
 }
 
+function switch_synclocal_defaults(){
+ return {
+   [SWITCH_BANABUSE]: false,
+   [SWITCH_EVENTACT]: false,
+   [SWITCH_BANLIST ]: false,
+   [SWITCH_TIMER   ]: false,
+   [SWITCH_WELCOME ]: false,
+ };
+}
+
 switches_layout = [
   pair_layout,
   pair_layout,
@@ -948,16 +1000,41 @@ switches_layout = [
   pair_layout,
 ]
 
+function localStorageGet(type, $){
+  if(type == 'fa-cloud')
+    return cb => cb(null)
+  let storage = typedStorage({data: { $: $ }});
+  return storage.get.bind(storage);
+}
+
 function make_switch_panel($, panel_id){
-  chrome.storage.sync.get((config) => {
-    switches.ui = switches.map((h) => h.ui(config));
-    $(panel_id).append(
-      switches_layout.map((set) =>
-        set(switches.ui)).join(''));
-    $(`.${class_map[SWITCH]}`).bootstrapSwitch('size', 'mini');
-    defaults = template_setting($);
-    init_switches($, defaults, config);
-    switches.map((h)=>h.bindEvents($));
+  // note here
+  typedStorage().get((config) => {
+    let type = config["#storage-type"] || 'fa-cloud';
+    localStorageGet(type, $)((localConfig) => {
+      let cfg = template_setting($);
+      let slcfg = switch_synclocal_defaults();
+      if(localConfig){
+        Object.assign(slcfg, localConfig);
+        Object.assign(config, slcfg);
+      }
+      Object.assign(cfg, config);
+      switches.ui = switches.map((h) => h.ui(cfg));
+      $(panel_id).append(
+        switches_layout.map((set) =>
+          set(switches.ui)).join(''));
+      $(`.${class_map[SWITCH]}`).bootstrapSwitch('size', 'mini');
+      init_switches($, cfg);
+      switches.map((h)=>h.bindEvents($));
+
+      $('.setting').get().forEach(dom => {
+        let icon = type == 'fa-cloud' ? '☁️' : '🖴';
+        let name = type == 'fa-cloud' ? 'sync' : 'local';
+        let suffix = `(${icon} ${name} ⚙ setting)`
+        dom.title = dom.title.split('\n')[0] + '\n' + suffix;
+      })
+
+    });
   });
 }
 

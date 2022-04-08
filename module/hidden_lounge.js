@@ -37,12 +37,12 @@ export const ui_event = (config) => {
   $('#hidden_lounge_sheet_id').val(config[HIDDEN_LOUNGE] || '');
 
   $('#set_sheet_id').click(()=>{
-    chrome.storage.sync.set({ [HIDDEN_LOUNGE]: $('#hidden_lounge_sheet_id').val() });
+    chrome.storage.local.set({ [HIDDEN_LOUNGE]: $('#hidden_lounge_sheet_id').val() });
     alert("done");
   });
 
   $('#go_lounge').click(()=>{
-    chrome.storage.sync.get([HIDDEN_LOUNGE], cfg => {
+    chrome.storage.local.get([HIDDEN_LOUNGE], cfg => {
       chrome.tabs.create({
         url: `https://drrrchatbots.gitee.io/peerjs/hidden-lounge.html?${cfg[HIDDEN_LOUNGE] ? `id=${cfg[HIDDEN_LOUNGE]}` : ''}`
       });
@@ -89,7 +89,7 @@ function upload(succ, fail){
       info.room.update,
     ];
 
-    chrome.storage.sync.get([HIDDEN_LOUNGE], config => {
+    chrome.storage.local.get([HIDDEN_LOUNGE], config => {
 
       var params = { data: JSON.stringify(room) };
       if(config[HIDDEN_LOUNGE])

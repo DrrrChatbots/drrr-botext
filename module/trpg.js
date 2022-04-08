@@ -89,7 +89,7 @@ function host(bool, set){
     $('#is_host').addClass('glyphicon-user')
     $('#trpg_host').attr('title', 'become host');
   }
-  if(set){ chrome.storage.sync.set({ 'trpg_is_host': bool }); }
+  if(set){ chrome.storage.local.set({ 'trpg_is_host': bool }); }
 }
 
 function dice(text){

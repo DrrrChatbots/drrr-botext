@@ -9,7 +9,8 @@ function open_manual(){
 }
 
 function open_background(){
-  chrome.tabs.create({url: chrome.extension.getURL('setting/sync/index.html')});
+  let type = $("#storage-type").hasClass('fa-hdd-o') ? 'local' : 'sync';
+  chrome.tabs.create({url: chrome.extension.getURL(`setting/${type}/index.html`)});
 }
 
 var nodes = undefined;
@@ -1634,11 +1635,11 @@ function module_setup(config){
 
     $target.attr('data', this.id);
 
-    chrome.storage.sync.set({
+    chrome.storage.local.set({
       'select_module': valueSelected
     });
 
-    chrome.storage.sync.get((config)=>{
+    chrome.storage.local.get((config)=>{
       import(`/module/${module_mapping[valueSelected]}`).then(
         (module)=>{
           if(module.ui && module.ui_event){
@@ -1735,11 +1736,15 @@ function local_setup(config){
     $('#local-switch').attr('class', `fa fa-toggle-${v ? 'on' : 'off'}`);
   });
 
+  $("#plug").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL(`setting/plugin/index.html`)});
+  });
+
   $("#local-setting-btn").click(function(){
     let sel = $('#local-select')[0];
     let optionSelected = $("option:selected", sel);
     let valueSelected = sel.value;
-    chrome.tabs.create({url: chrome.extension.getURL(`setting/local/index.html#menu${Object.keys(local_functions).indexOf(valueSelected)}`)});
+    chrome.tabs.create({url: chrome.extension.getURL(`setting/plugin/index.html#menu${Object.keys(local_functions).indexOf(valueSelected)}`)});
   });
 
   $('#local-select').on('change', function (e){
@@ -1964,6 +1969,90 @@ var tabInit = {
   'tab4': () => {},
 }
 
+var popupTypedStorage = ($) => {
+  if(!$) return chrome.storage.sync;
+  let type = $("#storage-type")
+               .hasClass('fa-hdd-o')
+               ? "local" : "sync";
+  return chrome.storage[type];
+}
+
+function template_setting($){
+  var template = {}
+  $(`.${class_map[SWITCH]}`).each(function(){
+    template[this.id] = $(this).prop('checked');
+  });
+  return template;
+}
+
+function switch_synclocal_defaults(){
+ return {
+   [SWITCH_BANABUSE]: false,
+   [SWITCH_EVENTACT]: false,
+   [SWITCH_BANLIST ]: false,
+   [SWITCH_TIMER   ]: false,
+   [SWITCH_WELCOME ]: false,
+ };
+}
+
+function update_switches($, state){
+  // var state = {};
+  // Object.assign(state, JSON.parse(JSON.stringify(
+  //   !Object.keys(config).length ? defaults : config)));
+  // let state = !Object.keys(config).length ? defaults : config;
+  $(`.${class_map[SWITCH]}`).each(function(){
+    $(this).bootstrapSwitch('state', state[this.id] || false, true);
+  })
+}
+
+function localStorageGet(type){
+  if(type == 'fa-cloud')
+    return cb => cb(null)
+  let storage = popupTypedStorage($);
+  return storage.get.bind(storage);
+}
+
+function header_setup(config){
+  $("#manual").click(open_manual);
+  $("#cog").click(open_background);
+  $("#program").click(function(){
+    chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
+  });
+  $("#video-guide").click(function(){
+    chrome.tabs.create({url: 'https://www.youtube.com/playlist?list=PLaNluYBUsQrKe_faeHaFsKo9SkQzkQFOk'});
+  });
+
+  function setStorageType(type, dom){
+    if(!dom) dom = $("#storage-type");
+    dom.removeClass('fa-hdd-o').removeClass('fa-cloud').addClass(type);
+  }
+  $("#storage-toggle").click(function(){
+    let dom = $("#storage-type");
+    let type = dom.hasClass('fa-hdd-o') ? 'fa-cloud' : 'fa-hdd-o';
+    setStorageType(type, dom);
+    popupTypedStorage().set({"#storage-type": type});
+    $('.setting').get().forEach(dom => {
+      let icon = type == 'fa-cloud' ? '☁️' : '🖴';
+      let name = type == 'fa-cloud' ? 'sync' : 'local';
+      let suffix = `(${icon} ${name} ⚙ setting)`
+      dom.title = dom.title.split('\n')[0] + '\n' + suffix;
+    })
+    popupTypedStorage().get((config) => {
+      localStorageGet(type)((localConfig) => {
+        let cfg = template_setting($);
+        let slcfg = switch_synclocal_defaults();
+        if(localConfig){
+          Object.assign(slcfg, localConfig);
+          Object.assign(config, slcfg);
+        }
+        Object.assign(cfg, config);
+        update_switches($, cfg);
+      });
+    });
+  });
+  setStorageType(config["#storage-type"] || 'fa-cloud');
+}
+
 $(document).ready(function(){
 
   plugTag('link', {
@@ -1972,15 +2061,9 @@ $(document).ready(function(){
     href: '/popup/theme.css'
   })
 
-  $("#manual").click(open_manual);
-  $("#cog").click(open_background);
-
   $("#tripgen").click(open_tripgen);
   $("#goto-dc").click(function(){
     chrome.tabs.create({url: 'https://discord.com/invite/BBCw3UY'});
-  });
-  $("#video-guide").click(function(){
-    chrome.tabs.create({url: 'https://www.youtube.com/playlist?list=PLaNluYBUsQrKe_faeHaFsKo9SkQzkQFOk'});
   });
   $("#wizard").click(function(){
     sendTab({ fn: call_wizard, args: {} });
@@ -2006,6 +2089,9 @@ $(document).ready(function(){
       if(val) chrome.storage.sync.set({"live2d": val});
     })
   });
+
+  /* ensure activate the background page */
+
   $("#program").click(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/index.html')});
   });
@@ -2013,15 +2099,19 @@ $(document).ready(function(){
     chrome.tabs.create({url: chrome.extension.getURL('setting/script/background.html')});
   });
   // ensure activate the background page
+
   chrome.runtime.sendMessage({ type: 'popup' },
     () => bkg().make_switch_panel($, '#switch_panel'));
 
   chrome.storage.sync.get((config)=>{
+    header_setup(config);
     music_bar_setup(config);
     friend_bio_setup(config);
-    module_setup(config);
     sticker_setup(config);
-    chrome.storage.local.get((config)=> local_setup(config));
+    chrome.storage.local.get((config)=>{
+     local_setup(config)
+     module_setup(config);
+    });
     let tab = config['pop-tab'] || 'tab0';
     $(`#${tab} > a`).click();
     tabInit[tab] && tabInit[tab]();

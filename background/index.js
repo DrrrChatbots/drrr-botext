@@ -3,51 +3,57 @@
 
 new Handler("music", [],
   {
-    [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */
-      precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
-      onevent: (req, config, uis, sender) => {
-        function wake_check(){
-          sendTab({
-            fn: is_playing,
-          }, undefined, ([active, after]) => {
-            if(!active){
-              if(after === undefined || after > getDelay(config) - 5)
-                play_next(config)
-              else sendTab({
-                fn: set_timeout,
-                args: {
-                  event: event_timeout,
-                  duration: (getDelay(config) - after + 5) * 1000
-                }
-              });
-            }
-          });
+    sync: {
+      [event_musicend]: { /* handle config[MUSIC_MODE] be undefined slightly */
+        precond: (config, uis) =>
+          config[MUSIC_MODE] !== SINGLE_MODE
+          && !empty_list(config, PLAYLIST),
+        onevent: (req, config, uis, sender) => {
+          function wake_check(){
+            sendTab({
+              fn: is_playing,
+            }, undefined, ([active, after]) => {
+              if(!active){
+                if(after === undefined || after > getDelay(config) - 5)
+                  play_next(config)
+                else sendTab({
+                  fn: set_timeout,
+                  args: {
+                    event: event_timeout,
+                    duration: (getDelay(config) - after + 5) * 1000
+                  }
+                });
+              }
+            });
+          }
+          console.log("wait for delay", getDelay(config), 's');
+          wake_check();
         }
-        console.log("wait for delay", getDelay(config), 's');
-        wake_check();
-      }
-    },
-    [event_timeout]: { /* handle config[MUSIC_MODE] be undefined slightly */
-      precond: (config, uis) => config[MUSIC_MODE] !== SINGLE_MODE && !empty_list(config, PLAYLIST),
-      onevent: (req, config, uis, sender) => {
-        function wake_check(){
-          sendTab({
-            fn: is_playing,
-          }, undefined, ([active, after]) => {
-            if(!active){
-              if(after === undefined || after > getDelay(config) - 5)
-                play_next(config)
-              else sendTab({
-                fn: delay_clock,
-                args: {
-                  event: "delay_clock",
-                  duration: (getDelay(config) - after + 5) * 1000
-                }
-              });
-            }
-          });
+      },
+      [event_timeout]: { /* handle config[MUSIC_MODE] be undefined slightly */
+        precond: (config, uis) =>
+          config[MUSIC_MODE] !== SINGLE_MODE
+          && !empty_list(config, PLAYLIST),
+        onevent: (req, config, uis, sender) => {
+          function wake_check(){
+            sendTab({
+              fn: is_playing,
+            }, undefined, ([active, after]) => {
+              if(!active){
+                if(after === undefined || after > getDelay(config) - 5)
+                  play_next(config)
+                else sendTab({
+                  fn: delay_clock,
+                  args: {
+                    event: "delay_clock",
+                    duration: (getDelay(config) - after + 5) * 1000
+                  }
+                });
+              }
+            });
+          }
+          console.log("re-wait for delay", getDelay(config), 's');
         }
-        console.log("re-wait for delay", getDelay(config), 's');
       }
     }
   }
@@ -162,8 +168,17 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
     let get = drrr.profile ? f => f() : drrr.getProfile;
 
     get(()=>{
+
+      // for some switch in sync storage
       chrome.storage.sync.get((config) => {
-        var reg_funcs = reg_table[req.type] || [];
+        var reg_funcs = reg_table.sync[req.type] || [];
+        for(handle of reg_funcs)
+          handle(req, config, sender)
+      });
+
+      // for some switch in local storage
+      chrome.storage.local.get((config) => {
+        var reg_funcs = reg_table.local[req.type] || [];
         for(handle of reg_funcs)
           handle(req, config, sender)
 
@@ -174,13 +189,12 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
                 module.event_action(req, config, sender, event_action);
             }
           )
-      });
-
-      const switchs = Object.keys(local_functions).map((x)=> 'switch_' + x)
-      chrome.storage.local.get(switchs, (config) => {
+      // });
+      // const switches = Object.keys(local_functions).map((x)=> 'switch_' + x)
+      // chrome.storage.local.get(switches, (config) => {
         Object.keys(local_functions).forEach((x)=>{
           if(config['switch_' + x]){
-            import(`/setting/local/${local_functions[x].module_file}`).then(
+            import(`/setting/plugin/${local_functions[x].module_file}`).then(
               (module)=>{
                 module.event_action &&
                   module.event_action(req, config, sender, event_action);
@@ -205,7 +219,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       req.text = '';
       req.url = '';
       chrome.storage.sync.get((config) => {
-        var reg_funcs = reg_table[req.type] || [];
+        var reg_funcs = reg_table.sync[req.type] || [];
         for(handle of reg_funcs)
           handle(req, config, sender)
       });

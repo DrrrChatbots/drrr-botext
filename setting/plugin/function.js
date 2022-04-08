@@ -53,13 +53,13 @@ var local_functions = {
     save_cbk: nothing,
     module_file: 'chatlog.js'
   },
-  "EventAction": {
-    validate: valid_evtact,
-    plain: rule_plain,
-    load: (d) => d,
-    store: rule_store,
-    empty_cbk: close_switch("switch_EventAction"),
-    save_cbk: start_switch("switch_EventAction"),
-    module_file: 'eventaction.js'
-  },
+  // "EventAction": {
+  //   validate: valid_evtact,
+  //   plain: rule_plain,
+  //   load: (d) => d,
+  //   store: rule_store,
+  //   empty_cbk: close_switch("switch_EventAction"),
+  //   save_cbk: start_switch("switch_EventAction"),
+  //   module_file: 'eventaction.js'
+  // },
 };

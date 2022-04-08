@@ -223,6 +223,11 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
         for(handle of reg_funcs)
           handle(req, config, sender)
       });
+      chrome.storage.local.get((config) => {
+        var reg_funcs = reg_table.local[req.type] || [];
+        for(handle of reg_funcs)
+          handle(req, config, sender)
+      });
     })
   }
   if(callback){

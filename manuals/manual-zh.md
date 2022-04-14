@@ -65,9 +65,9 @@ Kiwi browser 也可以運行此插件，不過因為某些未知的 bug，我做
   當事件發生，執行設定的動作
 - RoomKeeper
   自動發訊息給自己，防止房間消失
-- TgBotLogger <i class="glyphicon glyphicon-cog"></i>
+- TgBotForwarder (TgBotLogger) <i class="glyphicon glyphicon-cog"></i>
   將聊天訊息透過 Telegram Bot 紀錄下來
-- RoomNotification
+- RoomStatus (RoomNotification)
   當瀏覽器頁面不在聊天室時，送出聊天內容通知
 :::
 

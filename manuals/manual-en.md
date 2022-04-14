@@ -65,9 +65,9 @@ Kiwi browser can also run the extenson, but for some unknown bugs, I make a cust
   When the event occurs, perform the set action
 - RoomKeeper
   Automatically send messages to yourself to prevent the room from disappearing
-- TgBotLogger <i class="glyphicon glyphicon-cog"></i>
+- TgBotForwarder (TgBotLogger) <i class="glyphicon glyphicon-cog"></i>
   Record chat messages via Telegram Bot
-- RoomNotification
+- RoomStatus (RoomNotification)
   Send chat notification when browser tab is not on chatroom page
 :::
 

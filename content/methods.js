@@ -310,24 +310,26 @@ var alertUser = function(args){
   alert(args.msg);
 }
 
-var alarms = []
+var alarms = {
+  sync: [],
+  local: [],
+}
 
 var min = 1000 * 60;
-function bindAlarms(){
+function bindAlarms(args){
   console.log(timefmt("%H:%m:%s - start alarm on this tab, unit: min"));
-  chrome.storage.sync.get((config) => {
-    clearAlarms();
+  chrome.storage[args.type].get((config) => {
+    clearAlarms(args);
     rules = settings[TIMER].load(config[sid(TIMER)]);
     Object.keys(rules).map((idx)=>{
-
       var [period, action, arglist]  = rules[idx];
-      alarms.push(setInterval(
-        ((act, args) => () => {
+      alarms[args.type].push(setInterval(
+        ((_act, _args) => () => {
           chrome.runtime.sendMessage({
             type: event_timer,
             host: isHost(),
-            action: act,
-            arglist: args,
+            action: _act,
+            arglist: _args,
             user: $('#user_name').text(),
             text: '',
             url: ''
@@ -339,13 +341,13 @@ function bindAlarms(){
   });
 }
 
-function rebindAlarms(){
-  if(alarms.length) bindAlarms();
+function rebindAlarms(args){
+  if(alarms[args.type].length) bindAlarms(args);
 }
 
-function clearAlarms(){
-  alarms.map((v) => clearInterval(v));
-  alarms = [];
+function clearAlarms(args){
+  alarms[args.type].map((v) => clearInterval(v));
+  alarms[args.type] = [];
 }
 
 var play_end = undefined;

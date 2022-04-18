@@ -156,7 +156,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           roomTabs((tabs) => {
             if(tabs.length &&
               confirm('TIMER configuration changed, do you want to restart now?')){
-              bcastTabs({ fn: rebind_alarms });
+              bcastTabs({ fn: rebind_alarms, args: {type: 'local'} });
               chrome.notifications.create({
                 type: "basic",
                 iconUrl: '/icon.png',
@@ -293,7 +293,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           setting_cache[`${sid($(this).attr('data'))}`] = '';
           $(`#${sid($(this).attr('data'))}`).val('')
           /* close switch */
-          settings[$(this).attr('data')].empty_cbk();
+          settings[$(this).attr('data')].empty_cbk('local');
         }
         else try{
           settings[$(this).attr('data')].validate(val);
@@ -308,7 +308,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           //if($(this).attr('data') in save_callback)
           //    save_callback[$(this).attr('data')]();
           /* open switch */
-          settings[$(this).attr('data')].save_cbk();
+          settings[$(this).attr('data')].save_cbk('local');
         }
         catch(e){
           alert(e);

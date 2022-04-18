@@ -384,7 +384,7 @@ var BanListH = new Handler("banlist",
   { sync: BanListEvents, local: BanListEvents }
 );
 
-var TimerEvents = {
+var TimerEvents = (storage_type) => ({
   [event_newtab]: {
     precond: (config, uis) => config[SWITCH_TIMER],
     onevent: (req, config, uis, sender) => {
@@ -392,7 +392,7 @@ var TimerEvents = {
       roomTabs((tabs)=>{
         if(tabs.length == 1){
           chrome.tabs.sendMessage(tabs[0].id, {
-            fn: bind_alarms
+            fn: bind_alarms, args: {type: storage_type}
           })
           chrome.notifications.create({
             type: "basic",
@@ -416,7 +416,8 @@ var TimerEvents = {
     }
   },
   [event_timer]: {
-    precond: (config, uis) => true,
+    // precond: (config, uis) => true,
+    precond: (config, uis) => config[SWITCH_TIMER],
     onevent: (req, config, uis, sender) => {
       argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
         return actions[req.action].apply(config, args.map(timefmt));
@@ -445,7 +446,7 @@ var TimerEvents = {
           for(tab of tabs){
             if(tab.id !== sender.tab.id){
               chrome.tabs.sendMessage(tab.id, {
-                fn: bind_alarms
+                fn: bind_alarms, args: {type: storage_type}
               })
               break;
             }
@@ -454,7 +455,7 @@ var TimerEvents = {
       })
     }
   },
-};
+});
 
 var TimerH = new Handler("timer",
   [
@@ -466,7 +467,7 @@ var TimerH = new Handler("timer",
               if(tabs.length){
                 if(state){
                   chrome.tabs.sendMessage(tabs[0].id, {
-                    fn: bind_alarms
+                    fn: bind_alarms, args: {type: storageType(event)}
                   })
                   chrome.notifications.create({
                     type: "basic",
@@ -476,7 +477,7 @@ var TimerH = new Handler("timer",
                   });
                 }
                 else{
-                  bcastTabs({ fn: clear_alarms });
+                  bcastTabs({ fn: clear_alarms, args: {type: storageType(event)} });
                   chrome.notifications.create({
                     type: "basic",
                     iconUrl: '/icon.png',
@@ -493,7 +494,7 @@ var TimerH = new Handler("timer",
     ], {'class': 'setting',
         title: 'send some custom messages periodically\n(⚙ setting)'})
   ],
-  { sync: TimerEvents, local: TimerEvents }
+  { sync: TimerEvents('sync'), local: TimerEvents('local') }
 );
 
 var BanAbuseEvents = {

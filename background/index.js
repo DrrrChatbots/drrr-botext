@@ -172,15 +172,17 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       // for some switch in sync storage
       chrome.storage.sync.get((config) => {
         var reg_funcs = reg_table.sync[req.type] || [];
-        for(handle of reg_funcs)
+        for(let handle of reg_funcs){
           handle(req, config, sender)
+        }
       });
 
       // for some switch in local storage
       chrome.storage.local.get((config) => {
         var reg_funcs = reg_table.local[req.type] || [];
-        for(handle of reg_funcs)
+        for(let handle of reg_funcs){
           handle(req, config, sender)
+        }
 
         if(config['select_module'])
           import(`/module/${module_mapping[config['select_module']]}`).then(

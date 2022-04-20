@@ -218,7 +218,36 @@ actions = {
     setTimeout(()=>pndMusic(this.config, idx, keyword, source), 1000);
   },
   [action_schm] : function(keyword, source){
-    setTimeout(()=>schMusic(this.config, keyword, source), 1000);
+    setTimeout(
+      ()=>schMusic(this.config, keyword, source,
+        (keyw, src, data) => {
+          chrome.storage.local.set({
+            'MusicSearchHistory': {
+              key: keyw,
+              src: src,
+              data: data,
+            }
+          });
+        }), 1000);
+  },
+  [action_pshm] : function(idx){
+    chrome.storage.local.get('MusicSearchHistory', (cfg) => {
+      let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+      if(cfg['MusicSearchHistory']){
+        let {key, src, data} = cfg['MusicSearchHistory'];
+        let songs = api[src].songs(data);
+        console.log(songs);
+        if(idx === undefined || idx.length == 0){
+          showSongs(songs, src, data);
+        }
+        else if(idx && songs.length <= idx)
+          publish(`only ${api[src].songs(data).length} available`);
+        else{
+          let song = data2info(data, src, idx);
+          playMusic(song_title(song), song.link, publish);
+        }
+      } else publish(`no search result, please search first`);
+    });
   },
   [action_ocdr] : function(){
     sendTab({ fn: leave_room, args: {ret: true} });

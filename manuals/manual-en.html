@@ -633,6 +633,8 @@ $[-]
 "msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
 "msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
 "msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+"msg", "", "^/sc\\s+\\d", "pshm", ["$1"]
+"msg", "", "^/sc\\s*$", "pshm", []
 </code></pre>
 <h3 id="Call1" data-id="Call"><a class="anchor hidden-xs" href="#Call1" title="Call1"><span class="octicon octicon-link"></span></a><span>Call</span></h3>
 <pre><code>/play yellow
@@ -653,6 +655,8 @@ $[-]
 /next
 /sc yellow
 /sc 千 yellow
+/sc 2
+/sc
 </code></pre>
 </details>
 </div><h4 id="Function-Manual" data-id="Function-Manual"><a class="anchor hidden-xs" href="#Function-Manual" title="Function-Manual"><span class="octicon octicon-link"></span></a><span>Function Manual</span></h4><div class="alert alert-warning">
@@ -726,10 +730,20 @@ $[-]
 </li>
 <li><code>schm</code><span> </span><code>["Song Keyword"] </code><br>
 <code>schm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
-<span>List search results.</span>
+<span>List search results, and record the results.</span>
 <ol>
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Sound Source”: There are currently “千”, “網”, “易”, “Q”, </span><s><span>“我”</span></s><span>, “狗” and “Y” available.</span></li>
+</ol>
+</li>
+<li><code>pshm</code><span> </span><code>[]</code><br>
+<code>pshm</code><span> </span><code>[""]</code><br>
+<code>pshm</code><span> </span><code>["number"]</code><br>
+<span>If there is no parameter, show the previous search results.</span><br>
+<span>If number is provided, play the previous search result.</span><br>
+<span>If the parameter is empty string, show the previous search results.</span>
+<ol>
+<li><span>“Number”: Index of previous search results.</span></li>
 </ol>
 </li>
 <li><code>horm</code><span> </span><code>["username"] </code><br>

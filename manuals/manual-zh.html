@@ -612,7 +612,7 @@ $[-]
 /giphy iron man
 /play yellow
 </code></pre>
-<details><summary>更多範例</summary>
+<details open=""><summary>更多範例</summary>
 <h4 id="範例6" data-id="範例"><a class="anchor hidden-xs" href="#範例6" title="範例6"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
 <pre><code>"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
 "msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
@@ -632,6 +632,8 @@ $[-]
 "msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
 "msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
 "msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+"msg", "", "^/sc\\s+\\d", "pshm", ["$1"]
+"msg", "", "^/sc\\s*$", "pshm", []
 </code></pre>
 <h3 id="調用1" data-id="調用"><a class="anchor hidden-xs" href="#調用1" title="調用1"><span class="octicon octicon-link"></span></a><span>調用</span></h3>
 <pre><code>/play 剛好遇見你
@@ -652,6 +654,8 @@ $[-]
 /next
 /sc 花心
 /sc 千 花心
+/sc 2
+/sc
 </code></pre>
 </details>
 </div><h4 id="函數說明" data-id="函數說明"><a class="anchor hidden-xs" href="#函數說明" title="函數說明"><span class="octicon octicon-link"></span></a><span>函數說明</span></h4><div class="alert alert-warning">
@@ -725,10 +729,20 @@ $[-]
 </li>
 <li><code>schm</code><span> </span><code>["歌曲關鍵字"]</code><br>
 <code>schm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
-<span>列出搜尋結果。</span>
+<span>列出搜尋結果，並將搜尋結果記錄下來。</span>
 <ol>
 <li><span>“關鍵字”：歌曲關鍵字。</span></li>
 <li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q”, </span><s><span>“我”</span></s><span> 及 “Y” 可以使用。</span></li>
+</ol>
+</li>
+<li><code>pshm</code><span> </span><code>[]</code><br>
+<code>pshm</code><span> </span><code>[""]</code><br>
+<code>pshm</code><span> </span><code>["數字"]</code><br>
+<span>無參數則列出前一次搜尋結果。</span><br>
+<span>如有數字，播放前一次搜尋結果。</span><br>
+<span>如關鍵字為空字串，列出前一次搜尋結果。</span>
+<ol>
+<li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
 </ol>
 </li>
 <li><code>horm</code><span> </span><code>["使用者名稱"]</code><br>

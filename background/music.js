@@ -79,33 +79,39 @@ function pndMusic(config, idx, keyword = '', source){
   else lstMusic(config);
 }
 
-function schMusic(config, keyword, source){
-  console.log(`search music[${source}]: ${keyword}`);
-  get_music(keyword, source, (keyword, source, data) => {
-    var msg0 = '', msg1 = '', songs = api[source].songs(data);
-    for(var i = 0; i < 5; i++)
-      if(songs[i]) msg0 +=
-        `[${i}] ${ommited_name(
-          api[source].name(data, i),
-          api[source].singer(data, i), 28)}\n`;
-    for(var i = 5; i < 10; i++)
-      if(songs[i]) msg1 +=
-        `[${i}] ${ommited_name(
-          api[source].name(data, i),
-          api[source].singer(data, i), 28)}\n`;
-    if(msg1){
+function showSongs(songs, source, data){
+  var msg0 = '', msg1 = '';
+  for(var i = 0; i < 5; i++)
+    if(songs[i]) msg0 +=
+      `[${i}] ${ommited_name(
+        api[source].name(data, i),
+        api[source].singer(data, i), 28)}\n`;
+  for(var i = 5; i < 10; i++)
+    if(songs[i]) msg1 +=
+      `[${i}] ${ommited_name(
+        api[source].name(data, i),
+        api[source].singer(data, i), 28)}\n`;
+  if(msg1){
+    sendTab({
+      fn: publish_message,
+      args: { msg: msg1 }
+    });
+  }
+  if(msg0){
+    setTimeout(function() {
       sendTab({
         fn: publish_message,
-        args: { msg: msg1 }
+        args: { msg: msg0 }
       });
-    }
-    if(msg0){
-      setTimeout(function() {
-        sendTab({
-          fn: publish_message,
-          args: { msg: msg0 }
-        });
-      }, 1000);
-    }
+    }, 1000);
+  }
+}
+
+function schMusic(config, keyword, source, callback){
+  console.log(`search music[${source}]: ${keyword}`);
+  get_music(keyword, source, (keyword, source, data) => {
+    var songs = api[source].songs(data);
+    callback && callback(keyword, source, data);
+    showSongs(songs, source, data);
   });
 }

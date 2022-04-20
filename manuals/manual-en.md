@@ -803,6 +803,8 @@ $[-]
 "msg", "", "^/pendsrc\\s+[千易]\\s+\\d\\s+\\S+", "pndm", ["$[3-]", "$1", "$2"]
 "msg", "", "^/sc\\s+([千易]\\S+|[^千易])", "schm", ["$args"]
 "msg", "", "^/sc\\s+[千易]\\s+\\S+", "schm", ["$[2-]", "$1"]
+"msg", "", "^/sc\\s+\\d", "pshm", ["$1"]
+"msg", "", "^/sc\\s*$", "pshm", []
 ```
 
 ### Call
@@ -825,6 +827,8 @@ $[-]
 /next
 /sc yellow
 /sc 千 yellow
+/sc 2
+/sc
 ```
 :::
 
@@ -892,9 +896,16 @@ Function ["parameter", ...] Description:
   3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
-  List search results.
+  List search results, and record the results.
   1. "Keywords": Song keywords.
   2. "Sound Source": There are currently "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
+- `pshm` `[]`
+  `pshm` `[""]`
+  `pshm` `["number"]`
+  If there is no parameter, show the previous search results.
+  If number is provided, play the previous search result.
+  If the parameter is empty string, show the previous search results.
+  1. "Number": Index of previous search results.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

@@ -13,11 +13,11 @@ function Handler(hname, uis, events){
       /* use IIFE avoid fucking side effect !! */
       let lift = (function(event_name, event_func){
         return function(req, config, sender){
-          console.log(`meet handle ${hname} ${event_name}`);
+          // console.log(`meet handle ${hname} ${event_name}`);
           if(event_func.precond(config, uis)){
-            console.log(`handling ${hname} ${event_name}`);
+            // console.log(`handling ${hname} ${event_name}`);
             event_func.onevent(req, config, uis, sender);
-          } else console.log(`pass ${hname}`);
+          } // else console.log(`pass ${hname}`);
         }
       })(k, e);
       if(k in reg_table[p]) reg_table[p][k].push(lift);

@@ -410,7 +410,7 @@
 <li><code>%ss</code><span> 秒，數字（補零）</span></li>
 <li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
 </ul>
-<p><span>（你可以對小時制的格式指定時區，像是</span><code>%+8hh</code><span>為東八區，</span><code>%-1H</code><span>為西一區，</span><code>%3n</code><span>為東三區，不過目前時區並不支援日期運算。）</span></p>
+<p><span>（你可以對時間格式指定時區，像是</span><code>%+8hh</code><span>為東八區，</span><code>%-1H</code><span>為西一區，</span><code>%3n</code><span>為東三區，亦支援日期運算。）</span></p>
 <h4 id="範例" data-id="範例"><a class="anchor hidden-xs" href="#範例" title="範例"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
 <pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
 <span class="hljs-number">2</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"It's a Report Message"</span>, <span class="hljs-string">"Now is %H:%m!"</span>]
@@ -433,7 +433,7 @@
 <h4 id="特殊變量1" data-id="特殊變量"><a class="anchor hidden-xs" href="#特殊變量1" title="特殊變量1"><span class="octicon octicon-link"></span></a><span>特殊變量</span></h4>
 <ul>
 <li><code>$user</code><span> 進入房間的成員名稱。</span></li>
-<li><code>$</code><span> 轉義字符 </span><code>$</code><span>。</span></li>
+<li><code><span><span>$</span></span><span><span>$</span></span></code><span> 轉義字符 </span><code>$</code><span>。</span></li>
 </ul>
 <h4 id="範例1" data-id="範例"><a class="anchor hidden-xs" href="#範例1" title="範例1"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
 <p><span>對名字裡面有 lambda 和其後跟著 cat （中間可能夾有一些字）的使用者說 </span><code>hello, kitty</code><span>，對其他人則說 </span><code>hello/HI!!</code><span> 加上 </span><code>使用者名稱</code><span>。</span></p>
@@ -557,7 +557,7 @@
 <li><code>%ss</code><span> 秒，數字（補零）</span></li>
 <li><code>%%</code><span> 轉義字符 </span><code>%</code></li>
 </ul>
-<p><span>（你可以對小時制的格式指定時區，像是</span><code>%+8hh</code><span>為東八區，</span><code>%-1H</code><span>為西一區，</span><code>%3n</code><span>為東三區，不過目前時區並不支援日期運算。）</span></p>
+<p><span>（你可以對時間格式指定時區，像是</span><code>%+8hh</code><span>為東八區，</span><code>%-1H</code><span>為西一區，</span><code>%3n</code><span>為東三區，亦支援日期運算。）</span></p>
 <ul>
 <li><code>$user</code><span> 發送訊息的使用者名稱</span></li>
 <li><code>$cont</code><span> 使用者發送的內容</span></li>
@@ -565,7 +565,7 @@
 <span>使用者發送：</span><code>play BUMP OF CHICKEN「Hello,world!」</code><br>
 <code>$args</code><span>：</span><code>BUMP OF CHICKEN「Hello,world!」</code></li>
 <li><code>$url</code><span> 使用者夾上的 URL</span></li>
-<li><code>$</code><span> 轉義字符 </span><code>$</code></li>
+<li><code><span><span>$</span></span><span><span>$</span></span></code><span> 轉義字符 </span><code>$</code></li>
 </ul>
 <h4 id="特殊參數用法" data-id="特殊參數用法"><a class="anchor hidden-xs" href="#特殊參數用法" title="特殊參數用法"><span class="octicon octicon-link"></span></a><span>特殊參數用法</span></h4>
 <p><span>這裡還有一些特殊用法。</span><br>
@@ -576,9 +576,23 @@
 <li><code>$[N-M]</code><span> 取從 N 到 M 的參數。N 不給則從零開始，M 不給取到最後。</span></li>
 </ul>
 <h4 id="特殊函數" data-id="特殊函數"><a class="anchor hidden-xs" href="#特殊函數" title="特殊函數"><span class="octicon octicon-link"></span></a><span>特殊函數</span></h4>
+<h5 id="適用於所有參數" data-id="適用於所有參數"><a class="anchor hidden-xs" href="#適用於所有參數" title="適用於所有參數"><span class="octicon octicon-link"></span></a><span>適用於所有參數</span></h5>
 <ul>
 <li><code>$tenor(keyword)</code><span> 回傳 tenor 搜尋的 gif URL</span></li>
 <li><code>$giphy(keyword)</code><span> 回傳 giphy 搜尋的 gif URL</span></li>
+<li><code>$str(special param/func)</code><span> 字串化特殊參數/函數回傳值</span></li>
+<li><code>$(code)</code><span> 使用浪語操作參數</span><br>
+<span>例：</span><code>$($str($cont).reverse())</code><span> 反轉參數字串內容</span></li>
+<li><code>$!(code)</code><span> 同</span><code>$(code)</code><span> 不過提供 </span><code>env</code><span> 變數</span></li>
+</ul>
+<h5 id="適用於第一個參數" data-id="適用於第一個參數"><a class="anchor hidden-xs" href="#適用於第一個參數" title="適用於第一個參數"><span class="octicon octicon-link"></span></a><span>適用於第一個參數</span></h5>
+<ul>
+<li><code>$call(code)</code><span> 使用浪語操作整個參數列</span><br>
+<span>例：</span><code>["$call((a, b)=&gt;[b, a])", "1", "2"]</code><span> =&gt; </span><code>["2", "1"]</code></li>
+<li><code>$call!(code)</code><span> 同 </span><code>$call</code><span> 不過提供 </span><code>env</code><span> 變數</span></li>
+<li><code>$apply(code)</code><span> 使用浪語操作整個參數列</span><br>
+<span>例：</span><code>["$apply(args=&gt;args.reverse())", "1", "2"]</code><span> =&gt; </span><code>["2", "1"]</code></li>
+<li><code>$apply!(code)</code><span> 同 </span><code>$apply</code><span> 不過提供 </span><code>env</code><span> 變數</span></li>
 </ul>
 <h4 id="參數圖示" data-id="參數圖示"><a class="anchor hidden-xs" href="#參數圖示" title="參數圖示"><span class="octicon octicon-link"></span></a><span>參數圖示</span></h4>
 <pre><code>this is  a  message send from user
@@ -612,7 +626,7 @@ $[-]
 /giphy iron man
 /play yellow
 </code></pre>
-<details open=""><summary>更多範例</summary>
+<details><summary>更多範例</summary>
 <h4 id="範例6" data-id="範例"><a class="anchor hidden-xs" href="#範例6" title="範例6"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
 <pre><code>"msg", "", "^/play\\s+(\\D|\\d\\S)", "plym", ["$args"]
 "msg", "", "^/play\\s+\\d\\s+\\S+", "plym", ["$[2-]", "$1"]
@@ -743,6 +757,16 @@ $[-]
 <li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
 </ol>
 </li>
+<li><code>ashm</code><span> </span><code>[]</code><br>
+<code>ashm</code><span> </span><code>[""]</code><br>
+<code>ashm</code><span> </span><code>["數字"]</code><br>
+<span>無參數則列出前一次搜尋結果。</span><br>
+<span>如有數字，將前一次搜尋結果加到播放清單。</span><br>
+<span>如關鍵字為空字串，列出前一次搜尋結果。</span>
+<ol>
+<li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
+</ol>
+</li>
 <li><code>horm</code><span> </span><code>["使用者名稱"]</code><br>
 <span>轉移房主權限給該使用者。</span></li>
 <li><code>ocdr</code><span> </span><code>[]</code><br>
@@ -751,11 +775,11 @@ $[-]
 <span>前往符合房間名稱的房間。若失敗則回到原房間。</span></li>
 <li><code>eval</code><span> </span><code>["浪語代碼"]</code><br>
 <span>純函數執行浪語代碼（執行存的變數沒有作用）</span></li>
-<li><code>exec</code><span> </span><code>["浪語代碼"]</code><br>
+<li><code>eval!</code><span> </span><code>["浪語代碼"]</code><br>
 <span>提供 </span><code>env</code><span> 這個變數以執行浪語代碼。</span></li>
-<li><code>func</code><span> </span><code>["浪語腳本分類和名稱"]</code><br>
+<li><code>call</code><span> </span><code>["浪語腳本分類/腳本名稱.js"]</code><br>
 <span>純函數執行浪語腳本（執行存的變數沒有作用）</span></li>
-<li><code>script</code><span> </span><code>["浪語腳本分類和名稱"]</code><br>
+<li><code>call!</code><span> </span><code>["浪語腳本分類/腳本名稱.js"]</code><br>
 <span>提供 </span><code>env</code><span> 這個變數以執行浪語腳本。</span></li>
 </ul>
 <blockquote>
@@ -887,9 +911,9 @@ $[-]
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
-<li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
-<li><a href="#電腦版" title="電腦版">電腦版</a></li>
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#安裝" title="安裝">安裝</a><ul class="nav">
+<li class=""><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
 <li><a href="#背景版本" title="背景版本">背景版本</a></li>
 <li><a href="#即將上架（審核好難通過-_3" title="即將上架（審核好難通過 _(:3)">即將上架（審核好難通過 _(:3)</a></li>
@@ -925,9 +949,9 @@ $[-]
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
-<li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
-<li><a href="#電腦版" title="電腦版">電腦版</a></li>
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#安裝" title="安裝">安裝</a><ul class="nav">
+<li class=""><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
 <li><a href="#背景版本" title="背景版本">背景版本</a></li>
 <li><a href="#即將上架（審核好難通過-_3" title="即將上架（審核好難通過 _(:3)">即將上架（審核好難通過 _(:3)</a></li>

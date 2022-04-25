@@ -519,7 +519,7 @@ You can use special time variables in parameters:
 - `%星` week, Chinese
 - `%午` before/after midday, `上午`, `下午`
 
-(you can specify the timezone for hour relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, but not support date currently)
+(you can specify the timezone for time relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, also support date currently)
 
 #### Example
 ```js
@@ -552,7 +552,7 @@ Two formats, multiple welcome words (choose randomly and send out)
 
 #### Special variables
 - `$user` The name of the member who entered the room.
-- `$$` escape character `$`.
+- <code><span>&#36;</span><span>&#36;</span></code> escape character `$`.
 
 #### Example
 
@@ -569,7 +569,7 @@ Say `hello, kitty` to users who have lambda in their name followed by cat (possi
 
 #### Function
 
-Use [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#) to automatically kick out specifics ** not in the list ** user.
+Use [regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#) to automatically kick out specifics the user who **not in the list**.
 
 #### Format
 ```js
@@ -715,7 +715,7 @@ Please refer to [Function Manual](#Function-Manual)
 - `%星` week, Chinese
 - `%午` before/after midday, `上午`, `下午`
 
-(you can specify the timezone for hour relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, but not support date currently)
+(you can specify the timezone for time relative format, such as `%+8hh` for UTC+8, `%-1H` for UTC-1, `%3n` for UTC+3, also support date currently)
 
 * `$user` username for sending message
 * `$cont` content sent by the user
@@ -723,7 +723,7 @@ Please refer to [Function Manual](#Function-Manual)
    User sends: `play BUMP OF CHICKEN「 Hello, world! 」`
    `$args`:` BUMP OF CHICKEN "Hello, world!" `
 * `$url` URL on user folder
-* `$$` escape character `$`
+* <code><span>&#36;</span><span>&#36;</span></code> escape character `$`
 
 #### Special parameter usage
 
@@ -736,8 +736,25 @@ For separate content, the following methods can be used as parameters.
 
 #### Special function
 
+
+##### work for every oprands
+
 - `$tenor(keyword)` return gif URL tenor searched
 - `$giphy(keyword)` retrun gif URL giphy searched
+- `$str(special param/func)` stringify the special form
+- `$(code)` manipulate the oprand by lambda script
+ex: `$($str($cont).reverse())` reverse the content
+- `$!(code)` same as `$(code)` but provide `env` variable
+
+##### work for the first oprand
+
+- `$call(code)` manipulate the whole argument list
+ex: `["$call((a, b)=>[b, a])", "1", "2"]` => `["2", "1"]`
+- `$call!(code)` same as `$call` but provide `env` variable
+- `$apply(code)` manipulate the whole argument list
+ex: `["$apply(args=>args.reverse())", "1", "2"]` => `["2", "1"]`
+- `$apply!(code)` same as `$apply` but provide `env` variable
+
 
 #### Figure for parameter
 
@@ -904,6 +921,13 @@ Function ["parameter", ...] Description:
   If number is provided, play the previous search result.
   If the parameter is empty string, show the previous search results.
   1. "Number": Index of previous search results.
+- `ashm` `[]`
+  `ashm` `[""]`
+  `ashm` `["number"]`
+  If there is no parameter, show the previous search results.
+  If number is provided, add the previous search result to playlist.
+  If the parameter is empty string, show the previous search results.
+  1. "Number": Index of previous search results.
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `
@@ -912,11 +936,11 @@ Function ["parameter", ...] Description:
   Go to the room that matches the room name. If it fails, return to the origin room.
 - `eval` `["lambda script code"]`
   execute lambda script code purely (you cannot store variable)
-- `exec` `["lambda script code"]`
+- `eval!` `["lambda script code"]`
   provide the variable`env` for lambda script code execution.
-- `func` `["lambda script category and name"]`
+- `call` `["lambda script category/script name.js"]`
   execute lambda script purely (you cannot store variable)
-- `script` `["lambda script category and name"]`
+- `call!` `["lambda script category/script name.js"]`
   provide the variable`env` for lambda script execution.
 
 > If you want to send `me` message, you can apply msg function with `/me + message` .

@@ -1,79 +1,4 @@
 
-function run_lambda_script(pure){
-  return function(file){
-    function exec(){
-      envName = `env-${file}`
-      let entries = ["bs-installed"]
-      if(!pure) entries.push(envName)
-      chrome.storage.local.get(entries, (config)=>{
-        code = config["bs-installed"] && config["bs-installed"][file] && config["bs-installed"][file].code;
-        if(typeof(code) != "string"){
-          return alert(`${file} not existed`);
-        }
-        if(pure) storage = {}
-        else storage = config[envName] || {}
-        try{
-          storage["evt"] = this.event;
-          machine = PS.Main.newMachine();
-          machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
-          machine = PS.Main.interact(machine)(code)();
-          val = machine.val;
-          console.log(`action script val => ${stringify(val)}`);
-          if(!pure){
-            config[envName] = storage;
-            chrome.storage.local.set({
-              [envName]: config[envName]
-            });
-          }
-        }
-        catch(err){
-          alert(JSON.stringify(err));
-          console.log("error", err);
-        }
-      })
-    }
-    if(!drrr.loc) drrr.getReady(exec);
-    else exec();
-  }
-}
-
-function run_lambda_code(pure){
-  return function(code){
-    function exec(){
-      envName = `inline-env`
-      let entries = []
-      if(!pure) entries.push(envName)
-      chrome.storage.local.get(entries, (config)=>{
-        if(typeof(code) != "string"){
-          return alert(`code is not a string`);
-        }
-        if(pure) storage = {}
-        else storage = config[envName] || {}
-        try{
-          storage["evt"] = this.event;
-          machine = PS.Main.newMachine();
-          machine.env = PS.BotScriptEnv.insert(machine.env)("env")(storage)
-          machine = PS.Main.interact(machine)(code)();
-          val = machine.val;
-          console.log(`action script val => ${stringify(val)}`);
-          if(!pure){
-            config[envName] = storage;
-            chrome.storage.local.set({
-              [envName]: config[envName]
-            });
-          }
-        }
-        catch(err){
-          alert(JSON.stringify(err));
-          console.log("error", err);
-        }
-      })
-    }
-    if(!drrr.loc) drrr.getReady(exec);
-    else exec();
-  }
-}
-
 actions = {
   [action_name] : function(...names){
     setTimeout(
@@ -236,7 +161,6 @@ actions = {
       if(cfg['MusicSearchHistory']){
         let {key, src, data} = cfg['MusicSearchHistory'];
         let songs = api[src].songs(data);
-        console.log(songs);
         if(idx === undefined || idx.length == 0){
           showSongs(songs, src, data);
         }
@@ -245,6 +169,24 @@ actions = {
         else{
           let song = data2info(data, src, idx);
           playMusic(song_title(song), song.link, publish);
+        }
+      } else publish(`no search result, please search first`);
+    });
+  },
+  [action_ashm] : function(idx){
+    chrome.storage.local.get('MusicSearchHistory', (cfg) => {
+      let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+      if(cfg['MusicSearchHistory']){
+        let {key, src, data} = cfg['MusicSearchHistory'];
+        let songs = api[src].songs(data);
+        if(idx === undefined || idx.length == 0){
+          showSongs(songs, src, data);
+        }
+        else if(idx && songs.length <= idx)
+          publish(`only ${api[src].songs(data).length} available`);
+        else{
+          let song = data2info(data, src, idx);
+          setTimeout(()=>pndMusic(this.config, idx, key, src), 1000);
         }
       } else publish(`no search result, please search first`);
     });
@@ -289,10 +231,10 @@ actions = {
         );
       });
   },
-  [action_eval] : run_lambda_code(true),
-  [action_exec] : run_lambda_code(false),
-  [action_func] : run_lambda_script(true),
-  [action_script] : run_lambda_script(false),
+  [action_eval] : window.run_lambda_code_purely,
+  [action_evalbang] : window.run_lambda_code_impurely,
+  [action_call] : window.run_lambda_script_purely,
+  [action_callbang] : window.run_lambda_script_impurely,
   /* too quick leading play song failed in content script, so setTimeout */
 }
 

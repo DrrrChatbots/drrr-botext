@@ -30,7 +30,7 @@ new Handler("music", [],
           wake_check();
         }
       },
-      [event_timeout]: { /* handle config[MUSIC_MODE] be undefined slightly */
+      [event_timeout]: {
         precond: (config, uis) =>
           config[MUSIC_MODE] !== SINGLE_MODE
           && !empty_list(config, PLAYLIST),
@@ -43,9 +43,9 @@ new Handler("music", [],
                 if(after === undefined || after > getDelay(config) - 5)
                   play_next(config)
                 else sendTab({
-                  fn: delay_clock,
+                  fn: set_timeout,
                   args: {
-                    event: "delay_clock",
+                    event: event_timeout,
                     duration: (getDelay(config) - after + 5) * 1000
                   }
                 });
@@ -53,6 +53,7 @@ new Handler("music", [],
             });
           }
           console.log("re-wait for delay", getDelay(config), 's');
+          wake_check();
         }
       }
     }

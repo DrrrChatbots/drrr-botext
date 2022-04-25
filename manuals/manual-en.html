@@ -412,7 +412,7 @@
 <li><code>%星</code><span> week, Chinese</span></li>
 <li><code>%午</code><span> before/after midday, </span><code>上午</code><span>, </span><code>下午</code></li>
 </ul>
-<p><span>(you can specify the timezone for hour relative format, such as </span><code>%+8hh</code><span> for UTC+8, </span><code>%-1H</code><span> for UTC-1, </span><code>%3n</code><span> for UTC+3, but not support date currently)</span></p>
+<p><span>(you can specify the timezone for time relative format, such as </span><code>%+8hh</code><span> for UTC+8, </span><code>%-1H</code><span> for UTC-1, </span><code>%3n</code><span> for UTC+3, also support date currently)</span></p>
 <h4 id="Example" data-id="Example"><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h4>
 <pre><code class="js hljs"><span class="hljs-number">10</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"every 10 mins report once!"</span>]
 <span class="hljs-number">2</span>, <span class="hljs-string">"msg"</span>, [<span class="hljs-string">"It's a Report Message"</span>, <span class="hljs-string">"Now is%H:%m!"</span>]
@@ -435,7 +435,7 @@
 <h4 id="Special-variables" data-id="Special-variables"><a class="anchor hidden-xs" href="#Special-variables" title="Special-variables"><span class="octicon octicon-link"></span></a><span>Special variables</span></h4>
 <ul>
 <li><code>$user</code><span> The name of the member who entered the room.</span></li>
-<li><code>$</code><span> escape character </span><code>$</code><span>.</span></li>
+<li><code><span><span>$</span></span><span><span>$</span></span></code><span> escape character </span><code>$</code><span>.</span></li>
 </ul>
 <h4 id="Example1" data-id="Example"><a class="anchor hidden-xs" href="#Example1" title="Example1"><span class="octicon octicon-link"></span></a><span>Example</span></h4>
 <p><span>Say </span><code>hello, kitty</code><span> to users who have lambda in their name followed by cat (possibly with some words in between), and </span><code>hello/HI!! </code><span>to others.</span></p>
@@ -445,7 +445,7 @@
 </div><div class="alert alert-warning">
 <h3 id="WhiteList-Configuration" data-id="WhiteList-Configuration"><a class="anchor hidden-xs" href="#WhiteList-Configuration" title="WhiteList-Configuration"><span class="octicon octicon-link"></span></a><span>WhiteList Configuration</span></h3>
 <h4 id="Function2" data-id="Function"><a class="anchor hidden-xs" href="#Function2" title="Function2"><span class="octicon octicon-link"></span></a><span>Function</span></h4>
-<p><span>Use </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expressions</span></a><span> to automatically kick out specifics ** not in the list ** user.</span></p>
+<p><span>Use </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#" target="_blank" rel="noopener"><span>regular expressions</span></a><span> to automatically kick out specifics the user who </span><strong><span>not in the list</span></strong><span>.</span></p>
 <h4 id="Format2" data-id="Format"><a class="anchor hidden-xs" href="#Format2" title="Format2"><span class="octicon octicon-link"></span></a><span>Format</span></h4>
 <pre><code class="js hljs"><span class="hljs-attribute">Usermatching</span>
 </code></pre>
@@ -558,7 +558,7 @@
 <li><code>%星</code><span> week, Chinese</span></li>
 <li><code>%午</code><span> before/after midday, </span><code>上午</code><span>, </span><code>下午</code></li>
 </ul>
-<p><span>(you can specify the timezone for hour relative format, such as </span><code>%+8hh</code><span> for UTC+8, </span><code>%-1H</code><span> for UTC-1, </span><code>%3n</code><span> for UTC+3, but not support date currently)</span></p>
+<p><span>(you can specify the timezone for time relative format, such as </span><code>%+8hh</code><span> for UTC+8, </span><code>%-1H</code><span> for UTC-1, </span><code>%3n</code><span> for UTC+3, also support date currently)</span></p>
 <ul>
 <li><code>$user</code><span> username for sending message</span></li>
 <li><code>$cont</code><span> content sent by the user</span></li>
@@ -566,7 +566,7 @@
 <span>User sends: </span><code>play BUMP OF CHICKEN「 Hello, world! 」</code><br>
 <code>$args</code><span>:</span><code>BUMP OF CHICKEN "Hello, world!"</code></li>
 <li><code>$url</code><span> URL on user folder</span></li>
-<li><code>$</code><span> escape character </span><code>$</code></li>
+<li><code><span><span>$</span></span><span><span>$</span></span></code><span> escape character </span><code>$</code></li>
 </ul>
 <h4 id="Special-parameter-usage" data-id="Special-parameter-usage"><a class="anchor hidden-xs" href="#Special-parameter-usage" title="Special-parameter-usage"><span class="octicon octicon-link"></span></a><span>Special parameter usage</span></h4>
 <p><span>There are some special uses here.</span><br>
@@ -577,9 +577,23 @@
 <li><code>$[N-M]</code><span> takes parameters from N to M. If N does not give, it will start from zero, and if M does not give, it will take to the end.</span></li>
 </ul>
 <h4 id="Special-function" data-id="Special-function"><a class="anchor hidden-xs" href="#Special-function" title="Special-function"><span class="octicon octicon-link"></span></a><span>Special function</span></h4>
+<h5 id="work-for-every-oprands" data-id="work-for-every-oprands"><a class="anchor hidden-xs" href="#work-for-every-oprands" title="work-for-every-oprands"><span class="octicon octicon-link"></span></a><span>work for every oprands</span></h5>
 <ul>
 <li><code>$tenor(keyword)</code><span> return gif URL tenor searched</span></li>
 <li><code>$giphy(keyword)</code><span> retrun gif URL giphy searched</span></li>
+<li><code>$str(special param/func)</code><span> stringify the special form</span></li>
+<li><code>$(code)</code><span> manipulate the oprand by lambda script</span><br>
+<span>ex: </span><code>$($str($cont).reverse())</code><span> reverse the content</span></li>
+<li><code>$!(code)</code><span> same as </span><code>$(code)</code><span> but provide </span><code>env</code><span> variable</span></li>
+</ul>
+<h5 id="work-for-the-first-oprand" data-id="work-for-the-first-oprand"><a class="anchor hidden-xs" href="#work-for-the-first-oprand" title="work-for-the-first-oprand"><span class="octicon octicon-link"></span></a><span>work for the first oprand</span></h5>
+<ul>
+<li><code>$call(code)</code><span> manipulate the whole argument list</span><br>
+<span>ex: </span><code>["$call((a, b)=&gt;[b, a])", "1", "2"]</code><span> =&gt; </span><code>["2", "1"]</code></li>
+<li><code>$call!(code)</code><span> same as </span><code>$call</code><span> but provide </span><code>env</code><span> variable</span></li>
+<li><code>$apply(code)</code><span> manipulate the whole argument list</span><br>
+<span>ex: </span><code>["$apply(args=&gt;args.reverse())", "1", "2"]</code><span> =&gt; </span><code>["2", "1"]</code></li>
+<li><code>$apply!(code)</code><span> same as </span><code>$apply</code><span> but provide </span><code>env</code><span> variable</span></li>
 </ul>
 <h4 id="Figure-for-parameter" data-id="Figure-for-parameter"><a class="anchor hidden-xs" href="#Figure-for-parameter" title="Figure-for-parameter"><span class="octicon octicon-link"></span></a><span>Figure for parameter</span></h4>
 <pre><code>this is  a  message send from user
@@ -744,6 +758,16 @@ $[-]
 <li><span>“Number”: Index of previous search results.</span></li>
 </ol>
 </li>
+<li><code>ashm</code><span> </span><code>[]</code><br>
+<code>ashm</code><span> </span><code>[""]</code><br>
+<code>ashm</code><span> </span><code>["number"]</code><br>
+<span>If there is no parameter, show the previous search results.</span><br>
+<span>If number is provided, add the previous search result to playlist.</span><br>
+<span>If the parameter is empty string, show the previous search results.</span>
+<ol>
+<li><span>“Number”: Index of previous search results.</span></li>
+</ol>
+</li>
 <li><code>horm</code><span> </span><code>["username"] </code><br>
 <span>Transfer owner permissions to the user.</span></li>
 <li><code>ocdr</code><span> </span><code>[] </code><br>
@@ -752,11 +776,11 @@ $[-]
 <span>Go to the room that matches the room name. If it fails, return to the origin room.</span></li>
 <li><code>eval</code><span> </span><code>["lambda script code"]</code><br>
 <span>execute lambda script code purely (you cannot store variable)</span></li>
-<li><code>exec</code><span> </span><code>["lambda script code"]</code><br>
+<li><code>eval!</code><span> </span><code>["lambda script code"]</code><br>
 <span>provide the variable</span><code>env</code><span> for lambda script code execution.</span></li>
-<li><code>func</code><span> </span><code>["lambda script category and name"]</code><br>
+<li><code>call</code><span> </span><code>["lambda script category/script name.js"]</code><br>
 <span>execute lambda script purely (you cannot store variable)</span></li>
-<li><code>script</code><span> </span><code>["lambda script category and name"]</code><br>
+<li><code>call!</code><span> </span><code>["lambda script category/script name.js"]</code><br>
 <span>provide the variable</span><code>env</code><span> for lambda script execution.</span></li>
 </ul>
 <blockquote>

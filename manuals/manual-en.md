@@ -743,7 +743,7 @@ For separate content, the following methods can be used as parameters.
 - `$giphy(keyword)` retrun gif URL giphy searched
 - `$str(special param/func)` stringify the special form
 - `$(code)` manipulate the oprand by lambda script
-ex: `$($str($cont).reverse())` reverse the content
+ex: `$($str($cont).substr(1))` get substring
 - `$!(code)` same as `$(code)` but provide `env` variable
 
 ##### work for the first oprand

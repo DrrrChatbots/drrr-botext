@@ -751,7 +751,7 @@ otoko
 - `$giphy(keyword)` 回傳 giphy 搜尋的 gif URL
 - `$str(special param/func)` 字串化特殊參數/函數回傳值
 - `$(code)` 使用浪語操作參數
-例：`$($str($cont).reverse())` 反轉參數字串內容
+例：`$($str($cont).substr(1))` 取子字串
 - `$!(code)` 同`$(code)` 不過提供 `env` 變數
 
 ##### 適用於第一個參數

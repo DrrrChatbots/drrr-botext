@@ -16,10 +16,13 @@ actions = {
   },
   [action_msg ] : function(...msgs){
     if(!msgs.length) msgs = [''];
+    let msg = msgs[Math.floor(Math.random() * msgs.length)];
+    if (!(typeof msg === 'string' || msg instanceof String))
+      msg = String(msg);
     setTimeout(
       () => sendTab({
         fn: publish_message,
-        args: { msg: msgs[Math.floor(Math.random() * msgs.length)] }
+        args: { msg: msg }
       }), 1000);
   },
   [action_horm ] : function(user){
@@ -248,8 +251,10 @@ function match_event(type, event){
 function event_action(event, config, req){
   var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
   rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
+    let cmat = null;
     if(match_event(type, event) && match_user(req.user, req.trip, user_trip_regex)
-      && ((req.text === 'unknown' || req.text === undefined) || req.text.match(new RegExp(cont_regex)))){
+      && ((req.text === 'unknown' || req.text === undefined)
+        || (cmat = req.text.match(new RegExp(cont_regex))))){
       argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
         return actions[action].apply({
           event: {
@@ -262,7 +267,7 @@ function event_action(event, config, req){
           },
           config: config
         }, args);
-      });
+      }, cmat);
     }
   });
 }

@@ -524,7 +524,8 @@
 <span>如果兩個規則都有的話則都需要滿足。</span></p>
 <pre><code class="js hljs"><span class="hljs-string">"浪打"</span> &lt;- 名字有 <span class="hljs-string">"浪打"</span> 的人
 <span class="hljs-string">"#.*cat"</span> &lt;- <span class="hljs-keyword">tc</span> 有 <span class="hljs-keyword">cat</span> 的人（忽略大小寫）
-<span class="hljs-string">"浪打#.*cat"</span> &lt;- 名字有 <span class="hljs-string">"浪打"</span> 且 <span class="hljs-keyword">tc</span> 有 <span class="hljs-keyword">cat</span> 的人
+<span class="hljs-string">"lambda#.*cat"</span> &lt;- 名字有 <span class="hljs-string">"lambda"</span> (大小寫都可) 且 <span class="hljs-keyword">tc</span> 有 <span class="hljs-keyword">cat</span> 的人 （區分大小寫）
+<span class="hljs-string">"lambda##.*cat"</span> &lt;- 名字有 <span class="hljs-string">"lambda"</span> (大小寫都可) 且 <span class="hljs-keyword">tc</span> 有 <span class="hljs-keyword">cat</span> 的人 （大小寫都可）
 </code></pre>
 <h4 id="內容匹配" data-id="內容匹配"><a class="anchor hidden-xs" href="#內容匹配" title="內容匹配"><span class="octicon octicon-link"></span></a><span>內容匹配</span></h4>
 <p><span>內容匹配則是單純的一串 RegExp。</span></p>
@@ -574,6 +575,7 @@
 <ul>
 <li><code>$N</code><span> N 為數字，以數字取第 N 個參數，從零開始。</span></li>
 <li><code>$[N-M]</code><span> 取從 N 到 M 的參數。N 不給則從零開始，M 不給取到最後。</span></li>
+<li><code>$_N</code><span> N 為數字，以數字取第 N 個 RegExp 的 match result，從零開始。</span></li>
 </ul>
 <h4 id="特殊函數" data-id="特殊函數"><a class="anchor hidden-xs" href="#特殊函數" title="特殊函數"><span class="octicon octicon-link"></span></a><span>特殊函數</span></h4>
 <h5 id="適用於所有參數" data-id="適用於所有參數"><a class="anchor hidden-xs" href="#適用於所有參數" title="適用於所有參數"><span class="octicon octicon-link"></span></a><span>適用於所有參數</span></h5>
@@ -614,6 +616,13 @@ $0   $1 $2 $3               $4   $5    $6
 $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------
 $[-]
+</code></pre>
+<pre><code>RegExp: "給(.*)來(.*)"
+Content: "給 larry 來一杯奶茶"
+          -----------------
+          $_0
+            ------- -------
+            $_1      $_2
 </code></pre>
 <h4 id="範例5" data-id="範例"><a class="anchor hidden-xs" href="#範例5" title="範例5"><span class="octicon octicon-link"></span></a><span>範例</span></h4>
 <pre><code>"msg", "", "^/tenor", "umsg", ["$tenor($args)", "$args"]

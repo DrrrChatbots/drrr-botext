@@ -678,7 +678,8 @@ if both rule existed, then both must be satisfied.
 ```js
 "lambda" <- name contains "lambda"
 "#.*cat" <- tc with cat （ignore case）
-"lambda#.*cat" <- name contains "lambda" and tc with cat
+"lambda#.*cat" <- name contains "lambda" and tc with cat, where name is case insensitive and tc is case sensitive.
+"lambda##.*cat" <- name contains "lambda" and tc with cat, where name is case insensitive and tc is case insensitive.
 ```
 
 #### Content matching
@@ -731,8 +732,9 @@ There are some special uses here.
 For received messages, the parameters are separated by spaces, and quotation marks are used to avoid separation.
 For separate content, the following methods can be used as parameters.
 
-- `$N` N is a number. Take the Nth parameter from the number, starting from zero.
+- `$N` N is a number. Take the Nth parameter, starting from zero.
 - `$[N-M]` takes parameters from N to M. If N does not give, it will start from zero, and if M does not give, it will take to the end.
+- `$_N` N is a number. Take the Nth result from the RegExp match, starting from zero.
 
 #### Special function
 
@@ -778,6 +780,15 @@ $0   $1 $2 $3               $4   $5    $6
 $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------                     
 $[-]
+```
+
+```
+RegExp: "give(.*)\sa\s(.*)"
+Content: "give me a sandwich"
+          ------------------
+          $_0
+              ---   --------
+              $_1   $_2
 ```
 
 #### Example

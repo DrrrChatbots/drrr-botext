@@ -523,9 +523,10 @@
 <h4 id="User-matching" data-id="User-matching"><a class="anchor hidden-xs" href="#User-matching" title="User-matching"><span class="octicon octicon-link"></span></a><span>User matching</span></h4>
 <p><span>User matching would be a username RegExp or Tripcode RegExp,</span><br>
 <span>if both rule existed, then both must be satisfied.</span></p>
-<pre><code class="js hljs"><span class="hljs-string">"lambda"</span> &lt;- <span class="hljs-built_in">name</span> <span class="hljs-keyword">contains</span> <span class="hljs-string">"lambda"</span>
-<span class="hljs-string">"#.*cat"</span> &lt;- tc <span class="hljs-keyword">with</span> cat （ignore case）
-<span class="hljs-string">"lambda#.*cat"</span> &lt;- <span class="hljs-built_in">name</span> <span class="hljs-keyword">contains</span> <span class="hljs-string">"lambda"</span> <span class="hljs-keyword">and</span> tc <span class="hljs-keyword">with</span> cat
+<pre><code class="js hljs">"lambda" &lt;- <span class="hljs-type">name</span> contains "lambda"
+"#.*cat" &lt;- tc <span class="hljs-keyword">with</span> cat （ignore <span class="hljs-keyword">case</span>）
+"lambda#.*cat" &lt;- <span class="hljs-type">name</span> contains "lambda" <span class="hljs-keyword">and</span> tc <span class="hljs-keyword">with</span> cat, <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> <span class="hljs-keyword">is</span> <span class="hljs-keyword">case</span> insensitive <span class="hljs-keyword">and</span> tc <span class="hljs-keyword">is</span> <span class="hljs-keyword">case</span> sensitive.
+"lambda##.*cat" &lt;- <span class="hljs-type">name</span> contains "lambda" <span class="hljs-keyword">and</span> tc <span class="hljs-keyword">with</span> cat, <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> <span class="hljs-keyword">is</span> <span class="hljs-keyword">case</span> insensitive <span class="hljs-keyword">and</span> tc <span class="hljs-keyword">is</span> <span class="hljs-keyword">case</span> insensitive.
 </code></pre>
 <h4 id="Content-matching" data-id="Content-matching"><a class="anchor hidden-xs" href="#Content-matching" title="Content-matching"><span class="octicon octicon-link"></span></a><span>Content matching</span></h4>
 <p><span>Content matching is simply a RegExp.</span></p>
@@ -573,8 +574,9 @@
 <span>For received messages, the parameters are separated by spaces, and quotation marks are used to avoid separation.</span><br>
 <span>For separate content, the following methods can be used as parameters.</span></p>
 <ul>
-<li><code>$N</code><span> N is a number. Take the Nth parameter from the number, starting from zero.</span></li>
+<li><code>$N</code><span> N is a number. Take the Nth parameter, starting from zero.</span></li>
 <li><code>$[N-M]</code><span> takes parameters from N to M. If N does not give, it will start from zero, and if M does not give, it will take to the end.</span></li>
+<li><code>$_N</code><span> N is a number. Take the Nth result from the RegExp match, starting from zero.</span></li>
 </ul>
 <h4 id="Special-function" data-id="Special-function"><a class="anchor hidden-xs" href="#Special-function" title="Special-function"><span class="octicon octicon-link"></span></a><span>Special function</span></h4>
 <h5 id="work-for-every-oprands" data-id="work-for-every-oprands"><a class="anchor hidden-xs" href="#work-for-every-oprands" title="work-for-every-oprands"><span class="octicon octicon-link"></span></a><span>work for every oprands</span></h5>
@@ -615,6 +617,13 @@ $0   $1 $2 $3               $4   $5    $6
 $[-2]      $[3-4]                $[5-]
 ---------------------------------------------------                     
 $[-]
+</code></pre>
+<pre><code>RegExp: "give(.*)\sa\s(.*)"
+Content: "give me a sandwich"
+          ------------------
+          $_0
+              ---   --------
+              $_1   $_2
 </code></pre>
 <h4 id="Example5" data-id="Example"><a class="anchor hidden-xs" href="#Example5" title="Example5"><span class="octicon octicon-link"></span></a><span>Example</span></h4>
 <pre><code>"msg", "", "^/tenor", "umsg", ["$tenor($args)", "$args"]

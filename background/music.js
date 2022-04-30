@@ -13,7 +13,7 @@ function get_music(keyword, source, callback){
 
   if(!source){
     chrome.storage.sync.get((config) => {
-      if(config['music_source']) get(config['music_source']); else get('易');
+      if(config['music_source']) get(config['music_source']); else get('Q');
     });
   } else get(source);
 }
@@ -47,7 +47,7 @@ function lstMusic(config){
     })(msg[i]), i * 1000);
 }
 
-function pndMusic(config, idx, keyword = '', source){
+function pndMusicKeyword(config, idx, keyword = '', source){
   var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
   if(keyword.length){
     sendTab({
@@ -75,6 +75,33 @@ function pndMusic(config, idx, keyword = '', source){
     });
   }
   else lstMusic(config);
+}
+
+function pndMusic(config, song, mute = true){
+  var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+  sendTab({
+    fn: is_playing,
+  }, undefined, ([active, after]) => {
+    if(active)
+      add_song(PLAYLIST, song, mute, publish);
+    else{
+      if(config[PLAYLIST] && config[PLAYLIST].length){
+        console.log("add and play first")
+        add_song(PLAYLIST, song, mute, publish);
+        if(after === undefined || after === null || after > getDelay(config) + 5)
+          setTimeout(()=> play_next(config, publish), 1000);
+
+      }
+      else if(after === undefined || after === null || after > getDelay(config) + 5){
+        playMusic(song_title(song), song.link, publish);
+        console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
+      }
+      else{
+        add_song(PLAYLIST, song, mute, publish);
+        console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
+      }
+    }
+  });
 }
 
 function showSongs(songs, source, data){

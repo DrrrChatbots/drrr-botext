@@ -143,7 +143,7 @@ window._actions = {
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    setTimeout(()=>pndMusic(this.config, idx, keyword, source), 1000);
+    setTimeout(()=>pndMusicKeyword(this.config, idx, keyword, source), 1000);
   },
   [action_schm] : function(keyword, source){
     setTimeout(
@@ -189,7 +189,7 @@ window._actions = {
           publish(`only ${api[src].songs(data).length} available`);
         else{
           let song = data2info(data, src, idx);
-          setTimeout(()=>pndMusic(this.config, idx, key, src), 1000);
+          setTimeout(()=>pndMusic(this.config, song), 1000);
         }
       } else publish(`no search result, please search first`);
     });

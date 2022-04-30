@@ -420,7 +420,7 @@ var TimerEvents = (storage_type) => ({
     precond: (config, uis) => config[SWITCH_TIMER],
     onevent: (req, config, uis, sender) => {
       argfmt(req.arglist, req.user, req.text, req.url, (args)=>{
-        return actions[req.action].apply(config, args.map(timefmt));
+        return _actions[req.action].apply(config, args.map(timefmt));
       });
     }
   },
@@ -715,7 +715,6 @@ var AlwaysMeH = new Handler("always me",
             chrome.tabs.query({
               url: 'https://drrr.com/room/*'
             }, (tabs) => {
-              console.log("switch function handling");
               for(tab of tabs){
                 chrome.tabs.sendMessage(tab.id, {
                   fn: switch_me,

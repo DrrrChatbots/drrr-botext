@@ -48,13 +48,11 @@ function lstMusic(config){
 }
 
 function pndMusic(config, idx, keyword = '', source){
-  console.log(idx, keyword);
   var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
   if(keyword.length){
     sendTab({
       fn: is_playing,
     }, undefined, ([active, after]) => {
-      console.log(active, after);
       if(active)
         add_search(get_music.bind(null, keyword, source), false, true, idx);
       else{

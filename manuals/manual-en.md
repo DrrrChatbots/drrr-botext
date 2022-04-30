@@ -757,6 +757,25 @@ ex: `["$call((a, b)=>[b, a])", "1", "2"]` => `["2", "1"]`
 ex: `["$apply(args=>args.reverse())", "1", "2"]` => `["2", "1"]`
 - `$apply!(code)` same as `$apply` but provide `env` variable
 
+##### utility function in lambda script
+
+For the `code` in special form, there are some utility functions for you:
+```javascript
+// array sample
+[1,2,3].sample() // will random pick an element
+randint(0, 10) // will return random number 1 to 10
+range(5) // will return [0, 1, 2, 3, 4]
+range(2, 7) // will return [2,3,4,5,6]
+range(1, 5, 2) // will return [1, 3]
+span(2, 5) // like range, but inclusive the end, [2,3,4,5]
+mapact('msg', ['hello', 'world']) // send hello and world
+sacts(acts => acts.msg('hello world!'))
+// or just use function set (with your sync storage)
+pacts.msg('hello world')
+// if you don't need use storage relative function,
+// you can use pacts (p for pure)
+'1 2 3'.pysplit() // python like split ['1', '2', '3']
+```
 
 #### Figure for parameter
 
@@ -953,6 +972,8 @@ Function ["parameter", ...] Description:
   execute lambda script purely (you cannot store variable)
 - `call!` `["lambda script category/script name.js"]`
   provide the variable`env` for lambda script execution.
+- `nop` `[]`
+  do nothing.
 
 > If you want to send `me` message, you can apply msg function with `/me + message` .
 

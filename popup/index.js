@@ -71,18 +71,6 @@ function set_hidden_room(){
   //})
 }
 
-function c2sess(cookies){
-  let session = '';
-  if(cookies && cookies.forEach){
-   cookies.forEach(c => {
-     if(c.name == 'drrr-session-1'){
-       session = c.value;
-     }
-   })
-  }
-  return session;
-}
-
 function open_tripgen(){
   chrome.tabs.create({url: chrome.extension.getURL('setting/tripcode.html')});
 }

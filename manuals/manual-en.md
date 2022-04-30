@@ -162,7 +162,6 @@ Search mode:
 - **千** Baidu Music Boxes
 - **Y** YouTube (banned by GFW)
 - **狗** Kugou
-- ~~**我** Kuwo~~
 
 #### Search Keyword and Play
 
@@ -910,16 +909,19 @@ Function ["parameter", ...] Description:
   play music.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
 - `addm` `["Song Keywords"] `
   `addm` `["Song Keywords", "Number"] `
   `addm` `["Song Keyword", "Sound Source"] `
   `addm` `["Song Keyword", "Number", "Sound Source"] `
   `addm` `["Song Keyword", "Sound Source", "Number"] `
+  `addm` `["Song Keyword", "Number", "Sound Source", "Pos"] `
+  `addm` `["Song Keyword", "Sound Source", "Number", "Pos"] `
   Add music to your playlist.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
+  4. "Pos", Insert pos, -1 or out of bound as append
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -932,18 +934,21 @@ Function ["parameter", ...] Description:
   `pndm` `["Song Keyword", "Sound Source"] `
   `pndm` `["song keyword", "number", "audio source"] `
   `pndm` `["song keyword", "sound source", "number"] `
+  `pndm` `["song keyword", "number", "audio source", "Pos"] `
+  `pndm` `["song keyword", "sound source", "number", "Pos"] `
   If there is no parameter, the list to be played is listed.
   If there is no music currently, play music.
   If there is music, add it to the list
   If the keyword is an empty string, list it for play.
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
+  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
+  4. "Pos", Insert pos, -1 or out of bound as append
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results, and record the results.
   1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "網", "易", "Q", ~~"我"~~, "狗" and "Y" available.
+  2. "Sound Source": There are currently "千", "網", "易", "Q", "狗" and "Y" available.
 - `pshm` `[]`
   `pshm` `[""]`
   `pshm` `["number"]`
@@ -953,11 +958,13 @@ Function ["parameter", ...] Description:
   1. "Number": Index of previous search results.
 - `ashm` `[]`
   `ashm` `[""]`
-  `ashm` `["number"]`
+  `ashm` `["Number"]`
+  `ashm` `["Number", "Pos"]`
   If there is no parameter, show the previous search results.
   If number is provided, add the previous search result to playlist.
   If the parameter is empty string, show the previous search results.
   1. "Number": Index of previous search results.
+  2. "Pos", Insert pos, -1 or out of bound as append
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

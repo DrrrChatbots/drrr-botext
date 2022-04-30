@@ -151,7 +151,6 @@
 <li><strong><span>千</span></strong><span> 千千音樂盒</span></li>
 <li><strong><span>Y</span></strong><span> YouTube（須翻牆）</span></li>
 <li><strong><span>狗</span></strong><span> 酷狗音樂</span></li>
-<li><s><strong><span>我</span></strong><span> 酷我音樂</span></s></li>
 </ul>
 <h4 id="Search-Keyword-and-Play（搜尋列）" data-id="Search-Keyword-and-Play（搜尋列）"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play（搜尋列）" title="Search-Keyword-and-Play（搜尋列）"><span class="octicon octicon-link"></span></a><span>Search Keyword and Play（搜尋列）</span></h4>
 <p><span>輸入關鍵字配合功能鍵查詢。</span><br>
@@ -724,11 +723,14 @@ Content: "給 larry 來一杯奶茶"
 <code>plym</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
 <code>plym</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
 <code>plym</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "數字", "音源", "位置"]</code><br>
+<code>plym</code><span> </span><code>["歌曲關鍵字", "音源", "數字", "位置"]</code><br>
 <span>播放音樂。</span>
 <ol>
 <li><span>“關鍵字”：歌曲關鍵字。</span></li>
 <li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
-<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q”, </span><s><span>“我”</span></s><span> 及 “Y” 可以使用。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q” 及 “Y” 可以使用。</span></li>
+<li><span>“位置”:插入位置，如越界或是 -1 則加在尾端。</span></li>
 </ol>
 </li>
 <li><code>addm</code><span> </span><code>["歌曲關鍵字"]</code><br>
@@ -736,11 +738,14 @@ Content: "給 larry 來一杯奶茶"
 <code>addm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
 <code>addm</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
 <code>addm</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "數字", "音源", "位置"]</code><br>
+<code>addm</code><span> </span><code>["歌曲關鍵字", "音源", "數字", "位置"]</code><br>
 <span>加入音樂至待播清單。</span>
 <ol>
 <li><span>“關鍵字”：歌曲關鍵字。</span></li>
 <li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
-<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q”, </span><s><span>“我”</span></s><span> 及 “Y” 可以使用。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q” 及 “Y” 可以使用。</span></li>
+<li><span>“位置”:插入位置，如越界或是 -1 則加在尾端。</span></li>
 </ol>
 </li>
 <li><code>delm</code><span> </span><code>["數字"]</code><br>
@@ -755,6 +760,8 @@ Content: "給 larry 來一杯奶茶"
 <code>pndm</code><span> </span><code>["歌曲關鍵字", "音源"]</code><br>
 <code>pndm</code><span> </span><code>["歌曲關鍵字", "數字", "音源"]</code><br>
 <code>pndm</code><span> </span><code>["歌曲關鍵字", "音源", "數字"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "數字", "音源", "位置"]</code><br>
+<code>pndm</code><span> </span><code>["歌曲關鍵字", "音源", "數字", "位置"]</code><br>
 <span>無參數則列出待播清單。</span><br>
 <span>如當前沒音樂，播放音樂。</span><br>
 <span>如有音樂，將音樂加入清單</span><br>
@@ -762,7 +769,8 @@ Content: "給 larry 來一杯奶茶"
 <ol>
 <li><span>“關鍵字”：歌曲關鍵字。</span></li>
 <li><span>“數字”：第 “數字” 個搜尋結果。</span></li>
-<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q”, </span><s><span>“我”</span></s><span> 及 “Y” 可以使用。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q” 及 “Y” 可以使用。</span></li>
+<li><span>“位置”:插入位置，如越界或是 -1 則加在尾端。</span></li>
 </ol>
 </li>
 <li><code>schm</code><span> </span><code>["歌曲關鍵字"]</code><br>
@@ -770,7 +778,7 @@ Content: "給 larry 來一杯奶茶"
 <span>列出搜尋結果，並將搜尋結果記錄下來。</span>
 <ol>
 <li><span>“關鍵字”：歌曲關鍵字。</span></li>
-<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q”, </span><s><span>“我”</span></s><span> 及 “Y” 可以使用。</span></li>
+<li><span>“音源”：音源，目前有 “千” 和 “網”, “易”, “狗”, “Q” 及 “Y” 可以使用。</span></li>
 </ol>
 </li>
 <li><code>pshm</code><span> </span><code>[]</code><br>
@@ -850,7 +858,7 @@ Content: "給 larry 來一杯奶茶"
 <span>運行一段腳本後，你可以用在直譯終端做測試，他會以運行後的環境執行。</span><br>
 <code>ctrl</code><span> + </span><code>enter</code><span> 執行直譯終端的腳本（游標要在終端裡面）。</span></p>
 </div><div class="alert alert-warning">
-<h4 id="浪語1" data-id="浪語"><a class="anchor hidden-xs" href="#浪語1" title="浪語1"><span class="octicon octicon-link"></span></a><span>浪語</span></h4>
+<h4 id="浪語" data-id="浪語"><a class="anchor hidden-xs" href="#浪語" title="浪語"><span class="octicon octicon-link"></span></a><span>浪語</span></h4>
 <p><span>細節請參考 </span><a href="./script-zh.html" target="_blank" rel="noopener"><span>語言介紹</span></a><span>。</span></p>
 </div><div class="alert alert-warning">
 <h4 id="套件管理器" data-id="套件管理器"><a class="anchor hidden-xs" href="#套件管理器" title="套件管理器"><span class="octicon octicon-link"></span></a><span>套件管理器</span></h4>
@@ -939,7 +947,7 @@ Content: "給 larry 來一杯奶茶"
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
@@ -962,12 +970,12 @@ Content: "給 larry 來一杯奶茶"
 <li><a href="#Script-浪語終端-" title="Script 浪語終端 ">Script 浪語終端 </a></li>
 </ul>
 </li>
-<li><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
+<li class=""><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
 <li><a href="#個人" title="個人">個人</a></li>
-<li><a href="#部屋" title="部屋">部屋</a></li>
+<li class=""><a href="#部屋" title="部屋">部屋</a></li>
 </ul>
 </li>
-<li><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
+<li class=""><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
 </ul>
 </li>
 </ul>
@@ -977,7 +985,7 @@ Content: "給 larry 來一杯奶茶"
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
@@ -1000,12 +1008,12 @@ Content: "給 larry 來一杯奶茶"
 <li><a href="#Script-浪語終端-" title="Script 浪語終端 ">Script 浪語終端 </a></li>
 </ul>
 </li>
-<li><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
+<li class=""><a href="#特別誌謝" title="特別誌謝">特別誌謝</a><ul class="nav">
 <li><a href="#個人" title="個人">個人</a></li>
-<li><a href="#部屋" title="部屋">部屋</a></li>
+<li class=""><a href="#部屋" title="部屋">部屋</a></li>
 </ul>
 </li>
-<li><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
+<li class=""><a href="#相關鏈結" title="相關鏈結">相關鏈結</a></li>
 </ul>
 </li>
 </ul>

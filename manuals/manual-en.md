@@ -921,7 +921,7 @@ Function ["parameter", ...] Description:
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
   3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
-  4. "Pos", Insert pos, -1 or out of bound as append
+  4. "Pos": Insert pos, -1 or out of bound as append
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -943,7 +943,7 @@ Function ["parameter", ...] Description:
   1. "Keywords": Song keywords.
   2. "Number": Index of search results.
   3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
-  4. "Pos", Insert pos, -1 or out of bound as append
+  4. "Pos": Insert pos, -1 or out of bound as append
 - `schm` `["Song Keyword"] `
   `schm` `["Song Keyword", "Sound Source"] `
   List search results, and record the results.
@@ -960,11 +960,13 @@ Function ["parameter", ...] Description:
   `ashm` `[""]`
   `ashm` `["Number"]`
   `ashm` `["Number", "Pos"]`
+  `ashm` `["Number", "Pos", "Autoplay"]`
   If there is no parameter, show the previous search results.
   If number is provided, add the previous search result to playlist.
   If the parameter is empty string, show the previous search results.
   1. "Number": Index of previous search results.
-  2. "Pos", Insert pos, -1 or out of bound as append
+  2. "Pos": Insert pos, -1 or out of bound as append
+  2. "Autoplay": bool, if autoplay, difference between addm and pndm
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

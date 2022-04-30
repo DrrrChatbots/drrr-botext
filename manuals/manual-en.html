@@ -743,7 +743,7 @@ Content: "give me a sandwich"
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Number”: Index of search results.</span></li>
 <li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
-<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
+<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>delm</code><span> </span><code>["number"] </code><br>
@@ -768,7 +768,7 @@ Content: "give me a sandwich"
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Number”: Index of search results.</span></li>
 <li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
-<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
+<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>schm</code><span> </span><code>["Song Keyword"] </code><br>
@@ -793,12 +793,14 @@ Content: "give me a sandwich"
 <code>ashm</code><span> </span><code>[""]</code><br>
 <code>ashm</code><span> </span><code>["Number"]</code><br>
 <code>ashm</code><span> </span><code>["Number", "Pos"]</code><br>
+<code>ashm</code><span> </span><code>["Number", "Pos", "Autoplay"]</code><br>
 <span>If there is no parameter, show the previous search results.</span><br>
 <span>If number is provided, add the previous search result to playlist.</span><br>
 <span>If the parameter is empty string, show the previous search results.</span>
 <ol>
 <li><span>“Number”: Index of previous search results.</span></li>
-<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
+<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
+<li><span>“Autoplay”: bool, if autoplay, difference between addm and pndm</span></li>
 </ol>
 </li>
 <li><code>horm</code><span> </span><code>["username"] </code><br>
@@ -907,7 +909,7 @@ Content: "give me a sandwich"
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
 <li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
 <li><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
@@ -941,7 +943,7 @@ Content: "give me a sandwich"
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
 <li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
 <li><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>

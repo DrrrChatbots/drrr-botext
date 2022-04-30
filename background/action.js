@@ -179,7 +179,7 @@ window._actions = {
       } else publish(`no search result, please search first`);
     });
   },
-  [action_ashm] : function(idx, pos = -1){
+  [action_ashm] : function(idx, pos = -1, autoplay = true){
     chrome.storage.local.get('MusicSearchHistory', (cfg) => {
       let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
       if(cfg['MusicSearchHistory']){
@@ -192,7 +192,7 @@ window._actions = {
           publish(`only ${api[src].songs(data).length} available`);
         else{
           let song = data2info(data, src, idx);
-          setTimeout(()=>pndMusic(this.config, song, true, pos), 1000);
+          setTimeout(()=>pndMusic(this.config, song, true, pos, autoplay), 1000);
         }
       } else publish(`no search result, please search first`);
     });

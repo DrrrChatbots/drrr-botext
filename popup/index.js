@@ -921,17 +921,6 @@ function delCookies(list, callback, url){
   recursive(list, callback);
 }
 
-//function store_bio(succ, fail){
-//  getProfile(function(p){
-//    if(p){
-//      getCookie((cs)=>{
-//        push_value('bio_cookies', [p, cs], (bios) => succ(bios[bios.length - 1]));
-//      });
-//    }
-//    else fail();
-//  })
-//}
-
 function redraw_bios(bio_cookies, data){
   let $stored = $('#bio_select');
 

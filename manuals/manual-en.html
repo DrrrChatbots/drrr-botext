@@ -597,6 +597,23 @@
 <span>ex: </span><code>["$apply(args=&gt;args.reverse())", "1", "2"]</code><span> =&gt; </span><code>["2", "1"]</code></li>
 <li><code>$apply!(code)</code><span> same as </span><code>$apply</code><span> but provide </span><code>env</code><span> variable</span></li>
 </ul>
+<h5 id="utility-function-in-lambda-script" data-id="utility-function-in-lambda-script"><a class="anchor hidden-xs" href="#utility-function-in-lambda-script" title="utility-function-in-lambda-script"><span class="octicon octicon-link"></span></a><span>utility function in lambda script</span></h5>
+<p><span>For the </span><code>code</code><span> in special form, there are some utility functions for you:</span></p>
+<pre><code class="javascript hljs"><span class="token comment">// array sample</span>
+<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sample</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// will random pick an element</span>
+<span class="token function">randint</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token comment">// will return random number 1 to 10</span>
+<span class="token function">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token comment">// will return [0, 1, 2, 3, 4]</span>
+<span class="token function">range</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token comment">// will return [2,3,4,5,6]</span>
+<span class="token function">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">// will return [1, 3]</span>
+<span class="token function">span</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token comment">// like range, but inclusive the end, [2,3,4,5]</span>
+<span class="token function">mapact</span><span class="token punctuation">(</span><span class="token string">'msg'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'hello'</span><span class="token punctuation">,</span> <span class="token string">'world'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment">// send hello and world</span>
+<span class="token function">sacts</span><span class="token punctuation">(</span><span class="token parameter">acts</span> <span class="token operator">=&gt;</span> acts<span class="token punctuation">.</span><span class="token function">msg</span><span class="token punctuation">(</span><span class="token string">'hello world!'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment">// or just use function set (with your sync storage)</span>
+pacts<span class="token punctuation">.</span><span class="token function">msg</span><span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span>
+<span class="token comment">// if you don't need use storage relative function,</span>
+<span class="token comment">// you can use pacts (p for pure)</span>
+<span class="token string">'1 2 3'</span><span class="token punctuation">.</span><span class="token function">pysplit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// python like split ['1', '2', '3']</span>
+</code></pre>
 <h4 id="Figure-for-parameter" data-id="Figure-for-parameter"><a class="anchor hidden-xs" href="#Figure-for-parameter" title="Figure-for-parameter"><span class="octicon octicon-link"></span></a><span>Figure for parameter</span></h4>
 <pre><code>this is  a  message send from user
 ---- --  -  ------- ---- ---- ----
@@ -791,6 +808,8 @@ Content: "give me a sandwich"
 <span>execute lambda script purely (you cannot store variable)</span></li>
 <li><code>call!</code><span> </span><code>["lambda script category/script name.js"]</code><br>
 <span>provide the variable</span><code>env</code><span> for lambda script execution.</span></li>
+<li><code>nop</code><span> </span><code>[]</code><br>
+<span>do nothing.</span></li>
 </ul>
 <blockquote>
 <p><span>If you want to send </span><code>me</code><span> message, you can apply msg function with </span><code>/me + message</code><span> .</span></p>
@@ -881,9 +900,9 @@ Content: "give me a sandwich"
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li><a href="#PC-version" title="PC version">PC version</a></li>
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
@@ -915,9 +934,9 @@ Content: "give me a sandwich"
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li><a href="#PC-version" title="PC version">PC version</a></li>
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>

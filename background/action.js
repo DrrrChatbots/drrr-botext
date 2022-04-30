@@ -1,5 +1,5 @@
 
-actions = {
+window._actions = {
   [action_name] : function(...names){
     setTimeout(
       () => sendTab({
@@ -238,6 +238,7 @@ actions = {
   [action_evalbang] : window.run_lambda_code_impurely,
   [action_call] : window.run_lambda_script_purely,
   [action_callbang] : window.run_lambda_script_impurely,
+  [action_nop] : function(){ } ,
   /* too quick leading play song failed in content script, so setTimeout */
 }
 
@@ -256,7 +257,7 @@ function event_action(event, config, req){
       && ((req.text === 'unknown' || req.text === undefined)
         || (cmat = req.text.match(new RegExp(cont_regex))))){
       argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
-        return actions[action].apply({
+        return _actions[action].apply({
           event: {
             type: req.type,
             host: req.host,
@@ -270,4 +271,33 @@ function event_action(event, config, req){
       }, cmat);
     }
   });
+}
+
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce(function(result, key) {
+    result[key] = mapFn(object[key])
+    return result
+  }, {})
+}
+
+function actions(stype, callback){
+  chrome.storage[stype].get(cfg => {
+    callback(objectMap(_actions, f => f.bind({config: cfg})))
+  })
+}
+
+// utility functions for event action
+window.pacts = _actions;
+function sync_actions(callback){ actions('sync', callback); }
+function sacts(callback){ actions('sync', callback); }
+function mapact(name, array){
+  actions('sync', acts => array.forEach((v, i) => {
+    setTimeout(() => {
+      if(Array.isArray(v))
+        acts[name].apply(v);
+      else{
+        acts[name](v)
+      }
+    }, i * 3000);
+  }));
 }

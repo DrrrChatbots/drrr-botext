@@ -164,30 +164,30 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       var reg_funcs = reg_table.sync[req.type] || [];
       for(let handle of reg_funcs)
         handle(req, config, sender)
-    });    
+      chrome.storage.local.get((lconfig) => {
+        var reg_funcs = reg_table.local[req.type] || [];
+        for(let handle of reg_funcs)
+          handle(req, lconfig, sender, config)
 
-    chrome.storage.local.get((config) => {
-      var reg_funcs = reg_table.local[req.type] || [];
-      for(let handle of reg_funcs)
-        handle(req, config, sender)
-
-      if(config['select_module'])
-        import(`/module/${module_mapping[config['select_module']]}`).then(
-          (module)=>{
-            module.event_action &&
-              module.event_action(req, config, sender, event_action);
-          }
-        )
-      
-      Object.keys(local_functions).forEach((x)=>{
-        if(config['switch_' + x]){
-          import(`/setting/plugin/${local_functions[x].module_file}`).then(
+        if(lconfig['select_module'])
+          import(`/module/${module_mapping[lconfig['select_module']]}`).then(
             (module)=>{
               module.event_action &&
-                module.event_action(req, config, sender, event_action);
+                module.event_action(req, lconfig, sender, event_action);
             }
-          );
-        }
+          )
+
+        Object.keys(local_functions).forEach((x)=>{
+          if(lconfig['switch_' + x]){
+            import(`/setting/plugin/${local_functions[x].module_file}`).then(
+              (module)=>{
+                module.event_action &&
+                  module.event_action(req, lconfig, sender, event_action);
+              }
+            );
+          }
+
+        });
       });
     });
   }

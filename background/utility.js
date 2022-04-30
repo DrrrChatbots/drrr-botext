@@ -12,11 +12,11 @@ function Handler(hname, uis, events){
       // console.log("making", k);
       /* use IIFE avoid fucking side effect !! */
       let lift = (function(event_name, event_func){
-        return function(req, config, sender){
+        return function(req, pconfig, sender, econfig){
           // console.log(`meet handle ${hname} ${event_name}`);
-          if(event_func.precond(config, uis)){
+          if(event_func.precond(pconfig, uis)){
             // console.log(`handling ${hname} ${event_name}`);
-            event_func.onevent(req, config, uis, sender);
+            event_func.onevent(req, econfig || pconfig, uis, sender);
           } // else console.log(`pass ${hname}`);
         }
       })(k, e);

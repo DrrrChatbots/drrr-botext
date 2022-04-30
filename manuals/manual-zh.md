@@ -765,6 +765,26 @@ otoko
 例：`["$apply(args=>args.reverse())", "1", "2"]` => `["2", "1"]`
 - `$apply!(code)` 同 `$apply` 不過提供 `env` 變數
 
+##### 浪語的輔助函數
+
+對於特殊函數內的參數 `code`，這邊提供了一些預定義的輔助函數:
+```javascript
+// array sample
+[1,2,3].sample() // will random pick an element
+randint(0, 10) // will return random number 1 to 10
+range(5) // will return [0, 1, 2, 3, 4]
+range(2, 7) // will return [2,3,4,5,6]
+range(1, 5, 2) // will return [1, 3]
+span(2, 5) // like range, but inclusive the end, [2,3,4,5]
+mapact('msg', ['hello', 'world']) // send hello and world
+sacts(acts => acts.msg('hello world!'))
+// or just use function set (with your sync storage)
+pacts.msg('hello world')
+// if you don't need use storage relative function,
+// you can use pacts (p for pure)
+'1 2 3'.pysplit() // python like split ['1', '2', '3']
+```
+
 #### 參數圖示
 
 ```
@@ -959,6 +979,8 @@ Content: "給 larry 來一杯奶茶"
   純函數執行浪語腳本（執行存的變數沒有作用）
 - `call!` `["浪語腳本分類/腳本名稱.js"]`
   提供 `env` 這個變數以執行浪語腳本。
+- `nop` `[]`
+  沒有任何作用。
 
 > `me` 可以用 `/me + 推送訊息` 以 msg 達成。
 

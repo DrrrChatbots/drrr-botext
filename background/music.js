@@ -47,18 +47,18 @@ function lstMusic(config){
     })(msg[i]), i * 1000);
 }
 
-function pndMusicKeyword(config, idx, keyword = '', source){
+function pndMusicKeyword(config, idx, keyword = '', source, pos = -1){
   var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
   if(keyword.length){
     sendTab({
       fn: is_playing,
     }, undefined, ([active, after]) => {
       if(active)
-        add_search(get_music.bind(null, keyword, source), false, true, idx);
+        add_search(get_music.bind(null, keyword, source), false, true, idx, pos);
       else{
         if(config[PLAYLIST] && config[PLAYLIST].length){
           console.log("add and play first")
-          add_search(get_music.bind(null, keyword, source), false, true, idx);
+          add_search(get_music.bind(null, keyword, source), false, true, idx, pos);
           if(after === undefined || after === null || after > getDelay(config) + 5)
             setTimeout(()=> play_next(config, publish), 1000);
 
@@ -68,7 +68,7 @@ function pndMusicKeyword(config, idx, keyword = '', source){
           console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
         }
         else{
-          add_search(get_music.bind(null, keyword, source), true, idx);
+          add_search(get_music.bind(null, keyword, source), true, idx, pos);
           console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
         }
       }
@@ -77,17 +77,17 @@ function pndMusicKeyword(config, idx, keyword = '', source){
   else lstMusic(config);
 }
 
-function pndMusic(config, song, mute = true){
+function pndMusic(config, song, mute = true, pos = -1){
   var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
   sendTab({
     fn: is_playing,
   }, undefined, ([active, after]) => {
     if(active)
-      add_song(PLAYLIST, song, mute, publish);
+      add_song(PLAYLIST, song, mute, publish, pos);
     else{
       if(config[PLAYLIST] && config[PLAYLIST].length){
         console.log("add and play first")
-        add_song(PLAYLIST, song, mute, publish);
+        add_song(PLAYLIST, song, mute, publish, pos);
         if(after === undefined || after === null || after > getDelay(config) + 5)
           setTimeout(()=> play_next(config, publish), 1000);
 
@@ -97,7 +97,7 @@ function pndMusic(config, song, mute = true){
         console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
       }
       else{
-        add_song(PLAYLIST, song, mute, publish);
+        add_song(PLAYLIST, song, mute, publish, pos);
         console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
       }
     }

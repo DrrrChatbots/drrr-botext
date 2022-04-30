@@ -152,7 +152,6 @@
 <li><strong><span>千</span></strong><span> Baidu Music Boxes</span></li>
 <li><strong><span>Y</span></strong><span> YouTube (banned by GFW)</span></li>
 <li><strong><span>狗</span></strong><span> Kugou</span></li>
-<li><s><strong><span>我</span></strong><span> Kuwo</span></s></li>
 </ul>
 <h4 id="Search-Keyword-and-Play" data-id="Search-Keyword-and-Play"><a class="anchor hidden-xs" href="#Search-Keyword-and-Play" title="Search-Keyword-and-Play"><span class="octicon octicon-link"></span></a><span>Search Keyword and Play</span></h4>
 <p><span>Enter keywords and function keys to query.</span><br>
@@ -729,7 +728,7 @@ Content: "give me a sandwich"
 <ol>
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, </span><s><span>“我”</span></s><span>, “狗” and “Y” available.</span></li>
+<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
 </ol>
 </li>
 <li><code>addm</code><span> </span><code>["Song Keywords"] </code><br>
@@ -737,11 +736,14 @@ Content: "give me a sandwich"
 <code>addm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
 <code>addm</code><span> </span><code>["Song Keyword", "Number", "Sound Source"] </code><br>
 <code>addm</code><span> </span><code>["Song Keyword", "Sound Source", "Number"] </code><br>
+<code>addm</code><span> </span><code>["Song Keyword", "Number", "Sound Source", "Pos"] </code><br>
+<code>addm</code><span> </span><code>["Song Keyword", "Sound Source", "Number", "Pos"] </code><br>
 <span>Add music to your playlist.</span>
 <ol>
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, </span><s><span>“我”</span></s><span>, “狗” and “Y” available.</span></li>
+<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>delm</code><span> </span><code>["number"] </code><br>
@@ -756,6 +758,8 @@ Content: "give me a sandwich"
 <code>pndm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
 <code>pndm</code><span> </span><code>["song keyword", "number", "audio source"] </code><br>
 <code>pndm</code><span> </span><code>["song keyword", "sound source", "number"] </code><br>
+<code>pndm</code><span> </span><code>["song keyword", "number", "audio source", "Pos"] </code><br>
+<code>pndm</code><span> </span><code>["song keyword", "sound source", "number", "Pos"] </code><br>
 <span>If there is no parameter, the list to be played is listed.</span><br>
 <span>If there is no music currently, play music.</span><br>
 <span>If there is music, add it to the list</span><br>
@@ -763,7 +767,8 @@ Content: "give me a sandwich"
 <ol>
 <li><span>“Keywords”: Song keywords.</span></li>
 <li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, </span><s><span>“我”</span></s><span>, “狗” and “Y” available.</span></li>
+<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>schm</code><span> </span><code>["Song Keyword"] </code><br>
@@ -771,7 +776,7 @@ Content: "give me a sandwich"
 <span>List search results, and record the results.</span>
 <ol>
 <li><span>“Keywords”: Song keywords.</span></li>
-<li><span>“Sound Source”: There are currently “千”, “網”, “易”, “Q”, </span><s><span>“我”</span></s><span>, “狗” and “Y” available.</span></li>
+<li><span>“Sound Source”: There are currently “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
 </ol>
 </li>
 <li><code>pshm</code><span> </span><code>[]</code><br>
@@ -786,12 +791,14 @@ Content: "give me a sandwich"
 </li>
 <li><code>ashm</code><span> </span><code>[]</code><br>
 <code>ashm</code><span> </span><code>[""]</code><br>
-<code>ashm</code><span> </span><code>["number"]</code><br>
+<code>ashm</code><span> </span><code>["Number"]</code><br>
+<code>ashm</code><span> </span><code>["Number", "Pos"]</code><br>
 <span>If there is no parameter, show the previous search results.</span><br>
 <span>If number is provided, add the previous search result to playlist.</span><br>
 <span>If the parameter is empty string, show the previous search results.</span>
 <ol>
 <li><span>“Number”: Index of previous search results.</span></li>
+<li><span>“Pos”, Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>horm</code><span> </span><code>["username"] </code><br>
@@ -901,8 +908,8 @@ Content: "give me a sandwich"
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
+<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
@@ -935,8 +942,8 @@ Content: "give me a sandwich"
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
 <li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
+<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li><a href="#PC-version" title="PC version">PC version</a></li>
 <li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
 <li><a href="#Background-version" title="Background version">Background version</a></li>
 <li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>

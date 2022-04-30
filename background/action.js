@@ -124,11 +124,13 @@ window._actions = {
       }), idx
     ), 1000);
   },
-  [action_addm] : function(keyword, p1, p2){
+  [action_addm] : function(keyword, p1, p2, pos = -1){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    setTimeout(()=>add_search(get_music.bind(null, keyword, source), false, true, idx), 1000);
+    setTimeout(()=>add_search(
+      get_music.bind(null, keyword, source),
+      false, true, idx, pos), 1000);
   },
   [action_delm] : function(idx){
     setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000);
@@ -139,11 +141,12 @@ window._actions = {
   [action_nxtm] : function(){
     setTimeout(()=> play_next(this.config, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
   },
-  [action_pndm] : function(keyword, p1, p2){
+  [action_pndm] : function(keyword, p1, p2, pos = -1){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    setTimeout(()=>pndMusicKeyword(this.config, idx, keyword, source), 1000);
+    setTimeout(()=>pndMusicKeyword(
+      this.config, idx, keyword, source, pos), 1000);
   },
   [action_schm] : function(keyword, source){
     setTimeout(
@@ -176,7 +179,7 @@ window._actions = {
       } else publish(`no search result, please search first`);
     });
   },
-  [action_ashm] : function(idx){
+  [action_ashm] : function(idx, pos = -1){
     chrome.storage.local.get('MusicSearchHistory', (cfg) => {
       let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
       if(cfg['MusicSearchHistory']){
@@ -189,7 +192,7 @@ window._actions = {
           publish(`only ${api[src].songs(data).length} available`);
         else{
           let song = data2info(data, src, idx);
-          setTimeout(()=>pndMusic(this.config, song), 1000);
+          setTimeout(()=>pndMusic(this.config, song, true, pos), 1000);
         }
       } else publish(`no search result, please search first`);
     });

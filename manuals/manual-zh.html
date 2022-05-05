@@ -35,7 +35,7 @@
 </head>
 
 <body>
-    <div id="doc" class="markdown-body container-fluid comment-inner comment-enabled" data-hard-breaks="true" style=""><h1 id="DRRR-機器人插件設定手冊" data-id="DRRR-機器人插件設定手冊" style=""><a class="anchor hidden-xs" href="#DRRR-機器人插件設定手冊" title="DRRR-機器人插件設定手冊"><span class="octicon octicon-link"></span></a><span>DRRR 機器人插件設定手冊</span></h1><h2 id="安裝" data-id="安裝" style=""><a class="anchor hidden-xs" href="#安裝" title="安裝"><span class="octicon octicon-link"></span></a><span>安裝</span></h2><h3 id="電腦版" data-id="電腦版" style=""><a class="anchor hidden-xs" href="#電腦版" title="電腦版"><span class="octicon octicon-link"></span></a><span>電腦版</span></h3><div class="alert alert-success">
+    <div id="doc" class="markdown-body container-fluid comment-inner comment-enabled" data-hard-breaks="true" style=""><h1 id="DRRR-機器人插件設定手冊" data-id="DRRR-機器人插件設定手冊" style=""><a class="anchor hidden-xs" href="#DRRR-機器人插件設定手冊" title="DRRR-機器人插件設定手冊"><span class="octicon octicon-link"></span></a><span>DRRR 機器人插件設定手冊</span></h1><h2 id="安裝" data-id="安裝" style=""><a class="anchor hidden-xs" href="#安裝" title="安裝"><span class="octicon octicon-link"></span></a><span>安裝</span></h2><h3 id="電腦版" data-id="電腦版" style="" data-original-title="" title=""><a class="anchor hidden-xs" href="#電腦版" title="電腦版"><span class="octicon octicon-link"></span></a><span>電腦版</span></h3><div class="alert alert-success">
 <p><span>由於是 Chrome 插件，所以請使用 Chrome 瀏覽器，並至 </span><a href="https://chrome.google.com/webstore/detail/drrr-chatbot-extension/fkmpnkcjocenkliehpdhlfbmdmdnokgm" target="_blank" rel="noopener"><span>Google 線上應用程式商店</span></a><span> 安裝。</span></p>
 <p><span>另外如果是用 Opera 的話，可以嘗試 Opera 這款 </span><a href="https://addons.opera.com/zh-tw/extensions/details/install-chrome-extensions/" target="_blank" rel="noopener"><span>Install Chrome Extensions</span></a><span> 裝裝看。</span></p>
 </div><h3 id="手機端" data-id="手機端" style=""><a class="anchor hidden-xs" href="#手機端" title="手機端"><span class="octicon octicon-link"></span></a><span>手機端</span></h3><div class="alert alert-success">
@@ -803,6 +803,32 @@ Content: "給 larry 來一杯奶茶"
 <li><span>“位置”：插入位置，如越界或是 -1 則加在尾端。</span></li>
 <li><span>“自動播放”：bool，是否自動播放，</span><code>addm</code><span> 和 </span><code>pndm</code><span> 的差別</span></li>
 </ol>
+</li>
+<li><code>swpm</code><span> </span><code>["pos", "pos"]</code><br>
+<span>交換兩首歌在播放清單的位置。</span></li>
+<li><code>movm</code><span> </span><code>["pos", "pos"]</code><br>
+<span>將播放清單中的歌曲移動至其他位置。</span></li>
+<li><code>shfm</code><span> </span><code>[]</code><br>
+<span>隨機排序清單。</span></li>
+<li><code>repm</code><span> </span><code>[]</code><br>
+<span>切換至唱片循環。</span></li>
+<li><code>lopm</code><span> </span><code>[]</code><br>
+<span>切換至單曲循環。</span></li>
+<li><code>sngm</code><span> </span><code>[]</code><br>
+<span>切換至單曲模式。</span></li>
+<li><code>albm</code><span> </span><code>[]</code><br>
+<span>切換至唱片模式。</span></li>
+<li><code>modm</code><span> </span><code>[]</code><br>
+<code>modm</code><span> </span><code>[""]</code><br>
+<code>modm</code><span> </span><code>["number"]</code><br>
+<span>“數字” 指定模式,</span><br>
+<span>如果沒有數字參數，則顯示目前模式。</span>
+<ul>
+<li><code>"0"</code><span>: 單曲模式</span></li>
+<li><code>"1"</code><span>: 唱片模式</span></li>
+<li><code>"2"</code><span>: 單曲循環</span></li>
+<li><code>"3"</code><span>: 唱片循環</span></li>
+</ul>
 </li>
 <li><code>horm</code><span> </span><code>["使用者名稱"]</code><br>
 <span>轉移房主權限給該使用者。</span></li>

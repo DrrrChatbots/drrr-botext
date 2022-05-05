@@ -887,7 +887,7 @@ Function ["parameter", ...] Description:
   Select a description as new room description.
 - `msg` `["message", "message", ...] `
   Select a message to publish.
-- `umsg` `["URL", "Message", ...] `
+- `umsg` `["URL", "message", ...] `
   Publish the URL and a randomly selected message.
 - `dm` `["username", "message", "message", ...] `
   Select a message to dm the username.
@@ -901,27 +901,27 @@ Function ["parameter", ...] Description:
   Kick out and ban the user.
 - `banrpt` `["username"] `
   Kick out, ban and report the user.
-- `plym` `["Song Keywords"] `
-  `plym` `["Song Keyword", "Number"] `
-  `plym` `["Song Keyword", "Sound Source"] `
-  `plym` `["Song Keyword", "Number", "Sound Source"] `
-  `plym` `["Song Keyword", "Sound Source", "Number"] `
+- `plym` `["song keywords"] `
+  `plym` `["song keyword", "number"] `
+  `plym` `["song keyword", "sound source"] `
+  `plym` `["song keyword", "number", "sound source"] `
+  `plym` `["song keyword", "sound source", "number"] `
   play music.
-  1. "Keywords": Song keywords.
-  2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
-- `addm` `["Song Keywords"] `
-  `addm` `["Song Keywords", "Number"] `
-  `addm` `["Song Keyword", "Sound Source"] `
-  `addm` `["Song Keyword", "Number", "Sound Source"] `
-  `addm` `["Song Keyword", "Sound Source", "Number"] `
-  `addm` `["Song Keyword", "Number", "Sound Source", "Pos"] `
-  `addm` `["Song Keyword", "Sound Source", "Number", "Pos"] `
+  1. "keywords": Song keywords.
+  2. "number": Index of search results.
+  3. "sound source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
+- `addm` `["song keywords"] `
+  `addm` `["song keywords", "number"] `
+  `addm` `["song keyword", "sound source"] `
+  `addm` `["song keyword", "number", "sound source"] `
+  `addm` `["song keyword", "sound source", "number"] `
+  `addm` `["song keyword", "number", "sound source", "pos"] `
+  `addm` `["song keyword", "sound source", "number", "pos"] `
   Add music to your playlist.
-  1. "Keywords": Song keywords.
-  2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
-  4. "Pos": Insert pos, -1 or out of bound as append
+  1. "keywords": Song keywords.
+  2. "number": Index of search results.
+  3. "sound source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
+  4. "pos": Insert pos, -1 or out of bound as append
 - `delm` `["number"] `
   Remove music (by index number) from the list.
 - `lstm` `[] `
@@ -929,49 +929,72 @@ Function ["parameter", ...] Description:
 - `nxtm` `[] `
   Play the next song.
 - `pndm` `[] `
-  `pndm` `["Song Keywords"] `
+  `pndm` `["song keywords"] `
   `pndm` `["song keyword", "number"] `
-  `pndm` `["Song Keyword", "Sound Source"] `
+  `pndm` `["song keyword", "sound source"] `
   `pndm` `["song keyword", "number", "audio source"] `
   `pndm` `["song keyword", "sound source", "number"] `
-  `pndm` `["song keyword", "number", "audio source", "Pos"] `
-  `pndm` `["song keyword", "sound source", "number", "Pos"] `
+  `pndm` `["song keyword", "number", "audio source", "pos"] `
+  `pndm` `["song keyword", "sound source", "number", "pos"] `
   If there is no parameter, the list to be played is listed.
   If there is no music currently, play music.
   If there is music, add it to the list
   If the keyword is an empty string, list it for play.
-  1. "Keywords": Song keywords.
-  2. "Number": Index of search results.
-  3. "Sound Source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
-  4. "Pos": Insert pos, -1 or out of bound as append
-- `schm` `["Song Keyword"] `
-  `schm` `["Song Keyword", "Sound Source"] `
+  1. "keywords": Song keywords.
+  2. "number": Index of search results.
+  3. "sound source": Sound source. Currently there are "千", "網", "易", "Q", "狗" and "Y" available.
+  4. "pos": Insert pos, -1 or out of bound as append
+- `schm` `["song keyword"] `
+  `schm` `["song keyword", "sound source"] `
   List search results, and record the results.
-  1. "Keywords": Song keywords.
-  2. "Sound Source": There are currently "千", "網", "易", "Q", "狗" and "Y" available.
+  1. "keywords": Song keywords.
+  2. "sound source": There are currently "千", "網", "易", "Q", "狗" and "Y" available.
 - `pshm` `[]`
   `pshm` `[""]`
   `pshm` `["number"]`
   If there is no parameter, show the previous search results.
   If number is provided, play the previous search result.
   If the parameter is empty string, show the previous search results.
-  1. "Number": Index of previous search results.
+  1. "number": Index of previous search results.
 - `ashm` `[]`
   `ashm` `[""]`
-  `ashm` `["Number"]`
-  `ashm` `["Number", "Pos"]`
-  `ashm` `["Number", "Pos", "Autoplay"]`
+  `ashm` `["number"]`
+  `ashm` `["number", "pos"]`
+  `ashm` `["number", "pos", "autoplay"]`
   If there is no parameter, show the previous search results.
   If number is provided, add the previous search result to playlist.
   If the parameter is empty string, show the previous search results.
-  1. "Number": Index of previous search results.
-  2. "Pos": Insert pos, -1 or out of bound as append
-  2. "Autoplay": bool, if autoplay, difference between addm and pndm
+  1. "number": Index of previous search results.
+  2. "pos": Insert pos, -1 or out of bound as append
+  2. "autoplay": bool, if autoplay, difference between addm and pndm
+- `swpm` `["pos", "pos"]`
+  Swap the two songs in playlist.
+- `movm` `["pos", "pos"]`
+  Move the song to other position in playlist.
+- `shfm` `[]`
+  Shuffle the playlist
+- `repm` `[]`
+  Change to sloop mode.
+- `lopm` `[]`
+  Change to single aloop mode.
+- `sngm` `[]`
+  Change to single song mode.
+- `albm` `[]`
+  Change to album mode.
+- `modm` `[]`
+  `modm` `[""]`
+  `modm` `["number"]`
+  "number" is the mode,
+  if there is no "number" then show current mode
+  - `"0"`: single song mode
+  - `"1"`: album mode
+  - `"2"`: sloop mode
+  - `"3"`: aloop mode
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `
   Leaving the room and entering the room again.
-- `gofr` `["Room Name (RegExp)"] `
+- `gofr` `["room name (regexp)"] `
   Go to the room that matches the room name. If it fails, return to the origin room.
 - `eval` `["lambda script code"]`
   execute lambda script code purely (you cannot store variable)

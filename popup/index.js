@@ -418,7 +418,7 @@ function extractImagesFromNodes(nodes){
     let attr = $(u).css('background-image')
     return attr.substring(attr.indexOf('https'), attr.indexOf('")'))
   }).filter((v)=>v.length);
-  return urls.unique();
+  return urls.uniqued();
 
 }
 
@@ -690,10 +690,9 @@ function music_bar_setup(config){
   music_mode_switch(config[MUSIC_MODE] || ALBUM_MODE);
   $('#music_mode').click(()=>{
     let sel = $('#mode_type');
-    let mtype = mplay_modes[(mplay_modes.findIndex(m => sel.hasClass(m)) + 1) % mplay_modes.length];
-    chrome.storage.sync.set({
-      [MUSIC_MODE]: mtype
-    });
+    let mtidx = (mplay_modes.findIndex(m => sel.hasClass(m)) + 1) % mplay_modes.length;
+    let mtype = mplay_modes[mtidx];
+    set_playing_mode(mtype);
     music_mode_switch(mtype);
   })
 

@@ -1,3 +1,32 @@
+const _playing_modes = {
+  [SLOOP_MODE]: 'repeat',
+  [SINGLE_MODE]: 'single',
+  [ALBUM_MODE]: 'album',
+  [ALOOP_MODE]: 'loop',
+}
+
+function playModeAction(mtype){
+  let msg = 'invalid mode'
+  if(_playing_modes[mtype]){
+    set_playing_mode(mtype);
+    msg = `${_playing_modes[mtype]} mode on`
+  }
+  setTimeout(
+    () => sendTab({
+      fn: publish_message,
+      args: { msg: msg }
+    }), 1000);
+}
+
+function showPlayMode(msg){
+  get_playing_mode(mode => {
+    setTimeout(
+       () => sendTab({
+         fn: publish_message,
+         args: { msg: `${_playing_modes[mode]} mode on` }
+       }), 1000);
+  })
+}
 
 window._actions = {
   [action_name] : function(...names){
@@ -135,6 +164,33 @@ window._actions = {
   [action_delm] : function(idx){
     setTimeout(()=>del_song(PLAYLIST, idx, undefined, false, true), 1000);
   },
+  [action_swpm] : function(here, there){
+    setTimeout(()=>swp_song(PLAYLIST, here, there, undefined, false, true), 1000);
+  },
+  [action_shfm] : function(idx){
+    setTimeout(()=>shf_song(PLAYLIST, undefined, false, true), 1000);
+  },
+  [action_movm] : function(from, to){
+    setTimeout(()=>mov_song(PLAYLIST, from, to, undefined, false, true), 1000);
+  },
+  [action_repm] : function(){
+    playModeAction(SLOOP_MODE);
+  },
+  [action_lopm] : function(){
+    playModeAction(ALOOP_MODE);
+  },
+  [action_sngm] : function(){
+    playModeAction(SINGLE_MODE);
+  },
+  [action_albm] : function(){
+    playModeAction(ALBUM_MODE);
+  },
+  [action_modm] : function(idx){
+    if(idx === undefined || idx === "")
+      showPlayMode();
+    else
+      playModeAction([SINGLE_MODE, ALBUM_MODE, SLOOP_MODE, ALOOP_MODE][idx]);
+  },
   [action_lstm] : function(){
     setTimeout(()=>lstMusic(this.config), 1000);
   },
@@ -241,7 +297,7 @@ window._actions = {
   [action_evalbang] : window.run_lambda_code_impurely,
   [action_call] : window.run_lambda_script_purely,
   [action_callbang] : window.run_lambda_script_impurely,
-  [action_nop] : function(){ } ,
+  [action_nop] : function(){ console.log(arguments) } ,
   /* too quick leading play song failed in content script, so setTimeout */
 }
 
@@ -304,3 +360,27 @@ function mapact(name, array){
     }, i * 3000);
   }));
 }
+function playing(callback){
+  sendTab({ fn: is_playing }, null, callback);
+}
+function sattr_rw(name, callback){
+  chrome.storage.sync.get(name, (config) => {
+    chrome.storage.sync.set({[name]: callback(config[name])})
+  })
+}
+function sattr_rw_async(name, callback){
+  chrome.storage.sync.get(name, (config) => {
+    callback(config[name], val => {
+      chrome.storage.sync.set({[name]: val })
+    })
+  })
+}
+function sattr_r(name, callback){
+  chrome.storage.sync.get(name, (config) => {
+    callback(config[name])
+  })
+}
+function sattr_w(name, val, callback){
+  chrome.storage.sync.set({[name]: val}, callback);
+}
+

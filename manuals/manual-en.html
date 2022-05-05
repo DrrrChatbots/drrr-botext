@@ -705,7 +705,7 @@ Content: "give me a sandwich"
 <span>Select a description as new room description.</span></li>
 <li><code>msg</code><span> </span><code>["message", "message", ...] </code><br>
 <span>Select a message to publish.</span></li>
-<li><code>umsg</code><span> </span><code>["URL", "Message", ...] </code><br>
+<li><code>umsg</code><span> </span><code>["URL", "message", ...] </code><br>
 <span>Publish the URL and a randomly selected message.</span></li>
 <li><code>dm</code><span> </span><code>["username", "message", "message", ...] </code><br>
 <span>Select a message to dm the username.</span></li>
@@ -719,31 +719,31 @@ Content: "give me a sandwich"
 <span>Kick out and ban the user.</span></li>
 <li><code>banrpt</code><span> </span><code>["username"] </code><br>
 <span>Kick out, ban and report the user.</span></li>
-<li><code>plym</code><span> </span><code>["Song Keywords"] </code><br>
-<code>plym</code><span> </span><code>["Song Keyword", "Number"] </code><br>
-<code>plym</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
-<code>plym</code><span> </span><code>["Song Keyword", "Number", "Sound Source"] </code><br>
-<code>plym</code><span> </span><code>["Song Keyword", "Sound Source", "Number"] </code><br>
+<li><code>plym</code><span> </span><code>["song keywords"] </code><br>
+<code>plym</code><span> </span><code>["song keyword", "number"] </code><br>
+<code>plym</code><span> </span><code>["song keyword", "sound source"] </code><br>
+<code>plym</code><span> </span><code>["song keyword", "number", "sound source"] </code><br>
+<code>plym</code><span> </span><code>["song keyword", "sound source", "number"] </code><br>
 <span>play music.</span>
 <ol>
-<li><span>“Keywords”: Song keywords.</span></li>
-<li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“keywords”: Song keywords.</span></li>
+<li><span>“number”: Index of search results.</span></li>
+<li><span>“sound source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
 </ol>
 </li>
-<li><code>addm</code><span> </span><code>["Song Keywords"] </code><br>
-<code>addm</code><span> </span><code>["Song Keywords", "Number"] </code><br>
-<code>addm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
-<code>addm</code><span> </span><code>["Song Keyword", "Number", "Sound Source"] </code><br>
-<code>addm</code><span> </span><code>["Song Keyword", "Sound Source", "Number"] </code><br>
-<code>addm</code><span> </span><code>["Song Keyword", "Number", "Sound Source", "Pos"] </code><br>
-<code>addm</code><span> </span><code>["Song Keyword", "Sound Source", "Number", "Pos"] </code><br>
+<li><code>addm</code><span> </span><code>["song keywords"] </code><br>
+<code>addm</code><span> </span><code>["song keywords", "number"] </code><br>
+<code>addm</code><span> </span><code>["song keyword", "sound source"] </code><br>
+<code>addm</code><span> </span><code>["song keyword", "number", "sound source"] </code><br>
+<code>addm</code><span> </span><code>["song keyword", "sound source", "number"] </code><br>
+<code>addm</code><span> </span><code>["song keyword", "number", "sound source", "pos"] </code><br>
+<code>addm</code><span> </span><code>["song keyword", "sound source", "number", "pos"] </code><br>
 <span>Add music to your playlist.</span>
 <ol>
-<li><span>“Keywords”: Song keywords.</span></li>
-<li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
-<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
+<li><span>“keywords”: Song keywords.</span></li>
+<li><span>“number”: Index of search results.</span></li>
+<li><span>“sound source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“pos”: Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
 <li><code>delm</code><span> </span><code>["number"] </code><br>
@@ -753,30 +753,30 @@ Content: "give me a sandwich"
 <li><code>nxtm</code><span> </span><code>[] </code><br>
 <span>Play the next song.</span></li>
 <li><code>pndm</code><span> </span><code>[] </code><br>
-<code>pndm</code><span> </span><code>["Song Keywords"] </code><br>
+<code>pndm</code><span> </span><code>["song keywords"] </code><br>
 <code>pndm</code><span> </span><code>["song keyword", "number"] </code><br>
-<code>pndm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
+<code>pndm</code><span> </span><code>["song keyword", "sound source"] </code><br>
 <code>pndm</code><span> </span><code>["song keyword", "number", "audio source"] </code><br>
 <code>pndm</code><span> </span><code>["song keyword", "sound source", "number"] </code><br>
-<code>pndm</code><span> </span><code>["song keyword", "number", "audio source", "Pos"] </code><br>
-<code>pndm</code><span> </span><code>["song keyword", "sound source", "number", "Pos"] </code><br>
+<code>pndm</code><span> </span><code>["song keyword", "number", "audio source", "pos"] </code><br>
+<code>pndm</code><span> </span><code>["song keyword", "sound source", "number", "pos"] </code><br>
 <span>If there is no parameter, the list to be played is listed.</span><br>
 <span>If there is no music currently, play music.</span><br>
 <span>If there is music, add it to the list</span><br>
 <span>If the keyword is an empty string, list it for play.</span>
 <ol>
-<li><span>“Keywords”: Song keywords.</span></li>
-<li><span>“Number”: Index of search results.</span></li>
-<li><span>“Sound Source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
-<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
+<li><span>“keywords”: Song keywords.</span></li>
+<li><span>“number”: Index of search results.</span></li>
+<li><span>“sound source”: Sound source. Currently there are “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“pos”: Insert pos, -1 or out of bound as append</span></li>
 </ol>
 </li>
-<li><code>schm</code><span> </span><code>["Song Keyword"] </code><br>
-<code>schm</code><span> </span><code>["Song Keyword", "Sound Source"] </code><br>
+<li><code>schm</code><span> </span><code>["song keyword"] </code><br>
+<code>schm</code><span> </span><code>["song keyword", "sound source"] </code><br>
 <span>List search results, and record the results.</span>
 <ol>
-<li><span>“Keywords”: Song keywords.</span></li>
-<li><span>“Sound Source”: There are currently “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
+<li><span>“keywords”: Song keywords.</span></li>
+<li><span>“sound source”: There are currently “千”, “網”, “易”, “Q”, “狗” and “Y” available.</span></li>
 </ol>
 </li>
 <li><code>pshm</code><span> </span><code>[]</code><br>
@@ -786,28 +786,54 @@ Content: "give me a sandwich"
 <span>If number is provided, play the previous search result.</span><br>
 <span>If the parameter is empty string, show the previous search results.</span>
 <ol>
-<li><span>“Number”: Index of previous search results.</span></li>
+<li><span>“number”: Index of previous search results.</span></li>
 </ol>
 </li>
 <li><code>ashm</code><span> </span><code>[]</code><br>
 <code>ashm</code><span> </span><code>[""]</code><br>
-<code>ashm</code><span> </span><code>["Number"]</code><br>
-<code>ashm</code><span> </span><code>["Number", "Pos"]</code><br>
-<code>ashm</code><span> </span><code>["Number", "Pos", "Autoplay"]</code><br>
+<code>ashm</code><span> </span><code>["number"]</code><br>
+<code>ashm</code><span> </span><code>["number", "pos"]</code><br>
+<code>ashm</code><span> </span><code>["number", "pos", "autoplay"]</code><br>
 <span>If there is no parameter, show the previous search results.</span><br>
 <span>If number is provided, add the previous search result to playlist.</span><br>
 <span>If the parameter is empty string, show the previous search results.</span>
 <ol>
-<li><span>“Number”: Index of previous search results.</span></li>
-<li><span>“Pos”: Insert pos, -1 or out of bound as append</span></li>
-<li><span>“Autoplay”: bool, if autoplay, difference between addm and pndm</span></li>
+<li><span>“number”: Index of previous search results.</span></li>
+<li><span>“pos”: Insert pos, -1 or out of bound as append</span></li>
+<li><span>“autoplay”: bool, if autoplay, difference between addm and pndm</span></li>
 </ol>
+</li>
+<li><code>swpm</code><span> </span><code>["pos", "pos"]</code><br>
+<span>Swap the two songs in playlist.</span></li>
+<li><code>movm</code><span> </span><code>["pos", "pos"]</code><br>
+<span>Move the song to other position in playlist.</span></li>
+<li><code>shfm</code><span> </span><code>[]</code><br>
+<span>Shuffle the playlist</span></li>
+<li><code>repm</code><span> </span><code>[]</code><br>
+<span>Change to sloop mode.</span></li>
+<li><code>lopm</code><span> </span><code>[]</code><br>
+<span>Change to single aloop mode.</span></li>
+<li><code>sngm</code><span> </span><code>[]</code><br>
+<span>Change to single song mode.</span></li>
+<li><code>albm</code><span> </span><code>[]</code><br>
+<span>Change to album mode.</span></li>
+<li><code>modm</code><span> </span><code>[]</code><br>
+<code>modm</code><span> </span><code>[""]</code><br>
+<code>modm</code><span> </span><code>["number"]</code><br>
+<span>“number” is the mode,</span><br>
+<span>if there is no “number” then show current mode</span>
+<ul>
+<li><code>"0"</code><span>: single song mode</span></li>
+<li><code>"1"</code><span>: album mode</span></li>
+<li><code>"2"</code><span>: sloop mode</span></li>
+<li><code>"3"</code><span>: aloop mode</span></li>
+</ul>
 </li>
 <li><code>horm</code><span> </span><code>["username"] </code><br>
 <span>Transfer owner permissions to the user.</span></li>
 <li><code>ocdr</code><span> </span><code>[] </code><br>
 <span>Leaving the room and entering the room again.</span></li>
-<li><code>gofr</code><span> </span><code>["Room Name (RegExp)"] </code><br>
+<li><code>gofr</code><span> </span><code>["room name (regexp)"] </code><br>
 <span>Go to the room that matches the room name. If it fails, return to the origin room.</span></li>
 <li><code>eval</code><span> </span><code>["lambda script code"]</code><br>
 <span>execute lambda script code purely (you cannot store variable)</span></li>
@@ -909,12 +935,12 @@ Content: "give me a sandwich"
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li><a href="#PC-version" title="PC version">PC version</a></li>
-<li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
-<li><a href="#Background-version" title="Background version">Background version</a></li>
-<li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
+<li class=""><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
+<li class=""><a href="#Background-version" title="Background version">Background version</a></li>
+<li class=""><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
 </ul>
 </li>
 <li><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">
@@ -943,12 +969,12 @@ Content: "give me a sandwich"
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
-<li><a href="#Installation" title="Installation">Installation</a><ul class="nav">
-<li><a href="#PC-version" title="PC version">PC version</a></li>
-<li><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
-<li><a href="#Background-version" title="Background version">Background version</a></li>
-<li><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
+<li class=""><a href="#DRRR-ChatBot-Extension-Setting-Manual" title="DRRR ChatBot Extension Setting Manual">DRRR ChatBot Extension Setting Manual</a><ul class="nav">
+<li class=""><a href="#Installation" title="Installation">Installation</a><ul class="nav">
+<li class=""><a href="#PC-version" title="PC version">PC version</a></li>
+<li class=""><a href="#Mobile-version" title="Mobile version">Mobile version</a></li>
+<li class=""><a href="#Background-version" title="Background version">Background version</a></li>
+<li class=""><a href="#Incoming-versionThe-review-is-hard-to-pass-_3" title="Incoming version(The review is hard to pass _(:3)">Incoming version(The review is hard to pass _(:3)</a></li>
 </ul>
 </li>
 <li><a href="#FrontEnd-Control" title="FrontEnd Control">FrontEnd Control</a><ul class="nav">

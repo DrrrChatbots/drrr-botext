@@ -306,6 +306,7 @@ function wrap_post_form(){
 
   ext_post.on('click', function(e){
     wrapper(()=> org_post.click());
+    $('.counter').text('140')
   });
 
   $('textarea[name="message"]').on('keydown', function(e){
@@ -314,6 +315,7 @@ function wrap_post_form(){
       if(!e.originalEvent.mySecretVariableName) {
         e.preventDefault();
         wrapper(()=> org_post.click());
+        $('.counter').text('140')
       }
     }
   });

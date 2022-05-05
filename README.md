@@ -107,3 +107,5 @@ params: [string...]
 - multiple keyword intent matching, set([people, something]), seq(people, something, time)
 
 - custom room input (add some special command, input, something...)
+
+playlist (configable)

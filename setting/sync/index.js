@@ -53,13 +53,12 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
   }
 
   function make_pills(ps, index){
-    console.log(ps);
     var language = window.navigator.userLanguage || window.navigator.language;
     var url = chrome.extension.getURL(module.doc_url);
     return `<ul class="nav nav-pills">
                 ${Object.keys(ps).map(
                   (idx) => `<li ${(`menu${idx}` === index ? `class="active"` : '')}>
-                                <a data-toggle="pill" href="#menu${idx}">
+                                <a class="nav-pill" data-toggle="pill" href="#menu${idx}">
                                     ${ps[idx]}
                                 </a>
                               </li>`).join('')}
@@ -192,11 +191,22 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 
   setting_cache = {};
 
-  $(document).ready(()=>{
+  $(document).ready(() => {
+     chrome.storage.local.get('last-smenu', res => {
+       let index = window.location.toString().split('#')[1]
+                    || res['last-smenu'] || 'menu0';
+       onReady(index);
+    });
+  });
 
-    var index = window.location.toString().split('#')[1]
-    if(!index) index = 'menu0';
+  let onReady = (index) => {
+
     $('#nav_pills').append(make_pills(Object.keys(settings), index));
+
+    $('.nav-pill').click(function(){
+      chrome.storage.local.set(
+        {'last-smenu': this.href.split('#')[1]});
+    });
 
     make_tabs(settings, index, function(cont){
       $('#tab_conts').append(cont);
@@ -258,8 +268,24 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           this.scrollTop = st;
         }, false);
       }
+
+      $('#music_delay').on('input focus',function(e){
+        if(!isNaN(Number($(this).val()))){
+          chrome.storage.sync.set({
+            [MUSIC_DELAY]: $(this).val()
+          })
+        } else {
+          alert('Please input number');
+          $(this).val('');
+        }
+      });
+
       /* load or default for every field */
       chrome.storage.sync.get((res) => {
+
+        $('#music_delay').val(res[MUSIC_DELAY] ?
+          res[MUSIC_DELAY] : DEFAULT_DELAY);
+
         Object.keys(settings).forEach((e, index)=>{
           $(`#${sid(e)}`).attr(
             'placeholder',
@@ -365,21 +391,6 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           }
         }
       });
-
-      chrome.storage.sync.get((config)=>{
-        $('#music_delay').val(config[MUSIC_DELAY] ? config[MUSIC_DELAY] : DEFAULT_DELAY);
-      });
-
-      $('#music_delay').on('input focus',function(e){
-        if(!isNaN(Number($(this).val()))){
-          chrome.storage.sync.set({
-            [MUSIC_DELAY]: $(this).val()
-          })
-        } else {
-          alert('Please input number');
-          $(this).val('');
-        }
-      });
     })
-  });
+  }
 });

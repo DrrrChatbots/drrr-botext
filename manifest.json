@@ -45,8 +45,8 @@
     "permissions": [
         "tabs",
         "storage",
-        "notifications",
         "cookies",
+        "notifications",
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",

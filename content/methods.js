@@ -444,11 +444,7 @@ var effects = {
 }
 
 function bgEffect(args){
-  //$('<script/>', {src: location.baseURL + "/js/extra.min.js"}).appendTo("head"); snowStorm.start();
-  console.log(`start ${args.name}`);
-  $('head').append(`<script src="//drrr.com/js/extra.min.js"></script>`).promise().then(
-    ()=>$('head').append(`<script>setTimeout(()=>${effects[args.name]}, 2000);</script>`)
-  );
+  alert("bgEffect is not supported on firefox");
 }
 
 function changeBgImageURL(args){
@@ -511,29 +507,8 @@ function add_tag(url, data){
   });
 }
 
-function plug_live2d(){
-  if (screen.width >= 768) {
-    Promise.all([
-      add_tag(chrome.runtime.getURL("live2d-widget/font-awesome.min.css")),
-      add_tag(chrome.runtime.getURL("live2d-widget/waifu.css")),
-      add_tag(chrome.runtime.getURL("live2d-widget/tw_cn.js")),
-      add_tag(chrome.runtime.getURL("live2d-widget/live2d.min.js")),
-      add_tag(chrome.runtime.getURL("live2d-widget/waifu-tips.js")),
-    ]).then(() => {
-      live2d = `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json`
-      //live2d = `https://unpkg.com/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json`
-      //live2d = `https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json`
-      chrome.storage.sync.get(["live2d", "live2d-size"], (config)=>{
-        add_tag(chrome.runtime.getURL("live2d-widget/load.js"),
-          (config['live2d'] || live2d) + ' ' + (config['live2d-size'] || '300x300')
-        )
-      })
-    });
-  }
-}
-
 function callWizard(args, callback){
-  plug_live2d();
+  alert("live2d is not supported on firefox")
 }
 
 function reloadRoom(args, callback){

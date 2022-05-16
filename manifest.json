@@ -47,8 +47,6 @@
         "storage",
         "cookies",
         "notifications",
-        "identity",
-        "identity.email",
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",

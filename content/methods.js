@@ -484,6 +484,8 @@ var setClock = function(args, callback){
       text: '',
       url: ''
     });
+    console.log(`return clock`)
+    console.log(args)
   }, args.ms);
 }
 

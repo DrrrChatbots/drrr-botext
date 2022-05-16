@@ -47,6 +47,8 @@
         "storage",
         "cookies",
         "notifications",
+        "identity",
+        "identity.email",
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",
@@ -68,5 +70,6 @@
          "live2d-widget/*",
          "fonts/*"
     ],
-    "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'"
+    "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'",
+    "incognito": "split"
 }

@@ -49,8 +49,8 @@
     "permissions": [
         "tabs",
         "storage",
-        "notifications",
         "cookies",
+        "notifications",
         "*://drrr.com/*",
         "*://tinyurl.com/*",
         "*://ytapier-cat.herokuapp.com/*",
@@ -70,5 +70,8 @@
     "web_accessible_resources": [
          "images/*.png",
          "fonts/*"
+    ],
+    "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'",
+    "incognito": "split"
     ]
 }

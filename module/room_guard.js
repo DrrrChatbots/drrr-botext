@@ -133,7 +133,6 @@ export const event_action = (req, config) => {
     return;
   }
 
-
   if(type == event_join){
     if(enemy && enemy.includes(req.user) && mode == 0){
       setTimeout(()=> sendTab({ fn: kmodes[kmode], args: { user: req.user } }), 200);
@@ -159,9 +158,10 @@ export const event_action = (req, config) => {
     }
   }
   else if(type == event_clock){
-    if(req.args.from == ROOM_GUARD && observe.includes(req.args.user)){
+    if(req.args.from == ROOM_GUARD &&
+      (observe.includes(req.args.user) || req.args.action)){
       if(mode == 1){
-        sendTab({fn: show_confirm, args: {text: `Do you want to kick ${req.args.user}? (y/y)`}}, undefined, function(yn){
+        sendTab({fn: show_confirm, args: {text: `Do you want to kick ${req.args.user}?`}}, undefined, function(yn){
           if(yn){
             setTimeout(()=> sendTab({ fn: kmodes[kmode], args: { user: req.args.user } }), 200);
           }
@@ -169,10 +169,18 @@ export const event_action = (req, config) => {
       }
       else if(mode == 2){
         if(req.args.action === undefined){
-          sendTab({ fn: dm_member, args: { msg: `@${req.args.user} ${count_alert}`, user: req.args.user} });
-          setTimeout(()=>sendTab({fn: set_clock, args: {ms: 5000, from: ROOM_GUARD, user: req.args.user, action: "del"}}), 100);
+          sendTab({
+            fn: dm_member,
+            args: { msg: `@${req.args.user} ${count_alert}`,
+                    user: req.args.user} });
+          setTimeout(()=>sendTab({
+            fn: set_clock,
+            args: {ms: 5000, from: ROOM_GUARD, user: req.args.user, action: "del"}}), 100);
         }
-        else setTimeout(()=> sendTab({ fn: kmodes[kmode], args: { user: req.args.user } }), 200);
+        else if(req.args.action == "del"){
+          setTimeout(()=> sendTab({
+            fn: kmodes[kmode], args: { user: req.args.user } }), 200);
+        }
       }
       else if(mode == 3){
         setTimeout(()=> sendTab({ fn: kmodes[kmode], args: { user: req.args.user } }), 200);

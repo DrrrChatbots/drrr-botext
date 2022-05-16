@@ -666,6 +666,7 @@ otoko
 - `new-description` 房間敘述改變
 - `join` 成員加入
 - `leave` 成員離開
+- `timeout` 成員連接超時，中斷連線
 - `kick` 有人被踢出
 - `ban` 有人被禁止進入
 - `unban` 有人被解除禁止進入

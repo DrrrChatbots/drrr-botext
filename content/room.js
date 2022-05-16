@@ -96,8 +96,9 @@ function MsgDOM2EventObj(msg, info){
               type = e;
               user = $(msg).find('.name').text();
               text = $(msg).text();
+              byemsg = text.replace(user, '')
               if(type == event_leave &&
-                (text.includes(',') || text.includes('，')))
+                (byemsg.includes(',') || byemsg.includes('，')))
                 type = event_timeout;
             }
           });

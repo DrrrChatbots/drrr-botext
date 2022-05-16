@@ -658,6 +658,7 @@ when...
 - `new-description` change room description
 - `join` join new member
 - `leave` member left
+- `timeout` member timeout (disconnected)
 - `kick` someone be kicked
 - `ban` someone be banned
 - `unban` someone be unbanned

@@ -96,6 +96,9 @@ function MsgDOM2EventObj(msg, info){
               type = e;
               user = $(msg).find('.name').text();
               text = $(msg).text();
+              if(type == event_leave &&
+                (text.includes(',') || text.includes('，')))
+                type = event_timeout;
             }
           });
         if(!type){
@@ -168,7 +171,7 @@ function handle_talks(msg){
 
   if(!eobj) return;
 
-  if(['join', 'leave'].includes(eobj.type))
+  if(['join', 'leave', 'timeout'].includes(eobj.type))
     hide_annoying_namelist_post();
 
   console.log(
@@ -178,7 +181,9 @@ function handle_talks(msg){
     eobj.url
   );
 
-  if(!roomInfo || [event_join, event_leave, event_newhost, event_music].includes(eobj.type)){
+  if(!roomInfo || [
+    event_join, event_timeout, event_leave,
+    event_newhost, event_music].includes(eobj.type)){
     getRoom(
       function(info){
         prevRoomInfo = roomInfo;
@@ -306,7 +311,7 @@ function wrap_post_form(){
 
   ext_post.on('click', function(e){
     wrapper(()=> org_post.click());
-    $('.counter').text('140')
+    $('.room-input-wrap').find('.counter').text('140')
   });
 
   $('textarea[name="message"]').on('keydown', function(e){
@@ -315,7 +320,7 @@ function wrap_post_form(){
       if(!e.originalEvent.mySecretVariableName) {
         e.preventDefault();
         wrapper(()=> org_post.click());
-        $('.counter').text('140')
+        $('.room-input-wrap').find('.counter').text('140')
       }
     }
   });

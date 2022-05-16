@@ -23,18 +23,16 @@
     <script src="../codemirror/addon/fold/brace-fold.js"></script>
     <script src="../codemirror/mode/javascript/javascript.js"></script>
     <script src="../codemirror/keymap/sublime.js"></script>
-    <script src="index.js"></script>
+    <script src="background.js"></script>
     <script src="layout.js"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
     <script src="/lib/api.js" charset="utf-8"></script>
     <script src="/background/utility.js" charset="utf-8"></script>
     <script src="/background/music.js" charset="utf-8"></script>
     <script src="/background/action.js" charset="utf-8"></script>
-    <script src="./lambdascript.js" charset="utf-8"></script>
     <script src="/lib/format.js" charset="utf-8"></script>
-    <script src="./drrr.js" charset="utf-8"></script>
-    <script src="./listener.js" charset="utf-8"></script>
-    <script src="done.js"></script>
+    <script src="./lambdascript.js" charset="utf-8"></script>
+    <script src="./drrr-bkg.js" charset="utf-8"></script>
     <link rel="stylesheet" href="./modal.css">
     <style>
     #code-editor {
@@ -252,31 +250,15 @@ li.dropdown {
 
             </div>
           </div>
-
+          <!--
           <div id="iframe-room" class="draggable resizeable" style="background: #333; display:none;">
             <ul style="width:100%">
-              <!--
-              <li><a id='intro' target="_blank">Script</a></li>
-              <li><a id="mirror-link" class=active href="void(0);">Packages</a></li>
-              -->
-              <!--
-              <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">Action</a>
-                <div class="dropdown-content">
-                  <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
-                  <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
-                  <a class="dropdownitem" id='clear' href="#">(ctrl + l) Clear</a>
-                  <a class="dropdownitem" id='stop' href="#">(ctrl + p) Pause</a>
-                  <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>
-                </div>
-                </li>
-              -->
               <li style="float:right"><a class="toggle-room" href="void(0);">X</a></li>
             </ul>
             <div id="iframe-container">
-
             </div>
           </div>
+          -->
 
           <div id="code-editor">
           </div>
@@ -290,9 +272,8 @@ li.dropdown {
           <ul style="overflow-y: auto;width:100%">
             <li><a href="../sync/index.html">Sync</a></li>
             <li><a href="../local/index.html">Local</a></li>
-            <li><a href="../plugin/index.html">Plugin</a></li>
             <li><a id='intro' href="#">Language</a></li>
-            <li><a href="./background.html">Background</a></li>
+            <li><a href="./index.html">UserScript</a></li>
             <li><a id="mirror-link" href="#">Packages</a></li>
             <li class="dropdown">
               <a href="#" class="dropbtn">Action</a>
@@ -304,8 +285,6 @@ li.dropdown {
                 <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>
               </div>
             </li>
-            <li><a id="mirror-link" href="#">Packages</a></li>
-            <li><a class="toggle-room" href="#">Room</a></li>
           </ul>
           <span id="step" style="width: 100%; min-height: 30%; padding: 1px 1px 1px 1px;flex: 1" class="textarea log" role="textbox" contenteditable></span>
         </div>

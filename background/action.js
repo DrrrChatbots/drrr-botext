@@ -28,6 +28,37 @@ function showPlayMode(msg){
   })
 }
 
+function playSourceAction(mtype){
+  let avail = `"${Object.keys(api).join("")}"`
+  let msg = `invalid mode (avail: ${avail})`
+  if(api[mtype]){
+    set_playing_source(mtype);
+    msg = `source: ${mtype} in ${avail}`
+  }
+  else if(Object.keys(api)[mtype]){
+    let src = Object.keys(api)[mtype]
+    // ['易', 'Q', '狗', '千', 'Y', '網']
+    set_playing_source(src);
+    msg = `source: ${src} in ${avail}`
+  }
+  setTimeout(
+    () => sendTab({
+      fn: publish_message,
+      args: { msg: msg }
+    }), 1000);
+}
+
+function showPlaySource(msg){
+  let avail = `"${Object.keys(api).join("")}"`
+  get_playing_source(source => {
+    setTimeout(
+       () => sendTab({
+         fn: publish_message,
+         args: { msg: `source: ${source} in ${avail}` }
+       }), 1000);
+  })
+}
+
 window._actions = {
   [action_name] : function(...names){
     setTimeout(
@@ -190,6 +221,12 @@ window._actions = {
       showPlayMode();
     else
       playModeAction([SINGLE_MODE, ALBUM_MODE, SLOOP_MODE, ALOOP_MODE][idx]);
+  },
+  [action_srcm] : function(idx){
+    if(idx === undefined || idx === "")
+      showPlaySource();
+    else
+      playSourceAction(idx);
   },
   [action_lstm] : function(){
     setTimeout(()=>lstMusic(this.config), 1000);

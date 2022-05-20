@@ -991,6 +991,17 @@ Function ["parameter", ...] Description:
   - `"1"`: album mode
   - `"2"`: sloop mode
   - `"3"`: aloop mode
+- `srcm` `[]`
+  `srcm` `[""]`
+  `srcm` `["number or name"]`
+  "number or name" is the music source,
+    if there is no musice source then show current source
+  - `"0"`/`"易"`
+  - `"1"`/`"Q"`
+  - `"2"`/`"狗"`
+  - `"3"`/`"千"`
+  - `"4"`/`"Y"`
+  - `"5"`/`"网"``
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

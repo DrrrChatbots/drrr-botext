@@ -1308,7 +1308,6 @@ var PS = {};
   exports["Later"] = Later;
   exports["Going"] = Going;
   exports["Visit"] = Visit;
-  exports["Reset"] = Reset;
   exports["Renew"] = Renew;
   exports["Timer"] = Timer;
   exports["Group"] = Group;
@@ -24188,16 +24187,13 @@ var PS = {};
                   return v2.value0 === v.exprs.value0.value0.value0;
               })(v.states);
               if (v1 instanceof Data_Maybe.Just) {
-                  return function __do() {
-                      Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
-                      return Control_Monad_Rec_Class.Loop.create({
-                          exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, new Data_List_Types.Cons(new BotScript.Reset(v.cur), v.exprs.value0.value1)), v.exprs.value1),
-                          cur: v.cur,
-                          env: v.env,
-                          states: v.states,
-                          val: v.val
-                      });
-                  };
+                  return Control_Applicative.pure(Effect.applicativeEffect)(Control_Monad_Rec_Class.Loop.create({
+                      exprs: new Data_List_Types.Cons(new Data_List_Types.Cons(v1.value0.value1, v.exprs.value0.value1), v.exprs.value1),
+                      cur: v.cur,
+                      env: v.env,
+                      states: v.states,
+                      val: v.val
+                  }));
               };
               if (v1 instanceof Data_Maybe.Nothing) {
                   return function __do() {
@@ -24205,13 +24201,7 @@ var PS = {};
                       return new Control_Monad_Rec_Class.Done(v);
                   };
               };
-              throw new Error("Failed pattern match at BotScriptVM (line 285, column 13 - line 295, column 38): " + [ v1.constructor.name ]);
-          };
-          if (v.exprs.value0.value0 instanceof BotScript.Reset) {
-              return function __do() {
-                  Effect_Class.liftEffect(Effect_Class.monadEffectEffect)(DrrrBot.setcur(v.exprs.value0.value0.value0))();
-                  return new Control_Monad_Rec_Class.Loop(machine$prime);
-              };
+              throw new Error("Failed pattern match at BotScriptVM (line 285, column 13 - line 297, column 38): " + [ v1.constructor.name ]);
           };
           if (v.exprs.value0.value0 instanceof BotScript.Group) {
               var new$primeenv = BotScriptEnv.pushEnv(v.env);

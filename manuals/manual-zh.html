@@ -199,7 +199,7 @@
 <h4 id="功能鍵5" data-id="功能鍵"><a class="anchor hidden-xs" href="#功能鍵5" title="功能鍵5"><span class="octicon octicon-link"></span></a><span>功能鍵</span></h4>
 <p><i class="glyphicon glyphicon glyphicon-text-color"></i><span> 改變聊天室人名顏色</span><br>
 <i class="glyphicon glyphicon glyphicon-text-background"></i><span> 改變聊天室人名背景顏色</span><br>
-<span>（顏色採用</span><a href="https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2" target="_blank" rel="noopener"><span>網頁顏色</span></a><span>，e.g. </span><code>black</code><span>, </span><code>#000000</code><span>）</span><br>
+<span>（顏色採用</span><a href="https://zh.wikipedia.org/zh-tw/%E7%BD%91%E9%A1%B5%E9%A2%9C%E8%89%B2" target="_blank" rel="noopener"><span>網頁顏色</span></a><span>，e.g. </span><code>black</code><span>, </span><code class="color-indicator">#000000<span class="ml-1 inline-block rounded-sm" style="background-color: #000000; width: 10px; height: 10px;"></span></code><span>）</span><br>
 <i class="glyphicon glyphicon glyphicon-picture"></i><span> 使用圖片鏈結當作背景</span></p>
 <hr>
 <p><i class="fa fa-refresh"></i><span> 重置預設腳本</span><br>
@@ -805,9 +805,9 @@ Content: "給 larry 來一杯奶茶"
 <li><span>“自動播放”：bool，是否自動播放，</span><code>addm</code><span> 和 </span><code>pndm</code><span> 的差別</span></li>
 </ol>
 </li>
-<li><code>swpm</code><span> </span><code>["pos", "pos"]</code><br>
+<li><code>swpm</code><span> </span><code>["位置", "位置"]</code><br>
 <span>交換兩首歌在播放清單的位置。</span></li>
-<li><code>movm</code><span> </span><code>["pos", "pos"]</code><br>
+<li><code>movm</code><span> </span><code>["位置", "位置"]</code><br>
 <span>將播放清單中的歌曲移動至其他位置。</span></li>
 <li><code>shfm</code><span> </span><code>[]</code><br>
 <span>隨機排序清單。</span></li>
@@ -821,7 +821,7 @@ Content: "給 larry 來一杯奶茶"
 <span>切換至唱片模式。</span></li>
 <li><code>modm</code><span> </span><code>[]</code><br>
 <code>modm</code><span> </span><code>[""]</code><br>
-<code>modm</code><span> </span><code>["number"]</code><br>
+<code>modm</code><span> </span><code>["數字"]</code><br>
 <span>“數字” 指定模式,</span><br>
 <span>如果沒有數字參數，則顯示目前模式。</span>
 <ul>
@@ -829,6 +829,20 @@ Content: "給 larry 來一杯奶茶"
 <li><code>"1"</code><span>: 唱片模式</span></li>
 <li><code>"2"</code><span>: 單曲循環</span></li>
 <li><code>"3"</code><span>: 唱片循環</span></li>
+</ul>
+</li>
+<li><code>srcm</code><span> </span><code>[]</code><br>
+<code>srcm</code><span> </span><code>[""]</code><br>
+<code>srcm</code><span> </span><code>["數字或名稱"]</code><br>
+<span>“數字或名稱” 指定音源,</span><br>
+<span>如果沒有音源參數，則顯示目前模式。</span>
+<ul>
+<li><code>"0"</code><span>/</span><code>"易"</code></li>
+<li><code>"1"</code><span>/</span><code>"Q"</code></li>
+<li><code>"2"</code><span>/</span><code>"狗"</code></li>
+<li><code>"3"</code><span>/</span><code>"千"</code></li>
+<li><code>"4"</code><span>/</span><code>"Y"</code></li>
+<li><code>"5"</code><span>/`“网”``</span></li>
 </ul>
 </li>
 <li><code>horm</code><span> </span><code>["使用者名稱"]</code><br>
@@ -977,7 +991,7 @@ Content: "給 larry 來一杯奶茶"
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>
@@ -1015,7 +1029,7 @@ Content: "給 larry 來一杯奶茶"
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
+<li class=""><a href="#DRRR-機器人插件設定手冊" title="DRRR 機器人插件設定手冊">DRRR 機器人插件設定手冊</a><ul class="nav">
 <li><a href="#安裝" title="安裝">安裝</a><ul class="nav">
 <li><a href="#電腦版" title="電腦版">電腦版</a></li>
 <li><a href="#手機端" title="手機端">手機端</a></li>

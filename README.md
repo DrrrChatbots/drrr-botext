@@ -95,10 +95,6 @@ params: [string...]
 - add rule key, ["key", true]
 - add rule key control function (toggle, enable, disable, new, delete)
 
-- seq msg (use first argument as array)
-
-- timer offset (done, not handle date yet)
-
 - top to down stop or continue
 - avoid self (rule or switcher), pattern list, false
 - multiple user pattern
@@ -109,3 +105,5 @@ params: [string...]
 - custom room input (add some special command, input, something...)
 
 playlist (configable)
+
+@ time, identity group

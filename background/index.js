@@ -174,14 +174,14 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       chrome.storage.sync.get((sconfig) => {
         var reg_funcs = reg_table.sync[req.type] || [];
         for(let handle of reg_funcs){
-          handle(req, sconfig, sender)
+          handle(req, sconfig, sender, sconfig)
         }
 
         // for some switch in local storage
         chrome.storage.local.get((lconfig) => {
           var reg_funcs = reg_table.local[req.type] || [];
           for(let handle of reg_funcs){
-            handle(req, lconfig, sender)
+            handle(req, lconfig, sender, sconfig)
           }
 
           if(lconfig['select_module'])
@@ -218,15 +218,16 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       req.trip = profile.tripcode;
       req.text = '';
       req.url = '';
-      chrome.storage.sync.get((config) => {
+      chrome.storage.sync.get((sconfig) => {
         var reg_funcs = reg_table.sync[req.type] || [];
         for(handle of reg_funcs)
-          handle(req, config, sender)
-      });
-      chrome.storage.local.get((config) => {
-        var reg_funcs = reg_table.local[req.type] || [];
-        for(handle of reg_funcs)
-          handle(req, config, sender)
+          handle(req, sconfig, sender, sconfig)
+
+        chrome.storage.local.get((lconfig) => {
+          var reg_funcs = reg_table.local[req.type] || [];
+          for(handle of reg_funcs)
+            handle(req, lconfig, sender, sconfig)
+        });
       });
     })
   }

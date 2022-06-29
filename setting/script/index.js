@@ -115,7 +115,7 @@ function save_script(){
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: 'Your lambdascript are saved to local storage'
+        message: 'Your lambdascript is saved to local storage'
       });
     });
 }
@@ -127,7 +127,7 @@ function pause_script(){
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: 'Your lambdascript are terminated'
+    message: 'Your lambdascript is terminated'
   });
 }
 

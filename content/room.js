@@ -414,9 +414,12 @@ function hide_annoying(dom){
     if(!eobj) return;
     annoyingList.forEach(x => {
       let re = RegExp(x, 'i');
+      let at_re = RegExp("@" + x, 'i');
       if(!eobj) return;
       if((x.startsWith('#') && (eobj.trip || '').match(re))
-        || (eobj.user && eobj.user.match(re))){
+        || (eobj.user && eobj.user.match(re))
+        || (eobj.text && eobj.text.match(at_re))
+      ){
         dom.remove();
         $(`li[title=${eobj.user}]`).remove();
         eobj = null;
@@ -502,10 +505,16 @@ $(document).ready(function(){
       $('#talks').bind('DOMNodeInserted', function(event) {
         var e = event.target;
         if(e.parentElement.id == 'talks'){
+          let a = $(e).find('a');
+          if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
           handle_talks(e);
           hide_annoying(e);
         }
-      });
+      }).children().get().forEach(e => {
+        let a = $(e).find('a');
+        if(a.length)
+          a.attr('href', $('<textarea />').html(a.attr('href')).text())
+      })
 
       wrap_post_form();
       monit_progressbar();

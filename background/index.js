@@ -167,7 +167,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
       chrome.storage.local.get((lconfig) => {
         var reg_funcs = reg_table.local[req.type] || [];
         for(let handle of reg_funcs)
-          handle(req, lconfig, sender, config)
+          handle(req, lconfig, sender)
 
         if(lconfig['select_module'])
           import(`/module/${module_mapping[lconfig['select_module']]}`).then(

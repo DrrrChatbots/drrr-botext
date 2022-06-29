@@ -13,11 +13,13 @@ function Handler(hname, uis, events){
       /* use IIFE avoid fucking side effect !! */
       let lift = (function(event_name, event_func){
         return function(req, pconfig, sender, econfig){
-          // console.log(`meet handle ${hname} ${event_name}`);
           if(event_func.precond(pconfig, uis)){
-            // console.log(`handling ${hname} ${event_name}`);
-            event_func.onevent(req, econfig || pconfig, uis, sender);
-          } // else console.log(`pass ${hname}`);
+            // should not use econfig?
+            // why I write this before? if it's buggy, figure it out
+            // v
+            // event_func.onevent(req, econfig || pconfig, uis, sender);
+            event_func.onevent(req, pconfig, uis, sender);
+          }
         }
       })(k, e);
       if(k in reg_table[p]) reg_table[p][k].push(lift);

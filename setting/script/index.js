@@ -127,7 +127,7 @@ function save_script(){
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: `Your ${temp_save} are saved to local storage`
+        message: `Your ${temp_save} is saved to local storage`
       });
     });
 }
@@ -140,7 +140,7 @@ function pause_script(){
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: `Your ${temp_save} are terminated`
+    message: `Your ${temp_save} is terminated`
   });
 }
 

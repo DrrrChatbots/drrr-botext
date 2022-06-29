@@ -2102,7 +2102,31 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(req && req.expired_bio){
     let $stored = $('#bio_select');
     let optionSelected = $("option:selected", $stored);
-    optionSelected.replaceWith(`<option value="">Not Logined</option>`);
+    // TODO: delete current cookie
+    let valueSelected = $stored.val();
+    cache(undefined, (config)=>{
+      let session = c2sess(config['cookie']);
+      getProfile(function(p){
+        if(p && session == valueSelected){
+          getCookie((cs)=> {
+            delCookies(cs.map(c=>c.name), ()=>{
+              chrome.storage.sync.remove(
+                ['profile', 'cookie']);
+             optionSelected.replaceWith(`<option value="">Not Logined</option>`);
+            });
+          });
+        }
+        else{
+          pop_value(
+            'bio_cookies',
+            (([pro, cookies], idx, ary) => c2sess(cookies) == valueSelected),
+            (res, cookies) => redraw_bios(cookies)
+          )
+        }
+      })
+    });
+
+
   }
   if(callback) callback();
 });

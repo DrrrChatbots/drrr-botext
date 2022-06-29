@@ -229,21 +229,21 @@ window._actions = {
       playSourceAction(idx);
   },
   [action_lstm] : function(){
-    setTimeout(()=>lstMusic(this.config), 1000);
+    setTimeout(()=>lstMusic(this.syncConfig), 1000);
   },
   [action_nxtm] : function(){
-    setTimeout(()=> play_next(this.config, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
+    setTimeout(()=> play_next(this.syncConfig, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
   },
   [action_pndm] : function(keyword, p1, p2, pos = -1){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     setTimeout(()=>pndMusicKeyword(
-      this.config, idx, keyword, source, pos), 1000);
+      this.syncConfig, idx, keyword, source, pos), 1000);
   },
   [action_schm] : function(keyword, source){
     setTimeout(
-      ()=>schMusic(this.config, keyword, source,
+      ()=>schMusic(this.syncConfig, keyword, source,
         (keyw, src, data) => {
           chrome.storage.local.set({
             'MusicSearchHistory': {
@@ -285,7 +285,7 @@ window._actions = {
           publish(`only ${api[src].songs(data).length} available`);
         else{
           let song = data2info(data, src, idx);
-          setTimeout(()=>pndMusic(this.config, song, true, pos, autoplay), 1000);
+          setTimeout(()=>pndMusic(this.syncConfig, song, true, pos, autoplay), 1000);
         }
       } else publish(`no search result, please search first`);
     });
@@ -345,7 +345,7 @@ function match_event(type, event){
     return type == event || type == "*";
 }
 
-function event_action(event, config, req){
+function event_action(event, config, req, syncConfig){
   var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
   rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
     let cmat = null;
@@ -362,7 +362,8 @@ function event_action(event, config, req){
             text: req.text,
             url: req.url
           },
-          config: config
+          config,
+          syncConfig,
         }, args);
       }, cmat);
     }
@@ -377,8 +378,8 @@ function objectMap(object, mapFn) {
 }
 
 function actions(stype, callback){
-  chrome.storage[stype].get(cfg => {
-    callback(objectMap(_actions, f => f.bind({config: cfg})))
+  chrome.storage[stype].get(config => {
+    callback(objectMap(_actions, f => f.bind({config, syncConfig: config})))
   })
 }
 

@@ -613,7 +613,7 @@ var WelcomeH = new Handler("welcome",
 var EventActionEvents = event_events.reduce(function(obj, x){
   obj[x] = {
     precond: (config, uis) => config[SWITCH_EVENTACT] && config[sid(EVENTACT)],
-    onevent: (req, config, uis, sender) => event_action(x, config, req)
+    onevent: (req, config, uis, sender, syncConfig) => event_action(x, config, req, syncConfig)
   };
   return obj;
 }, {});

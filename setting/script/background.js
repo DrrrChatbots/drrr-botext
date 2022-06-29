@@ -1,5 +1,5 @@
-var script_mod = 'user';
-var temp_save = 'lambdascript';
+var script_mod = 'bkg';
+var temp_save = 'bkgscript';
 
 
 var intervals_remove_on_reExecute = [];
@@ -88,7 +88,6 @@ function interact(){
   console.log(`=> ${stringify(val)}`);
 }
 
-var notify_web = false;
 function execute(){
   clear_intervals_on_reExecute();
   code = globalThis.editor.getValue();
@@ -101,23 +100,6 @@ function execute(){
   }
   val = machine.val;
   console.log(`=> ${stringify(val)}`);
-  if(!notify_web){
-    chrome.tabs.query({
-      url: 'https://drrr.com/*'
-    }, (tabs) => {
-      if(!tabs.length){
-        console.log("no drrr.com tab exist, if you want to listen event, create one.")
-        chrome.runtime.sendMessage({
-          notification: {
-            title: 'CLICK TO OPEN DRRR.COM',
-            msg: 'open drrr.com to listen event',
-            url: 'drrr_webpage'
-          }
-        });
-      }
-      notify_web = true;
-    });
-  }
 }
 
 function save_script(){
@@ -127,7 +109,7 @@ function save_script(){
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: `Your ${temp_save} is saved to local storage`
+        message: `Your ${temp_save} are saved to local storage`
       });
     });
 }
@@ -140,7 +122,7 @@ function pause_script(){
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: `Your ${temp_save} is terminated`
+    message: `Your ${temp_save} are terminated`
   });
 }
 

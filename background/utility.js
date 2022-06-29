@@ -12,13 +12,9 @@ function Handler(hname, uis, events){
       // console.log("making", k);
       /* use IIFE avoid fucking side effect !! */
       let lift = (function(event_name, event_func){
-        return function(req, pconfig, sender, econfig){
+        return function(req, pconfig, sender, syncConfig){
           if(event_func.precond(pconfig, uis)){
-            // should not use econfig?
-            // why I write this before? if it's buggy, figure it out
-            // v
-            // event_func.onevent(req, econfig || pconfig, uis, sender);
-            event_func.onevent(req, pconfig, uis, sender);
+            event_func.onevent(req, pconfig, uis, sender, syncConfig);
           }
         }
       })(k, e);

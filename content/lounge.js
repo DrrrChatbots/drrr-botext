@@ -213,10 +213,15 @@ chrome.runtime.onMessage.addListener(
     if(req.fn == leave_room)
       location.reload();
     else if(req.fn == cache_profile){
-      if(Profile) Profile.loc = 'lounge';
-      console.log("lounge cache", Profile ? "succ": "failed");
-      callback(Profile);
-      return; // callback finished
+      if(Profile){
+        Profile.loc = 'lounge';
+        if(Profile.name && Profile.id){
+          console.log("lounge cache succ");
+          return callback(Profile);
+        }
+      }
+      console.log("lounge cache failed");
+      return callback(null);
     }
     else if(req.fn == update_profile){
       Profile = req.args.profile;

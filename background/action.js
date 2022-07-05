@@ -59,6 +59,18 @@ function showPlaySource(msg){
   })
 }
 
+function str2bool(str){
+  if(typeof str == 'string'){
+    let lower = str.toLowerCase()
+    if(['true', 'yes', 'y', 't'].includes(lower))
+      str = true;
+    if(['false', 'no', 'n', 'f'].includes(lower))
+      str = false;
+    return str;
+  }
+  else return Boolean(str);
+}
+
 window._actions = {
   [action_name] : function(...names){
     setTimeout(
@@ -171,6 +183,30 @@ window._actions = {
         args: { user: user }
       }), 500)
   },
+  [action_djmd] : function(enable = false){
+    enable = str2bool(enable)
+    setTimeout(
+      () => sendTab({
+        fn: set_dj_mode,
+        args: { dj_mode: enable }
+      }), 500)
+  },
+  [action_plyr] : function(user, player = false){
+    player = str2bool(player)
+    setTimeout(
+      () => sendTab({
+        fn: set_player,
+        args: { player: player, user: user }
+      }), 500)
+  },
+  [action_aliv] : function(user, alive = false){
+    alive = str2bool(alive)
+    setTimeout(
+      () => sendTab({
+        fn: set_alive,
+        args: { alive: alive, user: user }
+      }), 500)
+  },
   [action_plym] : function(keyword, p1, p2){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
@@ -273,6 +309,7 @@ window._actions = {
     });
   },
   [action_ashm] : function(idx, pos = -1, autoplay = true){
+    autoplay = str2bool(autoplay)
     chrome.storage.local.get('MusicSearchHistory', (cfg) => {
       let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
       if(cfg['MusicSearchHistory']){

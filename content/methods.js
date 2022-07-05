@@ -225,6 +225,23 @@ var banMember = removeMember('ban');
 var banReportMember = removeMember('report_and_ban_user');
 var unbanMember = removeMember('unban');
 
+var setDjMode = function(args){
+  // ctrlRoom(args);
+  ctrlRoom({'dj_mode': args['dj_mode']});
+}
+
+var setPlayer = function(args){
+  findUser(args.user, (u)=>{
+    ctrlRoom({'player': args.player, to: u.id });
+  })
+}
+
+var setAlive = function(args){
+  findUser(args.user, (u)=>{
+    ctrlRoom({'alive': args.alive, to: u.id });
+  })
+}
+
 //openFuncList(args, () => {
 //  if($('.dropdown-item-kick').length){
 //    $('.dropdown-item-kick')[0].click()
@@ -530,6 +547,10 @@ methods[kick_member] = kickMember;
 methods[ban_member] = banMember;
 methods[unban_member] = unbanMember;
 methods[ban_report_member] = banReportMember;
+methods[set_dj_mode] = setDjMode;
+methods[set_player] = setPlayer;
+methods[set_alive] = setAlive;
+
 methods[handover_room] = handOverRoom;
 methods[play_music] = playMusic;
 methods[alert_user] = alertUser;

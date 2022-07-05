@@ -902,6 +902,12 @@ Function ["parameter", ...] Description:
   Kick out and ban the user.
 - `banrpt` `["username"] `
   Kick out, ban and report the user.
+- `djmd` `["enable"]`
+  If enabe dj mode, enable: `true` or `false`.
+- `plyr` `["username", "enable"]`
+  Werewolf game room, if set as player, enable: `true` or `false`.
+- `aliv` `["username", "enable"]`
+  Werewolf game room, if set as alive, enable: `true` or `false`.
 - `plym` `["song keywords"] `
   `plym` `["song keyword", "number"] `
   `plym` `["song keyword", "sound source"] `
@@ -967,7 +973,7 @@ Function ["parameter", ...] Description:
   If the parameter is empty string, show the previous search results.
   1. "number": Index of previous search results.
   2. "pos": Insert pos, -1 or out of bound as append
-  2. "autoplay": bool, if autoplay, difference between addm and pndm
+  2. "autoplay": `true` or `false`, if autoplay, difference between addm and pndm
 - `swpm` `["pos", "pos"]`
   Swap the two songs in playlist.
 - `movm` `["pos", "pos"]`

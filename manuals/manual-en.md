@@ -1007,7 +1007,7 @@ Function ["parameter", ...] Description:
   - `"2"`/`"狗"`
   - `"3"`/`"千"`
   - `"4"`/`"Y"`
-  - `"5"`/`"网"``
+  - `"5"`/`"網"`
 - `horm` `["username"] `
   Transfer owner permissions to the user.
 - `ocdr` `[] `

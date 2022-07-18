@@ -1,11 +1,11 @@
 
 
-function get_music(keyword, source, callback){
+function get_music(keyword, source, show = sendTabMessage, callback){
   var get = function(src){
     if(keyword) {
       music_api(keyword, callback, {
         log: console.log,
-        error: (msg) => sendTab({ fn: publish_message, args: { msg: msg } }),
+        error: (msg) => show(msg),
         ajax: ajax
       }, src);
     } else console.log("please input keyword");
@@ -18,7 +18,7 @@ function get_music(keyword, source, callback){
   } else get(source);
 }
 
-function lstMusic(config){
+function lstMusic(config, show = sendTabMessage){
   var list = config[PLAYLIST];
   if(list && list.length){
     songs = Object.keys(list).map(
@@ -38,71 +38,65 @@ function lstMusic(config){
   for(var i = 0; i < msg.length; i++)
     setTimeout(((msg)=>function(){
       console.log('menu is..:', msg);
-      sendTab({
-        fn: publish_message,
-        args:{
-          msg: msg
-        }
-      });
+      show(msg);
     })(msg[i]), i * 1000);
 }
 
-function pndMusicKeyword(config, idx, keyword = '', source, pos = -1){
-  var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+function pndMusicKeyword(config, idx, keyword = '',
+  source, pos = -1, show = sendTabMessage){
   if(keyword.length){
     sendTab({
       fn: is_playing,
     }, undefined, ([active, after]) => {
       if(active)
-        add_search(get_music.bind(null, keyword, source), false, true, idx, pos);
+        add_search(get_music.bind(null, keyword, source, show), false, true, idx, pos);
       else{
         if(config[PLAYLIST] && config[PLAYLIST].length){
-          add_search(get_music.bind(null, keyword, source), false, true, idx, pos);
+          add_search(get_music.bind(null, keyword, source, show), false, true, idx, pos);
           if(after === undefined || after === null || after > getDelay(config) + 5)
-            setTimeout(()=> play_next(config, publish), 1000);
-
+            setTimeout(()=> play_next(config, show), 1000);
         }
         else if(after === undefined || after === null || after > getDelay(config) + 5){
-          play_search(get_music.bind(null, keyword, source), publish, idx);
+          play_search(get_music.bind(null, keyword, source, show), show, idx);
           console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
         }
         else{
-          add_search(get_music.bind(null, keyword, source), true, idx, pos);
+          add_search(get_music.bind(null, keyword, source, show), true, idx, pos);
           console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
         }
       }
     });
   }
-  else lstMusic(config);
+  else lstMusic(config, show);
 }
 
-function pndMusic(config, song, mute = true, pos = -1, autoplay = true){
-  var publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+function pndMusic(config, song, mute = true,
+  pos = -1, autoplay = true, show = sendTabMessage){
   sendTab({
     fn: is_playing,
   }, undefined, ([active, after]) => {
     if(active)
-      add_song(PLAYLIST, song, mute, publish, pos);
+      add_song(PLAYLIST, song, mute, show, pos);
     else{
       if(config[PLAYLIST] && config[PLAYLIST].length){
-        add_song(PLAYLIST, song, mute, publish, pos);
+        add_song(PLAYLIST, song, mute, show, pos);
         if(autoplay && (after === undefined || after === null || after > getDelay(config) + 5))
-          setTimeout(()=> play_next(config, publish), 1000);
+          setTimeout(()=> play_next(config, show), 1000);
 
       }
       else if(autoplay && (after === undefined || after === null || after > getDelay(config) + 5)){
-        playMusic(song_title(song), song.link, publish);
+        playMusic(song_title(song), song.link, show);
         console.log('after is:', after, ' > ', getDelay(config) + 5, 'play');
       }
       else{
-        add_song(PLAYLIST, song, mute, publish, pos);
+        add_song(PLAYLIST, song, mute, show, pos);
         console.log('after is:', after, ' < ', getDelay(config) + 5, 'add');
       }
     }
   });
 }
 
-function showSongs(songs, source, data){
+function showSongs(songs, source, data, show = sendTabMessage){
   var msg0 = '', msg1 = '';
   for(var i = 0; i < 5; i++)
     if(songs[i]) msg0 +=
@@ -114,27 +108,15 @@ function showSongs(songs, source, data){
       `[${i}] ${ommited_name(
         api[source].name(data, i),
         api[source].singer(data, i), 28)}\n`;
-  if(msg1){
-    sendTab({
-      fn: publish_message,
-      args: { msg: msg1 }
-    });
-  }
-  if(msg0){
-    setTimeout(function() {
-      sendTab({
-        fn: publish_message,
-        args: { msg: msg0 }
-      });
-    }, 1000);
-  }
+  if(msg1){ show(msg1); }
+  if(msg0){ setTimeout(() => show(msg0), 1000); }
 }
 
-function schMusic(config, keyword, source, callback){
+function schMusic(config, keyword, source, callback, show = sendTabMessage){
   console.log(`search music[${source}]: ${keyword}`);
-  get_music(keyword, source, (keyword, source, data) => {
+  get_music(keyword, source, show, (keyword, source, data) => {
     var songs = api[source].songs(data);
     callback && callback(keyword, source, data);
-    showSongs(songs, source, data);
+    showSongs(songs, source, data, show);
   });
 }

@@ -69,7 +69,7 @@ export const ui_event = (config) => {
       });
     }
   }, (err) => {
-    alert("Cannot get room list");
+    // alert("Cannot get room list");
   })
 }
 

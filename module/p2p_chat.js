@@ -60,7 +60,8 @@ export const ui_event = (config) => {
       })
     show_peer_list(data);
   }, (err) => {
-    alert("Cannot get room list");
+    // alert("Cannot get room list");
+    // https://alertifyjs.com/
   })
 }
 

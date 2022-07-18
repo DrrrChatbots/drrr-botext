@@ -920,12 +920,13 @@ function delCookies(list, callback, url){
   recursive(list, callback);
 }
 
-function redraw_bios(bio_cookies, data){
+function redraw_bios(bio_cookies, data, renew_profile = false){
   let $stored = $('#bio_select');
 
-  bio_cookies = bio_cookies || [];
-
   cache(undefined, (config)=>{
+    bio_cookies = bio_cookies || config['bio_cookies'] || [];
+
+    if(renew_profile) Profile = undefined;
     let session = c2sess(config['cookie']);
     getProfile(function(p, err){
       if(data){
@@ -993,9 +994,11 @@ function bio_setup(config){
                   'bio_cookies': bios,
                   'profile': nprofile,
                   'cookie': ncookies
-                }, ()=> chrome.tabs.update(
-                  { url: "https://drrr.com" },
-                  ()=>redraw_bios(bios, {profile: nprofile})));
+                }, () => {
+                  redraw_bios(bios, {profile: nprofile})
+                  chrome.tabs.update({ url: "https://drrr.com" });
+                 }
+                );
               });
             });
           }
@@ -1011,9 +1014,10 @@ function bio_setup(config){
                 'bio_cookies': bios,
                 'profile': nprofile,
                 'cookie': ncookies
-              }, ()=> chrome.tabs.update(
-                { url: "https://drrr.com" },
-                ()=>redraw_bios(bios, {profile: nprofile})));
+              }, () => {
+               redraw_bios(bios, {profile: nprofile})
+               chrome.tabs.update({ url: "https://drrr.com" });
+              });
             });
           }, 'bio_cookies')
         }

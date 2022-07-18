@@ -581,14 +581,9 @@ var WelcomeEvents = {
         if(wmsg){
           if(Array.isArray(wmsg))
             wmsg = wmsg[Math.floor(Math.random() * wmsg.length)]
-          sendTab({
-            fn: publish_message,
-            args: {
-              msg: wmsg
-              .replace(/(^|[^\$])\$user/g, `$1${req.user}`)
-              .replace(/(^|[^\$])\$/g, `$1$`)
-            }
-          });
+          sendTabMessage(wmsg
+           .replace(/(^|[^\$])\$user/g, `$1${req.user}`)
+           .replace(/(^|[^\$])\$/g, `$1$`));
         }
       })(assocTrip(req.user, config, WELCOME, trip));
     }

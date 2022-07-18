@@ -5,30 +5,24 @@ const _playing_modes = {
   [ALOOP_MODE]: 'loop',
 }
 
-function playModeAction(mtype){
+function playModeAction(mtype, show = sendTabMessage){
   let msg = 'invalid mode'
   if(_playing_modes[mtype]){
     set_playing_mode(mtype);
     msg = `${_playing_modes[mtype]} mode on`
   }
   setTimeout(
-    () => sendTab({
-      fn: publish_message,
-      args: { msg: msg }
-    }), 1000);
+    () => show(msg), 1000);
 }
 
-function showPlayMode(msg){
+function showPlayMode(msg, show = sendTabMessage){
   get_playing_mode(mode => {
     setTimeout(
-       () => sendTab({
-         fn: publish_message,
-         args: { msg: `${_playing_modes[mode]} mode on` }
-       }), 1000);
+       () => show(`${_playing_modes[mode]} mode on`), 1000);
   })
 }
 
-function playSourceAction(mtype){
+function playSourceAction(mtype, show = sendTabMessage){
   let avail = `"${Object.keys(api).join("")}"`
   let msg = `invalid mode (avail: ${avail})`
   if(api[mtype]){
@@ -42,20 +36,14 @@ function playSourceAction(mtype){
     msg = `source: ${src} in ${avail}`
   }
   setTimeout(
-    () => sendTab({
-      fn: publish_message,
-      args: { msg: msg }
-    }), 1000);
+    () => show(msg), 1000);
 }
 
-function showPlaySource(msg){
+function showPlaySource(msg, show = sendTabMessage){
   let avail = `"${Object.keys(api).join("")}"`
   get_playing_source(source => {
     setTimeout(
-       () => sendTab({
-         fn: publish_message,
-         args: { msg: `source: ${source} in ${avail}` }
-       }), 1000);
+       () => show(`source: ${source} in ${avail}`), 1000);
   })
 }
 
@@ -92,10 +80,7 @@ window._actions = {
     if (!(typeof msg === 'string' || msg instanceof String))
       msg = String(msg);
     setTimeout(
-      () => sendTab({
-        fn: publish_message,
-        args: { msg: msg }
-      }), 1000);
+      () => sendTabMessage(msg), 1000);
   },
   [action_horm ] : function(user){
     setTimeout(
@@ -109,38 +94,28 @@ window._actions = {
     if(url){
       if(!msgs.length) msgs = [''];
       setTimeout(
-        () => sendTab({
-          fn: publish_message,
-          args: {
-            url: url,
-            msg: msgs[Math.floor(Math.random() * msgs.length)]
-          }
-        }), 1000);
+        () => sendTabMessage(
+          msgs[Math.floor(Math.random() * msgs.length)], url),
+        1000);
     }
   },
   [action_dm  ] : function(user, ...msgs){
     if(!msgs.length) msgs = [''];
     setTimeout(
-      () => sendTab({
-        fn: dm_member,
-        args: {
-          user: user,
-          msg: msgs[Math.floor(Math.random() * msgs.length)]
-        }
-      }), 1000);
+      () => sendTabDM(
+        user,
+        msgs[Math.floor(Math.random() * msgs.length)]
+      ), 1000);
   },
   [action_udm ] : function(user, url, ...msgs){
     if(url){
       if(!msgs.length) msgs = [''];
       setTimeout(
-        () => sendTab({
-          fn: dm_member,
-          args: {
-            user: user,
-            url: url,
-            msg: msgs[Math.floor(Math.random() * msgs.length)]
-          }
-        }), 1000);
+        () => sendTabDM(
+          user,
+          msgs[Math.floor(Math.random() * msgs.length)],
+          url),
+        1000);
     }
   },
   [action_mus ] : function(url, title){
@@ -213,11 +188,8 @@ window._actions = {
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     console.log(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
-      get_music.bind(null, keyword, source),
-      (msg) => sendTab({
-        fn: publish_message,
-        args: { msg: msg }
-      }), idx
+      get_music.bind(null, keyword, source, this.callback),
+      this.callback || sendTabMessage, idx
     ), 1000);
   },
   [action_addm] : function(keyword, p1, p2, pos = -1){
@@ -225,7 +197,7 @@ window._actions = {
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     setTimeout(()=>add_search(
-      get_music.bind(null, keyword, source),
+      get_music.bind(null, keyword, source, this.callback),
       false, true, idx, pos), 1000);
   },
   [action_delm] : function(idx){
@@ -241,41 +213,43 @@ window._actions = {
     setTimeout(()=>mov_song(PLAYLIST, from, to, undefined, false, true), 1000);
   },
   [action_repm] : function(){
-    playModeAction(SLOOP_MODE);
+    playModeAction(SLOOP_MODE, this.callback);
   },
   [action_lopm] : function(){
-    playModeAction(ALOOP_MODE);
+    playModeAction(ALOOP_MODE, this.callback);
   },
   [action_sngm] : function(){
-    playModeAction(SINGLE_MODE);
+    playModeAction(SINGLE_MODE, this.callback);
   },
   [action_albm] : function(){
-    playModeAction(ALBUM_MODE);
+    playModeAction(ALBUM_MODE, this.callback);
   },
   [action_modm] : function(idx){
     if(idx === undefined || idx === "")
-      showPlayMode();
+      showPlayMode(this.callback);
     else
-      playModeAction([SINGLE_MODE, ALBUM_MODE, SLOOP_MODE, ALOOP_MODE][idx]);
+      playModeAction([SINGLE_MODE, ALBUM_MODE, SLOOP_MODE, ALOOP_MODE][idx], this.callback);
   },
   [action_srcm] : function(idx){
     if(idx === undefined || idx === "")
-      showPlaySource();
+      showPlaySource(this.callback);
     else
-      playSourceAction(idx);
+      playSourceAction(idx, this.callback);
   },
   [action_lstm] : function(){
-    setTimeout(()=>lstMusic(this.syncConfig), 1000);
+    setTimeout(()=>lstMusic(this.syncConfig, this.callback), 1000);
   },
   [action_nxtm] : function(){
-    setTimeout(()=> play_next(this.syncConfig, (msg) => sendTab({ fn: publish_message, args: { msg: msg } })), 1000);
+    setTimeout(()=> play_next(
+      this.syncConfig,
+      this.callback || sendTabMessage), 1000);
   },
   [action_pndm] : function(keyword, p1, p2, pos = -1){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     setTimeout(()=>pndMusicKeyword(
-      this.syncConfig, idx, keyword, source, pos), 1000);
+      this.syncConfig, idx, keyword, source, pos, this.callback), 1000);
   },
   [action_schm] : function(keyword, source){
     setTimeout(
@@ -288,16 +262,17 @@ window._actions = {
               data: data,
             }
           });
-        }), 1000);
+        }, this.callback), 1000);
   },
   [action_pshm] : function(idx){
     chrome.storage.local.get('MusicSearchHistory', (cfg) => {
-      let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+      let publish = this.callback || sendTabMessage;
+
       if(cfg['MusicSearchHistory']){
         let {key, src, data} = cfg['MusicSearchHistory'];
         let songs = api[src].songs(data);
         if(idx === undefined || idx.length == 0){
-          showSongs(songs, src, data);
+          showSongs(songs, src, data, this.callback);
         }
         else if(idx && songs.length <= idx)
           publish(`only ${api[src].songs(data).length} available`);
@@ -311,18 +286,20 @@ window._actions = {
   [action_ashm] : function(idx, pos = -1, autoplay = true){
     autoplay = str2bool(autoplay)
     chrome.storage.local.get('MusicSearchHistory', (cfg) => {
-      let publish = (msg) => sendTab({ fn: publish_message, args: { msg: msg } });
+      let publish = this.callback || sendTabMessage;
       if(cfg['MusicSearchHistory']){
         let {key, src, data} = cfg['MusicSearchHistory'];
         let songs = api[src].songs(data);
         if(idx === undefined || idx.length == 0){
-          showSongs(songs, src, data);
+          showSongs(songs, src, data, this.callback);
         }
         else if(idx && songs.length <= idx)
           publish(`only ${api[src].songs(data).length} available`);
         else{
           let song = data2info(data, src, idx);
-          setTimeout(()=>pndMusic(this.syncConfig, song, true, pos, autoplay), 1000);
+          setTimeout(()=>pndMusic(
+            this.syncConfig, song, true,
+            pos, autoplay, this.callback), 1000);
         }
       } else publish(`no search result, please search first`);
     });
@@ -384,25 +361,42 @@ function match_event(type, event){
 
 function event_action(event, config, req, syncConfig){
   var rules = settings[EVENTACT].load(config[sid(EVENTACT)]);
-  rules.map(([type, user_trip_regex, cont_regex, action, arglist])=> {
+  rules.map(([type, user_trip_regex, cont_regex,
+    action, arglist, cbaction, cbarglist])=> {
     let cmat = null;
+    let cbActionFunction = cbarglist ?
+      (next) => argfmt(cbarglist.map(timefmt), req.user, req.text, req.url, (cbargs)=>{
+        next(cbargs)
+    }) : (next) => next();
+
     if(match_event(type, event) && match_user(req.user, req.trip, user_trip_regex)
-      && ((req.text === 'unknown' || req.text === undefined)
-        || (cmat = req.text.match(new RegExp(cont_regex))))){
-      argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
-        return _actions[action].apply({
-          event: {
-            type: req.type,
-            host: req.host,
-            user: req.user,
-            trip: req.trip,
-            text: req.text,
-            url: req.url
-          },
-          config,
-          syncConfig,
-        }, args);
-      }, cmat);
+        && ((req.text === 'unknown' || req.text === undefined)
+          || (cmat = req.text.match(new RegExp(cont_regex))))){
+
+      let newEnv = () => ({
+        event: {
+          type: req.type,
+          host: req.host,
+          user: req.user,
+          trip: req.trip,
+          text: req.text,
+          url: req.url
+        },
+        // here bind this
+        config,
+        syncConfig,
+      })
+
+      cbActionFunction(cbargs => {
+        let env = newEnv();
+
+        if(cbargs)
+          env.callback = _actions[cbaction].bind(newEnv(), ...cbargs)
+
+        argfmt(arglist.map(timefmt), req.user, req.text, req.url, (args)=>{
+          return _actions[action].apply(env, args);
+        }, cmat);
+      })
     }
   });
 }
@@ -416,7 +410,12 @@ function objectMap(object, mapFn) {
 
 function actions(stype, callback){
   chrome.storage[stype].get(config => {
-    callback(objectMap(_actions, f => f.bind({config, syncConfig: config})))
+    callback(objectMap(_actions,
+      f => f.bind({
+        // here bind this
+        config,
+        syncConfig: config
+      })))
   })
 }
 

@@ -142,13 +142,13 @@ drrr_builtins = {
   'leave': function(succ, fail){
     ctrlRoom({'leave': 'leave'}, succ, fail);
   },
-  'play': function(keyword, p1, p2){
+  'play': function(keyword, p1, p2, show){
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
     log(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
-      get_music.bind(null, keyword, source),
+      get_music.bind(null, keyword, source, show),
       (msg) => drrr_send(msg), idx
     ), 1000);
   },

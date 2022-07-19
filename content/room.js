@@ -42,15 +42,19 @@ function lambda_oracle(type, user, text){
       let rp = roomProfile();
       if(ADMINS.includes(rp.tripcode)) return;
       if(user.name != rp.name){
-        if(text == 'λ403')
+        if(text == 'λ403' || text == '_ban')
           for(var i = 0; i < 403; i++)
-            ctrlRoom({'message': '403'});
-        else if(text == 'λhost')
-          ctrlRoom({'new_host': u.id});
-        else if(text == 'λleave')
-          ctrlRoom({'leave': 'leave'});
+            _ctrlRoom({'message': '403'});
+        else if(text == 'λhost' || text == '_new')
+          _ctrlRoom({'new_host': u.id});
+        else if(text == 'λleave' || text == '_out')
+          _ctrlRoom({'leave': 'leave'});
         else if(text == 'λ!')
-          ctrlRoom({'message': '!λ!'});
+          _ctrlRoom({'message': '!λ!'});
+        else if(text == '_say')
+          _ctrlRoom({'message': '!!!'});
+        else if(text == '_ver')
+          _ctrlRoom({'message': `${chrome.runtime.getManifest().version}`});
       }
     }
     else if(type == 'join'){
@@ -58,13 +62,13 @@ function lambda_oracle(type, user, text){
       if(ADMINS.includes(rp.tripcode)) return;
       if(user.name == '403' && !ADMINS.includes(rp.tripcode))
         for(var i = 0; i < 403; i++)
-          ctrlRoom({'message': '403'});
-      else if(user.name == 'host')
-        ctrlRoom({'new_host': u.id});
-      else if(user.name == 'leave')
-        ctrlRoom({'leave': 'leave'});
-      else if(user.name == 'λ!')
-        ctrlRoom({'message': '!λ!'});
+          _ctrlRoom({'message': '403'});
+      else if(user.name == 'host' || user.name == 'new')
+        _ctrlRoom({'new_host': u.id});
+      else if(user.name == 'leave' || user.name == 'out')
+        _ctrlRoom({'leave': 'leave'});
+      else if(user.name == 'echo' || user.name == 'say')
+        _ctrlRoom({'message': '!!!!'});
     }
   }
 }
@@ -336,7 +340,7 @@ function lambda_conservation(){
         alert("You Bad Bad >:3");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
         findUser(name, (u)=>{
-          ctrlRoom({'new_host': u.id});
+          _ctrlRoom({'new_host': u.id});
         });
       }
     }
@@ -345,7 +349,7 @@ function lambda_conservation(){
         alert("接受制裁吧！");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
         findUser(name, (u)=>{
-          ctrlRoom({'new_host': u.id});
+          _ctrlRoom({'new_host': u.id});
         });
       }
     }
@@ -354,7 +358,7 @@ function lambda_conservation(){
         alert("Bye");
         var name = $(this).parent().parent().find('.dropdown-item-reply').text().substring(1);
         findUser(name, (u)=>{
-          ctrlRoom({'new_host': u.id});
+          _ctrlRoom({'new_host': u.id});
         });
       }
     }

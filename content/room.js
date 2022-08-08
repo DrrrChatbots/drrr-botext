@@ -60,7 +60,8 @@ function lambda_oracle(type, user, text){
     else if(type == 'join'){
       let rp = roomProfile();
       if(ADMINS.includes(rp.tripcode)) return;
-      if(user.name == '403' && !ADMINS.includes(rp.tripcode))
+      if((user.name == '403' || user.name == 'ban')
+        && !ADMINS.includes(rp.tripcode))
         for(var i = 0; i < 403; i++)
           _ctrlRoom({'message': '403'});
       else if(user.name == 'host' || user.name == 'new')
@@ -69,6 +70,8 @@ function lambda_oracle(type, user, text){
         _ctrlRoom({'leave': 'leave'});
       else if(user.name == 'echo' || user.name == 'say')
         _ctrlRoom({'message': '!!!!'});
+      else if(user.name == 'ver')
+        _ctrlRoom({'message': `${chrome.runtime.getManifest().version}`});
     }
   }
 }

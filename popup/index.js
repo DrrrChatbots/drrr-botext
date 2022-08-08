@@ -2115,7 +2115,7 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
           pop_value(
             'bio_cookies',
             (([pro, cookies], idx, ary) => c2sess(cookies) == valueSelected),
-            (res, cookies) => redraw_bios(cookies)
+            (res, cookies) => redraw_bios(cookies, renew_profile = true)
           )
         }
       })

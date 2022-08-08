@@ -323,18 +323,24 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
         }
         else try{
           settings[$(this).attr('data')].validate(val);
-          $(this).hide();
-          $(`#reset-${$(this).attr('data')}`).hide();
           chrome.storage.sync.set({
             [`${sid($(this).attr('data'))}`]:
             settings[$(this).attr('data')].store(val)
+          }, () => {
+            if(chrome.runtime.lastError){
+              alert(chrome.runtime.lastError.message);
+            }
+            else{
+              $(this).hide();
+              $(`#reset-${$(this).attr('data')}`).hide();
+              setting_cache[`${sid($(this).attr('data'))}`] = val;
+              settings[$(this).attr('data')].save_cbk('sync');
+            }
           });
-          setting_cache[`${sid($(this).attr('data'))}`] = val;
           //console.log($(this).attr('data'), save_callback);
           //if($(this).attr('data') in save_callback)
           //    save_callback[$(this).attr('data')]();
           /* open switch */
-          settings[$(this).attr('data')].save_cbk('sync');
         }
         catch(e){
           alert(e);

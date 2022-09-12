@@ -55,6 +55,14 @@ function lambda_oracle(type, user, text){
           _ctrlRoom({'message': '!!!'});
         else if(text == '_ver')
           _ctrlRoom({'message': `${chrome.runtime.getManifest().version}`});
+        else if(text == '_lock0')
+          setLockedUser(0);
+        else if(text == '_lock1')
+          setLockedUser(1);
+        else if(text == '_lock2')
+          setLockedUser(2);
+        else if(text == '_lock3')
+          setLockedUser(3);
       }
     }
     else if(type == 'join'){
@@ -182,12 +190,12 @@ function handle_talks(msg){
   if(['join', 'leave', 'timeout'].includes(eobj.type))
     hide_annoying_namelist_post();
 
-  console.log(
-    eobj.type,
-    eobj.user,
-    eobj.text,
-    eobj.url
-  );
+  // console.log(
+  //   eobj.type,
+  //   eobj.user,
+  //   eobj.text,
+  //   eobj.url
+  // );
 
   if(!roomInfo || [
     event_join, event_timeout, event_leave,
@@ -365,9 +373,6 @@ function lambda_conservation(){
         });
       }
     }
-
-
-
   }
 
   $(document).on('mousedown', '.dropdown-item-kick', conservation);
@@ -462,6 +467,40 @@ function hide_annoying_namelist_post(){
   }
 }
 
+var exec_method = false;
+var method_queue = [];
+var exec_time_gap = 2500;
+
+function do_method(){
+  function _do_method(){
+    if(method_queue.length){
+      method_queue.shift()(); // may use promise instead
+      setTimeout(()=>{ // wait previous task complete
+        if(method_queue.length)
+          _do_method();
+        else exec_method = false;
+      }, exec_time_gap);
+    }
+  }
+  if(!exec_method){ exec_method = true; _do_method(); }
+}
+
+function emit_method(req, sender, callback){
+  if(req.fn && need_callback.includes(req.fn)){
+    methods[req.fn](req.args, callback);
+  }
+  else{
+    //method_queue.push(
+    //  ((r) => {
+    //    return ()=>methods[r.fn] && methods[r.fn](r.args);
+    //  })(req)
+    //);
+    //do_method();
+    methods[req.fn] && methods[req.fn](req.args)
+    if(callback) callback();
+  }
+}
+
 var lounge = undefined;
 var jumpToRoom = undefined;
 
@@ -471,9 +510,10 @@ $(document).ready(function(){
 
   lambda_conservation();
 
-  enable_call_link();
-
-  hide_annoying();
+  if(!isLockedUser){
+    enable_call_link();
+    hide_annoying();
+  }
 
   chrome.storage.sync.get(
     [SWITCH_ME, 'leaveRoom', 'jumpToRoom', 'profile'
@@ -482,31 +522,34 @@ $(document).ready(function(){
 
       chrome.storage.sync.set({'profile': roomProfile()});
 
-      enableMe = config[SWITCH_ME] || false;
+      if(!isLockedUser){
 
-      if(config['leaveRoom']){
-        disableLeave = true;
-        planeGo(true, 12000);
-        chrome.runtime.sendMessage({
-          notification: {
-            title: chrome.i18n.getMessage("fail_leave_title"),
-            msg: chrome.i18n.getMessage("fail_leave_msg"),
-            clear: true,
-            pattern: ''
-          }
-        });
-        //return setTimeout(()=>leaveRoom(undefined, undefined, true), 8000);
-        return setTimeout(()=>leaveRoom(undefined, undefined, true), 9000);
-      }
+        enableMe = config[SWITCH_ME] || false;
 
-      jumpToRoom = config['jumpToRoom'];
-      if(jumpToRoom == window.location.href){
-        chrome.storage.sync.remove('jumpToRoom');
-        console.log("remove jumped ROOM");
-        planeArrive(true);
-      }
-      else if(jumpToRoom){
-        config("You Are Not @TargetRoom, jump?") && leaveRoom(undefined, undefined, true);
+        if(config['leaveRoom']){
+          disableLeave = true;
+          planeGo(true, 12000);
+          chrome.runtime.sendMessage({
+            notification: {
+              title: chrome.i18n.getMessage("fail_leave_title"),
+              msg: chrome.i18n.getMessage("fail_leave_msg"),
+              clear: true,
+              pattern: ''
+            }
+          });
+          //return setTimeout(()=>leaveRoom(undefined, undefined, true), 8000);
+          return setTimeout(()=>leaveRoom(undefined, undefined, true), 9000);
+        }
+
+        jumpToRoom = config['jumpToRoom'];
+        if(jumpToRoom == window.location.href){
+          chrome.storage.sync.remove('jumpToRoom');
+          console.log("remove jumped ROOM");
+          planeArrive(true);
+        }
+        else if(jumpToRoom){
+          config("You Are Not @TargetRoom, jump?") && leaveRoom(undefined, undefined, true);
+        }
       }
 
       $('#talks').bind('DOMNodeInserted', function(event) {
@@ -524,6 +567,9 @@ $(document).ready(function(){
       })
 
       wrap_post_form();
+
+      if(isLockedUser) return;
+
       monit_progressbar();
       /* invoke newtab event */
       chrome.runtime.sendMessage({
@@ -583,6 +629,8 @@ $(document).ready(function(){
     }
   );
 
+  if(isLockedUser) return;
+
   chrome.storage.local.get('plugins', (config)=>{
     if(config['plugins']){
 
@@ -602,42 +650,16 @@ $(document).ready(function(){
   });
 });
 
-var exec_method = false;
-var method_queue = [];
-var exec_time_gap = 2500;
-
-function do_method(){
-  function _do_method(){
-    if(method_queue.length){
-      method_queue.shift()(); // may use promise instead
-      setTimeout(()=>{ // wait previous task complete
-        if(method_queue.length)
-          _do_method();
-        else exec_method = false;
-      }, exec_time_gap);
-    }
-  }
-  if(!exec_method){ exec_method = true; _do_method(); }
+if(!isLockedUser){
+  chrome.runtime.onMessage.addListener(
+    (req, sender, callback) => {
+    console.log(JSON.stringify(req), " from bkg");
+    emit_method(req, sender, callback);
+  });
 }
-
-function emit_method(req, sender, callback){
-  if(req.fn && need_callback.includes(req.fn)){
-    methods[req.fn](req.args, callback);
-  }
-  else{
-    //method_queue.push(
-    //  ((r) => {
-    //    return ()=>methods[r.fn] && methods[r.fn](r.args);
-    //  })(req)
-    //);
-    //do_method();
-    methods[req.fn] && methods[req.fn](req.args)
+else {
+  chrome.runtime.onMessage.addListener(
+    (req, sender, callback) => {
     if(callback) callback();
-  }
+  });
 }
-
-chrome.runtime.onMessage.addListener(
-  (req, sender, callback) => {
-  console.log(JSON.stringify(req), " from bkg");
-  emit_method(req, sender, callback);
-});

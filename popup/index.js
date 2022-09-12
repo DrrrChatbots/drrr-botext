@@ -2084,6 +2084,9 @@ $(document).ready(function(){
     () => bkg().make_switch_panel($, '#switch_panel'));
 
   chrome.storage.sync.get((config)=>{
+    if(config['lockLevel'] != 0){
+     return $('.panel-body').html(`<center><h1>LOCKED!</h1></center>`)
+    }
     header_setup(config);
     music_bar_setup(config);
     friend_bio_setup(config);

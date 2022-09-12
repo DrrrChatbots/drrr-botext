@@ -111,49 +111,6 @@ function monit_lounge(){
   }
 }
 
-$(document).ready(function(){
-
-  monit_lounge();
-  chrome.runtime.sendMessage({ start: 'lounge' });
-  chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
-  //'https://drrr.com/room/.*'
-  $('form[action="//drrr.com/logout/"] > input').click(function(){
-    chrome.storage.sync.remove(['profile', 'cookie']);
-  })
-
-  chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile', 'annoyingList'], (config) => {
-    console.log('config', config);
-    annoyingList = config['annoyingList'];
-
-    function task(){
-      Profile.loc = 'lounge';
-      chrome.storage.sync.set({'profile': Profile});
-
-      if(config['leaveRoom'])
-        chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));
-      else checkGoToRoom(config);
-    }
-
-    if(!config['profile']) ajaxProfile(task, undefined, 'lounge');
-    else{
-      Profile = config['profile'];
-      task();
-    }
-  });
-
-  chrome.storage.local.get('plugins', (config)=>{
-    if(config['plugins']){
-      Object.keys(config['plugins']).forEach(name => {
-        let [mode, loc, enable, ctx] = config['plugins'][name];
-        if(enable && loc == "lounge"){
-          if(mode == 'url') plugTag('script', { src: ctx, })
-          else plugTag('script', { textContent: ctx, })
-        }
-      })
-    }
-  });
-})
-
 var hand = undefined;
 
 function show_jump_dialogue(config){
@@ -206,31 +163,76 @@ function blinkElt(sel, callback){
   } else callback && callback();
 }
 
-chrome.runtime.onMessage.addListener(
-  (req, sender, callback) => {
-  console.log(req);
-  if(req){
-    if(req.fn == leave_room)
-      location.reload();
-    else if(req.fn == cache_profile){
-      if(Profile){
+if(!isLockedUser){
+  $(document).ready(function(){
+
+    monit_lounge();
+    chrome.runtime.sendMessage({ start: 'lounge' });
+    chrome.runtime.sendMessage({ clearNotes: true, pattern: '' });
+    //'https://drrr.com/room/.*'
+    $('form[action="//drrr.com/logout/"] > input').click(function(){
+      chrome.storage.sync.remove(['profile', 'cookie']);
+    })
+
+    chrome.storage.sync.get(['leaveRoom', 'jumpToRoom', 'profile', 'annoyingList'], (config) => {
+      console.log('config', config);
+      annoyingList = config['annoyingList'];
+
+      function task(){
         Profile.loc = 'lounge';
-        if(Profile.name && Profile.id){
-          console.log("lounge cache succ");
-          return callback(Profile);
-        }
+        chrome.storage.sync.set({'profile': Profile});
+
+        if(config['leaveRoom'])
+          chrome.storage.sync.remove('leaveRoom', ()=>checkGoToRoom(config));
+        else checkGoToRoom(config);
       }
-      console.log("lounge cache failed");
-      return callback(null);
+
+      if(!config['profile']) ajaxProfile(task, undefined, 'lounge');
+      else{
+        Profile = config['profile'];
+        task();
+      }
+    });
+
+    chrome.storage.local.get('plugins', (config)=>{
+      if(config['plugins']){
+        Object.keys(config['plugins']).forEach(name => {
+          let [mode, loc, enable, ctx] = config['plugins'][name];
+          if(enable && loc == "lounge"){
+            if(mode == 'url') plugTag('script', { src: ctx, })
+            else plugTag('script', { textContent: ctx, })
+          }
+        })
+      }
+    });
+  })
+
+  chrome.runtime.onMessage.addListener(
+    (req, sender, callback) => {
+    console.log(req);
+    if(req){
+      if(req.fn == leave_room)
+        location.reload();
+      else if(req.fn == cache_profile){
+        if(Profile){
+          Profile.loc = 'lounge';
+          if(Profile.name && Profile.id){
+            console.log("lounge cache succ");
+            return callback(Profile);
+          }
+        }
+        console.log("lounge cache failed");
+        return callback(null);
+      }
+      else if(req.fn == update_profile){
+        Profile = req.args.profile;
+      }
+      else if(req.fn == scroll_to){
+        var sel = req.args.sel;
+        console.log(sel);
+        blinkElt(sel);
+      }
     }
-    else if(req.fn == update_profile){
-      Profile = req.args.profile;
-    }
-    else if(req.fn == scroll_to){
-      var sel = req.args.sel;
-      console.log(sel);
-      blinkElt(sel);
-    }
-  }
-  if(callback) callback();
-});
+    if(callback) callback();
+  });
+}

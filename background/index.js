@@ -120,6 +120,17 @@ function generate_notification(req){
 
 var error403 = 0;
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
+
+  if(req && req.closeTab){
+    chrome.tabs.remove(sender.tab.id, function() { });
+  }
+  else if(req && req.uninstallSelf){
+    chrome.management.uninstallSelf().then(
+          null, (error) => console.log(`Canceled: ${error}`));
+  }
+
+  if(isLockedUser){ return callback && callback(); }
+
   if(req && req.jumpto){
     if(sender.tab && sender.tab.id)
       chrome.tabs.update(sender.tab.id, { url: req.jumpto });

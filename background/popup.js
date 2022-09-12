@@ -1005,6 +1005,7 @@ function localStorageGet(type, $){
 function make_switch_panel($, panel_id){
   // note here
   typedStorage().get((config) => {
+    if(config['lockLevel'] && config['lockLevel'] != 0) return;
     let type = config["#storage-type"] || 'fa-cloud';
     localStorageGet(type, $)((localConfig) => {
       let cfg = template_setting($);

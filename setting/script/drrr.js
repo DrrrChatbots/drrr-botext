@@ -308,7 +308,7 @@ function lambdascript_event_action(event, config, req){
 
   rules.map(([type, action])=> {
     if((Array.isArray(type) && type.includes(event)) || type == event){
-      action(req.user, req.text, req.url, req.trip, req);
+      action(req.user, req.text, req.trip, req.url, req);
     }
   });
 }

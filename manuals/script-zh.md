@@ -23,6 +23,7 @@ false
 ### String
 ```javascript=
 "hello, lambda!"
+'hello, lambda!' // 從 1.783 開始支援
 ```
 目前不允許單引號字串，如 `'hello'`。
 
@@ -188,6 +189,9 @@ drrr.join("房間 ID")
 drrr.create("房間名稱", "房間描述", 房間人數:數字, "語系")
 // 基本上都有預設參數，所以要傳幾個參數都行
 
+drrr.log("log info")
+// 在終端頁面印出來
+
 // 還有一些幫你抓好的變數
 drrr.loc // 現在位置（大廳或房間 "lounge" / "room"）
 drrr.profile // 個人訊息
@@ -252,7 +256,7 @@ print("done");
 ```javascript=
 // 冒號 (:) 後面是 RegExp，如果匹配才呼叫。
 // 適用於 user 和 content （第一和第二個參數）
-event msg (user: "lambda", content, url, tripcode, req) => {
+event msg (user: "lambda", content, tc, url, req) => {
   drrr.print(user + " 叫了一下");
 }
 
@@ -283,6 +287,7 @@ timer 10000 {
 }
 
 // parse error, 10000() is not a function call
+// works after 1.783
 timer 10000 () => {
   print("hello world");
 }
@@ -298,7 +303,7 @@ later 10000 print("hello world")
 f = () => console.log("hello world")
 later 3000 f // 不會被呼叫，因為 f 被 auto lift，又被包了一層 function 在外面
 later 3000 f() // 這樣才會在三秒後印出 hello world
-later 3000 () => console.log("hello world") // parse error, 3000() is not a function call
+later 3000 () => console.log("hello world") // parse error, 3000() is not a function call, works after 1.783
 later 3000; () => console.log("hello world") // works, good
 later 3000; (a, b) => console.log("hello world") // fine, too
 later 3000 console.log("hello world") // 這個也會正常運作

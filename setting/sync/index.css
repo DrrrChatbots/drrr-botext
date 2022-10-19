@@ -1,3 +1,4 @@
+/*
 .setting-input {
     width: 100%;
 }
@@ -8,4 +9,79 @@
 
 textarea {
   font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+*/
+
+.container {
+  margin-top:50px;
+}
+
+@media (max-width: 767px) {
+    .navbar-fixed-top {
+        position: relative;
+        top: auto;
+    }
+    .navbar-collapse {
+        max-height: none;
+    }
+    body {
+        margin: 0;
+    }
+    .container {
+      margin-top:0px;
+    }
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.formblock-container
+{
+    text-align:center;
+}
+
+.config-row {
+  width: 100%;
+}
+
+.config-row > button {
+    position: relative;
+    top: 0.5px;
+    border: 1px solid #aaa;
+    height: 29px;
+    padding-top: 0px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+}
+
+.config-row > input {
+    position: relative;
+    top: 0.5px;
+    border: 1px solid #aaa;
+    height: 29px;
+    width: 28%;
+    padding-top: 0px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+}
+
+.config-row > select {
+    background-color: white;
+    position: relative;
+    top: 1px;
+    width: 28%;
+    border: 1px solid #aaa;
+    height: 29px;
+    padding-top: 0px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+}
+
+.chosen-container-multi {
+  width: 28% !important;
 }

@@ -104,6 +104,10 @@ params: [string...]
 
 - custom room input (add some special command, input, something...)
 
-playlist (configable)
+Playlist API (configurable)
 
 @ time, identity group
+
+Favlist to playlist, cycling instead of pop playing
+
+Event action, rule by rule mechanism

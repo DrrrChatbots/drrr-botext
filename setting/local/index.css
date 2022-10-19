@@ -1,3 +1,4 @@
+/*
 .setting-input {
     width: 100%;
 }
@@ -8,4 +9,34 @@
 
 textarea {
   font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+*/
+
+.container {
+  margin-top:50px;
+}
+
+@media (max-width: 767px) {
+    .navbar-fixed-top {
+        position: relative;
+        top: auto;
+    }
+    .navbar-collapse {
+        max-height: none;
+    }
+    body {
+        margin: 0;
+    }
+    .container {
+      margin-top:0px;
+    }
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+
+.wrapper {
+  display: flex;
 }

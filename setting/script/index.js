@@ -10,24 +10,6 @@ function clear_intervals_on_reExecute(){
   intervals_remove_on_reExecute = [];
 }
 
-function redef_log() {
-  globalThis.log = console.log;
-  var logger = document.getElementById('log');
-  console.log = function () {
-    for (var i = 0; i < arguments.length; i++) {
-      if (typeof arguments[i] == 'object') {
-        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i]/*, undefined, 2*/) : arguments[i]) + '<br />';
-      } else {
-        logger.innerHTML += arguments[i] + '<br />';
-      }
-    }
-    jQuery( function(){
-      var pre = jQuery("#log");
-      pre.scrollTop( pre.prop("scrollHeight") );
-    });
-  }
-}
-
 globalThis.pprint = function(){
   var logger = document.getElementById('log');
   for (var i = 0; i < arguments.length; i++) {
@@ -56,7 +38,7 @@ function show_bindings(){
       value += "  \"" + key + "\": \"" + val + "\",\n";
   }
   value += "}\n\n";
-  console.log(value);
+  drrr.log(value);
 }
 
 stringify = obj => {
@@ -74,39 +56,46 @@ stringify = obj => {
 }
 
 function interact(){
+  let val = null, ok = false;
   if(!globalThis.machine){
-    globalThis.machine = PS.Main.newMachine();
+    globalThis.machine = new RL.Machine('', drrr.log.bind(drrr));
   }
   code = $('#step').text();
   try {
-    globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
+    [ok, val] = RL.interact(globalThis.machine, code);
   }
   catch(err){
-    return console.log("Uncatchable parsing error");
+    return drrr.log(err);
   }
-  val = machine.val;
-  console.log(`=> ${stringify(val)}`);
+  if(typeof val !== 'undefined')
+    drrr.log(`${typeof val} => ${stringify(val)}`);
+  else if(ok)
+    drrr.log("Interaction Successd!")
 }
 
 var notify_web = false;
 function execute(){
   clear_intervals_on_reExecute();
-  code = globalThis.editor.getValue();
+  let code = globalThis.editor.getValue(), ok = false;
   code = preloaded_code(code);
   try {
-    globalThis.machine = PS.Main.execute(code)();
+    globalThis.machine?.destructor();
+    [ok, globalThis.machine] = RL.execute(code, drrr.log.bind(drrr));
   }
   catch(err){
-    return console.log("Uncatchable parsing error");
+    return drrr.log(err);
   }
-  val = machine.val;
-  console.log(`=> ${stringify(val)}`);
+  let val = machine.val;
+  if(typeof val !== 'undefined')
+    drrr.log(`${typeof val} => ${stringify(val)}`);
+  else if(ok)
+    drrr.log("Execution Successd!")
   if(!notify_web){
     chrome.tabs.query({
       url: 'https://drrr.com/*'
     }, (tabs) => {
       if(!tabs.length){
-        console.log("no drrr.com tab exist, if you want to listen event, create one.")
+        drrr.log("no drrr.com tab exist, if you want to listen event, create one.")
         chrome.runtime.sendMessage({
           notification: {
             title: 'CLICK TO OPEN DRRR.COM',
@@ -134,8 +123,8 @@ function save_script(){
 
 function pause_script(){
   clear_intervals_on_reExecute();
-  globalThis.machine = PS.Main.execute(';')();
-  val = machine.val;
+  globalThis.machine?.destructor();
+  globalThis.machine = RL.execute(';', drrr.log.bind(drrr));
   chrome.notifications.create({
     type: "basic",
     iconUrl: '/icon.png',
@@ -574,8 +563,13 @@ function bind_manual(){
   })
 }
 
-$(document).ready(function(event) {
+var RL = null;
+(async () => {
+  const src = chrome.extension.getURL('setting/script/run-lambda.mjs');
+  globalThis.RL = await import(src);
+})();
 
+$(document).ready(function(event) {
 
   $(".draggable").draggable({
     iframeFix: true,
@@ -651,6 +645,5 @@ $(document).ready(function(event) {
         return false;
       }
     });
-    redef_log();
   });
 });

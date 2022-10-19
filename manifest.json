@@ -4,7 +4,7 @@
     "name": "drrr chatbot extension (background)",
     "description": "chatbot extension for drrr.com",
     "short_name": "drrrbot",
-    "version": "1.828",
+    "version": "1.830",
     "default_locale": "en",
     "current_locale": "zh",
     "browser_action": {
@@ -68,7 +68,8 @@
     "web_accessible_resources": [
          "images/*.png",
          "live2d-widget/*",
-         "fonts/*"
+         "fonts/*",
+         "setting/*.mjs"
     ],
     "content_security_policy": "script-src 'self' https://static.line-scdn.net; object-src 'self'",
     "incognito": "split"

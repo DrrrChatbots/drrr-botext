@@ -87,6 +87,11 @@ function reload_chatroom(){
 }
 
 drrr_builtins = {
+  '_prev_say_args': [],
+  'repeat': function(msg){
+    let [func, args] = drrr._prev_say_args;
+    if(func) drrr[func](...args);
+  },
   'title': function(msg){
     ctrlRoom({'room_name': String(msg)});
   },
@@ -100,9 +105,11 @@ drrr_builtins = {
     ctrlRoom({'dj_mode': enable});
   },
   'print': function(msg, url){
+    drrr._prev_say_args = ['print', arguments];
     drrr_send(msg, url);
   },
   'dm': function(user, msg, url){
+    drrr._prev_say_args = ['dm', arguments];
     drrr_send(msg, url, user);
   },
   'chown': function(user){
@@ -213,6 +220,21 @@ drrr_builtins = {
       ctrlRoom({'alive': alive, to: u.id });
     })
   },
+  'log': function () {
+    var logger = document.getElementById('log');
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] == 'object') {
+        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1) : arguments[i]) + '&nbsp;';
+      } else {
+        logger.innerHTML += arguments[i] + '&nbsp;';
+      }
+    }
+    logger.innerHTML += '<br />';
+    jQuery( function(){
+      var pre = jQuery("#log");
+      pre.scrollTop( pre.prop("scrollHeight") );
+    });
+  }
 }
 
 globalThis.drrr = {}
@@ -277,25 +299,16 @@ drrr.getReady = function(callback){
 }
 
 function lambdascript_event_action(event, config, req){
-  var rules = PS.DrrrBot.events[""] || []
+  if(!globalThis.machine) return;
 
-  if(PS.DrrrBot.cur.length)
-    rules = rules.concat(PS.DrrrBot.events[PS.DrrrBot.cur] || [])
+  var rules = globalThis.machine.events[""] || []
 
-  rules.map(([type, user_trip_regex, cont_regex, action])=> {
+  if(globalThis.machine.cur.length)
+    rules = rules.concat(globalThis.machine.events[globalThis.machine.cur] || [])
+
+  rules.map(([type, action])=> {
     if((Array.isArray(type) && type.includes(event)) || type == event){
-      //log("event matched!");
-      if(match_user(req.user, req.trip, user_trip_regex)){
-        //log("user matched!");
-        if((req.text === 'unknown' || req.text === undefined)
-          || req.text.match(new RegExp(cont_regex))){
-          //log("context matched!");
-          action(req.user, req.text, req.url, req.trip, req);
-          //argfmt(arglist, req.user, req.text, req.url, (args)=>{
-          //  return actions[action].apply(config, args);
-          //});
-        } //else log('content unmatched', req.text, cont_regex);
-      } //else log('user unmatched', req.user, user_trip_regex);
-    } //else log('event unmatched', event);
+      action(req.user, req.text, req.url, req.trip, req);
+    }
   });
 }

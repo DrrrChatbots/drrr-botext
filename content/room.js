@@ -174,10 +174,10 @@ function MsgDOM2EventObj(msg, info){
     type: type,
     host: isHost(),
     user: user,
-    trip: u ? u.tripcode : '',
-    text: text,
+    trip: u && u.tripcode || '',
+    text: text || '',
     info: roomInfo,
-    url: url
+    url: url || ''
   };
 }
 

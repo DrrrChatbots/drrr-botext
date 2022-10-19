@@ -193,6 +193,9 @@ drrr.create("room name", "room desc", room limit:number, "language")
 
 // Basically there are preset parameters, so you have to pass several parameters
 
+drrr.log("log info")
+// print in script console
+
 // some pre-defined variable
 drrr.loc // current location ("lounge" / "room")
 drrr.profile // your profile
@@ -257,7 +260,7 @@ To handle related events, the type of event is the same as the description in ev
 ```javascript=
 // The colon (:) is followed by RegExp, and it will be called if it matches.
 // Applies to user and content (first and second parameters)
-event msg (user: "lambda", content, url, tripcode, req) => {
+event msg (user: "lambda", content, tc, url, req) => {
   drrr.print(user + " 叫了一下");
 }
 

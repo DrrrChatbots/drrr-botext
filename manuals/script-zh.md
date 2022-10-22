@@ -63,13 +63,6 @@ alert("it's a alert!");
 
 ![每三十秒使用一言 API 換一次部屋描述。](https://i.imgur.com/gh6i2fl.png)
 
-和 JS 不同的地方在於，浪語裡面所有東西都是 Expression，都一定有回傳值。
-
-這個語言通常不會出現 undefined，取而代之的是，他回傳 false。
-
-分號 (;) 基本上都可以省略，或者你可以使用分號回傳 false。
-
-所有第一次參考到的變數，如果不存在，便會是 false。
 
 ```javascript=
 print(x)
@@ -94,7 +87,7 @@ event[me,msg](u,m:"^/baka yande.re")=>$.get("https://yande.re/post.json?limit=1&
 
 ## 語法
 
-基本的 `+`, `-`, `*`, `/` 運算子都有支援，`+=`, `++`, `--` 之類的也有，但目前不支援三元運算子。
+基本的 `+`, `-`, `*`, `/` 運算子都有支援，`+=`, `++`, `--` 之類的也有。
 
 ### cond
 
@@ -111,7 +104,7 @@ if(x == 3) then { "hello" } else { "world" }
 
 ### loop
 
-迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。
+迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。目前也不支援 break 和 continue。
 
 迴圈的小括弧可以省略。
 
@@ -134,7 +127,7 @@ for(j in {tom: 1, allen: 2}) print(j);
 
 ### function
 
-沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。
+沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。不支援 return 語法。
 
 ```javascript=
 f = (x) =>
@@ -299,9 +292,8 @@ timer 10000 () => {
 
 ```javascript=
 later 10000 print("hello world")
-// 注意以下 function 不會被呼叫
 f = () => console.log("hello world")
-later 3000 f // 不會被呼叫，因為 f 被 auto lift，又被包了一層 function 在外面
+later 3000 f // 可以
 later 3000 f() // 這樣才會在三秒後印出 hello world
 later 3000 () => console.log("hello world") // parse error, 3000() is not a function call, works after 1.783
 later 3000; () => console.log("hello world") // works, good

@@ -57,7 +57,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 </div></div></code></pre><p><span>基本上用法和 JS 一樣，不過在 event 關鍵字後，可以使用 pattern matching。</span></p><h2 id="實作" data-id="實作" style=""><a class="anchor hidden-xs" href="#實作" title="實作"><span class="octicon octicon-link"></span></a><span>實作</span></h2><p><span>因為這個語言會被 JavaScript 直譯，</span></p><p><span>所以 JS 裡的物件其實都能在這個語言裡面進行構造、使用。</span></p><p><span>由於參考到 JS 的 globalThis，所以你也可以直接使用 global 裡面的東西。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span></div><div class="code">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"it's a alert!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</div></div></code></pre><p><img src="/manuals/img/gh6i2fl.png" alt="每三十秒使用一言 API 換一次部屋描述。" loading="lazy"></p><p><span>和 JS 不同的地方在於，浪語裡面所有東西都是 Expression，都一定有回傳值。</span></p><p><span>這個語言通常不會出現 undefined，取而代之的是，他回傳 false。</span></p><p><span>分號 (;) 基本上都可以省略，或者你可以使用分號回傳 false。</span></p><p><span>所有第一次參考到的變數，如果不存在，便會是 false。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><img src="/manuals/img/gh6i2fl.png" alt="每三十秒使用一言 API 換一次部屋描述。" loading="lazy"></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span></div><div class="code"><span class="token function">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
 <span class="token comment">// not defined, show false (before v1.740 is {}, false after v1.740)</span>
 </div></div></code></pre><p><span>這個語言也可以發 ajax，可以實作一些有趣的功能。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
@@ -70,7 +70,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
     <span class="token function">print</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>hitokoto<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </div></div></code></pre><p><span>※ 測試姬 /baka </span><a href="http://yande.re" target="_blank" rel="noopener"><span>yande.re</span></a><span> 指令復現（nsfw 警告）</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span></div><div class="code">event<span class="token punctuation">[</span>me<span class="token punctuation">,</span>msg<span class="token punctuation">]</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token literal-property property">m</span><span class="token operator">:</span><span class="token string">"^/baka yande.re"</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span>$<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"https://yande.re/post.json?limit=1&amp;page="</span><span class="token operator">+</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1e4</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token parameter">d</span><span class="token operator">=&gt;</span>drrr<span class="token punctuation">.</span><span class="token function">dm</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token string">"."</span><span class="token punctuation">,</span>d<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>preview_url<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</div></div></code></pre><h2 id="語法" data-id="語法" style=""><a class="anchor hidden-xs" href="#語法" title="語法"><span class="octicon octicon-link"></span></a><span>語法</span></h2><p><span>基本的 </span><code>+</code><span>, </span><code>-</code><span>, </span><code>*</code><span>, </span><code>/</code><span> 運算子都有支援，</span><code>+=</code><span>, </span><code>++</code><span>, </span><code>--</code><span> 之類的也有，但目前不支援三元運算子。</span></p><h3 id="cond" data-id="cond" style=""><a class="anchor hidden-xs" href="#cond" title="cond"><span class="octicon octicon-link"></span></a><span>cond</span></h3><p><span>目前支援 if then else 語法，但 switch 沒有支援。</span></p><p><span>注意這裡的 if else 是 expression，且需要 then。可以省略 if 的括號。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h2 id="語法" data-id="語法" style=""><a class="anchor hidden-xs" href="#語法" title="語法"><span class="octicon octicon-link"></span></a><span>語法</span></h2><p><span>基本的 </span><code>+</code><span>, </span><code>-</code><span>, </span><code>*</code><span>, </span><code>/</code><span> 運算子都有支援，</span><code>+=</code><span>, </span><code>++</code><span>, </span><code>--</code><span> 之類的也有。</span></p><h3 id="cond" data-id="cond" style=""><a class="anchor hidden-xs" href="#cond" title="cond"><span class="octicon octicon-link"></span></a><span>cond</span></h3><p><span>目前支援 if then else 語法，但 switch 沒有支援。</span></p><p><span>注意這裡的 if else 是 expression，且需要 then。可以省略 if 的括號。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -79,7 +79,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 <span class="token keyword">if</span> <span class="token number">0</span> then <span class="token number">1</span>
 <span class="token comment">// =&gt; false</span>
 <span class="token keyword">if</span><span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span> then <span class="token punctuation">{</span> <span class="token string">"hello"</span> <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token string">"world"</span> <span class="token punctuation">}</span>
-</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。</span></p><p><span>迴圈的小括弧可以省略。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。目前也不支援 break 和 continue。</span></p><p><span>迴圈的小括弧可以省略。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -106,7 +106,7 @@ j <span class="token operator">=</span> <span class="token number">0</span>
 
 <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token function">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token keyword">in</span> <span class="token punctuation">{</span><span class="token literal-property property">tom</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">allen</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token function">print</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</div></div></code></pre><h3 id="function" data-id="function" style=""><a class="anchor hidden-xs" href="#function" title="function"><span class="octicon octicon-link"></span></a><span>function</span></h3><p><span>沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="function" data-id="function" style=""><a class="anchor hidden-xs" href="#function" title="function"><span class="octicon octicon-link"></span></a><span>function</span></h3><p><span>沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。不支援 return 語法。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -323,11 +323,9 @@ timer <span class="token number">10000</span> <span class="token punctuation">(<
 <span></span>
 <span></span>
 <span></span>
-<span></span>
 <span></span></div><div class="code">later <span class="token number">10000</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
-<span class="token comment">// 注意以下 function 不會被呼叫</span>
 <span class="token function-variable function">f</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
-later <span class="token number">3000</span> f <span class="token comment">// 不會被呼叫，因為 f 被 auto lift，又被包了一層 function 在外面</span>
+later <span class="token number">3000</span> f <span class="token comment">// 可以</span>
 later <span class="token number">3000</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 這樣才會在三秒後印出 hello world</span>
 later <span class="token number">3000</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span> <span class="token comment">// parse error, 3000() is not a function call, works after 1.783</span>
 later <span class="token number">3000</span><span class="token punctuation">;</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span> <span class="token comment">// works, good</span>
@@ -423,8 +421,8 @@ event <span class="token function">join</span> <span class="token punctuation">(
             </a>
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
-<li><a href="#浪語介紹" title="浪語介紹">浪語介紹</a><ul class="nav">
-<li><a href="#資料型態" title="資料型態">資料型態</a><ul class="nav">
+<li class=""><a href="#浪語介紹" title="浪語介紹">浪語介紹</a><ul class="nav">
+<li class=""><a href="#資料型態" title="資料型態">資料型態</a><ul class="nav">
 <li><a href="#Boolean" title="Boolean">Boolean</a></li>
 <li><a href="#Number" title="Number">Number</a></li>
 <li><a href="#String" title="String">String</a></li>
@@ -456,8 +454,8 @@ event <span class="token function">join</span> <span class="token punctuation">(
     </div>
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print" data-spy="affix" style="top:17px;display:none;" null null>
         <div class="toc"><ul class="nav">
-<li><a href="#浪語介紹" title="浪語介紹">浪語介紹</a><ul class="nav">
-<li><a href="#資料型態" title="資料型態">資料型態</a><ul class="nav">
+<li class=""><a href="#浪語介紹" title="浪語介紹">浪語介紹</a><ul class="nav">
+<li class=""><a href="#資料型態" title="資料型態">資料型態</a><ul class="nav">
 <li><a href="#Boolean" title="Boolean">Boolean</a></li>
 <li><a href="#Number" title="Number">Number</a></li>
 <li><a href="#String" title="String">String</a></li>

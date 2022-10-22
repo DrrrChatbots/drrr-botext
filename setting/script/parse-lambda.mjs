@@ -1,21 +1,19 @@
 #!/bin/node
 // TODO: pattern matching, computed attribute
-// TODO: make all keyword into reserved
+// TODO: add state, stmt parsing only function
 
 import {
   lexer as LambdaLexer
 } from "./lambda-lexer.mjs";
 
-const TRACE = true
-const DUMP = false
-// var JisonLex = require("./src/jison-lex");
-// var lexis = fs.readFileSync("src/lambda.jisonlex", "utf8");
-// var lexer = new JisonLex(lexis);
+const TRACE = 0
+const DUMP = 0
 
 function nimpl(parser){
   console.error(parser.tokls.map(t => `[${t.type}]`).join(' '))
   console.trace();
-  throw showError(parser.tokls[0], "ParseError: not implement yet");
+  throw showError(parser.tokls[0],
+    "SyntaxError: Not implement yet");
 }
 
 function validRegExp(pat){
@@ -49,7 +47,6 @@ const arith_tokens = ["+", "-"]
 const term_tokens = ["**", "*", "/"]
 
 // TODO support (...) operator
-//
 const assign_tokens = ["=", "+=", "-=", "**=", "*=", "/="
   , "%=", "<<=", ">>=", ">>>=", "&="
   , "^=", "|=", "&&=", "||=", "??="];
@@ -85,6 +82,12 @@ const Event = (events, body, tok) => ({
   events, body, tok,
 })
 
+// TODO consider support return
+// const Return = (val, tok) => ({
+//   type: 'return',
+//   val, tok
+// })
+
 const Timer = (period, body, tok) => ({
   type: 'timer',
   period,
@@ -97,6 +100,10 @@ const Later = (period, body, tok) => ({
   period,
   body,
   tok,
+})
+
+const Unary = (op, val, tok) => ({
+  type: 'prefix', op, val, tok,
 })
 
 const Binary = (lval, op, rval, optChain, tok) => ({
@@ -138,16 +145,12 @@ const While = (cond, body, tok) => ({
 const Assignment = (lval, rval, tok) =>
   Binary(lval, "=", rval, false, tok);
 
-const Unary = (op, val, tok) => ({
-  type: 'prefix', op, val, tok,
-})
-
 const Call = (op, func, args, optChain, tok) => ({
   type: "call", op, func, args, optChain, tok
 });
 
-const Lambda = (pars = [], body, tok) => ({
-  type: "arrow", pars, body, tok
+const Lambda = (pars = [], body, tok, tick) => ({
+  type: "arrow", pars, body, tok, tick
 });
 
 const Val = (val, tok) => ({
@@ -158,7 +161,34 @@ const Var = (v, tok) => ({
   type: "var", var: v, tok,
 })
 
+const Sym = (v, tok) => ({
+  type: "sym", sym: v, tok,
+})
+
 const Void = (tok) => Val(undefined, tok)
+
+const Proc = (body, tok) => ({
+  type: 'proc', body, tok: (tok || body.tok),
+})
+
+function liftNF(expr){
+  if(expr.type == 'arrow')
+    return expr;
+  return Lambda([], expr);
+}
+
+function liftGP(expr, tick){
+  if(expr.type != 'group') return expr;
+  let func = Lambda([], expr);
+  func.tick = tick;
+  return func;
+}
+
+function callOF(expr){
+  if(expr.type == 'arrow')
+    return Call("()", expr, []);
+  return expr;
+}
 
 // parser attribute builder
 
@@ -169,11 +199,6 @@ const left_assoc = s => ({
 const right_assoc = s => ({
   infix: s, assoc: { r: 1 }
 });
-
-const noIn =
-  noin => cfg => ({
-    noIn: noin, ...cfg
-  });
 
 const prefix = s => ({
   prefix: s
@@ -219,8 +244,9 @@ const prefix_between_on =
 //     cond, div
 //   });
 
-const identP = (p, noIn) => {
-  return p.expect("ident");
+const symP = (p) => {
+  p.expect("ident");
+  return Sym(p.token.val, p.token);
 }
 
 const lnext = lp => s => ({
@@ -230,14 +256,28 @@ const lnext = lp => s => ({
 const ops_precedences = [
   // move to expression
   // assign_tokens.map(right_assoc),
-  [0,  ["||", "??"].map(left_assoc), [1, 1]],
-  [1,  ["&&"].map(left_assoc), [1, 1]],
-  [2,  ["|"].map(left_assoc), [1, 1]],
-  [3,  ["^"].map(left_assoc), [1, 1]],
-  [4,  ["&"].map(left_assoc), [1, 1]],
-  [5,  equality_tokens.map(left_assoc), [1, 1]],
-  [6,  relational_tokens.map(left_assoc), [1, 0]],
-  [7,  shift_tokens.map(left_assoc)], // noIn(0, 0)
+  [0,  ["||", "??"].map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [1,  ["&&"].map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [2,  ["|"].map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [3,  ["^"].map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [4,  ["&"].map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [5,  equality_tokens.map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => pNoIn]
+  ],
+  [6,  relational_tokens.map(left_assoc),
+    [(pNoIn) => pNoIn, (pNoIn) => false]
+  ],
+  [7,  shift_tokens.map(left_assoc)],
   [8,  ["+", "-"].map(left_assoc)],
   [9,  ["*", "/", "%"].map(left_assoc)],
   [10, ["**"].map(right_assoc)],
@@ -245,10 +285,10 @@ const ops_precedences = [
   [12, ["++", "--"].map(postfix).map(mustLval).map(noNL)],
   // [["new"].map(prefix)],
   // [[".", "?."].map(left_assoc)
-  //             .map(lnext(identP))],
+  //             .map(lnext(symP))],
   // identifier name
-  // [[lnext(identP)(left_assoc(".")),
-  //   lnext(identP)(left_assoc("?.")),
+  // [[lnext(symP)(left_assoc(".")),
+  //   lnext(symP)(left_assoc("?.")),
   //   prefix_between_on("new", "(", ")"),
   //   between_on("[", "]"), between_on("(", ")")]],
   // [between("(", ")")]
@@ -284,7 +324,8 @@ function precedence_factory(
         let pt = parser.token;
         let val = current_ops(NoIn);
         if(op.mustLval && !isLval(val))
-          throw showError(this.token, `ParseError: operand of ${op.prefix} must be a lval`);
+          throw showError(this.token,
+            `SyntaxError: Operand of ${op.prefix} must be a lval`);
         return Prefix(op.prefix, val, pt);
       }
     }
@@ -329,7 +370,7 @@ function precedence_factory(
       }
     }
 
-    lhs = lhs || next(NoInL);
+    lhs = lhs || next(NoInL && NoInL(NoIn));
 
     let optChain = false;
     let optChainTok = null;
@@ -338,12 +379,15 @@ function precedence_factory(
       matched_op = false;
       for(let op of infixes){
         if(NoIn && op.infix == "in") continue;
-        if(parser.accept(op.infix) || parser.reserved(op.infix)){
+        if(parser.accept(op.infix) ||
+           parser.reserved(op.infix)){
           let bt = parser.token;
           if(op.assoc.l){
             if(op.infix == "?."){
               if(parser.accept("ident"))
-                lhs = Binary(lhs, ".", rhs, true, bt);
+                lhs = Binary(lhs, "?.",
+                  Sym(this.token.val, this.token),
+                  true, bt);
               else {
                 optChain = true;
                 optChainTok = bt;
@@ -351,8 +395,8 @@ function precedence_factory(
             }
             else {
               let rhs = op.lnext ?
-                        op.lnext(parser, NoInR) :
-                        next(NoInR);
+                        op.lnext(parser, NoInR && NoInR(NoIn)) :
+                        next(NoInR && NoInR(NoIn));
               lhs = Binary(lhs, op.infix, rhs, false, bt);
             }
             // node = [node, op.sym, rv];
@@ -364,7 +408,7 @@ function precedence_factory(
             // return [node, op.sym, current_ops()];
           }
           else throw showError(bt,
-                 `ParseError: [TODO] no assoc on infix operator ${op.infix}`);
+            `SyntaxError: No assoc on infix operator ${op.infix}`);
         }
       }
 
@@ -379,7 +423,7 @@ function precedence_factory(
           let args = parser.list(
               () => parser[
                 op.times == 1 ? 'expr' : 'expr2'
-              ](op.noIn && op.noIn[1]),
+              ](),
               op.left, op.right, ",", op.times);
 
           if(op.non_followed_by){
@@ -402,7 +446,9 @@ function precedence_factory(
 
     if(optChain)
       throw showError(optChainTok,
-        `ParseError: unexpected optChain expr,\n?. should be followed by identifier, (..) or [...],\nget ${JSON.stringify(parser.tokls[0].text, null, 2)}`)
+        `SyntaxError: Unexpected optChain expr,
+?. should be followed by identifier, (..) or [...],
+get ${JSON.stringify(parser.tokls[0].text, null, 2)}`)
 
     // for(let op of ternarys){
     //   if(parser.accept(op.cond)){
@@ -436,9 +482,9 @@ function is_key_token(v){
 function build_ops(parser){
 
   let newOp = prefix_between_on("new", "(", ")", true);
-  let memberOps = [lnext(identP)(left_assoc(".")),
+  let memberOps = [
+    lnext(symP)(left_assoc(".")),
     left_assoc("?."),
-    // TODO: support optional chaining
     newOp, between_on("[", "]")]
 
   let memberExpression = precedence_factory(
@@ -490,7 +536,8 @@ class Parser {
 
   next(ignore){
     if(!ignore && !this.tokls.length)
-      throw showError(this.token, "ParseError: zero length of token list on calling next()");
+      throw showError(this.token,
+        "SyntaxError: Zero length of token list on calling next()");
 
     if(!ignore){
       this.token = this.tokls.shift();
@@ -555,8 +602,7 @@ class Parser {
     if(!this.accept(token)){
       if(TRACE) console.trace();
       throw showError(this.tokls[0],
-        `ParseError: expected token [${token}], get [${this.peekNonNL()}]`)
-      // console.error(this.lexer.showPosition());
+        `SyntaxError: Expected token [${token}], get [${this.peekNonNL()}]`)
     }
     return this.token.val;
   }
@@ -575,6 +621,13 @@ class Parser {
     let idx = this.peekNonNLIdx()
     return this.peek(idx) == 'ident'
       && args.includes(this.tokls[idx].val);
+  }
+
+  ahead_is_object(){
+    return this.aheads_are("{", "}")
+        || this.aheads_are("{", is_key_token, ":")
+        || this.aheads_are("{", "ident", ",")
+        || this.aheads_are("{", "ident", "}")
   }
 
   aheads_are(...args){
@@ -620,7 +673,8 @@ class Parser {
     this.expect(beg)
     let token = this.token;
     while(!this.accept(end)){
-      if(times == 0) throw showError(token, `ParseError: too may exprs in ${beg}...${end}`);
+      if(times == 0) throw showError(token,
+        `SyntaxError: Too may exprs in ${beg}...${end}`);
       ret.push(item());
       if(times > 0) times -= 1;
 
@@ -633,7 +687,8 @@ class Parser {
       this.expect(delimiter);
       if(this.accept(end)) break;
     }
-    if(times > 0) throw showError(token, `ParseError: insufficient exprs in ${beg}...${end}`)
+    if(times > 0) throw showError(token,
+      `SyntaxError: Insufficient exprs in ${beg}...${end}`)
     return ret;
   }
 
@@ -641,7 +696,20 @@ class Parser {
 
   factor(NoIn){
     // array literal, parens
-    if(this.accept("number", "string")){
+
+    let ret = this.imperative();
+
+    if(ret) return Proc(ret);
+
+    if(this.reserved(
+      ...[ "while", "for", "timer", "later",
+        "going", "visit", "return", // "state", "event",
+        "in", "instanceof", "typeof", "void",
+        "new", "delete", "if", "then", "else" ])){
+      throw showError(this.token,
+        `SyntaxError: Unexpected token '${this.token.val}'`);
+    }
+    else if(this.accept("number", "string")){
       return Val(this.token.val, this.token);
     }
     else if(this.reserved(
@@ -661,28 +729,14 @@ class Parser {
       return LArray(this.list(
           () => this.expr2(0), "[", "]", ",", -1), at);
     }
+    // object
     else if(this.ahead_is("{")){
-      // object
-      if(  this.aheads_are("{", "}")
-        || this.aheads_are("{", is_key_token, ":")
-        || this.aheads_are("{", "ident", ",")
-        || this.aheads_are("{", "ident", "}")){
-        return this.object(0);
-      }
-      // block
-      else{
-        this.expect("{");
-        let ret = Group([], this.token);
-        while(!this.accept("}")){
-          ret.body.push(this.stmt());
-        }
-        return ret;
-      }
+      return this.object(0);
     }
     else {
-      console.log(this.lexer.showPosition());
       let idx = this.peekNonNLIdx();
-      throw showError(this.tokls[idx], `ParseError: unexpected token, expected factor`);
+      throw showError(this.tokls[idx],
+        `SyntaxError: Unexpected token, expected factor`);
     }
   }
 
@@ -704,7 +758,8 @@ class Parser {
       }
       else {
         let idx = this.peekNonNLIdx();
-        throw showError(this.tokls[idx], `ParseError: expected an object key`);
+        throw showError(this.tokls[idx],
+          `SyntaxError: Expected an object key`);
       }
     }
     return LObject(pairs, ot);
@@ -725,7 +780,8 @@ class Parser {
       let bt = this.token;
       let op = this.token.val;
       if(!isLval(mayLHS))
-        throw showError(bt, `ParseError: operand of ${op} must be a lval`);
+        throw showError(bt,
+          `SyntaxError: Operand of ${op} must be a lval`);
       return Binary(mayLHS, op, this.expr(NoIn), false, bt);
     }
     else if(this.accept("?")){
@@ -746,8 +802,12 @@ class Parser {
         this.expr(0),
         undefined,
         undefined, it);
-      this.reserved("then");
+      let thenTok = null;
+      if(this.reserved("then")){
+        thenTok = this.token;
+      }
       ret.then = this.stmt(true);
+      if(thenTok) ret.then.tok = thenTok;
       if(this.reserved("else"))
         ret.else = this.stmt(true);
       return ret;
@@ -777,7 +837,7 @@ class Parser {
             let regexp = validRegExp(pat.val)
             if(regexp) pat.val = regexp;
             else throw showError(pat.token,
-              `ParseError: "${pat.val}" is not a valid RegExp`);
+              `SyntaxError: "${pat.val}" is not a valid RegExp`);
           }
 
           ret.pars.push([sym, pat]);
@@ -795,7 +855,7 @@ class Parser {
           let regexp = validRegExp(pat.val)
           if(regexp) pat.val = regexp;
           else throw showError(pat.token,
-            `ParseError: "${pat.val}" is not a valid RegExp`);
+            `SyntaxError: "${pat.val}" is not a valid RegExp`);
         }
 
         ret.pars.push([sym, pat]);
@@ -806,7 +866,7 @@ class Parser {
       ret.body = this.stmt(true);
       return ret;
     }
-    else return this.assignment(noIn);
+    else return this.assignment(NoIn);
   }
 
   expr(NoIn){ // think if support , operator
@@ -836,13 +896,17 @@ class Parser {
                this.optAccept(this.expr(1), ";");
 
     if(this.reserved("in")){
-      // TODO: check is lval
+      if(!isLval(init))
+        throw showError(init.tok,
+          `SyntaxError: For ... in must be a lval`);
       ret['var'] = init;
       ret['iter'] = [this.expr(0), 'keys'];
       if(parens) this.expect(")");
     }
     else if(this.reserved("of")){
-      // TODO: check is lval
+      if(!isLval(init))
+        throw showError(init.tok,
+          `SyntaxError: For ... of must be a lval`);
       ret['var'] = init;
       ret['iter'] = [this.expr(0), 'values'];
       if(parens) this.expect(")");
@@ -871,12 +935,13 @@ class Parser {
       if(this.accept("ident")){
         if(!event_types.includes(this.token.val))
           throw showError(this.token,
-            `ParseError: expected a event type, get: ${this.token.val}`);
+            `SyntaxError: Expected a event type, get: ${this.token.val}`);
         ret.push(this.token.val);
       }
       else if(this.accept("string")){
         if(!event_types.includes(this.token.val))
-          throw showError(this.token, `ParseError: expected a event type, get: ${this.token.val}`);
+          throw showError(this.token,
+            `SyntaxError: Expected a event type, get: ${this.token.val}`);
         ret.push(this.token.val);
       }
       else if(this.accept("*")){
@@ -884,7 +949,8 @@ class Parser {
       }
       else {
         let idx = this.peekNonNLIdx();
-        throw showError(this.tokls[idx], `ParseError: expected a event type`);
+        throw showError(this.tokls[idx],
+          `SyntaxError: Expected a event type`);
       }
     }).bind(this);
 
@@ -904,13 +970,8 @@ class Parser {
     return false;
   }
 
-  stmt(noComma){
-    if(this.accept(";")){
-      return Group([], this.token);
-    }
-
+  imperative(){
     let ret = null;
-    // | parseStmtExpr
     if(this.reserved("while")){
       let st = this.token;
       ret = While(this.expr(0), this.stmt(), st);
@@ -930,17 +991,46 @@ class Parser {
       let st = this.token;
       ret = Event(this.events(), this.stmt(), st);
     }
+    // else if(this.reserved("return")){
+    //   let rt = this.token;
+    //   ret = Return(this.expr(), rt);
+    // }
     else if(this.reserved("going")){
       let st = this.token;
       ret = Going(this.expect("ident"), st);
+      this.meet_states.push([ret.state, this.token])
     }
     else if(this.reserved("visit")){
       let st = this.token;
       ret = Visit(this.expect("ident"), st);
+      this.meet_states.push([ret.state, this.token])
     }
-    else{
-      ret = noComma ? this.expr2(2) : this.expr(0);
+    // block
+    else if(this.ahead_is("{")
+      && !(this.ahead_is_object())){
+      this.expect("{");
+      ret = Group([], this.token);
+      while(!this.accept("}")){
+        ret.body.push(this.stmt());
+      }
     }
+    return ret;
+  }
+
+
+  stmt(noComma){
+    if(this.accept(";")){
+      return Group([], this.token);
+    }
+
+    let ret = this.imperative();
+
+    if(!ret){
+      ret = noComma ?
+        this.expr2(2):
+        this.expr(0);
+    }
+
     this.accept(";");
     return ret;
   }
@@ -970,28 +1060,80 @@ class Parser {
   script(){
     this.next(true);
     let states = [], stmts = [];
+    this.meet_states = [];
     do{
       states.push.apply(states, this.states())
       stmts.push.apply(stmts, this.stmts())
     } while(!this.accept("EOF"));
+
+    let error = '';
+    for(let [name, tok] of this.meet_states){
+      let s = states.find(s => s.name == name);
+      if(!s)
+        error += (error ? '\n' : '') + showError(tok,
+          `StateNotFound: Cannot find state ${name}`);
+    }
+    delete this.meet_states;
+    if(error) throw error;
     return { states, stmts };
   }
 }
 
-function showError(tok, message){
+function strLen(str) {
+  var l = str.length;
+  var c = '';
+  var length = 0;
+  for (var i = 0; i < l; i++) {
+    c = str.charCodeAt(i);
+    if (0x0000 <= c && c <= 0x0019) {
+      length += 0;
+    } else if (0x0020 <= c && c <= 0x1FFF) {
+      length += 1;
+    } else if (0x2000 <= c && c <= 0xFF60) {
+      length += 2;
+    } else if (0xFF61 <= c && c <= 0xFF9F) {
+      length += 1;
+    } else if (0xFFA0 <= c) {
+      length += 2;
+    }
+  }
+  return length;
+}
+
+function showError(tok, message, color = true, arrow = true){
   if(!tok) return message;
+
+  // if color, then no idicator
+  // check color is on console or html
+  if(color === true){
+    if(typeof process != 'undefined')
+      color = ["\x1b[31m", "\x1b[0m"]
+    else color = ["<span style='color:red'>", "</span>"]
+  }
+
   let loc = tok.loc;
   let ret = `${loc.first_line}:${loc.first_column}: ${message}\n`;
-  let lastBeg = 0;
   for(let l = loc.first_line - 1; l < loc.last_line; l++){
     let indicator = '';
+    let code = tok.code[l];
+
     if(l == loc.first_line - 1)
-      indicator += ' '.repeat(loc.first_column)
-    lastBeg = l == loc.first_line - 1 ? loc.first_column : 0;
-    let end = l == loc.last_line - 1? loc.last_column : l.length;
-    indicator += '^'.repeat(end - lastBeg);
-    ret += `${String(l + 1).padStart(5)} | ${tok.code[l]}\n` +
-           `      | ${indicator}\n`
+      indicator += ' '.repeat(strLen(code.substring(0, loc.first_column)))
+
+    let beg = l == loc.first_line - 1 ? loc.first_column : 0;
+    let end = l == loc.last_line - 1 ? loc.last_column : l.length;
+    indicator += '^'.repeat(end - beg);
+
+    if(color){
+      let [begTag, endTag] = color;
+      code = code.substring(0, beg)
+           + begTag + code.substring(beg, end) + endTag
+           + code.substring(end);
+    }
+
+    ret += `${String(l + 1).padStart(5)} | ${code}\n`;
+
+    if(arrow) ret += `      | ${indicator}\n`;
   }
   return ret.slice(0, -1);
 }
@@ -1020,84 +1162,24 @@ if(typeof process != 'undefined'){
   });
 }
 
-// parser = new Parser({...LambdaLexer});
+function removeTok(obj) {
+  for(let prop in obj) {
+    if (prop === 'tok')
+      delete obj[prop];
+    else if (typeof obj[prop] === 'object')
+      removeTok(obj[prop]);
+  }
+  return obj;
+}
 
 // https://262.ecma-international.org/5.1/#sec-11.2 parsing
-
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
-//
-/*
-18	Grouping	n/a	( … )
-17	Member Access	left-to-right	… . …
-    Computed Member Access	n/a	… [ … ]
-    new (with argument list)	n/a	new … ( … )
-    Function Call	n/a	… ( … )
-    Optional chaining	left-to-right	… ?. …
-16	new (without argument list)	n/a	new …
-15	Postfix Increment	n/a	… ++
-    Postfix Decrement	… --
-14	Logical NOT (!)	n/a	! …
-  Bitwise NOT (~)	~ …
-  Unary plus (+)	+ …
-  Unary negation (-)	- …
-  Prefix Increment	++ …
-  Prefix Decrement	-- …
-  typeof	typeof …
-  void	void …
-  delete	delete …
-  await	await …
-13	Exponentiation (**)	right-to-left	… ** …
-12	Multiplication (*)	left-to-right	… * …
-  Division (/)	… / …
-  Remainder (%)	… % …
-11	Addition (+)	left-to-right	… + …
-  Subtraction (-)	… - …
-10	Bitwise Left Shift (<<)	left-to-right	… << …
-  Bitwise Right Shift (>>)	… >> …
-  Bitwise Unsigned Right Shift (>>>)	… >>> …
-9	Less Than (<)	left-to-right	… < …
-  Less Than Or Equal (<=)	… <= …
-  Greater Than (>)	… > …
-  Greater Than Or Equal (>=)	… >= …
-  in	… in …
-  instanceof	… instanceof …
-8	Equality (==)	left-to-right	… == …
-  Inequality (!=)	… != …
-  Strict Equality (===)	… === …
-  Strict Inequality (!==)	… !== …
-7	Bitwise AND (&)	left-to-right	… & …
-6	Bitwise XOR (^)	left-to-right	… ^ …
-5	Bitwise OR (|)	left-to-right	… | …
-4	Logical AND (&&)	left-to-right	… && …
-3	Logical OR (||)	left-to-right	… || …
-  Nullish coalescing operator (??)	left-to-right	… ?? …
-2	Assignment	right-to-left
-  … = …
-  … += …
-  … -= …
-  … **= …
-  … *= …
-  … /= …
-  … %= …
-  … <<= …
-  … >>= …
-  … >>>= …
-  … &= …
-  … ^= …
-  … |= …
-  … &&= …
-  … ||= …
-  … ??= …
-  Conditional (ternary) operator	right-to-left (Groups on expressions after ?)	… ? … : …
-  Arrow (=>)	n/a	… => …
-  yield	yield …
-  yield*	yield* …
-  Spread (...)	... …
-1	Comma / Sequence	left-to-right	… , …
-*/
 
-export { Parser, showError,
-         Assignment, Group,
-         While, Lambda, Call,
-         Unary, Binary, Var, Val, Void,
-         validRegExp, assign_tokens };
+export { Parser
+  , validRegExp, showError, assign_tokens
+  , callOF, liftGP, liftNF, removeTok
+  , State, Visit, Going, Event, /* Return, */ Timer, Later
+  , Unary, Binary, Prefix, Postfix, LArray, LObject
+  , Ifels, Group, While, Assignment
+  , Call, Lambda, Val, Var, Sym, Void, Proc
+};

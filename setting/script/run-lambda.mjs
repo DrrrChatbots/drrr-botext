@@ -6,11 +6,17 @@ import {
   lexer as LambdaLexer
 } from "./lambda-lexer.mjs";
 
-import { Parser, Assignment, Group
-  , Lambda, Call, Unary, Binary
-  , Var, Val, Void
+import { Parser
   , validRegExp, showError, assign_tokens
+  , callOF, liftGP, liftNF, removeTok
+  , State, Visit, Going, Event, /* Return, */ Timer, Later
+  , Unary, Binary, Prefix, Postfix, LArray, LObject
+  , Ifels, Group, While, Assignment
+  , Call, Lambda, Val, Var, Sym, Void, Proc
 } from "./parse-lambda.mjs";
+
+const DUMP = false;
+const NONE = undefined;
 
 function MachineException(type, value,
   token = null, message = "") {
@@ -19,8 +25,6 @@ function MachineException(type, value,
   this.token = token;
   this.message = message;
 }
-
-const NONE = undefined;
 
 MachineException.prototype.toString = function() {
   return "MachineException: " + this.type + '"';
@@ -32,7 +36,7 @@ function padArray(array, length, fill){
     length - array.length, 0)).fill(fill));
 }
 
-function evalUnary(op, val){
+function evalUnary(op, val, tok){
   if(op == "!")
     return (!val);
   else if(op == '~')
@@ -45,7 +49,11 @@ function evalUnary(op, val){
     return (typeof val);
   else if(op == 'void')
     return (void val);
-  throw `unsupported unary operator ${op}`;
+
+  throw new MachineException(
+    "ImplError", null, tok,
+    `ImplError: Unsupported unary operator ${op}`
+  );
 }
 
 function evalBinary(op, lval, rval, tok){
@@ -93,34 +101,19 @@ function evalBinary(op, lval, rval, tok){
     if(!(rval instanceof Object))
       throw new MachineException(
         "TypeError", op, tok,
-        `TypeError: cannot use 'in' operator to search for ${lval} in ${rval}`);
+        `TypeError: Cannot use 'in' operator to search for ${lval} in ${rval}`
+      );
     return (lval in rval);
   }
   else if(op == 'instanceof')
     return (lval instanceof rval);
   else if(op == ',')
     return rval;
-  else
-    throw `unsupported binary operator ${op}`;
-}
 
-function liftNF(expr){
-  if(expr.type == 'arrow')
-    return expr;
-  return Lambda([], expr);
-}
-
-function liftGP(expr, tick){
-  if(expr.type != 'group') return expr;
-  let func = Lambda([], expr);
-  func.tick = tick;
-  return func;
-}
-
-function callOF(expr){
-  if(expr.type == 'arrow')
-    return Call("()", expr, []);
-  return expr;
+  throw new MachineException(
+    "ImplError", null, tok,
+    `ImplError: Unsupported binary operator ${op}`
+  );
 }
 
 class Machine {
@@ -205,14 +198,15 @@ class Machine {
             && !(g instanceof RegExp)){
             throw new MachineException(
               "TypeError", g, expr.pars[i][1].tok,
-              `TypeError: function guard must be function or string or undefined, get ${typeof g}`);
+              `TypeError: Function guard must be function or string or undefined, get ${typeof g}`);
           }
           if(typeof g == 'string'){
             let regexp = validRegExp(g)
             if(regexp) guards[i] = regexp;
             throw new MachineException(
               "TypeError", g, expr.pars[i][1].tok,
-              `TypeError: "${g}" is not a valid RegExp`);
+              `TypeError: "${g}" is not a valid RegExp`
+            );
           }
         }
         return (_env => (...args) => {
@@ -229,7 +223,8 @@ class Machine {
               continue;
             else throw new MachineException(
               "TypeError", g, expr.pars[i][1].tok,
-              `TypeError: invalid guard type ${typeof g}`);
+              `TypeError: Invalid guard type ${typeof g}`
+            );
           }
           let newEnv = pushEnv(_env);
           insert(newEnv, 'args', args);
@@ -245,16 +240,18 @@ class Machine {
         if(this.eval(env, expr.cond)){
           let [ok, val] = this.execute(env, [[expr.then]])
           if(ok) return val;
-          else throw MachineException(
+          else throw new MachineException(
             "CondError", NONE, expr.then.tok,
-            "IfThenError: Something Wrong with then statement");
+            "IfThenError: Something wrong with then statement"
+          );
         }
         else if(expr.else){
           let [ok, val] = this.execute(env, [[expr.else]])
           if(ok) return val;
-          else throw MachineException(
+          else throw new MachineException(
             "CondError", NONE, expr.else.tok,
-            "IfElseError: Something Wrong with else statement");
+            "IfElseError: Something Wrong with else statement"
+          );
         }
         else return NONE;
       }
@@ -274,11 +271,12 @@ class Machine {
           let lhs = expr.val;
           if(lhs.type == 'binary' && lhs.op == '.'){
             let lval = this.eval(env, lhs.lval)
-            let rval = lhs.rval;
+            let rval = lhs.rval.sym;
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, lhs.lval.tok,
-                `TypeError: Cannot read (.) properties of ${lval}`);
+                "TypeError", lval, lhs.tok,
+                `TypeError: Cannot read (.) properties of ${lval}`
+              );
             return delete lval[rval];
           }
           else if(lhs.type == 'call' && lhs.op == '[]'){
@@ -286,8 +284,9 @@ class Machine {
             let rval = this.eval(env, lhs.args[0]);
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, lhs.func.tok,
-                `TypeError: Cannot read ([]) properties of ${lval}`);
+                "TypeError", lval, lhs.tok,
+                `TypeError: Cannot read ([]) properties of ${lval}`
+              );
             return delete lval[rval];;
           }
           else if(lhs.type == 'var'){
@@ -296,7 +295,7 @@ class Machine {
           }
           return delete this.eval(env, expr.val);
         }
-        else return evalUnary(expr.op, this.eval(env, expr.val));
+        else return evalUnary(expr.op, this.eval(env, expr.val), expr.tok);
       case 'postfix':
         if(expr.op == '++' || expr.op == '--'){
           // wrong ++ output on 'a'
@@ -311,17 +310,21 @@ class Machine {
               expr.tok))
           return val;
         }
-        throw `unsupported postfix ${expr.op}`;
+        throw new MachineException(
+          "ImplError", null, expr.tok,
+          `ImplError: Unsupported postfix operator ${expr.op}`
+        );
       case 'binary':
         if(expr.op == '='){
           let lhs = expr.lval;
           if(lhs.type == 'binary' && lhs.op == '.'){
             let lval = this.eval(env, lhs.lval)
-            let rval = lhs.rval;
+            let rval = lhs.rval.sym;
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, lhs.lval.tok,
-                `TypeError: Cannot read (.) properties of ${lval}`)
+                "TypeError", lval, lhs.tok,
+                `TypeError: Cannot read (.) properties of ${lval}`
+              );
             return lval[rval] = this.eval(env, expr.rval);
           }
           else if(lhs.type == 'call' && lhs.op == '[]'){
@@ -329,12 +332,13 @@ class Machine {
             let rval = this.eval(env, lhs.args[0]);
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, lhs.func.tok,
-                `TypeError: Cannot read ([]) properties of ${lval}`)
+                "TypeError", lval, lhs.tok,
+                `TypeError: Cannot read ([]) properties of ${lval}`
+              );
             return lval[rval] = this.eval(env, expr.rval);
           }
           return save(env, expr.lval['var'],
-            this.eval(env, liftGP(expr.rval, this.tick)));
+            this.eval(env, expr.rval));
         }
         else if(assign_tokens.includes(expr.op)){
           return this.eval(env,
@@ -361,17 +365,15 @@ class Machine {
           return this.eval(env, expr.lval)
             && this.eval(env, expr.rval);
         }
-        // else if(expr.op == '?.'){
-        //   throw "TODO: support optional chaining";
-        // }
         else if(expr.op == '.'){
           let lval = this.eval(env, expr.lval);
-          if(expr.optChain) return lval?.[expr.rval];
+          if(expr.optChain) return lval?.[expr.rval.sym];
           if(typeof lval === 'undefined' || lval === null)
             throw new MachineException(
-              "TypeError", lval, expr.lval.tok,
-              `TypeError: Cannot read (.) properties of ${lval}`)
-          return lval[expr.rval];
+              "TypeError", lval, expr.tok,
+              `TypeError: Cannot read (.) properties of ${lval}`
+            );
+          return lval[expr.rval.sym];
         }
         else return evalBinary(
           expr.op,
@@ -385,6 +387,10 @@ class Machine {
         for(let [k, v] of expr.pairs)
         obj[k] = this.eval(env, v);
         return obj;
+      }
+      case 'proc': {
+        let func = Lambda([], expr.body, expr.tok, this.tick);
+        return this.eval(env, func);
       }
       case 'array':
         return expr.cells.map(c => this.eval(env, c));
@@ -410,54 +416,81 @@ class Machine {
           let args = expr.args.map(arg => this.eval(env, arg));
           return new func(...args);
         }
-        throw `unsupported ctor ${expr.op}`;
+        throw new MachineException(
+          "ImplError", null, expr.tok,
+          `ImplError: Unsupported constructor ${expr.op}`
+        );
       }
       case 'call':
         if(expr.op == '()'){
+          let lval = null, rvalTok = null;
           let callee = expr.func, func = null;
           if(callee.type == 'binary' && callee.op == '.'){
-            let lval = this.eval(env, callee.lval)
-            let rval = callee.rval;
+            lval = this.eval(env, callee.lval)
+            let rval = callee.rval.sym;
+            rvalTok = callee.rval.tok;
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, callee.lval.tok,
+                "TypeError", lval, callee.tok,
                 `TypeError: Cannot read (.) properties of ${lval}`
-              )
-            func = lval[rval].bind(lval);
+              );
+            func = lval[rval];
           }
           else if(callee.type == 'call' && callee.op == '[]'){
-            let lval = this.eval(env, callee.func)
+            lval = this.eval(env, callee.func)
             let rval = this.eval(env, callee.args[0]);
+            rvalTok = callee.args[0].tok;
             if(typeof lval === 'undefined' || lval === null)
               throw new MachineException(
-                "TypeError", lval, callee.func.tok,
+                "TypeError", lval, callee.tok,
                 `TypeError: Cannot read ([]) properties of ${lval}`
-              )
-            func = lval[rval].bind(lval);
+              );
+            func = lval[rval];
           }
           else func = this.eval(env, expr.func);
+
+          if(expr.optChain &&
+            (typeof func == 'undefined'
+              || func === null))
+            return undefined;
+
           if(typeof func !== 'function')
             throw new MachineException(
-              "TypeError", func, expr.func.tok,
+              "TypeError", func, rvalTok ? rvalTok : expr.func.tok,
               `TypeError: ${func} is not a function (it is a ${typeof func})`
-            )
-          let args = expr.args.map(arg => this.eval(env, arg));
-          return expr.optChain ? func?.(...args) : func(...args);
+            );
+
+          func = func.bind(lval);
+
+          let args = expr.args.map(
+            arg => this.eval(env, arg));
+          return func(...args);
         }
         else if(expr.op == '[]'){
           let lval = this.eval(env, expr.func)
-          let rval = this.eval(env, expr.args[0]);
-          if(expr.optChain) return lval?.[rval];
-          if(typeof lval === 'undefined' || lval === null)
-            throw new MachineException(
-              "TypeError", lval, expr.func.tok,
+
+          if(typeof lval === 'undefined'
+                 || lval === null){
+            if(expr.optChain)
+              return undefined;
+            else throw new MachineException(
+              "TypeError", lval, expr.tok,
               `TypeError: Cannot read ([]) properties of ${lval}`
-            )
+            );
+          }
+
+          let rval = this.eval(env, expr.args[0]);
           return lval[rval];
         }
-        throw `Unsupported call ${expr.op}`;
+        throw new MachineException(
+          "ImplError", null, expr.tok,
+          `ImplError: Unsupported call ${expr.op}`
+        );
       default:
-        throw `Invalid expression ${JSON.stringify(expr, null, 2)}`;
+        throw new MachineException(
+          "ImplError", null, expr.tok,
+          `ImplError: Invalid ${expr.type} expression`
+        );
     }
   }
 
@@ -491,19 +524,20 @@ class Machine {
     return state.stmt;
   }
 
-  execute_(env, scops, setTick){
+  execute_(env, scops, setTick = 0){
     let val = NONE;
     let tick = this.tick;
     while(scops.length){
-
-      if(setTick > 0 && this.tick > setTick)
-        return [false, undefined];
-      else if(setTick == 0 && tick != this.tick)
-        return [false, undefined];
-      // if (setTick < 0 && true)
-      // /* continue executing anyway */ ;
       let stmts = scops.shift();
       while(stmts.length){
+
+        if(setTick > 0 && this.tick > setTick)
+          return [false, undefined];
+        else if(setTick == 0 && tick != this.tick)
+          return [false, undefined];
+        // if (setTick < 0 && true)
+        // /* continue executing anyway */ ;
+
         let stmt = stmts.shift();
         val = NONE;
         switch(stmt.type){
@@ -518,7 +552,8 @@ class Machine {
             this.tick += 1;
             this.cur = stmt.state;
             let stateStmt = this.findState(stmt);
-            setTimeout(() => this.execute(this.env, [[stateStmt]]), 0);
+            setTimeout(() =>
+              this.execute(this.env, [[stateStmt]]), 0);
             return [false, undefined];
           }
           case 'event': {
@@ -533,10 +568,12 @@ class Machine {
             )
             break;
           }
+          // case 'return': {
+          //   return [true, this.eval(env, stmt.val)];
+          //   break;
+          // }
           case 'later':
             setTimeout((_env => () => {
-              // TODO: think
-              // this.execute(_env, [[callOF(stmt.body)]]);
               let [ok, val] = this.execute(_env, [[stmt.body]]);
               while(ok && typeof val == 'function')
                 val = val();
@@ -546,9 +583,7 @@ class Machine {
             this.setTimer(
               this.cur,
               this.eval(env, stmt.period),
-              // TODO: think
               (_env => () => {
-                // this.execute(_env, [[callOF(stmt.body)]])
                 let [ok, val] = this.execute(_env, [[stmt.body]])
                 while(ok && typeof val == 'function')
                   val = val();
@@ -564,7 +599,10 @@ class Machine {
           case 'floop':
             if(stmt['var']){
               if(!('iter' in stmt))
-                throw `unsupported for syntax ${JSON.stringify(stmt)}`;
+                throw new MachineException(
+                  "ImplError", null, stmt.tok,
+                  `ImplError: Unsupported for syntax`
+                );
               let [obj, iterCall] = stmt.iter;
               let iter = Object[iterCall](this.eval(env, obj)).values();
               stmts.unshift(
@@ -573,17 +611,17 @@ class Machine {
                   Assignment(Var("@var"), Val(iter.next())),
                   While(
                     Unary("!",
-                      Binary(Var("@var"), ".", "done")),
+                      Binary(Var("@var"), ".", Sym("done"))),
                     Group([
                       Assignment(stmt['var'],
-                        Binary(Var("@var"), ".", "value")),
+                        Binary(Var("@var"), ".", Sym("value"))),
                       stmt.body,
                       Assignment(
                         Var("@var"),
                         Call("()",
                           Binary(
                             Var("@iter"),
-                            ".", "next"), [])
+                            ".", Sym("next")), [])
                       ),
                     ])
                   )
@@ -605,7 +643,10 @@ class Machine {
                 ])
               );
             }
-            else throw `unsupported for syntax ${JSON.stringify(stmt)}`;
+            else throw new MachineException(
+              "ImplError", null, stmt.tok,
+              `ImplError: Unsupported for syntax`
+            );
             break;
           case 'group':
             scops.unshift(stmts);
@@ -682,8 +723,10 @@ function assocVar(env, name){
   }
   if(name in globalThis)
     return globalThis[name];
-  throw new MachineException("ReferenceError",
-    undefined, null, `ReferenceError: ${name} is not defined`)
+  throw new MachineException(
+    "ReferenceError", undefined, null,
+    `ReferenceError: ${name} is not defined`
+  );
 }
 
 // update a existed key
@@ -722,9 +765,11 @@ function interact(machine, code){
   return machine.step([stmts]);
 }
 
-function execute(code, error){
+function execute(code, error, dump = false){
   let parser = new Parser({...LambdaLexer});
   let script = parser.parse(code);
+  if(dump)
+    console.log(JSON.stringify(removeTok(script), null, 2))
   let machine = new Machine(script, error);
   let [ok, val] = machine.loop();
   return [ok, machine];
@@ -740,8 +785,9 @@ function main(){
       // console.log(
       //   JSON.stringify(parser.parse(code), null, 2));
       // console.log(parser.parse(code));
-      let m = execute(code);
-      if(typeof m.val !== 'undefined') console.log(`${typeof m.val} => ${m.val}`);
+      let m = execute(code, undefined, DUMP);
+      if(typeof m.val !== 'undefined')
+        console.log(`${typeof m.val} => ${m.val}`);
     }
     catch(e){
       console.error(e);

@@ -785,8 +785,8 @@ function main(){
       // console.log(
       //   JSON.stringify(parser.parse(code), null, 2));
       // console.log(parser.parse(code));
-      let m = execute(code, undefined, DUMP);
-      if(typeof m.val !== 'undefined')
+      let [ok, m] = execute(code, undefined, DUMP);
+      if(ok && typeof m.val !== 'undefined')
         console.log(`${typeof m.val} => ${m.val}`);
     }
     catch(e){

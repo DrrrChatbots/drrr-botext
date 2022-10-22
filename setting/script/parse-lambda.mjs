@@ -1027,7 +1027,7 @@ class Parser {
 
     if(!ret){
       ret = noComma ?
-        this.expr2(2):
+        this.expr2(0):
         this.expr(0);
     }
 

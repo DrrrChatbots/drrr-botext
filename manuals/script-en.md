@@ -65,14 +65,6 @@ alert("it's a alert!");
 
 ![Use hitokoto API change room desc every 30 secs](https://i.imgur.com/gh6i2fl.png)
 
-The difference between LambdaScript and JavaScript is that, everything in LambdaScript has it own return value.
-
-There is no undefined in the language, instead, it return false for you.
-
-semicolon (;) could be omit in most cases, or you can use semicolon to return false.
-
-The values of all the first refered variable would be false if they don't exist in the environment.
-
 ```javascript=
 print(x)
 // not defined, show false (before v1.740 is {}, false after v1.740)
@@ -96,7 +88,7 @@ event[me,msg](u,m:"^/baka yande.re")=>$.get("https://yande.re/post.json?limit=1&
 
 ## Syntax
 
-`+`, `-`, `*`, `/` operators are supported，`+=`, `++`, `--`, too. But ternary if-else operator is not supported now.
+`+`, `-`, `*`, `/` operators are supported，`+=`, `++`, `--`, too.
 
 ### cond
 
@@ -303,9 +295,8 @@ Used to delay the execution of a function, which is similar to a timer, but only
 
 ```javascript=
 later 10000 print("hello world")
-// 注意以下 function 不會被呼叫
 f = () => console.log("hello world")
-later 3000 f // wouldn't be called, because f will be lifted, it return a function instead of a function call on the time point.
+later 3000 f // works
 later 3000 f() // print "hello world" after 3 secs
 later 3000 () => console.log("hello world") // parse error, 3000() is not a function call, works after 1.783
 later 3000; () => console.log("hello world") // works, good

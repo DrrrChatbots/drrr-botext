@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/jquery-ui.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
+    <!-- https://notifyjs.jpillora.com/ -->
+    <script src="/js/notify.min.js"></script>
     <script src="../codemirror/lib/codemirror.js"></script>
     <script src="../codemirror/addon/search/searchcursor.js"></script>
     <script src="../codemirror/addon/search/search.js"></script>
@@ -24,12 +26,12 @@
     <script src="../codemirror/mode/lambdascript/lambdascript.js"></script>
     <script src="../codemirror/keymap/sublime.js"></script>
     <script src="layout.js"></script>
+    <script src="/lib/load-lambda.mjs" type="module" charset="utf-8"></script>
     <script src="/lib/globals.js" charset="utf-8"></script>
     <script src="/lib/api.js" charset="utf-8"></script>
     <script src="/background/utility.js" charset="utf-8"></script>
     <script src="/background/music.js" charset="utf-8"></script>
     <script src="/background/action.js" charset="utf-8"></script>
-    <!-- <script src="./lambdascript.js" charset="utf-8"></script> -->
     <script src="/lib/format.js" charset="utf-8"></script>
     <script src="./drrr.js" charset="utf-8"></script>
     <script src="./listener.js" charset="utf-8"></script>
@@ -296,7 +298,7 @@ li.dropdown {
               <a href="#" class="dropbtn">Action</a>
               <div class="dropdown-content">
                 <a class="dropdownitem" id="show-bindings" href="#">EditorHotKeys</a>
-                <a class="dropdownitem" id='save' href="#">(ctrl + s) save</a>
+                <a class="dropdownitem" id='save' href="#">(ctrl + s) Save</a>
                 <a class="dropdownitem" id='clear' href="#">(ctrl + l) Clear</a>
                 <a class="dropdownitem" id='stop' href="#">(ctrl + p) Pause</a>
                 <a class="dropdownitem" id='execute' href="#">(ctrl + ⏎) Execute</a>

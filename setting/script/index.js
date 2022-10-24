@@ -583,7 +583,7 @@ $(document).ready(function(event) {
     set_modules(config);
 
     globalThis.editor = CodeMirror(document.getElementById("code-editor"), {
-      value: config['lambdascript'] ? config['lambdascript'] : 'print("hello world")',
+      value: config['lambdascript'] ? config['lambdascript'] : 'pprint("hello world")',
       lineNumbers: true,
       mode: "javascript",
       keyMap: "sublime",

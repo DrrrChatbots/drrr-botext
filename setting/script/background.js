@@ -1,5 +1,5 @@
-var script_mod = 'user';
-var temp_save = 'lambdascript';
+var script_mod = 'bkg';
+var temp_save = 'bkgscript';
 
 
 var intervals_remove_on_reExecute = [];
@@ -8,6 +8,24 @@ function clear_intervals_on_reExecute(){
   for(id of intervals_remove_on_reExecute)
     clearInterval(id);
   intervals_remove_on_reExecute = [];
+}
+
+function redef_log() {
+  globalThis.log = console.log;
+  var logger = document.getElementById('log');
+  console.log = function () {
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] == 'object') {
+        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i]/*, undefined, 2*/) : arguments[i]) + '<br />';
+      } else {
+        logger.innerHTML += arguments[i] + '<br />';
+      }
+    }
+    jQuery( function(){
+      var pre = jQuery("#log");
+      pre.scrollTop( pre.prop("scrollHeight") );
+    });
+  }
 }
 
 globalThis.pprint = function(){
@@ -38,7 +56,7 @@ function show_bindings(){
       value += "  \"" + key + "\": \"" + val + "\",\n";
   }
   value += "}\n\n";
-  drrr.log(value);
+  console.log(value);
 }
 
 stringify = obj => {
@@ -56,69 +74,32 @@ stringify = obj => {
 }
 
 function interact(){
-  let val = null, ok = false;
   if(!globalThis.machine){
-    globalThis.machine = new RL.Machine('',
-      (...args) => {
-        drrr.log(...args);
-        $.notify("Interaction Failed.", "error")
-      }
-    );
+    globalThis.machine = PS.Main.newMachine();
   }
   code = $('#step').text();
   try {
-    [ok, val] = RL.interact(globalThis.machine, code);
+    globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
   }
   catch(err){
-    return drrr.log(err);
+    return console.log("Uncatchable parsing error");
   }
-  if(typeof val !== 'undefined')
-    // drrr.log(`${typeof val} => ${stringify(val)}`);
-    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
-  else if(ok)
-    $.notify("Interaction Successd!", "success");
+  val = machine.val;
+  console.log(`=> ${stringify(val)}`);
 }
 
-var notify_web = false;
 function execute(){
   clear_intervals_on_reExecute();
-  let code = globalThis.editor.getValue(), ok = false;
+  code = globalThis.editor.getValue();
   code = preloaded_code(code);
   try {
-    globalThis.machine?.destructor();
-    [ok, globalThis.machine] = RL.execute(
-      code, (...args) => {
-        drrr.log(...args);
-        $.notify("Execution Failed.", "error")
-      }
-    );
+    globalThis.machine = PS.Main.execute(code)();
   }
   catch(err){
-    return drrr.log(err);
+    return console.log("Uncatchable parsing error");
   }
-  let val = machine.val;
-  if(typeof val !== 'undefined')
-    // drrr.log(`${typeof val} => ${stringify(val)}`);
-    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
-  else if(ok)
-    $.notify("Execution Successd!", "success");
-  if(!notify_web){
-    chrome.tabs.query({
-      url: 'https://drrr.com/*'
-    }, (tabs) => {
-      if(!tabs.length){
-        drrr.log("no drrr.com tab exist, if you want to listen event, create one.")
-        chrome.runtime.sendMessage({
-          notification: {
-            title: 'CLICK TO OPEN DRRR.COM',
-            msg: 'open drrr.com to listen event',
-            url: 'drrr_webpage'
-          }
-        });
-      }
-      notify_web = true;
-    });
-  }
+  val = machine.val;
+  console.log(`=> ${stringify(val)}`);
 }
 
 function save_script(){
@@ -128,25 +109,20 @@ function save_script(){
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: `Your ${temp_save} is saved to local storage`
+        message: `Your ${temp_save} are saved to local storage`
       });
     });
 }
 
 function pause_script(){
   clear_intervals_on_reExecute();
-  globalThis.machine?.destructor();
-  globalThis.machine = RL.execute(';',
-    (...args) => {
-      drrr.log(...args);
-      $.notify("execute failed", "error")
-    }
-  );
+  globalThis.machine = PS.Main.execute(';')();
+  val = machine.val;
   chrome.notifications.create({
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: `Your ${temp_save} is terminated`
+    message: `Your ${temp_save} are terminated`
   });
 }
 
@@ -199,8 +175,7 @@ function update_index(mirror, mirrors){
     fetch(`https://${mirrors[mirror].loc}/bs-pkgs/raw/main/index.json`)
       .then(response => response.json())
       .catch(error => {
-        if(mirror != 'Local')
-          $.notify(`cannot fetch ${mirror}`, "error")
+        if(mirror != 'Local') alert(`cannot fetch ${mirror}`);
         index = {}
         mirrors[mirror].index = index;
         chrome.storage.local.set({
@@ -229,7 +204,7 @@ function install_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        $.notify("cannot fetch module", "error");
+        alert("cannot fetch module");
         console.log(String(error));
       })
       .then(code => {
@@ -251,7 +226,7 @@ function install_module(){
         load_local_modules(local_modules);
       })
   }
-  else $.notify("invalid module path", "error");
+  else alert("invalid module path");
 }
 
 function load_module(){
@@ -265,7 +240,7 @@ function load_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        $.notify("cannot fetch module", "error")
+        alert("cannot fetch module");
         console.log(String(error));
       })
       .then(code => {
@@ -380,7 +355,7 @@ function new_module(){
     load_index(mirrors[mirror].index);
     load_local_modules(local_modules);
   }
-  else $.notify("empty input", "error")
+  else alert("empty input");
 }
 
 function clear_module_env(){
@@ -441,13 +416,14 @@ function add_mirror(alias, repo){
     });
     load_mirrors(mirror, mirrors);
   }
-  else $.notify("invalid format", "error")
+  else alert("invalid format");
 }
 
 function del_mirror(alias){
   if(!alias) alias = prompt("input mirror name");
   if(alias === "Local"){
-    return $.notify("cannot delete local", "error")
+    alert("cannot delete local");
+    return;
   }
   if(alias in mirrors){
     if(mirror == alias)
@@ -459,7 +435,7 @@ function del_mirror(alias){
     });
     load_mirrors(mirror, mirrors);
   }
-  else $.notify("mirror not existed", "error")
+  else alert("mirror not existed");
 }
 
 function set_modules(config){
@@ -581,7 +557,7 @@ function bind_manual(){
 }
 
 $(document).ready(function(event) {
-  $.notify.defaults({globalPosition: 'bottom right'})
+
 
   $(".draggable").draggable({
     iframeFix: true,
@@ -657,5 +633,6 @@ $(document).ready(function(event) {
         return false;
       }
     });
+    redef_log();
   });
 });

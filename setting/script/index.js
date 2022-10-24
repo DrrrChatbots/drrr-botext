@@ -602,7 +602,7 @@ $(document).ready(function(event) {
     set_modules(config);
 
     globalThis.editor = CodeMirror(document.getElementById("code-editor"), {
-      value: config[temp_save] ? config[temp_save] : 'print("hello world")',
+      value: config[temp_save] ? config[temp_save] : 'pprint("hello world")',
       lineNumbers: true,
       mode: "javascript",
       keyMap: "sublime",

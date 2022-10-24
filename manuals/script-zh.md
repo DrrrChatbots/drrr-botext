@@ -32,7 +32,7 @@ false
 [1,2,3,4]
 ```
 
-### Object 
+### Object
 ```javascript=
 obj = {x: 1.34, y: 4.5}
 obj.y = 4
@@ -63,19 +63,13 @@ alert("it's a alert!");
 
 ![每三十秒使用一言 API 換一次部屋描述。](https://i.imgur.com/gh6i2fl.png)
 
-
-```javascript=
-print(x)
-// not defined, show false (before v1.740 is {}, false after v1.740)
-```
-
 這個語言也可以發 ajax，可以實作一些有趣的功能。
 
 ```javascript=
 fetch("https://v1.hitokoto.cn")
   .then(response => response.json())
   .then(result => {
-    print(result.hitokoto);
+    pprint(result.hitokoto);
 });
 ```
 
@@ -113,16 +107,16 @@ if(x == 3) then { "hello" } else { "world" }
 for i = 0
     i < 10
     i++
-    print(i)
-    
+    pprint(i)
+
 j = 0
 while(j < 3){
-  print(j);
+  pprint(j);
   j++;
 }
 
-for(i of [1,2,3,4]) print(i);
-for(j in {tom: 1, allen: 2}) print(j);
+for(i of [1,2,3,4]) pprint(i);
+for(j in {tom: 1, allen: 2}) pprint(j);
 ```
 
 ### function
@@ -143,10 +137,10 @@ Scope `{}` 如果被當作參數，或者是 right value 綁定時，會被 lift
 
 ```javascript=
 f = (a, b) => a + b;
-print(f(1, 4)) // 5
+pprint(f(1, 4)) // 5
 
 g = { args[0] + args[1] };
-print(g(1, 2)) // 3
+pprint(g(1, 2)) // 3
 ```
 
 跟 JS 的 arguments 一樣，在 function 或是 lifted scope 中，浪語的 args 可以拿到參數列。
@@ -213,12 +207,12 @@ drrr.getLoc(callback);
 
 ```javascript=
 state welcome {
-  print("hello world");
+  pprint("hello world");
   going bye
 }
 
 state bye {
-  print("bye");
+  pprint("bye");
   // done.
 }
 
@@ -227,22 +221,22 @@ going welcome
 
 ```javascript=
 state welcome {
-  print("hello world");
+  pprint("hello world");
   going bye
 }
 
 state bye {
-  print("bye");
+  pprint("bye");
     // because "visit welcome", so back to visit
 }
 
 visit welcome
 // back from bye
-print("done");
+pprint("done");
 // done.
 ```
 
-### event 
+### event
 
 處理相關事件，event 種類和 event action 裡的說明一樣。
 
@@ -259,13 +253,13 @@ event join (user) => {
 }
 ```
 
-### timer 
+### timer
 
 用於定時執行 function。
 
 ```javascript=
 // 單位是 ms，所以 10000 是十秒
-timer 10000 print("hello world"); // print 會被自動 lift 成 function
+timer 10000 pprint("hello world"); // print 會被自動 lift 成 function
 
 // 三十秒使用一言換一次部屋描述
 timer 30000 fetch("https://v1.hitokoto.cn")
@@ -276,22 +270,22 @@ drrr.descr(result.hitokoto);
 
 // 等價於第一個範例
 timer 10000 {
-  print("hello world");
+  pprint("hello world");
 }
 
 // parse error, 10000() is not a function call
 // works after 1.783
 timer 10000 () => {
-  print("hello world");
+  pprint("hello world");
 }
 ```
 
-### later 
+### later
 
 用於延遲執行 function，和 timer 很像，但是只執行一次。
 
 ```javascript=
-later 10000 print("hello world")
+later 10000 pprint("hello world")
 f = () => console.log("hello world")
 later 3000 f // 可以
 later 3000 f() // 這樣才會在三秒後印出 hello world
@@ -323,7 +317,7 @@ event join (user) => {
   then drrr.print("welcome back, " + user)
   else guests.push(user)
 }
-print(guests)
+pprint(guests)
 ```
 
 猜數字遊戲：

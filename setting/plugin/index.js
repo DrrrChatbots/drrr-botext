@@ -42,28 +42,24 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     try{
       config = JSON.parse(contents)
       chrome.storage.local.set(config, function(){
-        alert("config updated");
+        $.notify("Config Updated", 'success');
         location.reload();
       });
     }
     catch(err){
-      alert(err);
+      $.notify(err, 'error');
     }
   }
 
   function make_pills(ps, index){
-    console.log(ps);
     var language = window.navigator.userLanguage || window.navigator.language;
     var url = chrome.extension.getURL(module.doc_url);
-    return `<ul class="nav nav-pills">
-                ${Object.keys(ps).map(
+    return `${Object.keys(ps).map(
                   (idx) => `<li ${(`menu${idx}` === index ? `class="active"` : '')}>
-                                <a data-toggle="pill" href="#menu${idx}">
+                                <a class="nav-pill" data-toggle="pill" href="#menu${idx}">
                                     ${ps[idx]}
                                 </a>
-                              </li>`).join('')}
-                ${infos(url)}
-            </ul>${module.infopop}`;
+                              </li>`).join('')}`;
   }
 
   function make_tabs(tabs, index){
@@ -155,7 +151,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     if(confirm("Discard Settings?")){
       chrome.storage.local.get(config => {
         let names = Object.keys(config).filter(k => k.endsWith("-setting"))
-        chrome.storage.local.remove(names, () => { alert("ok") });
+        chrome.storage.local.remove(names, () => { $.notify("ok", 'success') });
       });
       location.reload();
     }
@@ -166,7 +162,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       chrome.storage.local.get(config => {
         let names = Object.keys(config).filter(k => k.startsWith("env-"))
         names.push('inline-env')
-        chrome.storage.local.remove(names, () => { alert("ok") });
+        chrome.storage.local.remove(names, () => { $.notify("ok", 'success') });
       });
     }
   }
@@ -177,7 +173,20 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
 
     var index = window.location.toString().split('#')[1]
     if(!index) index = 'menu0';
-    $('#nav_pills').append(make_pills(Object.keys(local_functions), index));
+
+    $('#about_popup').append(module.infopop);
+
+    $(`#nav-plugin`)
+      .addClass('dropdown')
+      .addClass('active')
+
+    $(`#nav-plugin > a`)
+      .attr('href', '#')
+      .addClass('dropdown-toggle')
+      .attr('data-toggle', 'dropdown')
+      .append(` <b class="caret"></b>`);
+
+    $('#plugin-pills').prepend(make_pills(Object.keys(local_functions), index));
     $('#tab_conts').append(make_tabs(local_functions, index));
 
     $("#discard_settings").click(discard_settings);
@@ -282,7 +291,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
         local_functions[$(this).attr('data')].save_cbk('local');
       }
       catch(e){
-        alert(e);
+        $.notify(String(e), 'error');
       }
 
     });

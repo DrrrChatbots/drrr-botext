@@ -48,7 +48,12 @@ stringify = obj => {
 function interact(){
   let val = null, ok = false;
   if(!globalThis.machine){
-    globalThis.machine = new RL.Machine('', drrr.log.bind(drrr));
+    globalThis.machine = new RL.Machine('',
+      (...args) => {
+        drrr.log(...args);
+        $.notify("Interaction Failed.", "error")
+      }
+    );
   }
   code = $('#step').text();
   try {
@@ -58,9 +63,10 @@ function interact(){
     return drrr.log(err);
   }
   if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val)}`);
+    // drrr.log(`${typeof val} => ${stringify(val)}`);
+    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
   else if(ok)
-    drrr.log("Interaction Successd!")
+    $.notify("Interaction Successd!", "success");
 }
 
 function execute(){
@@ -68,16 +74,22 @@ function execute(){
   code = preloaded_code(code);
   try {
     globalThis.machine?.destructor();
-    [ok, globalThis.machine] = RL.execute(code, drrr.log.bind(drrr));
+    [ok, globalThis.machine] = RL.execute(
+      code, (...args) => {
+        drrr.log(...args);
+        $.notify("Execution Failed.", "error")
+      }
+    );
   }
   catch(err){
     return drrr.log(err);
   }
   let val = machine.val;
   if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val)}`);
+    // drrr.log(`${typeof val} => ${stringify(val)}`);
+    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
   else if(ok)
-    drrr.log("Execution Successd!")
+    $.notify("Execution Successd!", "success");
   if(!notify_web){
     chrome.tabs.query({
       url: 'https://drrr.com/*'
@@ -111,7 +123,12 @@ function save_script(){
 
 function pause_script(){
   globalThis.machine?.destructor();
-  globalThis.machine = RL.execute(';', drrr.log.bind(drrr));
+  globalThis.machine = RL.execute(';',
+    (...args) => {
+      drrr.log(...args);
+      $.notify("execute failed", "error")
+    }
+  );
   chrome.notifications.create({
     type: "basic",
     iconUrl: '/icon.png',
@@ -169,7 +186,8 @@ function update_index(mirror, mirrors){
     fetch(`https://${mirrors[mirror].loc}/bs-pkgs/raw/main/index.json`)
       .then(response => response.json())
       .catch(error => {
-        if(mirror != 'Local') alert(`cannot fetch ${mirror}`);
+        if(mirror != 'Local')
+          $.notify(`cannot fetch ${mirror}`, "error")
         index = {}
         mirrors[mirror].index = index;
         chrome.storage.local.set({
@@ -198,7 +216,7 @@ function install_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        alert("cannot fetch module");
+        $.notify("cannot fetch module", "error");
         console.log(String(error));
       })
       .then(code => {
@@ -214,7 +232,7 @@ function install_module(){
         load_local_modules(local_modules);
       })
   }
-  else alert("invalid module path");
+  else $.notify("invalid module path", "error");
 }
 
 function load_module(){
@@ -228,7 +246,7 @@ function load_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        alert("cannot fetch module");
+        $.notify("cannot fetch module", "error")
         console.log(String(error));
       })
       .then(code => {
@@ -343,7 +361,7 @@ function new_module(){
     load_index(mirrors[mirror].index);
     load_local_modules(local_modules);
   }
-  else alert("empty input");
+  else $.notify("empty input", "error")
 }
 
 function clear_module_env(){
@@ -404,14 +422,13 @@ function add_mirror(alias, repo){
     });
     load_mirrors(mirror, mirrors);
   }
-  else alert("invalid format");
+  else $.notify("invalid format", "error")
 }
 
 function del_mirror(alias){
   if(!alias) alias = prompt("input mirror name");
   if(alias === "Local"){
-    alert("cannot delete local");
-    return;
+    return $.notify("cannot delete local", "error")
   }
   if(alias in mirrors){
     if(mirror == alias)
@@ -423,7 +440,7 @@ function del_mirror(alias){
     });
     load_mirrors(mirror, mirrors);
   }
-  else alert("mirror not existed");
+  else $.notify("mirror not existed", "error")
 }
 
 function set_modules(config){
@@ -544,13 +561,8 @@ function bind_manual(){
   })
 }
 
-var RL = null;
-(async () => {
-  const src = chrome.extension.getURL('setting/script/run-lambda.mjs');
-  globalThis.RL = await import(src);
-})();
-
 $(document).ready(function(event) {
+  $.notify.defaults({globalPosition: 'bottom right'})
 
   $(".draggable").draggable({
     iframeFix: true,

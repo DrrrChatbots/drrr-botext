@@ -469,7 +469,7 @@ class Bot {
     if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
     if(!desc) desc = ''
     if(!limit) limit = 5;
-    if(!lang) lang = profile.lang;
+    if(!lang) lang = Profile.lang;
     if(music === undefined) music = true;
     if(adult === undefined) adult = false;
     if(hidden === undefined) hidden = false;
@@ -540,8 +540,10 @@ class Bot {
     if(info){
       this.prevInfo = this.info;
       this.info = info;
-      if(info.prfile)
+      if(info.prfile){
         this.profile = info.profile;
+        this.user = this.profile;
+      }
       if(info.user)
         this.user = info.user;
       if(info.room){
@@ -564,6 +566,7 @@ class Bot {
   getProfile = (function(callback){
     getProfile.bind(this)((profile)=>{
       this.profile = profile;
+      this.user = this.profile;
       this.name = profile.name;
       this.avatar = profile.icon;
       this.lang = profile.lang;

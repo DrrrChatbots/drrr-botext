@@ -34,7 +34,7 @@ single quote string is now allowed, like `'hello'`.
 [1,2,3,4]
 ```
 
-### Object 
+### Object
 ```javascript=
 obj = {x: 1.34, y: 4.5}
 obj.y = 4
@@ -65,18 +65,13 @@ alert("it's a alert!");
 
 ![Use hitokoto API change room desc every 30 secs](https://i.imgur.com/gh6i2fl.png)
 
-```javascript=
-print(x)
-// not defined, show false (before v1.740 is {}, false after v1.740)
-```
-
 You can also emit ajax in the language, which let you implement some interesting functionalities.
 
 ```javascript=
 fetch("https://v1.hitokoto.cn")
   .then(response => response.json())
   .then(result => {
-    print(result.hitokoto);
+    pprint(result.hitokoto);
 });
 ```
 
@@ -115,16 +110,16 @@ The parentheses of loop can be omitted.
 for i = 0
     i < 10
     i++
-    print(i)
-    
+    pprint(i)
+
 j = 0
 while(j < 3){
-  print(j);
+  pprint(j);
   j++;
 }
 
-for(i of [1,2,3,4]) print(i);
-for(j in {tom: 1, allen: 2}) print(j);
+for(i of [1,2,3,4]) pprint(i);
+for(j in {tom: 1, allen: 2}) pprint(j);
 ```
 
 ### function
@@ -145,10 +140,10 @@ Scope `{}` if be treated as argument or right value to be binded, it would be li
 
 ```javascript=
 f = (a, b) => a + b;
-print(f(1, 4)) // 5
+pprint(f(1, 4)) // 5
 
 g = { args[0] + args[1] };
-print(g(1, 2)) // 3
+pprint(g(1, 2)) // 3
 ```
 
 Like the keyword "arguments" in JS, in function or lifted scope, the "args" keyword provide you the argument list.
@@ -216,12 +211,12 @@ The current visit uses dynamic scoping, while going is static scoping.
 
 ```javascript=
 state welcome {
-  print("hello world");
+  pprint("hello world");
   going bye
 }
 
 state bye {
-  print("bye");
+  pprint("bye");
   // done.
 }
 
@@ -230,22 +225,22 @@ going welcome
 
 ```javascript=
 state welcome {
-  print("hello world");
+  pprint("hello world");
   going bye
 }
 
 state bye {
-  print("bye");
-    // because "visit welcome", so back to visit
+  pprint("bye");
+  // because "visit welcome", so back to visit
 }
 
 visit welcome
 // back from bye
-print("done");
+pprint("done");
 // done.
 ```
 
-### event 
+### event
 
 To handle related events, the type of event is the same as the description in event action.
 
@@ -262,13 +257,13 @@ event join (user) => {
 }
 ```
 
-### timer 
+### timer
 
 It is used to execute the function regularly.
 
 ```javascript=
 // The unit is ms, so 10000 is ten seconds
-timer 10000 print("hello world"); // print would be lifted as a function automatically
+timer 10000 pprint("hello world"); // print would be lifted as a function automatically
 
 // Use hitokoto to change the description of the house every 30 seconds
 timer 30000 fetch("https://v1.hitokoto.cn")
@@ -279,22 +274,22 @@ drrr.descr(result.hitokoto);
 
 // Equal to first example
 timer 10000 {
-  print("hello world");
+  pprint("hello world");
 }
 
 // parse error, 10000() is not a function call
 // works after 1.783
 timer 10000 () => {
-  print("hello world");
+  pprint("hello world");
 }
 ```
 
-### later 
+### later
 
 Used to delay the execution of a function, which is similar to a timer, but only executes once.
 
 ```javascript=
-later 10000 print("hello world")
+later 10000 pprint("hello world")
 f = () => console.log("hello world")
 later 3000 f // works
 later 3000 f() // print "hello world" after 3 secs
@@ -308,7 +303,7 @@ later 3000 {
 ```
 
 
-※ Note "timer" and "later" will lift "non-lambda expression" to a "lambda expression", and eval it on the time point. 
+※ Note "timer" and "later" will lift "non-lambda expression" to a "lambda expression", and eval it on the time point.
 
 ### new/delete
 
@@ -327,7 +322,7 @@ event join (user) => {
   then drrr.print("welcome back, " + user)
   else guests.push(user)
 }
-print(guests)
+pprint(guests)
 ```
 
 Guess The Number Game:

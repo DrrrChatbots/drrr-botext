@@ -59,17 +59,14 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 <span>so all the objects in JS could be constructed and used.</span></p><p><span>Because refer the globalThis of JS, so you can use variables defined in global directly.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span></div><div class="code">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"it's a alert!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</div></div></code></pre><p><img src="/manuals/img/gh6i2fl.png" alt="Use hitokoto API change room desc every 30 secs" loading="lazy"></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
-<span></span></div><div class="code"><span class="token function">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
-<span class="token comment">// not defined, show false (before v1.740 is {}, false after v1.740)</span>
-</div></div></code></pre><p><span>You can also emit ajax in the language, which let you implement some interesting functionalities.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><img src="/manuals/img/gh6i2fl.png" alt="Use hitokoto API change room desc every 30 secs" loading="lazy"></p><p><span>You can also emit ajax in the language, which let you implement some interesting functionalities.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
 <span></span></div><div class="code"><span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">"https://v1.hitokoto.cn"</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">response</span> <span class="token operator">=&gt;</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">result</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token function">print</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>hitokoto<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pprint</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>hitokoto<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </div></div></code></pre><p><span>※ 測試姬 (baka bot) /baka </span><a href="http://yande.re" target="_blank" rel="noopener"><span>yande.re</span></a><span> command recurrent（nsfw warning）</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span></div><div class="code">event<span class="token punctuation">[</span>me<span class="token punctuation">,</span>msg<span class="token punctuation">]</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token literal-property property">m</span><span class="token operator">:</span><span class="token string">"^/baka yande.re"</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span>$<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"https://yande.re/post.json?limit=1&amp;page="</span><span class="token operator">+</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1e4</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token parameter">d</span><span class="token operator">=&gt;</span>drrr<span class="token punctuation">.</span><span class="token function">dm</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token string">"."</span><span class="token punctuation">,</span>d<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>preview_url<span class="token punctuation">)</span><span class="token punctuation">)</span>
 </div></div></code></pre><h2 id="Syntax" data-id="Syntax" style=""><a class="anchor hidden-xs" href="#Syntax" title="Syntax"><span class="octicon octicon-link"></span></a><span>Syntax</span></h2><p><code>+</code><span>, </span><code>-</code><span>, </span><code>*</code><span>, </span><code>/</code><span> operators are supported，</span><code>+=</code><span>, </span><code>++</code><span>, </span><code>--</code><span>, too.</span></p><h3 id="cond" data-id="cond" style=""><a class="anchor hidden-xs" href="#cond" title="cond"><span class="octicon octicon-link"></span></a><span>cond</span></h3><p><span>if then else syntax is supported now, but there is no switch syntax.</span></p><p><span>Note the if else is expression, and you need “then” keyword. You can omit the parentheses of if condition.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
@@ -98,16 +95,16 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 <span class="token keyword">for</span> i <span class="token operator">=</span> <span class="token number">0</span>
     i <span class="token operator">&lt;</span> <span class="token number">10</span>
     i<span class="token operator">++</span>
-    <span class="token function">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-    
+    <span class="token function">pprint</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+
 j <span class="token operator">=</span> <span class="token number">0</span>
 <span class="token keyword">while</span><span class="token punctuation">(</span>j <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
   j<span class="token operator">++</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token function">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token keyword">in</span> <span class="token punctuation">{</span><span class="token literal-property property">tom</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">allen</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token function">print</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token function">pprint</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token keyword">in</span> <span class="token punctuation">{</span><span class="token literal-property property">tom</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">allen</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token function">pprint</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </div></div></code></pre><h3 id="function" data-id="function" style=""><a class="anchor hidden-xs" href="#function" title="function"><span class="octicon octicon-link"></span></a><span>function</span></h3><p><span>There’s no function keyworkd, you can use arrow function syntax to define a function. It return the last expression by default.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
@@ -126,10 +123,10 @@ j <span class="token operator">=</span> <span class="token number">0</span>
 <span></span>
 <span></span>
 <span></span></div><div class="code"><span class="token function-variable function">f</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
-<span class="token function">print</span><span class="token punctuation">(</span><span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 5</span>
+<span class="token function">pprint</span><span class="token punctuation">(</span><span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 5</span>
 
 g <span class="token operator">=</span> <span class="token punctuation">{</span> args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token function">print</span><span class="token punctuation">(</span><span class="token function">g</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 3</span>
+<span class="token function">pprint</span><span class="token punctuation">(</span><span class="token function">g</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 3</span>
 </div></div></code></pre><p><span>Like the keyword “arguments” in JS, in function or lifted scope, the “args” keyword provide you the argument list.</span></p><h3 id="builtins" data-id="builtins" style=""><a class="anchor hidden-xs" href="#builtins" title="builtins"><span class="octicon octicon-link"></span></a><span>builtins</span></h3><p><span>I provide some drrr related function, and bind them in the drrr object.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
@@ -222,12 +219,12 @@ drrr<span class="token punctuation">.</span><span class="token function">getLoc<
 <span></span>
 <span></span>
 <span></span></div><div class="code">state welcome <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   going bye
 <span class="token punctuation">}</span>
 
 state bye <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"bye"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"bye"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// done.</span>
 <span class="token punctuation">}</span>
 
@@ -246,18 +243,18 @@ going welcome
 <span></span>
 <span></span>
 <span></span></div><div class="code">state welcome <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   going bye
 <span class="token punctuation">}</span>
 
 state bye <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"bye"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// because "visit welcome", so back to visit</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"bye"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// because "visit welcome", so back to visit</span>
 <span class="token punctuation">}</span>
 
 visit welcome
 <span class="token comment">// back from bye</span>
-<span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"done"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"done"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// done.</span>
 </div></div></code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>To handle related events, the type of event is the same as the description in event action.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
@@ -298,7 +295,7 @@ event <span class="token function">join</span> <span class="token punctuation">(
 <span></span>
 <span></span>
 <span></span></div><div class="code"><span class="token comment">// The unit is ms, so 10000 is ten seconds</span>
-timer <span class="token number">10000</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// print would be lifted as a function automatically</span>
+timer <span class="token number">10000</span> <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// print would be lifted as a function automatically</span>
 
 <span class="token comment">// Use hitokoto to change the description of the house every 30 seconds</span>
 timer <span class="token number">30000</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">"https://v1.hitokoto.cn"</span><span class="token punctuation">)</span>
@@ -309,13 +306,13 @@ drrr<span class="token punctuation">.</span><span class="token function">descr</
 
 <span class="token comment">// Equal to first example</span>
 timer <span class="token number">10000</span> <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment">// parse error, 10000() is not a function call</span>
 <span class="token comment">// works after 1.783</span>
 timer <span class="token number">10000</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-  <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </div></div></code></pre><h3 id="later" data-id="later" style=""><a class="anchor hidden-xs" href="#later" title="later"><span class="octicon octicon-link"></span></a><span>later</span></h3><p><span>Used to delay the execution of a function, which is similar to a timer, but only executes once.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
@@ -327,7 +324,7 @@ timer <span class="token number">10000</span> <span class="token punctuation">(<
 <span></span>
 <span></span>
 <span></span>
-<span></span></div><div class="code">later <span class="token number">10000</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
+<span></span></div><div class="code">later <span class="token number">10000</span> <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
 <span class="token function-variable function">f</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span>
 later <span class="token number">3000</span> f <span class="token comment">// works</span>
 later <span class="token number">3000</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// print "hello world" after 3 secs</span>
@@ -350,7 +347,7 @@ event <span class="token function">join</span> <span class="token punctuation">(
   then drrr<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"welcome back, "</span> <span class="token operator">+</span> user<span class="token punctuation">)</span>
   <span class="token keyword">else</span> guests<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
-<span class="token function">print</span><span class="token punctuation">(</span>guests<span class="token punctuation">)</span>
+<span class="token function">pprint</span><span class="token punctuation">(</span>guests<span class="token punctuation">)</span>
 </div></div></code></pre><p><span>Guess The Number Game:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>

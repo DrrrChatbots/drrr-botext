@@ -43,12 +43,12 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     try{
       config = JSON.parse(contents)
       chrome.storage[settingType].set(config, function(){
-        alert("config updated");
+        $.notify("Config Updated", 'success');
         location.reload();
       });
     }
     catch(err){
-      alert(err);
+      $.notify(String(err), 'error');
     }
   }
 
@@ -224,7 +224,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
     if(confirm("Discard Settings?")){
       chrome.storage[settingType].get(config => {
         let names = Object.keys(config).filter(k => k.endsWith("-setting"))
-        chrome.storage[settingType].remove(names, () => { alert("ok") });
+        chrome.storage[settingType].remove(names, () => { $.notify("ok", 'success') });
       });
       location.reload();
     }
@@ -235,7 +235,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
       chrome.storage.local.get(config => {
         let names = Object.keys(config).filter(k => k.startsWith("env-"))
         names.push('inline-env')
-        chrome.storage.local.remove(names, () => { alert("ok") });
+        chrome.storage.local.remove(names, () => { $.notify("ok", 'success') });
       });
     }
   }
@@ -243,6 +243,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
   setting_cache = {};
 
   $(document).ready(() => {
+    $.notify.defaults({globalPosition: 'bottom right'})
     let index = window.location.toString().split('#')[1]
                  || localStorage.getItem('last-smenu') || 'menu0';
 
@@ -357,7 +358,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
             [MUSIC_DELAY]: $(this).val()
           })
         } else {
-          alert('Please input number');
+          $.notify('Please input number', 'error');
           $(this).val('');
         }
       });
@@ -410,7 +411,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
             settings[$(this).attr('data')].store(val)
           }, () => {
             if(chrome.runtime.lastError){
-              alert(chrome.runtime.lastError.message);
+              $.notify(chrome.runtime.lastError.message, 'error');
             }
             else{
               $(`.${$(this).attr('data')}-editing`).hide();
@@ -425,7 +426,7 @@ import(`/manuals/manual-${(language == 'zh-CN' || language == 'zh-TW') ? 'zh' : 
           /* open switch */
         }
         catch(e){
-          alert(e);
+          $.notify(e, 'error');
         }
 
       });

@@ -234,6 +234,10 @@ drrr_builtins = {
       var pre = jQuery("#log");
       pre.scrollTop( pre.prop("scrollHeight") );
     });
+  },
+  'clear': function () {
+    var logger = document.getElementById('log');
+    logger.innerHTML = "";
   }
 }
 

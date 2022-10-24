@@ -21,7 +21,7 @@ export const event_action = (req, config) => {
             [MODULE_SETTING]: config[MODULE_SETTING]
           }, function(){
             if(chrome.runtime.lastError)
-              alert("HashTag is full!");
+              $.notify("HashTag is full!", 'error');
           });
         }
       )(result)

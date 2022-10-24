@@ -177,28 +177,28 @@ function assoc(key, res, comp_name){
   if(!res[sid(comp_name)]) return false;
   var set = settings[comp_name].load(res[sid(comp_name)]);
   if(set.length && Array.isArray(set[0])){
-    console.log('this... is rule: ', JSON.stringify(set));
+    // console.log('this... is rule: ', JSON.stringify(set));
     for(r of set){
       var [exp, terms] = r;
-      console.log('matching...', exp)
+      // console.log('matching...', exp)
       if(key.match(new RegExp(exp, 'i'))){
-        console.log(exp, ' matched!')
+        // console.log(exp, ' matched!')
         return terms;
       }
     }
-    console.log(key, 'not matched!')
+    // console.log(key, 'not matched!')
     return false;
   }
   else{
-    console.log('this... is list: ', JSON.stringify(set));
+    // console.log('this... is list: ', JSON.stringify(set));
     for(exp of set){
-      console.log('matching...', exp)
+      // console.log('matching...', exp)
       if(key.match(new RegExp(exp, 'i'))){
-        console.log(exp, ' matched!')
+        // console.log(exp, ' matched!')
         return true;
       }
     }
-    console.log(key, 'not matched!')
+    // console.log(key, 'not matched!')
     return false;
   }
 }
@@ -207,26 +207,26 @@ function assocTrip(key, res, comp_name, trip){
   if(!res[sid(comp_name)]) return false;
   var set = settings[comp_name].load(res[sid(comp_name)]);
   if(set.length && Array.isArray(set[0])){
-    console.log('this... is rule: ', JSON.stringify(set));
+    // console.log('this... is rule: ', JSON.stringify(set));
     for(r of set){
       var [name_trip, terms] = r;
       if(match_user(key, trip, name_trip)){
-        console.log(key, ' matched!')
+        // console.log(key, ' matched!')
         return terms;
       }
     }
-    console.log(key, 'not matched!')
+    // console.log(key, 'not matched!')
     return false;
   }
   else{
-    console.log('this... is list: ', JSON.stringify(set));
+    // console.log('this... is list: ', JSON.stringify(set));
     for(name_trip of set){
       if(match_user(key, trip, name_trip)){
-        console.log(key, ' matched!')
+        // console.log(key, ' matched!')
         return true;
       }
     }
-    console.log(key, 'not matched!')
+    // console.log(key, 'not matched!')
     return false;
   }
 }
@@ -252,7 +252,7 @@ function noteEmptySetting(state, event, switch_id, func_name, callback){
         + `#menu${Object.keys(settings).indexOf(setting_name)}`});
 
       chrome.notifications.onClicked.addListener(function(notificationId) {
-        console.log(notificationId);
+        // console.log(notificationId);
         if(notificationId.match(new RegExp('chrome-extension://')))
           chrome.tabs.create({url: notificationId});
         chrome.notifications.clear(notificationId);
@@ -324,7 +324,7 @@ var BanListEvents = {
       }
       if(config[BANLIST] === BLACKLIST){
         if(assocTrip(req.user, config, BLACKLIST, trip)){
-          console.log("kick");
+          // console.log("kick");
           sendTab({
             fn: ban_way,
             args: { user: req.user }
@@ -502,7 +502,7 @@ var BanAbuseEvents = {
     precond: (config, uis) => config[SWITCH_BANABUSE],
     onevent: (req, config, uis) => {
       if(assoc(req.text, config, BANABUSE)){
-        console.log("abuse kick");
+        // console.log("abuse kick");
         sendTab({
           fn: kick_member,
           args: { user: req.user }
@@ -515,7 +515,7 @@ var BanAbuseEvents = {
     precond: (config, uis) => config[SWITCH_BANABUSE],
     onevent: (req, config, uis) => {
       if(assoc(req.text, config, BANABUSE)){
-        console.log("abuse kick");
+        // console.log("abuse kick");
         sendTab({
           fn: kick_member,
           args: { user: req.user }
@@ -528,7 +528,7 @@ var BanAbuseEvents = {
     precond: (config, uis) => config[SWITCH_BANABUSE],
     onevent: (req, config, uis) => {
       if(assoc(req.text, config, BANABUSE)){
-        console.log("abuse kick");
+        // console.log("abuse kick");
         sendTab({
           fn: kick_member,
           args: { user: req.user }
@@ -751,12 +751,12 @@ var AutoDMH = new Handler("AutoDM",
       [event_dmto]: {
         precond: (config, uis) => config[SWITCH_DM],
         onevent: (req, config, uis) => {
-          console.log("save the dm username");
+          // console.log("save the dm username");
           typedStorage().set({
             [DM_USERNAME]: req.user
           });
           if(config[DM_USERNAME]){
-            console.log("there");
+            // console.log("there");
 
             sendTab({
               fn: on_dm_member,
@@ -868,7 +868,7 @@ function validateTgToken(token, callback){
 
 function log2mkd(type, e){
   //type, user, text, url
-  console.log('log data', e);
+  // console.log('log data', e);
   if(type === event_msg)
     return `*${e.user}*: ${e.text}${e.url? ` [URL](${e.url})`: ''}`
   if(type === event_me)

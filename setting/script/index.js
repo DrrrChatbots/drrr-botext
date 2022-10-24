@@ -2,11 +2,12 @@ globalThis.pprint = function(){
   var logger = document.getElementById('log');
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
-      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
     } else {
-      logger.innerHTML += (arguments[i]) + '<br />';
+      logger.innerHTML += arguments[i] + '&nbsp;';
     }
   }
+  logger.innerHTML += '<br />';
   jQuery( function(){
     var pre = jQuery("#log");
     pre.scrollTop( pre.prop("scrollHeight") );
@@ -31,8 +32,8 @@ function show_bindings(){
 
 notify_web = false;
 
-stringify = obj => {
-  str = JSON.stringify(obj)
+stringify = (obj, pre, space) => {
+  str = JSON.stringify(obj, pre, space)
   if(obj === undefined)
     str = "undefined";
   else if(typeof obj == 'function')
@@ -63,9 +64,8 @@ function interact(){
     return drrr.log(err);
   }
   if(typeof val !== 'undefined')
-    // drrr.log(`${typeof val} => ${stringify(val)}`);
-    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
-  else if(ok)
+    drrr.log(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  if(ok)
     $.notify("Interaction Successd!", "success");
 }
 
@@ -86,9 +86,8 @@ function execute(){
   }
   let val = machine.val;
   if(typeof val !== 'undefined')
-    // drrr.log(`${typeof val} => ${stringify(val)}`);
-    $.notify(`${typeof val} => ${stringify(val)}`, 'success');
-  else if(ok)
+    drrr.log(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  if(ok)
     $.notify("Execution Successd!", "success");
   if(!notify_web){
     chrome.tabs.query({
@@ -217,7 +216,7 @@ function install_module(){
       .then(response => response.text())
       .catch(error => {
         $.notify("cannot fetch module", "error");
-        console.log(String(error));
+        pprint(String(error));
       })
       .then(code => {
         local_modules[`${c}/${m}`] = {load: false, code: code};
@@ -247,7 +246,7 @@ function load_module(){
       .then(response => response.text())
       .catch(error => {
         $.notify("cannot fetch module", "error")
-        console.log(String(error));
+        pprint(String(error));
       })
       .then(code => {
         globalThis.editor.setValue(code);

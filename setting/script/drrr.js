@@ -153,7 +153,7 @@ drrr_builtins = {
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    log(`play music[${source}][${idx}]: ${keyword}`);
+    drrr.log(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
       get_music.bind(null, keyword, source, show),
       (msg) => drrr_send(msg), idx
@@ -165,12 +165,12 @@ drrr_builtins = {
       url: "https://drrr.com/room/?id=" + room_id,
       dataType: 'html',
       success: function(data){
-        console.log("join successfully");
+        pprint("join successfully");
         renew_chatroom();
         reload_chatroom();
       },
       error: function(data){
-        console.log("join failed");
+        pprint("join failed");
       }
     });
   },
@@ -198,13 +198,13 @@ drrr_builtins = {
         submit: "Create+Room"
       },
       success: function(data){
-        console.log("create successfully");
+        pprint("create successfully");
         renew_chatroom();
         reload_chatroom();
         if(succ) succ();
       },
       error: function(data){
-        console.log("create failed");
+        pprint("create failed");
         if(fail) fail();
       }
     });
@@ -220,11 +220,11 @@ drrr_builtins = {
       ctrlRoom({'alive': alive, to: u.id });
     })
   },
-  'log': function () {
+  'log': function(){
     var logger = document.getElementById('log');
     for (var i = 0; i < arguments.length; i++) {
       if (typeof arguments[i] == 'object') {
-        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1) : arguments[i]) + '&nbsp;';
+        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
       } else {
         logger.innerHTML += arguments[i] + '&nbsp;';
       }

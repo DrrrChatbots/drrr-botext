@@ -1,5 +1,5 @@
-var script_mod = 'user';
-var temp_save = 'lambdascript';
+var script_mod = 'bkg';
+var temp_save = 'bkgscript';
 
 
 var intervals_remove_on_reExecute = [];
@@ -39,7 +39,7 @@ function show_bindings(){
       value += "  \"" + key + "\": \"" + val + "\",\n";
   }
   value += "}\n\n";
-  drrr.log(value);
+  pprint(value);
 }
 
 stringify = (obj, pre, space) => {
@@ -61,7 +61,7 @@ function interact(){
   if(!globalThis.machine){
     globalThis.machine = new RL.Machine('',
       (...args) => {
-        drrr.log(...args);
+        pprint(...args);
         $.notify("Interaction Failed.", "error")
       }
     );
@@ -71,15 +71,15 @@ function interact(){
     [ok, val] = RL.interact(globalThis.machine, code);
   }
   catch(err){
-    return drrr.log(err);
+    return pprint(err);
   }
-  if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  if(typeof val !== 'undefined'){
+    pprint(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  }
   if(ok)
     $.notify("Interaction Successd!", "success");
 }
 
-var notify_web = false;
 function execute(){
   clear_intervals_on_reExecute();
   let code = globalThis.editor.getValue(), ok = false;
@@ -88,36 +88,19 @@ function execute(){
     globalThis.machine?.destructor();
     [ok, globalThis.machine] = RL.execute(
       code, (...args) => {
-        drrr.log(...args);
+        pprint(...args);
         $.notify("Execution Failed.", "error")
       }
     );
   }
   catch(err){
-    return drrr.log(err);
+    return pprint(err);
   }
   let val = machine.val;
   if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+    pprint(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
   if(ok)
     $.notify("Execution Successd!", "success");
-  if(!notify_web){
-    chrome.tabs.query({
-      url: 'https://drrr.com/*'
-    }, (tabs) => {
-      if(!tabs.length){
-        drrr.log("no drrr.com tab exist, if you want to listen event, create one.")
-        chrome.runtime.sendMessage({
-          notification: {
-            title: 'CLICK TO OPEN DRRR.COM',
-            msg: 'open drrr.com to listen event',
-            url: 'drrr_webpage'
-          }
-        });
-      }
-      notify_web = true;
-    });
-  }
 }
 
 function save_script(){
@@ -137,7 +120,7 @@ function pause_script(){
   globalThis.machine?.destructor();
   globalThis.machine = RL.execute(';',
     (...args) => {
-      drrr.log(...args);
+      pprint(...args);
       $.notify("execute failed", "error")
     }
   );

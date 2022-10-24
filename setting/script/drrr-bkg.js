@@ -318,6 +318,11 @@ class Bot {
     this.drrr_send(msg, url, user);
   }).bind(this);
 
+  clear = function () {
+    var logger = document.getElementById('log');
+    logger.innerHTML = "";
+  }
+
   log = function () {
     var logger = document.getElementById('log');
     for (var i = 0; i < arguments.length; i++) {

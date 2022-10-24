@@ -14,11 +14,12 @@ globalThis.pprint = function(){
   var logger = document.getElementById('log');
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
-      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '<br />';
+      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
     } else {
-      logger.innerHTML += (arguments[i]) + '<br />';
+      logger.innerHTML += arguments[i] + '&nbsp;';
     }
   }
+  logger.innerHTML += '<br />';
   jQuery( function(){
     var pre = jQuery("#log");
     pre.scrollTop( pre.prop("scrollHeight") );
@@ -109,13 +110,14 @@ function save_script(){
         type: "basic",
         iconUrl: '/icon.png',
         title: 'SCRIPT SAVED',
-        message: `Your ${temp_save} are saved to local storage`
+        message: `Your ${temp_save} is saved to local storage`
       });
     });
 }
 
 function pause_script(){
   clear_intervals_on_reExecute();
+  globalThis.machine?.destructor();
   globalThis.machine = RL.execute(';',
     (...args) => {
       pprint(...args);
@@ -126,7 +128,7 @@ function pause_script(){
     type: "basic",
     iconUrl: '/icon.png',
     title: 'SCRIPT PAUSED',
-    message: `Your ${temp_save} are terminated`
+    message: `Your ${temp_save} is terminated`
   });
 }
 

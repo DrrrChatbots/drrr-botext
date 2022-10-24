@@ -67,7 +67,7 @@ function talk2event(talk, bot){
 
 function getCookie(cookie_raw){
   let cookies = cookie_raw;
-  if(!cookies[0]) console.log(cookies);
+  if(!cookies[0]) pprint(cookies);
   // what if cookies is a string instead of an array
   if ( (cookies != null) && (cookies[0].length == 1) ) {
     cookies = new Array(1);
@@ -103,6 +103,13 @@ class Bot {
   method_queue = [];
   exec_time_gap = 1500;
 
+  _prev_say_args = [];
+
+  repeat = function(msg){
+    let [func, args] = this._prev_say_args;
+    if(func) this[func](...args);
+  }
+
   do_method = (function(){
     let self = this;
     function _do_method(){
@@ -120,7 +127,7 @@ class Bot {
 
   ctrlRoom = (function(...args){
     this.method_queue.push(((args) => {
-      return ()=>ctrlRoom.apply(this, args);
+      return ()=>_ctrlRoom.apply(this, args);
     })(args));
     this.do_method();
   }).bind(this);
@@ -208,14 +215,14 @@ class Bot {
 
   going = (function(name){
     let dest = this.states[name];
-    if(!dest) return console.log("no such state");
+    if(!dest) return pprint("no such state");
     this.cur_st = name;
     dest();
   }).bind(this);
 
   visit = (function(name){
     let dest = this.states[name];
-    if(!f) return console.log("no such state");
+    if(!f) return pprint("no such state");
     this.cur_st = name;
     dest();
   }).bind(this);
@@ -238,15 +245,15 @@ class Bot {
           }
         },
         success: function(data, textStatus, request){
-          console.log(data);
+          pprint(data);
           let cookie = request.getResponseHeader('drrr-cookie')
           if(data.redirect) return callback(data);
           callback && callback(data['token'], getCookie(cookie));
         },
         error: function(res){
-          console.log("login-1-step failed");
-          console.log(res.status);
-          console.log(res.text);
+          pprint("login-1-step failed");
+          pprint(res.status);
+          pprint(res.text);
           callback && callback(res);
         }
       });
@@ -286,7 +293,7 @@ class Bot {
           else callback(data);
         },
         error: function(res){
-          console.log("login-2-step failed");
+          pprint("login-2-step failed");
           callback && callback(res);
         }
       });
@@ -302,12 +309,30 @@ class Bot {
   }).bind(this);
 
   print = (function(msg, url){
+    this._prev_say_args = ['print', arguments];
     this.drrr_send(msg, url);
   }).bind(this);
 
   dm = (function(user, msg, url){
+    this._prev_say_args = ['dm', arguments];
     this.drrr_send(msg, url, user);
   }).bind(this);
+
+  log = function () {
+    var logger = document.getElementById('log');
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] == 'object') {
+        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
+      } else {
+        logger.innerHTML += arguments[i] + '&nbsp;';
+      }
+    }
+    logger.innerHTML += '<br />';
+    jQuery( function(){
+      var pre = jQuery("#log");
+      pre.scrollTop( pre.prop("scrollHeight") );
+    });
+  }
 
   drrr_send = (function(msg, url, to){
     let callback = renew_callback(msg, to);
@@ -382,7 +407,7 @@ class Bot {
     var idx = undefined, source = undefined;
     if(p1){ if(p1 in api) source = p1; else idx = p1; }
     if(p2){ if(p2 in api) source = p2; else idx = p2; }
-    log(`play music[${source}][${idx}]: ${keyword}`);
+    pprint(`play music[${source}][${idx}]: ${keyword}`);
     setTimeout(()=> play_search(
       get_music.bind(null, keyword, source),
       //TODO
@@ -406,7 +431,7 @@ class Bot {
         }
       },
       success: function(json){
-        console.log("join successfully");
+        pprint("join successfully");
         callback && callback(json)
         let handle_count = 0;
         let handle = () => {
@@ -434,7 +459,7 @@ class Bot {
         reload_chatroom();
       },
       error: function(data){
-        console.log("join failed");
+        pprint("join failed");
       }
     });
   }).bind(this);
@@ -469,14 +494,14 @@ class Bot {
         submit: "Create+Room"
       },
       success: function(data){
-        console.log("create successfully");
+        pprint("create successfully");
         // TODO
         renew_chatroom();
         reload_chatroom();
         if(succ) succ();
       },
       error: function(data){
-        console.log("create failed");
+        pprint("create failed");
         if(fail) fail();
       }
     });
@@ -574,25 +599,16 @@ class Bot {
 globalThis.Bot = Bot;
 
 function lambdascript_event_action(event, config, req){
-  var rules = PS.DrrrBot.events[""] || []
+  if(!globalThis.machine) return;
 
-  if(PS.DrrrBot.cur.length)
-    rules = rules.concat(PS.DrrrBot.events[PS.DrrrBot.cur] || [])
+  var rules = globalThis.machine.events[""] || []
 
-  rules.map(([type, user_trip_regex, cont_regex, action])=> {
+  if(globalThis.machine.cur.length)
+    rules = rules.concat(globalThis.machine.events[globalThis.machine.cur] || [])
+
+  rules.map(([type, action])=> {
     if((Array.isArray(type) && type.includes(event)) || type == event){
-      //log("event matched!");
-      if(match_user(req.user, req.trip, user_trip_regex)){
-        //log("user matched!");
-        if((req.text === 'unknown' || req.text === undefined)
-          || req.text.match(new RegExp(cont_regex))){
-          //log("context matched!");
-          action(req.user, req.text, req.url, req.trip, req);
-          //argfmt(arglist, req.user, req.text, req.url, (args)=>{
-          //  return actions[action].apply(config, args);
-          //});
-        } //else log('content unmatched', req.text, cont_regex);
-      } //else log('user unmatched', req.user, user_trip_regex);
-    } //else log('event unmatched', event);
+      action(req.user, req.text, req.trip, req.url, req);
+    }
   });
 }

@@ -10,29 +10,11 @@ function clear_intervals_on_reExecute(){
   intervals_remove_on_reExecute = [];
 }
 
-function redef_log() {
-  globalThis.log = console.log;
-  var logger = document.getElementById('log');
-  console.log = function () {
-    for (var i = 0; i < arguments.length; i++) {
-      if (typeof arguments[i] == 'object') {
-        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i]/*, undefined, 2*/) : arguments[i]) + '<br />';
-      } else {
-        logger.innerHTML += arguments[i] + '<br />';
-      }
-    }
-    jQuery( function(){
-      var pre = jQuery("#log");
-      pre.scrollTop( pre.prop("scrollHeight") );
-    });
-  }
-}
-
 globalThis.pprint = function(){
   var logger = document.getElementById('log');
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
-      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '<br />';
     } else {
       logger.innerHTML += (arguments[i]) + '<br />';
     }
@@ -56,11 +38,11 @@ function show_bindings(){
       value += "  \"" + key + "\": \"" + val + "\",\n";
   }
   value += "}\n\n";
-  console.log(value);
+  pprint(value);
 }
 
-stringify = obj => {
-  str = JSON.stringify(obj)
+stringify = (obj, pre, space) => {
+  str = JSON.stringify(obj, pre, space)
   if(obj === undefined)
     str = "undefined";
   else if(typeof obj == 'function')
@@ -74,32 +56,50 @@ stringify = obj => {
 }
 
 function interact(){
+  let val = null, ok = false;
   if(!globalThis.machine){
-    globalThis.machine = PS.Main.newMachine();
+    globalThis.machine = new RL.Machine('',
+      (...args) => {
+        pprint(...args);
+        $.notify("Interaction Failed.", "error")
+      }
+    );
   }
   code = $('#step').text();
   try {
-    globalThis.machine = PS.Main.interact(globalThis.machine)(code)()
+    [ok, val] = RL.interact(globalThis.machine, code);
   }
   catch(err){
-    return console.log("Uncatchable parsing error");
+    return pprint(err);
   }
-  val = machine.val;
-  console.log(`=> ${stringify(val)}`);
+  if(typeof val !== 'undefined'){
+    pprint(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  }
+  if(ok)
+    $.notify("Interaction Successd!", "success");
 }
 
 function execute(){
   clear_intervals_on_reExecute();
-  code = globalThis.editor.getValue();
+  let code = globalThis.editor.getValue(), ok = false;
   code = preloaded_code(code);
   try {
-    globalThis.machine = PS.Main.execute(code)();
+    globalThis.machine?.destructor();
+    [ok, globalThis.machine] = RL.execute(
+      code, (...args) => {
+        pprint(...args);
+        $.notify("Execution Failed.", "error")
+      }
+    );
   }
   catch(err){
-    return console.log("Uncatchable parsing error");
+    return pprint(err);
   }
-  val = machine.val;
-  console.log(`=> ${stringify(val)}`);
+  let val = machine.val;
+  if(typeof val !== 'undefined')
+    pprint(`${typeof val} => ${stringify(val, null, 1).replaceAll("\n", "<br>")}`);
+  if(ok)
+    $.notify("Execution Successd!", "success");
 }
 
 function save_script(){
@@ -116,8 +116,12 @@ function save_script(){
 
 function pause_script(){
   clear_intervals_on_reExecute();
-  globalThis.machine = PS.Main.execute(';')();
-  val = machine.val;
+  globalThis.machine = RL.execute(';',
+    (...args) => {
+      pprint(...args);
+      $.notify("execute failed", "error")
+    }
+  );
   chrome.notifications.create({
     type: "basic",
     iconUrl: '/icon.png',
@@ -175,7 +179,8 @@ function update_index(mirror, mirrors){
     fetch(`https://${mirrors[mirror].loc}/bs-pkgs/raw/main/index.json`)
       .then(response => response.json())
       .catch(error => {
-        if(mirror != 'Local') alert(`cannot fetch ${mirror}`);
+        if(mirror != 'Local')
+          $.notify(`cannot fetch ${mirror}`, "error")
         index = {}
         mirrors[mirror].index = index;
         chrome.storage.local.set({
@@ -204,8 +209,8 @@ function install_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        alert("cannot fetch module");
-        console.log(String(error));
+        $.notify("cannot fetch module", "error");
+        pprint(String(error));
       })
       .then(code => {
         local_modules[`${c}/${m}`] = {
@@ -226,7 +231,7 @@ function install_module(){
         load_local_modules(local_modules);
       })
   }
-  else alert("invalid module path");
+  else $.notify("invalid module path", "error");
 }
 
 function load_module(){
@@ -240,8 +245,8 @@ function load_module(){
     fetch(`https://${mirrors[M].loc}/bs-pkgs/raw/main/${c}/${m}`)
       .then(response => response.text())
       .catch(error => {
-        alert("cannot fetch module");
-        console.log(String(error));
+        $.notify("cannot fetch module", "error")
+        pprint(String(error));
       })
       .then(code => {
         globalThis.editor.setValue(code);
@@ -355,7 +360,7 @@ function new_module(){
     load_index(mirrors[mirror].index);
     load_local_modules(local_modules);
   }
-  else alert("empty input");
+  else $.notify("empty input", "error")
 }
 
 function clear_module_env(){
@@ -416,14 +421,13 @@ function add_mirror(alias, repo){
     });
     load_mirrors(mirror, mirrors);
   }
-  else alert("invalid format");
+  else $.notify("invalid format", "error")
 }
 
 function del_mirror(alias){
   if(!alias) alias = prompt("input mirror name");
   if(alias === "Local"){
-    alert("cannot delete local");
-    return;
+    return $.notify("cannot delete local", "error")
   }
   if(alias in mirrors){
     if(mirror == alias)
@@ -435,7 +439,7 @@ function del_mirror(alias){
     });
     load_mirrors(mirror, mirrors);
   }
-  else alert("mirror not existed");
+  else $.notify("mirror not existed", "error")
 }
 
 function set_modules(config){
@@ -557,7 +561,7 @@ function bind_manual(){
 }
 
 $(document).ready(function(event) {
-
+  $.notify.defaults({globalPosition: 'bottom right'})
 
   $(".draggable").draggable({
     iframeFix: true,
@@ -633,6 +637,5 @@ $(document).ready(function(event) {
         return false;
       }
     });
-    redef_log();
   });
 });

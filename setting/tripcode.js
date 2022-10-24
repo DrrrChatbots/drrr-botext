@@ -21,7 +21,7 @@ function dumpTrip(){
     }
     download('tripcode.txt', cont);
   }
-  else alert("No tripcode to download, Do search first");
+  else $.notify("No tripcode to download, Do search first", 'error');
 }
 
 function copyToClipboard(text) {

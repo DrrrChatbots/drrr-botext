@@ -29,7 +29,7 @@ export const event_action = (req, config) => {
         [MODULE_SETTING]: config[MODULE_SETTING]
       }, function(){
         if(chrome.runtime.lastError)
-          alert("ChatLog is full!");
+          $.notify("ChatLog is full!", 'error');
       });
     // });
   }

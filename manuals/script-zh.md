@@ -252,13 +252,13 @@ pprint("done");
 
 
 如果 state 後接著的是 function 的話，可以用參數去 call 它。
-```js
+```javascript=
 state t(a, b) => {
     console.log(a, b);
     pop;
 }
 
-push(5, 6);
+push t(5, 6);
 // pop 會回到這裡
 
 state s (a, b) => {
@@ -341,7 +341,7 @@ later 3000 {
 
 像是 scope `{}` 在 expression 中會被 lift 成 function 一樣, 其他的 statement 像是 `for`, `while`, `event`, `timer`, `later`, `going`, `visit`, `push`, `pop` 也有同樣的特性。
 
-```js
+```javascript=
 f = for i of args { console.log(i); }
 f(1, 2, 3)
 // 1 2 3
@@ -357,7 +357,7 @@ Lifted functions 和 normal functions 有一個叫做 tick 的小小區別。
 
 Lifted functions 不能在他宣告的 state 外被執行。
 
-```js
+```javascript=
 let f;
 state tick {
   f = { console.log("tick"); }

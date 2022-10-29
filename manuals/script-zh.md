@@ -87,7 +87,7 @@ event[me,msg](u,m:"^/baka yande.re")=>$.get("https://yande.re/post.json?limit=1&
 
 目前支援 if then else 語法，但 switch 沒有支援。
 
-注意這裡的 if else 是 expression，且需要 then。可以省略 if 的括號。
+注意這裡的 if else 是 expression，then 可寫可不寫。可以省略 if 的括號。
 ```javascript=
 if 1 then 2 else 3
 // => 2
@@ -98,7 +98,7 @@ if(x == 3) then { "hello" } else { "world" }
 
 ### loop
 
-迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。目前也不支援 break 和 continue。
+迴圈語法支援 while, for loop, for in, for of，基本上和 JS 一樣，但沒有 do while。亦支援 break 和 continue。
 
 迴圈的小括弧可以省略。
 
@@ -121,7 +121,7 @@ for(j in {tom: 1, allen: 2}) pprint(j);
 
 ### function
 
-沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。不支援 return 語法。
+沒有支援 function 語法，僅支援 arrow function，預設回傳最後一個 expression。亦支援 return 語法。
 
 ```javascript=
 f = (x) =>
@@ -145,6 +145,11 @@ pprint(g(1, 2)) // 3
 
 跟 JS 的 arguments 一樣，在 function 或是 lifted scope 中，浪語的 args 可以拿到參數列。
 
+使用 `=` 就會在當前的 scope 宣告並初始該變數，該行為和 python 一樣，而 js 會把該變數直接初始在 global。
+但是遇到 global 存在的變數時，`=` 會去更新該個變數，而不是在當前 scope 宣告新的變數，這點則是和 python 不同，和 js 比較類似的地方。
+當你想要在當前 scope 宣告和 global 重複的變數的話，可以使用 `let`。
+
+ex: `let x, y = 2 + 2;`
 
 ### builtins
 
@@ -191,6 +196,13 @@ drrr.rooms // 所有房間，大廳狀態
 drrr.getLounge(callback);
 drrr.getProfile(callback);
 drrr.getLoc(callback);
+
+// 像是 js 裡面的 globalThis 一樣 (global scope)
+// 有時候在瀏覽器會被 alias 成 window, top
+// 而在 nodeJS 裡會被 alias 成 global
+// 如果你想要用 script 的 global scope 可以用 top
+top.x = 3
+console.log(x) // 3
 ```
 
 目前浪語裡，除了先前提到的保留字外，還有一些特殊的關鍵字：
@@ -203,7 +215,9 @@ drrr.getLoc(callback);
 
 如果你要回來的話，請使用 visit。
 
-目前的 visit 是使用 dynamic scoping，而 going 是 static scoping。
+目前的 visit 是使用 dynamic scoping， 而 going 是 static scoping。
+
+也新增了 push, pop 語法，使用 push 後會轉移到新的 state, 和 going 一樣，不過會像 visit 一樣保留上個 state 執行的位置，使用 pop 可以回到上一個 state。pop 不用給 state name。
 
 ```javascript=
 state welcome {
@@ -234,6 +248,25 @@ visit welcome
 // back from bye
 pprint("done");
 // done.
+```
+
+
+如果 state 後接著的是 function 的話，可以用參數去 call 它。
+```js
+state t(a, b) => {
+    console.log(a, b);
+    pop;
+}
+
+push(5, 6);
+// pop 會回到這裡
+
+state s (a, b) => {
+    console.log(a, b);
+}
+visit s(3, 4);
+going s(1, 2);
+// 使用 going 後不會回來
 ```
 
 ### event
@@ -298,11 +331,44 @@ later 3000 {
 }
 ```
 
-※ 注意 timer 和 later 會將 "非 lambda 的 expression" lift 成一個 lambda expression，然後時間到了再 eval 他。
+※ 注意 timer 和 later 在時間到了的時候去 eval 你的 expression, 如果 eval 結果是 function 的話，會給他參數。而如果此 function 的結果還是 function 的話，他會一直重複上述行為。
 
 ### new/delete
 
 這兩個關鍵字用法和 JS 相同。
+
+### statement lifting
+
+像是 scope `{}` 在 expression 中會被 lift 成 function 一樣, 其他的 statement 像是 `for`, `while`, `event`, `timer`, `later`, `going`, `visit`, `push`, `pop` 也有同樣的特性。
+
+```js
+f = for i of args { console.log(i); }
+f(1, 2, 3)
+// 1 2 3
+
+f = later 1000 (a, b, c) => {
+  console.log("hello", args, a, b, c);
+}
+f(1, 2, 3)
+// hello [1, 2, 3] 1 2 3
+```
+
+Lifted functions 和 normal functions 有一個叫做 tick 的小小區別。
+
+Lifted functions 不能在他宣告的 state 外被執行。
+
+```js
+let f;
+state tick {
+  f = { console.log("tick"); }
+  f(); // show tick
+  pop;
+}
+
+push tick;
+console.log(f) // still a function
+f(); // not show tick
+```
 
 ## 範例
 

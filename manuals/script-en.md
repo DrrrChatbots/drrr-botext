@@ -89,7 +89,7 @@ event[me,msg](u,m:"^/baka yande.re")=>$.get("https://yande.re/post.json?limit=1&
 
 if then else syntax is supported now, but there is no switch syntax.
 
-Note the if else is expression, and you need "then" keyword. You can omit the parentheses of if condition.
+Note the if else is expression, and "then" keyword is optional. You can omit the parentheses of if condition.
 
 ```javascript=
 if 1 then 2 else 3
@@ -101,7 +101,7 @@ if(x == 3) then { "hello" } else { "world" }
 
 ### loop
 
-loop syntax supports while, for loop, for in, for of. They are same as JS's basically. But do ... while is not supported now.
+loop syntax supports while, for loop, for in, for of. They are same as JS's basically. But do ... while is not supported now. `break` and `continue` syntax also support now.
 
 The parentheses of loop can be omitted.
 
@@ -124,7 +124,7 @@ for(j in {tom: 1, allen: 2}) pprint(j);
 
 ### function
 
-There's no function keyworkd, you can use arrow function syntax to define a function. It return the last expression by default.
+There's no function keyworkd, you can use arrow function syntax to define a function. It return the last expression by default. `return` syntax also support now.
 
 ```javascript=
 f = (x) =>
@@ -147,6 +147,14 @@ pprint(g(1, 2)) // 3
 ```
 
 Like the keyword "arguments" in JS, in function or lifted scope, the "args" keyword provide you the argument list.
+
+You can declare and initialize the variable in current scope by using `=`, the behavior is same as Python, while JavaScript will initialize the variable in global.
+
+But if the variable exists in global, the `=` operator will update the variable instead of declare it in current scope, it is different from Python, and more similar to JavaScript.
+
+If you want to declare the variable that already existed in global in current scope, you can use `let`.
+
+ex: `let x, y = 2 + 2;`
 
 
 ### builtins
@@ -195,6 +203,13 @@ drrr.rooms // All rooms, lounge state
 drrr.getLounge(callback);
 drrr.getProfile(callback);
 drrr.getLoc(callback);
+
+// like globalThis in js (global scope)
+// sometimes be alias to window, top in browser
+// and global in nodejs
+// if you want to use script global scope, use top
+top.x = 3
+console.log(x) // 3
 ```
 
 At present, in addition to the reserved words mentioned earlier, there are some special keywords in LambdaScript:
@@ -208,6 +223,8 @@ But going is to jump to that place and won't come back.
 If you want to come back, please use visit.
 
 The current visit uses dynamic scoping, while going is static scoping.
+
+`push` and `pop` syntax for state are also supported, the state will transfer to new state after you use `push`, but `push` will keep the execution position of last state, you can use `pop` to back to the previous state. Note that you don't need to give state name for `pop`.
 
 ```javascript=
 state welcome {
@@ -239,6 +256,27 @@ visit welcome
 pprint("done");
 // done.
 ```
+
+You can also use argument to call the state:
+
+```js
+state t(a, b) => {
+    console.log(a, b);
+    pop;
+}
+
+push(5, 6);
+// pop will back to here
+
+state s (a, b) => {
+    console.log(a, b);
+}
+visit s(3, 4);
+going s(1, 2);
+// no back after going
+```
+
+
 
 ### event
 
@@ -302,12 +340,43 @@ later 3000 {
 }
 ```
 
-
-※ Note "timer" and "later" will lift "non-lambda expression" to a "lambda expression", and eval it on the time point.
+※ Note "timer" and "later" will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result if the function call is still a function, the above actions will be continue repeating.
 
 ### new/delete
 
 The two keyword is same with JS.
+
+### statement lifting
+
+Like scope `{}` will be lifted as function in expressions, other statement like `for`, `while`, `event`, `timer`, `later`, `going`, `visit`, `push`, `pop` have the same feature.
+
+```js
+f = for i of args { console.log(i); }
+f(1, 2, 3)
+// 1 2 3
+
+f = later 1000 (a, b, c) => {
+  console.log("hello", args, a, b, c);
+}
+f(1, 2, 3)
+// hello [1, 2, 3] 1 2 3
+```
+
+Lifted functions and normal functions have a difference that named tick.
+The lifted functions cannot be executed ouside the state they declared.
+
+```js
+let f;
+state tick {
+  f = { console.log("tick"); }
+  f(); // show tick
+  pop;
+}
+
+push tick;
+console.log(f) // still a function
+f(); // not show tick
+```
 
 ## Example
 

@@ -69,7 +69,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
     <span class="token function">pprint</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>hitokoto<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </div></div></code></pre><p><span>※ 測試姬 (baka bot) /baka </span><a href="http://yande.re" target="_blank" rel="noopener"><span>yande.re</span></a><span> command recurrent（nsfw warning）</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span></div><div class="code">event<span class="token punctuation">[</span>me<span class="token punctuation">,</span>msg<span class="token punctuation">]</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token literal-property property">m</span><span class="token operator">:</span><span class="token string">"^/baka yande.re"</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span>$<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"https://yande.re/post.json?limit=1&amp;page="</span><span class="token operator">+</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">1e4</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token parameter">d</span><span class="token operator">=&gt;</span>drrr<span class="token punctuation">.</span><span class="token function">dm</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span><span class="token string">"."</span><span class="token punctuation">,</span>d<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>preview_url<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</div></div></code></pre><h2 id="Syntax" data-id="Syntax" style=""><a class="anchor hidden-xs" href="#Syntax" title="Syntax"><span class="octicon octicon-link"></span></a><span>Syntax</span></h2><p><code>+</code><span>, </span><code>-</code><span>, </span><code>*</code><span>, </span><code>/</code><span> operators are supported，</span><code>+=</code><span>, </span><code>++</code><span>, </span><code>--</code><span>, too.</span></p><h3 id="cond" data-id="cond" style=""><a class="anchor hidden-xs" href="#cond" title="cond"><span class="octicon octicon-link"></span></a><span>cond</span></h3><p><span>if then else syntax is supported now, but there is no switch syntax.</span></p><p><span>Note the if else is expression, and you need “then” keyword. You can omit the parentheses of if condition.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h2 id="Syntax" data-id="Syntax" style=""><a class="anchor hidden-xs" href="#Syntax" title="Syntax"><span class="octicon octicon-link"></span></a><span>Syntax</span></h2><p><code>+</code><span>, </span><code>-</code><span>, </span><code>*</code><span>, </span><code>/</code><span> operators are supported，</span><code>+=</code><span>, </span><code>++</code><span>, </span><code>--</code><span>, too.</span></p><h3 id="cond" data-id="cond" style=""><a class="anchor hidden-xs" href="#cond" title="cond"><span class="octicon octicon-link"></span></a><span>cond</span></h3><p><span>if then else syntax is supported now, but there is no switch syntax.</span></p><p><span>Note the if else is expression, and “then” keyword is optional. You can omit the parentheses of if condition.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -78,7 +78,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 <span class="token keyword">if</span> <span class="token number">0</span> then <span class="token number">1</span>
 <span class="token comment">// =&gt; false</span>
 <span class="token keyword">if</span><span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span> then <span class="token punctuation">{</span> <span class="token string">"hello"</span> <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token string">"world"</span> <span class="token punctuation">}</span>
-</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>loop syntax supports while, for loop, for in, for of. They are same as JS’s basically. But do … while is not supported now.</span></p><p><span>The parentheses of loop can be omitted.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>loop syntax supports while, for loop, for in, for of. They are same as JS’s basically. But do … while is not supported now. </span><code>break</code><span> and </span><code>continue</code><span> syntax also support now.</span></p><p><span>The parentheses of loop can be omitted.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -105,7 +105,7 @@ j <span class="token operator">=</span> <span class="token number">0</span>
 
 <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token function">pprint</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span><span class="token punctuation">(</span>j <span class="token keyword">in</span> <span class="token punctuation">{</span><span class="token literal-property property">tom</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">allen</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token function">pprint</span><span class="token punctuation">(</span>j<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</div></div></code></pre><h3 id="function" data-id="function" style=""><a class="anchor hidden-xs" href="#function" title="function"><span class="octicon octicon-link"></span></a><span>function</span></h3><p><span>There’s no function keyworkd, you can use arrow function syntax to define a function. It return the last expression by default.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="function" data-id="function" style=""><a class="anchor hidden-xs" href="#function" title="function"><span class="octicon octicon-link"></span></a><span>function</span></h3><p><span>There’s no function keyworkd, you can use arrow function syntax to define a function. It return the last expression by default. </span><code>return</code><span> syntax also support now.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -127,7 +127,14 @@ j <span class="token operator">=</span> <span class="token number">0</span>
 
 g <span class="token operator">=</span> <span class="token punctuation">{</span> args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token function">g</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 3</span>
-</div></div></code></pre><p><span>Like the keyword “arguments” in JS, in function or lifted scope, the “args” keyword provide you the argument list.</span></p><h3 id="builtins" data-id="builtins" style=""><a class="anchor hidden-xs" href="#builtins" title="builtins"><span class="octicon octicon-link"></span></a><span>builtins</span></h3><p><span>I provide some drrr related function, and bind them in the drrr object.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><span>Like the keyword “arguments” in JS, in function or lifted scope, the “args” keyword provide you the argument list.</span></p><p><span>You can declare and initialize the variable in current scope by using </span><code>=</code><span>, the behavior is same as Python, while JavaScript will initialize the variable in global.</span></p><p><span>But if the variable exists in global, the </span><code>=</code><span> operator will update the variable instead of declare it in current scope, it is different from Python, and more similar to JavaScript.</span></p><p><span>If you want to declare the variable that already existed in global in current scope, you can use </span><code>let</code><span>.</span></p><p><span>ex: </span><code>let x, y = 2 + 2;</code></p><h3 id="builtins" data-id="builtins" style=""><a class="anchor hidden-xs" href="#builtins" title="builtins"><span class="octicon octicon-link"></span></a><span>builtins</span></h3><p><span>I provide some drrr related function, and bind them in the drrr object.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -208,7 +215,14 @@ drrr<span class="token punctuation">.</span>rooms <span class="token comment">//
 drrr<span class="token punctuation">.</span><span class="token function">getLounge</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
 drrr<span class="token punctuation">.</span><span class="token function">getProfile</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
 drrr<span class="token punctuation">.</span><span class="token function">getLoc</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</div></div></code></pre><p><span>At present, in addition to the reserved words mentioned earlier, there are some special keywords in LambdaScript:</span></p><h3 id="state" data-id="state" style=""><a class="anchor hidden-xs" href="#state" title="state"><span class="octicon octicon-link"></span></a><span>state</span></h3><p><span>Declare a state, use it with going, and have its own scope.</span></p><p><span>But going is to jump to that place and won’t come back.</span></p><p><span>If you want to come back, please use visit.</span></p><p><span>The current visit uses dynamic scoping, while going is static scoping.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+
+<span class="token comment">// like globalThis in js (global scope)</span>
+<span class="token comment">// sometimes be alias to window, top in browser</span>
+<span class="token comment">// and global in nodejs</span>
+<span class="token comment">// if you want to use script global scope, use top</span>
+top<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token comment">// 3</span>
+</div></div></code></pre><p><span>At present, in addition to the reserved words mentioned earlier, there are some special keywords in LambdaScript:</span></p><h3 id="state" data-id="state" style=""><a class="anchor hidden-xs" href="#state" title="state"><span class="octicon octicon-link"></span></a><span>state</span></h3><p><span>Declare a state, use it with going, and have its own scope.</span></p><p><span>But going is to jump to that place and won’t come back.</span></p><p><span>If you want to come back, please use visit.</span></p><p><span>The current visit uses dynamic scoping, while going is static scoping.</span></p><p><code>push</code><span> and </span><code>pop</code><span> syntax for state are also supported, the state will transfer to new state after you use </span><code>push</code><span>, but </span><code>push</code><span> will keep the execution position of last state, you can use </span><code>pop</code><span> to back to the previous state. Note that you don’t need to give state name for </span><code>pop</code><span>.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -256,7 +270,21 @@ visit welcome
 <span class="token comment">// back from bye</span>
 <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"done"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// done.</span>
-</div></div></code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>To handle related events, the type of event is the same as the description in event action.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><span>You can also use argument to call the state:</span></p><pre><code class="js hljs"><span class="hljs-keyword">state</span> t(a, b) =&gt; {
+    console.<span class="hljs-keyword">log</span>(a, b);
+    pop;
+}
+
+push(<span class="hljs-number">5</span>, <span class="hljs-number">6</span>);
+// pop will back <span class="hljs-keyword">to</span> here
+
+<span class="hljs-keyword">state</span> s (a, b) =&gt; {
+    console.<span class="hljs-keyword">log</span>(a, b);
+}
+visit s(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);
+going s(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);
+// <span class="hljs-keyword">no</span> back after going
+</code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>To handle related events, the type of event is the same as the description in event action.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -335,7 +363,27 @@ later <span class="token number">3000</span> console<span class="token punctuati
 later <span class="token number">3000</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span> <span class="token comment">// works</span>
 <span class="token punctuation">}</span>
-</div></div></code></pre><p><span>※ Note “timer” and “later” will lift “non-lambda expression” to a “lambda expression”, and eval it on the time point.</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>The two keyword is same with JS.</span></p><h2 id="Example" data-id="Example" style=""><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h2><p><span>Some sample code:</span></p><p><span>Welcome back:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><span>※ Note “timer” and “later” will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result if the function call is still a function, the above actions will be continue repeating.</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>The two keyword is same with JS.</span></p><h3 id="statement-lifting" data-id="statement-lifting" style=""><a class="anchor hidden-xs" href="#statement-lifting" title="statement-lifting"><span class="octicon octicon-link"></span></a><span>statement lifting</span></h3><p><span>Like scope </span><code>{}</code><span> will be lifted as function in expressions, other statement like </span><code>for</code><span>, </span><code>while</code><span>, </span><code>event</code><span>, </span><code>timer</code><span>, </span><code>later</code><span>, </span><code>going</code><span>, </span><code>visit</code><span>, </span><code>push</code><span>, </span><code>pop</code><span> have the same feature.</span></p><pre><code class="js hljs">f <span class="hljs-operator">=</span> <span class="hljs-keyword">for</span> i of args { console.log(i); }
+f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-comment">// 1 2 3</span>
+
+f <span class="hljs-operator">=</span> later <span class="hljs-number">1000</span> (a, b, c) <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> {
+  console.log(<span class="hljs-string">"hello"</span>, args, a, b, c);
+}
+f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-comment">// hello [1, 2, 3] 1 2 3</span>
+</code></pre><p><span>Lifted functions and normal functions have a difference that named tick.</span><br>
+<span>The lifted functions cannot be executed ouside the state they declared.</span></p><pre><code class="js hljs">let f;
+state tick {
+  f <span class="hljs-operator">=</span> { console.log(<span class="hljs-string">"tick"</span>); }
+  f(); <span class="hljs-comment">// show tick</span>
+  pop;
+}
+
+push tick;
+console.log(f) <span class="hljs-comment">// still a function</span>
+f(); <span class="hljs-comment">// not show tick</span>
+</code></pre><h2 id="Example" data-id="Example" style=""><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h2><p><span>Some sample code:</span></p><p><span>Welcome back:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -443,6 +491,7 @@ event <span class="token function">join</span> <span class="token punctuation">(
 <li><a href="#timer" title="timer">timer</a></li>
 <li><a href="#later" title="later">later</a></li>
 <li><a href="#newdelete" title="new/delete">new/delete</a></li>
+<li><a href="#statement-lifting" title="statement lifting">statement lifting</a></li>
 </ul>
 </li>
 <li><a href="#Example" title="Example">Example</a></li>
@@ -476,6 +525,7 @@ event <span class="token function">join</span> <span class="token punctuation">(
 <li><a href="#timer" title="timer">timer</a></li>
 <li><a href="#later" title="later">later</a></li>
 <li><a href="#newdelete" title="new/delete">new/delete</a></li>
+<li><a href="#statement-lifting" title="statement lifting">statement lifting</a></li>
 </ul>
 </li>
 <li><a href="#Example" title="Example">Example</a></li>

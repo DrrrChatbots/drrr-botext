@@ -259,13 +259,13 @@ pprint("done");
 
 You can also use argument to call the state:
 
-```js
+```javascript=
 state t(a, b) => {
     console.log(a, b);
     pop;
 }
 
-push(5, 6);
+push t(5, 6);
 // pop will back to here
 
 state s (a, b) => {
@@ -340,7 +340,7 @@ later 3000 {
 }
 ```
 
-※ Note "timer" and "later" will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result if the function call is still a function, the above actions will be continue repeating.
+※ Note "timer" and "later" will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result of the function call is still a function, the above actions will be continue repeating.
 
 ### new/delete
 
@@ -350,7 +350,7 @@ The two keyword is same with JS.
 
 Like scope `{}` will be lifted as function in expressions, other statement like `for`, `while`, `event`, `timer`, `later`, `going`, `visit`, `push`, `pop` have the same feature.
 
-```js
+```javascript=
 f = for i of args { console.log(i); }
 f(1, 2, 3)
 // 1 2 3
@@ -365,7 +365,7 @@ f(1, 2, 3)
 Lifted functions and normal functions have a difference that named tick.
 The lifted functions cannot be executed ouside the state they declared.
 
-```js
+```javascript=
 let f;
 state tick {
   f = { console.log("tick"); }

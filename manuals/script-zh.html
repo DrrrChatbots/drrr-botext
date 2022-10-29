@@ -35,10 +35,10 @@
 </head>
 
 <body>
-    <div id="doc" class="markdown-body container-fluid comment-enabled comment-inner" data-hard-breaks="true" style=""><h1 id="浪語介紹" data-id="浪語介紹" style=""><a class="anchor hidden-xs" href="#浪語介紹" title="浪語介紹"><span class="octicon octicon-link"></span></a><span>浪語介紹</span></h1><p><span>一種 JavaScript 的方言，因為由浪打所創因而得名。</span></p><h2 id="資料型態" data-id="資料型態" style=""><a class="anchor hidden-xs" href="#資料型態" title="資料型態"><span class="octicon octicon-link"></span></a><span>資料型態</span></h2><p><span>資料型態大概以下這些：</span></p><h3 id="Boolean" data-id="Boolean" style=""><a class="anchor hidden-xs" href="#Boolean" title="Boolean"><span class="octicon octicon-link"></span></a><span>Boolean</span></h3><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+    <div id="doc" class="markdown-body container-fluid comment-inner comment-enabled" data-hard-breaks="true" style=""><h1 id="浪語介紹" data-id="浪語介紹" style=""><a class="anchor hidden-xs" href="#浪語介紹" title="浪語介紹"><span class="octicon octicon-link"></span></a><span>浪語介紹</span></h1><p><span>一種 JavaScript 的方言，因為由浪打所創因而得名。</span></p><h2 id="資料型態" data-id="資料型態" style=""><a class="anchor hidden-xs" href="#資料型態" title="資料型態"><span class="octicon octicon-link"></span></a><span>資料型態</span></h2><p><span>資料型態大概以下這些：</span></p><h3 id="Boolean" data-id="Boolean" style=""><a class="anchor hidden-xs" href="#Boolean" title="Boolean"><span class="octicon octicon-link"></span></a><span>Boolean</span></h3><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span></div><div class="code"><span class="token boolean">true</span>
 <span class="token boolean">false</span>
-</div></div></code></pre><h3 id="Number" data-id="Number" style=""><a class="anchor hidden-xs" href="#Number" title="Number"><span class="octicon octicon-link"></span></a><span>Number</span></h3><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="Number" data-id="Number" style="" data-original-title="" title=""><a class="anchor hidden-xs" href="#Number" title="Number"><span class="octicon octicon-link"></span></a><span>Number</span></h3><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span></div><div class="code"><span class="token operator">-</span><span class="token number">1</span>
 <span class="token number">0</span>
@@ -116,7 +116,7 @@ j <span class="token operator">=</span> <span class="token number">0</span>
 
 <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span>
 <span class="token comment">// =&gt; [0,1,1,2,3,5,8]</span>
-</div></div></code></pre><p><span>Scope </span><code>{}</code><span> 如果被當作參數，或者是 right value 綁定時，會被 lift 成沒有參數的 function。</span></p><pre data-original-title="" title=""><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><span>Scope </span><code>{}</code><span> 如果被當作參數，或者是 right value 綁定時，會被 lift 成沒有參數的 function。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -268,21 +268,34 @@ visit welcome
 <span class="token comment">// back from bye</span>
 <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"done"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// done.</span>
-</div></div></code></pre><p><span>如果 state 後接著的是 function 的話，可以用參數去 call 它。</span></p><pre><code class="js hljs"><span class="hljs-keyword">state</span> t(a, b) =&gt; {
-    console.<span class="hljs-keyword">log</span>(a, b);
-    pop;
-}
+</div></div></code></pre><p><span>如果 state 後接著的是 function 的話，可以用參數去 call 它。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code">state <span class="token function">t</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    pop<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-push(<span class="hljs-number">5</span>, <span class="hljs-number">6</span>);
-// pop 會回到這裡
+push <span class="token function">t</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// pop 會回到這裡</span>
 
-<span class="hljs-keyword">state</span> s (a, b) =&gt; {
-    console.<span class="hljs-keyword">log</span>(a, b);
-}
-visit s(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);
-going s(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);
-// 使用 going 後不會回來
-</code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>處理相關事件，event 種類和 event action 裡的說明一樣。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+state <span class="token function">s</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+visit <span class="token function">s</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+going <span class="token function">s</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 使用 going 後不會回來</span>
+</div></div></code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>處理相關事件，event 種類和 event action 裡的說明一樣。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -361,26 +374,43 @@ later <span class="token number">3000</span> console<span class="token punctuati
 later <span class="token number">3000</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span> <span class="token comment">// 這個也會正常運作</span>
 <span class="token punctuation">}</span>
-</div></div></code></pre><p><span>※ 注意 timer 和 later 在時間到了的時候去 eval 你的 expression, 如果 eval 結果是 function 的話，會給他參數。而如果此 function 的結果還是 function 的話，他會一直重複上述行為。</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>這兩個關鍵字用法和 JS 相同。</span></p><h3 id="statement-lifting" data-id="statement-lifting" style=""><a class="anchor hidden-xs" href="#statement-lifting" title="statement-lifting"><span class="octicon octicon-link"></span></a><span>statement lifting</span></h3><p><span>像是 scope </span><code>{}</code><span> 在 expression 中會被 lift 成 function 一樣, 其他的 statement 像是 </span><code>for</code><span>, </span><code>while</code><span>, </span><code>event</code><span>, </span><code>timer</code><span>, </span><code>later</code><span>, </span><code>going</code><span>, </span><code>visit</code><span>, </span><code>push</code><span>, </span><code>pop</code><span> 也有同樣的特性。</span></p><pre><code class="js hljs">f <span class="hljs-operator">=</span> <span class="hljs-keyword">for</span> i of args { console.log(i); }
-f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
-<span class="hljs-comment">// 1 2 3</span>
+</div></div></code></pre><p><span>※ 注意 timer 和 later 在時間到了的時候去 eval 你的 expression, 如果 eval 結果是 function 的話，會給他參數。而如果此 function 的結果還是 function 的話，他會一直重複上述行為。</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>這兩個關鍵字用法和 JS 相同。</span></p><h3 id="statement-lifting" data-id="statement-lifting" style=""><a class="anchor hidden-xs" href="#statement-lifting" title="statement-lifting"><span class="octicon octicon-link"></span></a><span>statement lifting</span></h3><p><span>像是 scope </span><code>{}</code><span> 在 expression 中會被 lift 成 function 一樣, 其他的 statement 像是 </span><code>for</code><span>, </span><code>while</code><span>, </span><code>event</code><span>, </span><code>timer</code><span>, </span><code>later</code><span>, </span><code>going</code><span>, </span><code>visit</code><span>, </span><code>push</code><span>, </span><code>pop</code><span> 也有同樣的特性。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code">f <span class="token operator">=</span> <span class="token keyword">for</span> i <span class="token keyword">of</span> args <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token comment">// 1 2 3</span>
 
-f <span class="hljs-operator">=</span> later <span class="hljs-number">1000</span> (a, b, c) <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> {
-  console.log(<span class="hljs-string">"hello"</span>, args, a, b, c);
-}
-f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
-<span class="hljs-comment">// hello [1, 2, 3] 1 2 3</span>
-</code></pre><p><span>Lifted functions 和 normal functions 有一個叫做 tick 的小小區別。</span></p><p><span>Lifted functions 不能在他宣告的 state 外被執行。</span></p><pre><code class="js hljs">let f;
-state tick {
-  f <span class="hljs-operator">=</span> { console.log(<span class="hljs-string">"tick"</span>); }
-  f(); <span class="hljs-comment">// show tick</span>
-  pop;
-}
+f <span class="token operator">=</span> later <span class="token number">1000</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">,</span> args<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token comment">// hello [1, 2, 3] 1 2 3</span>
+</div></div></code></pre><p><span>Lifted functions 和 normal functions 有一個叫做 tick 的小小區別。</span></p><p><span>Lifted functions 不能在他宣告的 state 外被執行。</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code"><span class="token keyword">let</span> f<span class="token punctuation">;</span>
+state tick <span class="token punctuation">{</span>
+  f <span class="token operator">=</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"tick"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+  <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// show tick</span>
+  pop<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-push tick;
-console.log(f) <span class="hljs-comment">// still a function</span>
-f(); <span class="hljs-comment">// not show tick</span>
-</code></pre><h2 id="範例" data-id="範例" style=""><a class="anchor hidden-xs" href="#範例" title="範例"><span class="octicon octicon-link"></span></a><span>範例</span></h2><p><span>一些功能實作：</span></p><p><span>歡迎回來功能：</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+push tick<span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span> <span class="token comment">// still a function</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// not show tick</span>
+</div></div></code></pre><h2 id="範例" data-id="範例" style=""><a class="anchor hidden-xs" href="#範例" title="範例"><span class="octicon octicon-link"></span></a><span>範例</span></h2><p><span>一些功能實作：</span></p><p><span>歡迎回來功能：</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>

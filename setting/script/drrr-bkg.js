@@ -327,7 +327,9 @@ class Bot {
     var logger = document.getElementById('log');
     for (var i = 0; i < arguments.length; i++) {
       if (typeof arguments[i] == 'object') {
-        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 1).replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
+        logger.innerHTML += (JSON && JSON.stringify ?
+          JSON.stringify(arguments[i], censor(arguments[i]), 1)
+              .replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
       } else {
         logger.innerHTML += arguments[i] + '&nbsp;';
       }

@@ -27,7 +27,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     var operator = kw("operator"), atom = {type: "atom", style: "atom"};
 
     return {
-      "if": kw("if"), "while": A, "then": B, "else": B, "new": kw("new"), "delete": C, "void": C, "timer": A, "later": A, "event": A, "going": A, "push": A, "pop": A, "visit": A, "return": D, "break": D, "continue": D,
+      "if": kw("if"), "while": A, "then": B, "else": B, "new": kw("new"), "delete": C, "void": C, "timer": A, "later": A, "event": A, "state": A, "going": A, "push": A, "pop": A, "visit": A, "return": D, "break": D, "continue": D,
       "for": kw("for"),
       "in": operator, "of": operator, "typeof": operator, "instanceof": operator,
       "true": atom, "false": atom, "null": atom, "undefined": atom, "let": kw("var"),

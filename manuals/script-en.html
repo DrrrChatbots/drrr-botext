@@ -78,7 +78,7 @@ obj<span class="token punctuation">.</span>y <span class="token operator">=</spa
 <span class="token keyword">if</span> <span class="token number">0</span> then <span class="token number">1</span>
 <span class="token comment">// =&gt; false</span>
 <span class="token keyword">if</span><span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span> then <span class="token punctuation">{</span> <span class="token string">"hello"</span> <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token string">"world"</span> <span class="token punctuation">}</span>
-</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>loop syntax supports while, for loop, for in, for of. They are same as JS’s basically. But do … while is not supported now. </span><code>break</code><span> and </span><code>continue</code><span> syntax also support now.</span></p><p><span>The parentheses of loop can be omitted.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><h3 id="loop" data-id="loop" style=""><a class="anchor hidden-xs" href="#loop" title="loop"><span class="octicon octicon-link"></span></a><span>loop</span></h3><p><span>loop syntax supports while, for loop, for in, for of. They are same as JS’s basically. But do … while is not supported now. </span><code>break</code><span> and </span><code>continue</code><span> syntax also support now.</span></p><p><span>The parentheses of loop can be omitted.</span></p><pre data-original-title="" title=""><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -270,21 +270,34 @@ visit welcome
 <span class="token comment">// back from bye</span>
 <span class="token function">pprint</span><span class="token punctuation">(</span><span class="token string">"done"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// done.</span>
-</div></div></code></pre><p><span>You can also use argument to call the state:</span></p><pre><code class="js hljs"><span class="hljs-keyword">state</span> t(a, b) =&gt; {
-    console.<span class="hljs-keyword">log</span>(a, b);
-    pop;
-}
+</div></div></code></pre><p><span>You can also use argument to call the state:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code">state <span class="token function">t</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    pop<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-push(<span class="hljs-number">5</span>, <span class="hljs-number">6</span>);
-// pop will back <span class="hljs-keyword">to</span> here
+push <span class="token function">t</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// pop will back to here</span>
 
-<span class="hljs-keyword">state</span> s (a, b) =&gt; {
-    console.<span class="hljs-keyword">log</span>(a, b);
-}
-visit s(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>);
-going s(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);
-// <span class="hljs-keyword">no</span> back after going
-</code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>To handle related events, the type of event is the same as the description in event action.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+state <span class="token function">s</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+visit <span class="token function">s</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+going <span class="token function">s</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// no back after going</span>
+</div></div></code></pre><h3 id="event" data-id="event" style=""><a class="anchor hidden-xs" href="#event" title="event"><span class="octicon octicon-link"></span></a><span>event</span></h3><p><span>To handle related events, the type of event is the same as the description in event action.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -363,27 +376,44 @@ later <span class="token number">3000</span> console<span class="token punctuati
 later <span class="token number">3000</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello world"</span><span class="token punctuation">)</span> <span class="token comment">// works</span>
 <span class="token punctuation">}</span>
-</div></div></code></pre><p><span>※ Note “timer” and “later” will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result if the function call is still a function, the above actions will be continue repeating.</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>The two keyword is same with JS.</span></p><h3 id="statement-lifting" data-id="statement-lifting" style=""><a class="anchor hidden-xs" href="#statement-lifting" title="statement-lifting"><span class="octicon octicon-link"></span></a><span>statement lifting</span></h3><p><span>Like scope </span><code>{}</code><span> will be lifted as function in expressions, other statement like </span><code>for</code><span>, </span><code>while</code><span>, </span><code>event</code><span>, </span><code>timer</code><span>, </span><code>later</code><span>, </span><code>going</code><span>, </span><code>visit</code><span>, </span><code>push</code><span>, </span><code>pop</code><span> have the same feature.</span></p><pre><code class="js hljs">f <span class="hljs-operator">=</span> <span class="hljs-keyword">for</span> i of args { console.log(i); }
-f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
-<span class="hljs-comment">// 1 2 3</span>
+</div></div></code></pre><p><span>※ Note “timer” and “later” will eval your expression on the timestamp you set, if the result is a function, it will feed arguments to it, and the result of the function call is still a function, the above actions will be continue repeating.</span></p><h3 id="newdelete" data-id="newdelete" style=""><a class="anchor hidden-xs" href="#newdelete" title="newdelete"><span class="octicon octicon-link"></span></a><span>new/delete</span></h3><p><span>The two keyword is same with JS.</span></p><h3 id="statement-lifting" data-id="statement-lifting" style=""><a class="anchor hidden-xs" href="#statement-lifting" title="statement-lifting"><span class="octicon octicon-link"></span></a><span>statement lifting</span></h3><p><span>Like scope </span><code>{}</code><span> will be lifted as function in expressions, other statement like </span><code>for</code><span>, </span><code>while</code><span>, </span><code>event</code><span>, </span><code>timer</code><span>, </span><code>later</code><span>, </span><code>going</code><span>, </span><code>visit</code><span>, </span><code>push</code><span>, </span><code>pop</code><span> have the same feature.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code">f <span class="token operator">=</span> <span class="token keyword">for</span> i <span class="token keyword">of</span> args <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token comment">// 1 2 3</span>
 
-f <span class="hljs-operator">=</span> later <span class="hljs-number">1000</span> (a, b, c) <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> {
-  console.log(<span class="hljs-string">"hello"</span>, args, a, b, c);
-}
-f(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
-<span class="hljs-comment">// hello [1, 2, 3] 1 2 3</span>
-</code></pre><p><span>Lifted functions and normal functions have a difference that named tick.</span><br>
-<span>The lifted functions cannot be executed ouside the state they declared.</span></p><pre><code class="js hljs">let f;
-state tick {
-  f <span class="hljs-operator">=</span> { console.log(<span class="hljs-string">"tick"</span>); }
-  f(); <span class="hljs-comment">// show tick</span>
-  pop;
-}
+f <span class="token operator">=</span> later <span class="token number">1000</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">,</span> args<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token comment">// hello [1, 2, 3] 1 2 3</span>
+</div></div></code></pre><p><span>Lifted functions and normal functions have a difference that named tick.</span><br>
+<span>The lifted functions cannot be executed ouside the state they declared.</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span></div><div class="code"><span class="token keyword">let</span> f<span class="token punctuation">;</span>
+state tick <span class="token punctuation">{</span>
+  f <span class="token operator">=</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"tick"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+  <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// show tick</span>
+  pop<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-push tick;
-console.log(f) <span class="hljs-comment">// still a function</span>
-f(); <span class="hljs-comment">// not show tick</span>
-</code></pre><h2 id="Example" data-id="Example" style=""><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h2><p><span>Some sample code:</span></p><p><span>Welcome back:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+push tick<span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span> <span class="token comment">// still a function</span>
+<span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// not show tick</span>
+</div></div></code></pre><h2 id="Example" data-id="Example" style=""><a class="anchor hidden-xs" href="#Example" title="Example"><span class="octicon octicon-link"></span></a><span>Example</span></h2><p><span>Some sample code:</span></p><p><span>Welcome back:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -396,7 +426,7 @@ event <span class="token function">join</span> <span class="token punctuation">(
   <span class="token keyword">else</span> guests<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 <span class="token function">pprint</span><span class="token punctuation">(</span>guests<span class="token punctuation">)</span>
-</div></div></code></pre><p><span>Guess The Number Game:</span></p><pre><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
+</div></div></code></pre><p><span>Guess The Number Game:</span></p><pre data-original-title="" title=""><code class="javascript hljs"><div class="wrapper"><div class="gutter linenumber"><span></span>
 <span></span>
 <span></span>
 <span></span>

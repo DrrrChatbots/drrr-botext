@@ -204,6 +204,10 @@ chrome.runtime.onMessage.addListener((req, sender, callback) => {
   }
   else if(sender.url.match(new RegExp('https://drrr.com/lounge'))){
   }
+  else if(sender.url.match(new RegExp('https://chat.openai.com/chat'))){
+    sendTabMessage(req.text);
+  }
+
   if(callback){
     //alert(JSON.stringify(req));
     //console.log(JSON.stringify(req))

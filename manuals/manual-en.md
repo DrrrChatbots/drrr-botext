@@ -817,6 +817,7 @@ Content: "give me a sandwich"
 "msg", "", "^/giphy", "umsg", ["$giphy($args)", "$args"]
 "msg", "", "^/play", "plym", ["$args"]
 "leave", "", "", "msg", ["$user bye!"]
+"msg", "", "^%", "chat", ["$($str($cont).substr(1))"]
 ```
 
 #### Call
@@ -825,6 +826,7 @@ Content: "give me a sandwich"
 /tenor cat
 /giphy iron man
 /play yellow
+%What is GFW
 ```
 
 :::spoiler More Examples
@@ -1024,6 +1026,8 @@ Function ["parameter", ...] Description:
   provide the variable`env` for lambda script execution.
 - `nop` `[]`
   do nothing.
+- `chat` `["content to chat with ChatGPT"]`
+  will open a tab to proxy the chat content with ChatGPT.
 
 > If you want to send `me` message, you can apply msg function with `/me + message` .
 

@@ -224,7 +224,7 @@ If you want to come back, please use visit.
 
 The current visit uses dynamic scoping, while going is static scoping.
 
-`push` and `pop` syntax for state are also supported, the state will transfer to new state after you use `push`, but `push` will keep the execution position of last state, you can use `pop` to back to the previous state. Note that you don't need to give state name for `pop`.
+~~`push` and `pop` syntax for state are also supported, the state will transfer to new state after you use `push`, but `push` will keep the execution position of last state, you can use `pop` to back to the previous state. Note that you don't need to give state name for `pop`.~~ exists semantics implementaion problems.
 
 ```javascript=
 state welcome {

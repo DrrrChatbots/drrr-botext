@@ -108,8 +108,7 @@ function monitChat(callback){
 }
 
 $(document).ready(function(){
-  console.log("rock and roll")
-  setTimeout(() => sendChat('請限制你的回答在 140 字內'), 5000);
+  setTimeout(() => $('textarea').val('請限制你的回答在 140 字內'), 1000);
   let cb = batchOf(x => {
     console.log(x);
     chrome.runtime.sendMessage({text: x});

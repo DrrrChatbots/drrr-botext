@@ -197,6 +197,11 @@ function handle_talks(msg){
   //   eobj.url
   // );
 
+
+  function sendMessage(){
+    chrome.runtime.sendMessage(eobj);
+  }
+
   if(!roomInfo || [
     event_join, event_timeout, event_leave,
     event_newhost, event_music].includes(eobj.type)){
@@ -209,8 +214,7 @@ function handle_talks(msg){
 
         eobj.trip = u ? u.tripcode : '';
         eobj.info = roomInfo;
-
-        chrome.runtime.sendMessage(eobj);
+        sendMessage();
       },
       function(){
         console.log("room error on info");
@@ -219,7 +223,7 @@ function handle_talks(msg){
   }
   else{
     lambda_oracle(eobj.type, u, eobj.text);
-    if(chrome.runtime) chrome.runtime.sendMessage(eobj);
+    if(chrome.runtime) sendMessage();
   }
 }
 

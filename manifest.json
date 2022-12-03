@@ -44,6 +44,10 @@
             "matches": ["https://drrr.com/"],
             "run_at": "document_start",
             "js": ["/js/jquery-3.4.1.min.js", "/lib/globals.js", "/lib/format.js", "/content/index.js"]
+        },
+        {
+          "matches": ["https://chat.openai.com/chat"],
+          "js": ["/js/jquery-3.4.1.min.js", "/lib/globals.js", "/lib/format.js", "/content/chatGPT.js"]
         }
     ],
     "permissions": [

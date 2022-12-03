@@ -47,6 +47,14 @@ function showPlaySource(msg, show = sendTabMessage){
   })
 }
 
+function sendToChatGPT(text){
+  sendTab({
+    text: text,
+  }, () => {
+    chrome.tabs.create({url: 'https://chat.openai.com/chat'});
+  }, null, null, 'https://chat.openai.com/chat');
+}
+
 function str2bool(str){
   if(typeof str == 'string'){
     let lower = str.toLowerCase()
@@ -60,6 +68,9 @@ function str2bool(str){
 }
 
 window._actions = {
+  [action_chat] : function(text){
+    sendToChatGPT(text);
+  },
   [action_name] : function(...names){
     setTimeout(
       () => sendTab({

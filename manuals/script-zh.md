@@ -217,7 +217,7 @@ console.log(x) // 3
 
 目前的 visit 是使用 dynamic scoping， 而 going 是 static scoping。
 
-也新增了 push, pop 語法，使用 push 後會轉移到新的 state, 和 going 一樣，不過會像 visit 一樣保留上個 state 執行的位置，使用 pop 可以回到上一個 state。pop 不用給 state name。
+~~也新增了 push, pop 語法，使用 push 後會轉移到新的 state, 和 going 一樣，不過會像 visit 一樣保留上個 state 執行的位置，使用 pop 可以回到上一個 state。pop 不用給 state name。~~ 仍有語義上的實作問題。
 
 ```javascript=
 state welcome {

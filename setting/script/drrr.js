@@ -225,7 +225,7 @@ drrr_builtins = {
     for (var i = 0; i < arguments.length; i++) {
       if (typeof arguments[i] == 'object') {
         logger.innerHTML += (JSON && JSON.stringify ?
-          JSON.stringify(arguments[i], censor(arguments[i]), 1)
+          JSON.stringify(arguments[i], getCircularReplacer(), 1)
               .replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
       } else {
         logger.innerHTML += arguments[i] + '&nbsp;';

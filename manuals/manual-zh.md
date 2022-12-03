@@ -825,6 +825,7 @@ Content: "給 larry 來一杯奶茶"
 "msg", "", "^/giphy", "umsg", ["$giphy($args)", "$args"]
 "msg", "", "^/play", "plym", ["$args"]
 "leave", "", "", "msg", ["$user bye!"]
+"msg", "", "^%", "chat", ["$($str($cont).substr(1))"]
 ```
 
 #### 調用
@@ -833,6 +834,7 @@ Content: "給 larry 來一杯奶茶"
 /tenor 貓
 /giphy iron man
 /play yellow
+%什麼是 GFW
 ```
 
 :::spoiler 更多範例
@@ -1033,6 +1035,8 @@ Content: "給 larry 來一杯奶茶"
   提供 `env` 這個變數以執行浪語腳本。
 - `nop` `[]`
   沒有任何作用。
+- `chat` `["想與 ChatGPT 聊天的內容"]`
+  會開啟一個分頁，傳送與 ChatGPT 聊天的內容。
 
 > `me` 可以用 `/me + 推送訊息` 以 msg 達成。
 

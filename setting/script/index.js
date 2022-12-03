@@ -15,7 +15,7 @@ globalThis.pprint = function(){
   for (var i = 0; i < arguments.length; i++) {
     if (typeof arguments[i] == 'object') {
       logger.innerHTML += (JSON && JSON.stringify ?
-        JSON.stringify(arguments[i], censor(arguments[i]), 1)
+        JSON.stringify(arguments[i], getCircularReplacer(), 1)
             .replaceAll("\n", "<br>") : arguments[i]) + '&nbsp;';
     } else {
       logger.innerHTML += arguments[i] + '&nbsp;';
@@ -45,7 +45,7 @@ function show_bindings(){
 }
 
 stringify = (obj, pre, space) => {
-  str = JSON.stringify(obj, pre ? pre : censor(obj), space)
+  str = JSON.stringify(obj, pre ? pre : getCircularReplacer(), space)
   if(obj === undefined)
     str = "undefined";
   else if(typeof obj == 'function')
@@ -76,7 +76,7 @@ function interact(){
     return drrr.log(err);
   }
   if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val, censor(val), 1).replaceAll("\n", "<br>")}`);
+    drrr.log(`${typeof val} => ${stringify(val, getCircularReplacer(), 1).replaceAll("\n", "<br>")}`);
   if(ok)
     $.notify("Interaction Successd!", "success");
 }
@@ -100,7 +100,7 @@ function execute(){
   }
   let val = machine.val;
   if(typeof val !== 'undefined')
-    drrr.log(`${typeof val} => ${stringify(val, censor(val), 1).replaceAll("\n", "<br>")}`);
+    drrr.log(`${typeof val} => ${stringify(val, getCircularReplacer(), 1).replaceAll("\n", "<br>")}`);
   if(ok)
     $.notify("Execution Successd!", "success");
   if(!notify_web){

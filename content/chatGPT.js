@@ -67,6 +67,16 @@ function parseProse(p){
       resp.push({ code: [...c.querySelectorAll('code')]
         .map(c => c.textContent).join('\n') });
     }
+    else if(c.tagName == 'UL'){
+      let ul = [...c.children].map(
+        li => '·' + li.textContent).join('\n');
+      resp.push({ text: ul });
+    }
+    else if(c.tagName == 'OL'){
+      let ol = [...c.children].map(
+        (li, idx) => `${idx + 1}. ` + li.textContent).join('\n');
+      resp.push({ text: ol });
+    }
     else {
       resp.push({ text: c.textContent });
     }
@@ -108,7 +118,8 @@ function monitChat(callback){
 }
 
 $(document).ready(function(){
-  setTimeout(() => $('textarea').val('請限制你的回答在 140 字內'), 1000);
+  let recmd = '請限制之後的回答在 140 字內'
+  setTimeout(() => $('textarea').val(recmd), 1000);
   let cb = batchOf(x => {
     console.log(x);
     chrome.runtime.sendMessage({text: x});

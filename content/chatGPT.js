@@ -57,7 +57,7 @@ function sendChat(content){
   if(lock) return chrome.runtime.sendMessage({text: '...'});
   lock = true;
   $('textarea').val(content);
-  $('textarea')[0].nextSibling.click()
+  $('textarea')[0].nextElementSibling.click()
 }
 
 function parseProse(p){

@@ -556,19 +556,23 @@ $(document).ready(function(){
         }
       }
 
-      $('#talks').bind('DOMNodeInserted', function(event) {
-        var e = event.target;
-        if(e.parentElement.id == 'talks'){
+      function listenTalks() {
+        $('#talks').bind('DOMNodeInserted', function(event) {
+          var e = event.target;
+          if(e.parentElement.id == 'talks'){
+            let a = $(e).find('a');
+            if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
+            handle_talks(e);
+            hide_annoying(e);
+          }
+        }).children().get().forEach(e => {
           let a = $(e).find('a');
-          if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
-          handle_talks(e);
-          hide_annoying(e);
-        }
-      }).children().get().forEach(e => {
-        let a = $(e).find('a');
-        if(a.length)
-          a.attr('href', $('<textarea />').html(a.attr('href')).text())
-      })
+          if(a.length)
+            a.attr('href', $('<textarea />').html(a.attr('href')).text())
+        })
+      }
+      // wait 3 sec to init the room talks
+      setTimeout(listenTalks, 1500);
 
       wrap_post_form();
 

@@ -578,7 +578,8 @@ $(document).ready(function(){
 
       if(isLockedUser) return;
 
-      monit_progressbar();
+      setTimeout(monit_progressbar, 1500);
+
       /* invoke newtab event */
       chrome.runtime.sendMessage({
         type: event_newtab,

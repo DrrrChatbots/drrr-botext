@@ -87,34 +87,50 @@ function parseProse(p){
 function monitChat(callback){
   let dom = document.getElementsByTagName('main')[0]
     .firstElementChild.firstElementChild.firstElementChild.firstElementChild
-
-  dom.addEventListener( 'DOMNodeInserted', function ( event ) {
-    if( event.target.parentNode.classList[0] == dom.classList[0] ) {
-      // result-streaming
-      if(event.target.querySelectorAll('svg')?.[0].classList.contains('w-6')){
-        let prosesResp = [];
-        for(let prose of event.target.querySelectorAll('.prose')){
-          if(prose.classList.contains('result-streaming')){
-            const observer = new MutationObserver(((p) =>
-              function (mutations, owner) {
-                console.log('waited', p);
-                callback(parseProse(p));
-                lock = false;
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      var nodes = Array.prototype.slice.call(mutation.addedNodes);
+      nodes.forEach(function(node) {
+        if( node.parentNode.classList[0] == dom.classList[0] ) {
+          // result-streaming
+          if(node.querySelectorAll('svg')?.[0].classList.contains('w-6')){
+            let prosesResp = [];
+            for(let prose of node.querySelectorAll('.prose')){
+              if(prose.classList.contains('result-streaming')){
+                const observer = new MutationObserver(((p) =>
+                  function (mutations, owner) {
+                    console.log('waited', p);
+                    callback(parseProse(p));
+                    lock = false;
+                  }
+                )(prose));
+                return observer.observe(prose, {
+                  attributes: true,
+                });
               }
-            )(prose));
-            return observer.observe(prose, {
-              attributes: true,
-            });
+              prosesResp.push(parseProse(prose));
+            }
+            // DO callback
+            console.log('done', prose)
+            callback(prosesResp.join('\n'));
+            lock = false;
           }
-          prosesResp.push(parseProse(prose));
+        };
+        if(node.parentElement.id == 'talks'){
+          let a = $(node).find('a');
+          if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
+          handle_talks(node);
+          hide_annoying(node);
         }
-        // DO callback
-        console.log('done', prose)
-        callback(prosesResp.join('\n'));
-        lock = false;
-      }
-    };
-  }, false );
+      });
+    });
+  });
+  observer.observe(dom, {
+    childList: true,
+    subtree: true,
+    attributes: false,
+    characterData: false,
+  });
 }
 
 $(document).ready(function(){

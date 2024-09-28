@@ -557,15 +557,27 @@ $(document).ready(function(){
       }
 
       function listenTalks() {
-        $('#talks').bind('DOMNodeInserted', function(event) {
-          var e = event.target;
-          if(e.parentElement.id == 'talks'){
-            let a = $(e).find('a');
-            if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
-            handle_talks(e);
-            hide_annoying(e);
-          }
-        }).children().get().forEach(e => {
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            var nodes = Array.prototype.slice.call(mutation.addedNodes);
+            nodes.forEach(function(node) {
+              if(node.parentElement.id == 'talks'){
+                let a = $(node).find('a');
+                if(a.length) a.attr('href', $('<textarea />').html(a.attr('href')).text())
+                handle_talks(node);
+                hide_annoying(node);
+              }
+            });
+          });
+        });
+        observer.observe(document.querySelector("#talks"), {
+          childList: true,
+          subtree: true,
+          attributes: false,
+          characterData: false,
+        });
+
+        $('#talks').children().get().forEach(e => {
           let a = $(e).find('a');
           if(a.length)
             a.attr('href', $('<textarea />').html(a.attr('href')).text())

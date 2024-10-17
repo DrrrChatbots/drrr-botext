@@ -96,7 +96,7 @@ function MsgDOM2EventObj(msg, info){
         user = $(msg).find('.name').text();
         text = $(msg).contents().filter(function() {
           return this.nodeType == 3;
-        }).get().pop().textContent;
+        }).get().pop().wholeText;
       }
       else if(msg.classList.contains("music")){
         type = event_music;
@@ -138,8 +138,7 @@ function MsgDOM2EventObj(msg, info){
       }
     }
     else{
-      text = $(msg).find($('.bubble p'))
-        .clone().children().remove().end().text();
+      text = $(msg).find($('p')).clone().children().remove().end().text();
       var ue = $(msg).find($('.bubble p a'));
       if(ue.length) url = ue.attr('href');
       ue = $(msg).find($('img'));

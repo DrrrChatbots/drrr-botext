@@ -211,11 +211,11 @@ function assocTrip(key, res, comp_name, trip){
     for(r of set){
       var [name_trip, terms] = r;
       if(match_user(key, trip, name_trip)){
-        // console.log(key, ' matched!')
+        // console.log(key, trip, ' matched!', name_trip)
         return terms;
       }
     }
-    // console.log(key, 'not matched!')
+    // console.log(key, trip, ' not matched', name_trip)
     return false;
   }
   else{

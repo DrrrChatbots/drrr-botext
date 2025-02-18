@@ -603,5 +603,6 @@ methods[cache_profile] = cacheProfile;
 methods[update_profile] = updateProfile;
 methods[show_prompt] = showPrompt;
 methods[show_confirm] = showConfirm;
+methods[ctrl_room] = ctrlRoom;
 
 need_callback = [leave_room, cache_profile, update_profile, get_members, is_playing, show_prompt, show_confirm]

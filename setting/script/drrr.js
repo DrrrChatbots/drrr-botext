@@ -93,16 +93,16 @@ drrr_builtins = {
     if(func) drrr[func](...args);
   },
   'title': function(msg){
-    ctrlRoom({'room_name': String(msg)});
+    drrr.ctrl({'room_name': String(msg)});
   },
   'descr': function(msg){
-    ctrlRoom({'room_description': String(msg)});
+    drrr.ctrl({'room_description': String(msg)});
   },
   'music': function(url, name){
-    ctrlRoom({'music': 'music', 'name': name, 'url': url});
+    drrr.ctrl({'music': 'music', 'name': name, 'url': url});
   },
   'dj': function(enable){
-    ctrlRoom({'dj_mode': enable});
+    drrr.ctrl({'dj_mode': enable});
   },
   'print': function(msg, url){
     drrr._prev_say_args = ['print', arguments];
@@ -114,40 +114,40 @@ drrr_builtins = {
   },
   'chown': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'new_host': u.id});
+      drrr.ctrl({'new_host': u.id});
     })
   },
   'kick': function(user){
     findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
-        ctrlRoom({'new_host': u.id});
+        drrr.ctrl({'new_host': u.id});
       else
-        ctrlRoom({'kick': u.id});
+        drrr.ctrl({'kick': u.id});
     })
   },
   'ban': function(user){
     findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
-        ctrlRoom({'new_host': u.id});
+        drrr.ctrl({'new_host': u.id});
       else
-        ctrlRoom({'ban': u.id});
+        drrr.ctrl({'ban': u.id});
     })
   },
   'report': function(user){
     findUser(user, (u)=>{
       if(ADMINS.includes(u.tripcode))
-        ctrlRoom({'new_host': u.id});
+        drrr.ctrl({'new_host': u.id});
       else
-        ctrlRoom({'report_and_ban_user': u.id});
+        drrr.ctrl({'report_and_ban_user': u.id});
     })
   },
   'unban': function(user){
     findUser(user, (u)=>{
-      ctrlRoom({'unban': u.id, 'userName': u.name});
+      drrr.ctrl({'unban': u.id, 'userName': u.name});
     })
   },
   'leave': function(succ, fail){
-    ctrlRoom({'leave': 'leave'}, succ, fail);
+    drrr.ctrl({'leave': 'leave'}, succ, fail);
   },
   'play': function(keyword, p1, p2, show){
     var idx = undefined, source = undefined;
@@ -174,7 +174,9 @@ drrr_builtins = {
       }
     });
   },
-  'ctrl': ctrlRoom,
+  'ctrlRoom': ctrlRoom,
+  'ctrl': function(cmd) { sendTab({ fn: ctrl_room, args: cmd }); },
+  'ctrlPage': function(cmd) { sendTab({ fn: ctrl_room, args: cmd }); },
   'create': function(name, desc, limit, lang, music, adult, hidden, succ, fail){
     if(!name) name = "Lambda ChatRoom " + String(Math.floor(Math.random() * 100))
     if(!desc) desc = ''
@@ -212,12 +214,12 @@ drrr_builtins = {
   // for werewolf room on drrr.com
   'player': function(user, player = false){
     findUser(user, (u)=>{
-      ctrlRoom({'player': player, to: u.id });
+      drrr.ctrl({'player': player, to: u.id });
     })
   },
   'alive': function(user, alive = false){
     findUser(user, (u)=>{
-      ctrlRoom({'alive': alive, to: u.id });
+      drrr.ctrl({'alive': alive, to: u.id });
     })
   },
   'log': function(){

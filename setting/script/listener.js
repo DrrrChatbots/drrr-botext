@@ -1,7 +1,8 @@
 chrome.runtime.onMessage.addListener((req, sender, callback) => {
   if(sender.url.match(new RegExp('https://drrr.com/room/.*'))){
-    if(req && req.info)
+    if(req && req.info) {
       drrr.setInfo(req.info);
+    }
     if(req.start){
       drrr.getProfile();
       drrr.getLoc();

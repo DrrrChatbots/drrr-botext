@@ -67,12 +67,12 @@ function drrr_send(msg, url, to){
   if(to){
     findUser(to, (u)=>{
       cmd['to'] = u.id;
-      ctrlRoom(cmd, callback, callback);
+      drrr.ctrl(cmd, callback, callback);
     });
   }
   else{
     sendTab({ fn: publish_message, args: chatcmd },
-      ()=>{ ctrlRoom(cmd, callback, callback) },
+      ()=>{ drrr.ctrl(cmd, callback, callback) },
       callback);
   };
 }
@@ -289,7 +289,7 @@ drrr.getLoc = function(callback){
     drrr.setInfo(info);
     if(callback) callback(info);
   }, (jxhr) => {
-    if(jxhr.status == 503){
+    if(jxhr && jxhr.status == 503){
       sendTab({ fn: reload_room, args: { } })
       setTimeout(() =>  drrr.getLoc(callback), 5 * 1000);
     }

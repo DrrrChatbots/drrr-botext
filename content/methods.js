@@ -535,6 +535,22 @@ function reloadRoom(args, callback){
   window.location.replace(window.location.href);
 }
 
+function fetchRoom(args, callback) {
+  getRoom(
+    function(info){
+      prevRoomInfo = roomInfo;
+      roomInfo = info;
+      chrome.runtime.sendMessage({
+        info: info
+      });
+      callback();
+    },
+    function(){
+      console.log("room error on info");
+      callback();
+    }
+  );
+}
 
 var methods = {}
 methods[post_message] = postMessage;
@@ -567,6 +583,7 @@ methods[change_name_bg_clr] = changeNameBgClr;
 methods[set_clock] = setClock;
 methods[call_wizard] = callWizard;
 methods[reload_room] = reloadRoom;
+methods[fetch_room] = fetchRoom;
 
 methods[set_timeout] = setTimeOut;
 
@@ -580,4 +597,4 @@ methods[show_prompt] = showPrompt;
 methods[show_confirm] = showConfirm;
 methods[ctrl_room] = ctrlRoom;
 
-need_callback = [leave_room, cache_profile, update_profile, get_members, is_playing, show_prompt, show_confirm]
+need_callback = [leave_room, cache_profile, update_profile, get_members, is_playing, show_prompt, show_confirm, fetch_room]
